@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "driver", "driver.csproj", "{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "driver_win", "..\driver_win\driver_win.csproj", "{37CC1DB9-870C-4C8D-8E70-59F17DC846AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HidSharp", "..\HidSharp\HidSharp.csproj", "{0DB86674-2A7B-4BDC-93C1-3F7DC771426C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CC1DB9-870C-4C8D-8E70-59F17DC846AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CC1DB9-870C-4C8D-8E70-59F17DC846AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CC1DB9-870C-4C8D-8E70-59F17DC846AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CC1DB9-870C-4C8D-8E70-59F17DC846AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB86674-2A7B-4BDC-93C1-3F7DC771426C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB86674-2A7B-4BDC-93C1-3F7DC771426C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB86674-2A7B-4BDC-93C1-3F7DC771426C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB86674-2A7B-4BDC-93C1-3F7DC771426C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

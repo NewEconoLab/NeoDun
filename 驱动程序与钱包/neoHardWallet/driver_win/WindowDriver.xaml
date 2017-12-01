@@ -1,0 +1,170 @@
+﻿<Window x:Class="driver_win.WindowDriver"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="" Height="503.649"  Width="734.099" Activated="Window_Activated" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid Margin="10,10,0,0">
+        <Button Content="模拟钱包" HorizontalAlignment="Left" Margin="577,10,-431,0" VerticalAlignment="Top" Width="75" Click="CreateSimHardware"/>
+        <Label Name="isLink" Content="设备未连接" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  VerticalAlignment="Top" Height="56" HorizontalAlignment="Left"/>
+        <Button Name="btn_relink" Background="White" BorderThickness="0"  HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="40" Click="Relink_click">
+            <Button.Content>
+                <StackPanel>
+                    <Image Stretch="Fill" Source="res/restart.png" RenderTransformOrigin="1.665,0.492" Height="33" Width="38"/>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <Grid HorizontalAlignment="Left" Height="49" Margin="0,61,-182,-54" VerticalAlignment="Top" Width="420">
+            <Button Name="btn_showaddpage" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="0,0,0,0" Click="ShowAddPage_click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/add.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Name="btn_backup" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="80,0,0,0" Click="Backup_click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/backup.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Name="btn_deleteaddress" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="160,0,0,0" Click="DeleteAddress_click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/delete.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Name="btn_showsettingpage" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="240,0,0,0" Click="ShowSettingPage_click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/setting.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Name="more" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="320,0,0,0">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/more.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </Grid>
+        <Label Name="label_unlink" Visibility="Collapsed" Content="未连接到设备,请检查USB是否插好或蓝牙是否连接正常" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="Gray" Height="315" Margin="5,130,0,0" VerticalAlignment="Top" Width="694"/>
+        <GroupBox Name="listBox" Visibility="Collapsed" Header="" HorizontalAlignment="Left" Height="351" Margin="0,115,0,0" VerticalAlignment="Top" Width="704">
+            <Grid Margin="0,0,0,0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55*"/>
+                    <ColumnDefinition Width="184*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="180*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="176*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="type" Margin="0,0,0,106" Content="NEO" VerticalContentAlignment="Center" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="1" />
+                <ListBox x:Name="addresslist" Margin="0,40,268,10" Grid.ColumnSpan="2" Grid.RowSpan="3" SelectionChanged="Addresslist_SelectionChanged"/>
+                <ListBox x:Name="info" Margin="265,40,0,10" Grid.RowSpan="3" Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Name="addBox" Visibility="Collapsed" Background="White" Header="" HorizontalAlignment="Left" Height="315" Margin="189,130,0,0" VerticalAlignment="Top" Width="328">
+            <Grid Margin="0,12,0,-12" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55*"/>
+                    <ColumnDefinition Width="184*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="180*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="176*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="lb_title" Margin="0,0,0.5,106" Content="新增地址"/>
+                <Button x:Name="btn_close" Margin="216.5,-5,0,110" Content="x" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" BorderThickness="0" Grid.Column="1" Click="HideAddPage_click"/>
+                <TextBox Name="tx_privateKey" HorizontalAlignment="Left" Margin="29,52,0,0" Text="" VerticalContentAlignment="Center"  VerticalAlignment="Top" Grid.ColumnSpan="2" Height="27" Width="248"/>
+                <Button x:Name="btn_fromText" Margin="29,95,163,0" Content="手动输入" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" BorderThickness="1" RenderTransformOrigin="-7.095,5.066" Grid.ColumnSpan="2" Click="FromText_click"/>
+                <Button x:Name="btn_fromBackup" Margin="80.5,95,39,0" Content="导入备份" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" BorderThickness="1" RenderTransformOrigin="-7.095,5.066" Grid.Column="1" Click="FromBackup_click"/>
+                <Label x:Name="lb_title2" Margin="29,10,223,2" Content="密钥地址" Grid.ColumnSpan="2" Grid.Row="1"/>
+                <Label Margin="29,10,39,0" BorderBrush="Gray" BorderThickness="1" Grid.ColumnSpan="2" Grid.Row="2" Height="51" VerticalAlignment="Top" RenderTransformOrigin="0.433,-0.573">
+                    <TextBlock  x:Name="lb_address" TextWrapping="Wrap" Text="">
+
+                    </TextBlock>
+                </Label>
+                <Button x:Name="btn_addAddress" Margin="29,81,39,10" Content="新增地址" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" BorderThickness="1" RenderTransformOrigin="-7.095,5.066" Grid.ColumnSpan="2" Grid.Row="2" Click="AddAddress_click"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Name="settingBox" Visibility="Collapsed" Margin="150,110,150,50" Background="White" Header="设置页面" FontSize="15">
+            <Grid Margin="0">
+                <Button Margin="370,-10,-5,250" Background="White" Content="×" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="HideSettingPage_click"/>
+                <Grid Margin="50,0,50,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Name="c1" Grid.Row="1" IsEnabled="False"  Content="连接钱包后自动弹出驱动页面" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <CheckBox Name="c2" Grid.Row="2" IsEnabled="False" Content="开机时自动检查更新" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Line Grid.Row="3" X1="0" Y1="0" X2="250" Y2="0" Stroke="Black"/>
+                    <Label Grid.Row="4" Content="以下操作需要密码验证" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Height="28" />
+                    <CheckBox Grid.Row="5" Name="c3" Content="新增地址" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <CheckBox Grid.Row="6" Name="c4" Content="删除地址" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <CheckBox  Grid.Row="7" Name="c5" Content="备份地址" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Line Grid.Row="8" X1="0" Y1="0" X2="250" Y2="0" Stroke="Black"/>
+                    <CheckBox Grid.Row="9" Margin="0,5" Name="c6" IsEnabled="False" Content="备份钱包时进行加密" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Button Grid.Row="10" Margin="10,0,0,0" Height="25" Width="147"  Background="White" Content="重置密码" Click="ResetPassword_click"/>
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Name="pwBox" Visibility="Collapsed" HorizontalAlignment="Left" Height="300" Margin="210,163,0,0" VerticalAlignment="Top" Width="300" RenderTransformOrigin="0.482,1.174">
+            <Grid Margin="0,0,0,265">
+                <Label Name="pwLabel" Content="" Margin="0,0,0,0"/>
+                <ListBox Name="passwordList" Margin="0,33,0,-266">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem>
+                        <Button Name="a" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="b" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="c" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="d" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="e" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="f" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="g" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="h" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Button Name="i" Content="※" FontSize="30" Height="80" Width="80" Click="PasswordListButtonClick"/>
+                    </ListBoxItem>
+                </ListBox>
+            </Grid>
+        </GroupBox>
+        <Grid Name="msgBox" Margin="200,150,200,150" Visibility="Collapsed" Background="White">
+            <Button Name="msgBox_cancel" Content="×" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="275,0,0,120" Background="White" BorderThickness="1" Click="HideMessagePage_click"/>
+            <Label Name="msgBox_label" Content="" FontSize="20" VerticalContentAlignment="Center" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

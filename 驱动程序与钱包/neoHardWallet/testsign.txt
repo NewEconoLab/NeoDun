@@ -1,0 +1,18 @@
+协议1 state 检查钱包是否连接
+参数：无参数
+http://localhost:50288/_api/state
+
+协议2 listaddress
+参数：无参数
+http://localhost:50288/_api/listaddress
+
+
+协议3 签名数据
+地址
+sign
+参数
+type   neo
+source 签名者地址
+data   签名数据
+
+http://localhost:50288/_api/sign?type=neo&source=ASJiT56jYKZgTN9FtGvjRenbdBKTZ98QVw&&data=800000010c8fa242aaf7461f802bf0d6e0fc8694e3daed2d66de4dc70fe017012d075350010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6080969800000000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c607098df2817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae

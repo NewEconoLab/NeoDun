@@ -1,0 +1,16 @@
+﻿<Window x:Class="simpletest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simpletest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <ListBox x:Name="list1" HorizontalAlignment="Left" Height="215" Margin="33,72,0,0" VerticalAlignment="Top" Width="302"/>
+        <Button Content="发现设备" HorizontalAlignment="Left" Margin="28,19,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="发送短数据" HorizontalAlignment="Left" Margin="130,19,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button Content="发送64bytes数据" HorizontalAlignment="Left" Margin="237,19,0,0" VerticalAlignment="Top" Width="120" Click="Button_Click_2"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,49 @@
+﻿<Window x:Class="driver_win.WindowSimHardware"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:driver_win"
+        mc:Ignorable="d"
+        Title="WindowSimHardware" Height="503.649" Width="734.099" Activated="Window_Activated" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid Margin="0,0,0,1">
+        <GroupBox Header="调试工具" HorizontalAlignment="Left" Height="397" Margin="398,24,0,0" VerticalAlignment="Top" Width="318">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55*"/>
+                    <ColumnDefinition Width="184*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="180*"/>
+                    <RowDefinition Height="19*"/>
+                    <RowDefinition Height="176*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="logs"  Grid.RowSpan="1" Grid.ColumnSpan="2" >
+                    <ListBox x:Name="list1"/>
+                </GroupBox>
+                <Button Content="Clear" Grid.ColumnSpan="1" Grid.Row="1"  Grid.RowSpan="1" Click="Button_Click_4" />
+                <GroupBox Header="datas"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" >
+                    <ListBox x:Name="list2"/>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+        <Image HorizontalAlignment="Left" Height="209" Margin="10,10,0,0" VerticalAlignment="Top" Width="371" Source="res/back.jpg"/>
+        <ListBox x:Name="screen" HorizontalAlignment="Left" Height="76" Margin="46,36,0,0" VerticalAlignment="Top" Width="291" Foreground="White" Background="Black" FontSize="10"/>
+        <Button Content="同意" HorizontalAlignment="Left" Margin="178,142,0,0" VerticalAlignment="Top" Width="35" Height="36"/>
+        <Button Content="拒绝" HorizontalAlignment="Left" Margin="236,150,0,0" VerticalAlignment="Top" Width="53"/>
+        <GroupBox Header="Address" HorizontalAlignment="Left" Height="132" Margin="10,206,0,0" VerticalAlignment="Top" Width="371">
+            <ListBox x:Name="listAddress" />
+        </GroupBox>
+        <GroupBox Name="passwordbox" Header="密码" HorizontalAlignment="Left" Height="133" Margin="10,338,0,0" VerticalAlignment="Top" Width="133" RenderTransformOrigin="0.482,1.174">
+            <Grid Margin="0,0,0,0">
+                <ListBox Name="password">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
