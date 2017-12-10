@@ -107,7 +107,7 @@ namespace driver_win
         //删除地址
         private void DeleteAddress_click(object sender, RoutedEventArgs e)
         {
-            if (selectAddress == null)
+            if (selectAddress == null|| selectAddress.AddressText == null)
                 return;
             string str_addressType = selectAddress.type.ToString();
             string str_addressText = selectAddress.AddressText;
@@ -117,7 +117,7 @@ namespace driver_win
                 return;
             }
             DeleteAddress();
-            selectAddress = null;
+            selectAddress.AddressText = null;
         }
         //隐藏消息框
         private void HideMessagePage_click(object sender, RoutedEventArgs e)
@@ -442,7 +442,7 @@ namespace driver_win
                 return;
             }
             driverCtr.BackUpAddress(str_addressType, str_addressText);
-            selectAddress = null;
+            selectAddress.AddressText=null;
         }
         private void BackUpPrivateKeyCallBack()  //把从签名机要到的私钥备份到本地
         {
