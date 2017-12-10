@@ -61,8 +61,10 @@ void Commands::SendToPc()
 		u32 crc = Utils::Crc32(0,this->data,62);
 		data[62] = crc & 0xff;
 		data[63] = (crc>>8) & 0xff;
-		//printf("ack crc = 0x%x\r\n",crc);
-		//Utils::PrintArray(data,CMD_DATA_PACK_LEN);
+
+//		printf("ack crc = 0x%x\r\n",crc);
+//		Utils::PrintArray(data,CMD_DATA_PACK_LEN);
+
 		Hal::getInstance().SendUSBData( data,64 );
 }
 

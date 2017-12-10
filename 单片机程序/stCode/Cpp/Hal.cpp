@@ -113,3 +113,10 @@ void Hal::HardwareInit()
 		__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
 }
 
+void Hal::Start_Motor(int mtime)
+{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+		HAL_Delay(mtime);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+}
+

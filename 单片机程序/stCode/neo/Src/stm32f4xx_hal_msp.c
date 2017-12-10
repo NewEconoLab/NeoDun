@@ -257,19 +257,19 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
   /* USER CODE END USART2_MspDeInit 1 */
   }
-  else if(huart->Instance==USART3)
+  else if(huart->Instance==USART1)
   {
   /* USER CODE BEGIN USART3_MspDeInit 0 */
 
   /* USER CODE END USART3_MspDeInit 0 */
     /* Peripheral clock disable */
-    __USART3_CLK_DISABLE();
+    __USART1_CLK_DISABLE();
   
     /**USART3 GPIO Configuration    
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX 
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_11);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|GPIO_PIN_7);
 
   /* USER CODE BEGIN USART3_MspDeInit 1 */
 

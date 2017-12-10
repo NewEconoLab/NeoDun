@@ -25,6 +25,7 @@ public:
 	bool ReadPin(char port , int  pin );
 	void HardwareInit();
 	void SendUSBData(u8 *data ,int len);
+	void Start_Motor(int mtime);
 }; 
 
 

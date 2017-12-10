@@ -309,8 +309,8 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8000000</StartAddress>
-                <Size>0x100000</Size>
+                <StartAddress>0x8010000</StartAddress>
+                <Size>0xf0000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -742,11 +742,6 @@
               <FileName>oled281.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Cpp\OLED281\oled281.c</FilePath>
-            </File>
-            <File>
-              <FileName>oled281_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Cpp\OLED281\oled281_test.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -7,12 +7,10 @@
 #include "math.h"
 #include "getaddress.h"
 
-char Dec[BUFSIZ];				//存储10进制的大数
-char Hex[BUFSIZ];				//存储16进制的大数
-char final[BUFSIZ] = "";//存储最终的字符串商
+static char final[BUFSIZ] = "";//存储最终的字符串商
+static int index_add = 0;      //字符地址对应的索引
 char Alphabet[58] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 char finaladdress[50] = "";  //存储最终的字符地址
-int index_add = 0;      //字符地址对应的索引
 
 /******************************************************************
 *	函数名：	GetIndexFromBuff
@@ -40,72 +38,24 @@ int GetIndexFromBuff(char *buff,char ch)
 *	函数名：	Ascii2Dec
 *	函数说明：查询Ascii表示的字符对应的10进制数
 * 输入参数：ch		输入字符	
-* 输出参数：value 输出10进制数
+* 输出参数：value 输出10进制数   返回为0xff表示出错
 *******************************************************************/
 int Ascii2Dec(char ch)
 {
-		int value=0;
-		switch (ch)
-		{
-			  case '0':
-						value = 0;
-						break;
-			  case '1':
-						value = 1;
-						break;				
-			  case '2':
-						value = 2;
-						break;
-			  case '3':
-						value = 3;
-						break;	
-			  case '4':
-						value = 4;
-						break;
-			  case '5':
-						value = 5;
-						break;	
-			  case '6':
-						value = 6;
-						break;
-			  case '7':
-						value = 7;
-						break;	
-			  case '8':
-						value = 8;
-						break;
-			  case '9':
-						value = 9;
-						break;	
-			  case 'a':
-			  case 'A':					
-						value = 10;
-						break;
-			  case 'b':
-			  case 'B':					
-						value = 11;
-						break;	
-			  case 'c':
-			  case 'C':					
-						value = 12;
-						break;
-			  case 'd':
-			  case 'D':					
-						value = 13;
-						break;				
-			  case 'e':
-			  case 'E':					
-						value = 14;
-						break;
-			  case 'f':
-			  case 'F':					
-						value = 15;
-						break;		
-				default:						
-						printf("Not a ascii char!!!\r\n");
-						break;
-		}
-		return value;
+    if(ch < 0x30)
+        return 0xff;
+    else if(ch <= 0x39)  //字符 0-9
+        return (ch-0x30);
+    else if(ch < 0x41)
+        return 0xff;
+    else if(ch <= 0x46)  //字符 A-F
+        return (ch-0x37);
+    else if(ch < 0x61)
+        return 0xff;
+    else if(ch <= 0x66)  //字符 a-f
+        return (ch-0x57);
+    else
+        return 0xff;
 }
 /******************************************************************
 *	函数名：	ReverseArray
@@ -117,9 +67,7 @@ void ReverseArray(char *buf)//翻转数组
 {
     int i;
     char x;
-    int len =0;
-
-    len = strlen(buf);
+    int len = strlen(buf);
 
     for(i=0;i<len/2;i++)
     {
@@ -141,14 +89,7 @@ int bigdiv(char *diva,int lena,char *divb,int lenb)
 {
     int i=0,j=0,k=0,len=0;
     int yushu[2] = {0,0};
-		char result_tmp[BUFSIZ];//存储临时的商值，即进入strcmp循环的次数	
-		
-//		printf("lena = %d",lena);
-//		printf("   lenb = %d\r\n",lenb);
-//		puts(diva);
-//		printf("\r\ndiva\r\n");		
-//		puts(divb);
-//		printf("\r\ndivb\r\n");	
+		char result_tmp[BUFSIZ] = "";//存储临时的商值，即进入strcmp循环的次数	
 	
     memset(final,0,512);
     //死循环只有当lena和lenb相等时跳出循环，因为会不断的在divb数组前加0所以该数组的长度会不断的
@@ -486,6 +427,7 @@ void DecToHex(char *str,char *result)
 *******************************************************************/
 void Convert2address(char *buff)
 {
+		char Dec[BUFSIZ] = "";
 		printf("buff:%s\r\n",buff);
     HexToDec(buff,Dec);
 		printf("Dec:%s\r\n",Dec);

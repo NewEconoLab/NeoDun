@@ -6,10 +6,9 @@
 #include "Algorithm.h"
 
 //extern unsigned long timecount;
-uint8_t P_key[200];
-uint8_t result[128];
-uint8_t result1[128];
-extern uint8_t Digest[32];
+static uint8_t P_key[200];
+static uint8_t result1[128];
+//extern uint8_t Digest[32];
 
 /******************************************************************************/
 /******** Parameters for Elliptic Curve P-256 SHA-256 from FIPS 186-3**********/
@@ -50,22 +49,9 @@ const uint8_t P_256_Gy[] =
     0x0F, 0x9E, 0x16, 0x2B, 0xCE, 0x33, 0x57, 0x6B, 0x31, 0x5E, 0xCE, 0xCB, 0xB6,
     0x40, 0x68, 0x37, 0xBF, 0x51, 0xF5
   };
-	
-////用来测试的私钥数组，实际是由上位机传过来的
-//const uint8_t ecc_256_privkey[] = 
-//{
-//		0xf9,0x7b,0x74,0x34,0xff,0xa9,0x81,0xeb,0x80,0x9e,0xa6,0x79,0x5e,0x0c,0xb3,0x04,
-//		0x68,0x50,0xa6,0x5b,0xe2,0xf9,0xf6,0x7b,0x92,0x05,0x3f,0x6f,0x28,0x38,0xad,0xca
-//};
 
 //分配存储空间
 static uint8_t preallocated_buffer[ECC_STORE_SPACE]; 		
-
-//测试签名原文数组定义
-//uint8_t InputMessage_256[8*1024]; //8k
-//uint8_t InputMessage_256[16*1024];//16k
-//uint8_t InputMessage_256[32*1024] ; //32k
-
 /******************************************************************
 *	函数名：	 Alg_ECDSASignData
 *	函数说明：对输入的数据进行签名
@@ -87,24 +73,6 @@ int32_t Alg_ECDSASignData(uint8_t *dataIn,int dataInLen,uint8_t *dataOut,int *da
 	  Digest_Para digest1;
 	  Priv_Key_Para priv_key;	
 	
-//		//生成32k原文
-//		uint8_t j=0;
-//		for(i=0;i<32*1024;i++)
-//		{						
-//				InputMessage_256[i] = j;
-//				if(j == 0xff)				
-//						j = 0;				
-//				else
-//					j++;
-//		}
-	
-	
-//		printf("ECDSA签名过程开始！\r\n");
-//		printf("数据包的大小为：%d\r\n",dataInLen);
-		
-		
-//		TIM_Cmd(TIM3,ENABLE); //使能定时器3	
-
 		Crypto_DeInit();	
 		EC_paraTestInit(&EC, &pub_key, &sign, &inputMsg, &digest);
 	  inputMsg.input_msg = (uint8_t *)dataIn;
@@ -113,24 +81,6 @@ int32_t Alg_ECDSASignData(uint8_t *dataIn,int dataInLen,uint8_t *dataOut,int *da
 	  digest1.digt = result1;
 	  priv_key.priv = P_key;
     return_value = ECCKeyPairSignGenerate(&EC, &inputMsg, &digest1, &pub_key, &priv_key, &sign,PriveKEY);  //生成
-		
-//		TIM_Cmd(TIM3,DISABLE); //失能定时器3				
-		
-//		单片机验签过程，不需要		
-//		digest.digt = result;
-//		if (ECCSignVerify(&EC, &pub_key, &sign, &inputMsg, &digest) == AUTHENTICATION_SUCCESSFUL)  //认证
-//		{
-//				//认证成功
-//				printf("verify successful!\r\n");
-//		}
-//		else
-//		{
-//				//认证失败
-//				printf("verify fault!\r\n");				
-//		}		
-			
-		
-//		printf("签名花费时间为：%.2fms\r\n",timecount/100.00);
 
 		*dataoutLen = sign.sign_rSize + sign.sign_sSize;
 		for(i=0;i<(*dataoutLen)/2;i++)
@@ -138,10 +88,6 @@ int32_t Alg_ECDSASignData(uint8_t *dataIn,int dataInLen,uint8_t *dataOut,int *da
 				dataOut[i] = *(sign.sign_r+i);
 				dataOut[i+sign.sign_rSize] = *(sign.sign_s+i);
 		}
-		
-//		prinfInfo(&sign,&priv_key,&digest1);				
-//		printf("ECDSA签名过程结束！\r\n");	
-//		printf("return_value = %d\r\n",return_value);
 		return return_value;
 }
 

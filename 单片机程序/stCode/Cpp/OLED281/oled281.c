@@ -825,3 +825,113 @@ void Grayscale() {
 	Fill_Block(0x00, 0x3C, OLED_MAX_COLUMN, 0x00, OLED_MAX_ROW);
 }
 
+void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse)
+{
+		int x1,data,c,j;
+		switch (font)
+		{
+				case 0://FONT_5X8
+				{
+						x1 = x / 4;
+						c = num + 16;
+						if (x1 > 61) 
+						{
+								x = 0;
+								x1 = x / 4;
+								y = y + 8;
+						}  //换行
+						Set_Column_Address(0x1C + x1, 0x1C + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
+						Set_Row_Address(y, y + 7);
+						Set_Write_RAM();	 //	写显存
+
+						for (j = 0; j < 8; j++) 
+						{
+								data = ASC5X8[c * 8 + j];
+								Con_4_byte(isReverse ? ~data : data);	//数据转换
+						}
+						break;
+				}
+				case 1://FONT_6X12
+				{
+						x1 = x / 4;
+						c = num + 16;
+						if (x1 > 61) 
+						{
+							  x = 0;
+							  x1 = x / 4;
+							  y = y + 12;
+						}  //换行
+						Set_Column_Address(0x1C + x1, 0x1C + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
+						Set_Row_Address(y, y + 11);
+						Set_Write_RAM();	 //	写显存
+
+						for (j = 0; j < 12; j++) 
+						{
+								data = ASC6X12[c * 12 + j];
+								Con_4_byte(isReverse ? ~data : data);	//数据转换
+						}
+						break;
+				}
+				case 2://FONT_8X16
+				{
+						x1 = x / 4;
+						c = num + 16;
+						if (x1 > 61) 
+						{
+								x = 0;
+								x1 = x / 4;
+								y = y + 16;
+						}  //换行
+						Set_Column_Address(0x1C + x1, 0x1C + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
+						Set_Row_Address(y, y + 15);
+						Set_Write_RAM();	 //	写显存
+
+						for (j = 0; j < 16; j++) 
+						{
+								data = ASC8X16[c * 16 + j];
+								Con_4_byte(isReverse ? ~data : data);	//数据转换
+						}
+						break;
+				}
+				case 3://FONT_12X24
+				{
+						x1 = x / 4;
+						c = num + 16;
+						if (x1 > 59)
+						{
+								x = 0;
+								x1 = x / 4;
+								y = y + 24;
+						}  //换行
+						Set_Column_Address(0x1C + x1, 0x1C + x1 + 3); // 设置列坐标，shift为列偏移量由1322决定
+						Set_Row_Address(y, y + 23);
+						Set_Write_RAM();	 //	写显存
+
+						for (j = 0; j < 48; j++) 
+						{
+								data = ASC12X24[c * 48 + j];
+								Con_4_byte(isReverse ? ~data : data);	//数据转换
+						}
+						break;
+				}
+				case 4://FONT_20X40
+				{
+						x1 = x / 4;
+						c = num + 16;
+						Set_Column_Address(0x1C + x1, 0x1C + x1 + 5); // 设置列坐标，shift为列偏移量由1322决定
+						Set_Row_Address(y, y + 39);
+						Set_Write_RAM();	 //	写显存
+
+						for (j = 0; j < 120; j++) 
+						{
+								data = ASC20X40[c * 120 + j];
+								Con_4_byte(isReverse ? ~data : data);	//数据转换
+						}
+						break;
+				}
+				default:
+						break;
+		}
+
+}
+

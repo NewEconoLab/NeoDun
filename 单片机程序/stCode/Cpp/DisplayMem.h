@@ -59,7 +59,9 @@ public:
 	void drawInt(int x, int y, int num, FONT_t font,bool isReverse);
 	int drawNumber(int x, int y, long long num, int len,FONT_t font);
 	int drawxNumber(int x, int y, long long num, int len,FONT_t font);
-
+	int GetPassportArray(int *data);
+	void GetPassportFromString(u8 *data,int *src,u32 *desc);
+	
 };
 
 } /* namespace view */

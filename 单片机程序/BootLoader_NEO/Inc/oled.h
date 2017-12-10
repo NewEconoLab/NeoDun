@@ -68,14 +68,10 @@ void Asc5_8(unsigned char x,unsigned char y,unsigned char ch[]);
 void Asc6_12(unsigned char x,unsigned char y,unsigned char ch[]);
 void Asc8_16(unsigned char x,unsigned char y,unsigned char ch[]);
 void Asc12_24(unsigned char x,unsigned char y,unsigned char ch[]);
-void Asc20_40(unsigned char x,unsigned char y,unsigned char ch[]);
  //ÒÔÏÂºº×Ö³ÌĞò
-void HZ16_16( unsigned char x, unsigned char y, unsigned char num);
 void HZ12_12( unsigned char x, unsigned char y, unsigned char num);
-void HZ24_24( unsigned char x, unsigned char y, unsigned char num);
-void Show_HZ16_16(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2);
 void Show_HZ12_12(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2);
-void Show_HZ24_24(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2);
+
 
 void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse);
 

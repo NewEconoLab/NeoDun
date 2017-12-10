@@ -46,8 +46,9 @@
 .\obj\receiveanalysis.o: ..\..\Cpp\DisplayMem.h
 .\obj\receiveanalysis.o: ..\..\Cpp\triangle.h
 .\obj\receiveanalysis.o: ..\..\Cpp\main_define.h
-.\obj\receiveanalysis.o: ..\..\Algorithm\Algorithm.h
+.\obj\receiveanalysis.o: ..\..\Algorithm\stmflash.h
 .\obj\receiveanalysis.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\receiveanalysis.o: ..\..\Algorithm\Algorithm.h
 .\obj\receiveanalysis.o: ..\..\Algorithm\showsign.h
 .\obj\receiveanalysis.o: ..\..\Algorithm\encrypt.h
 .\obj\receiveanalysis.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

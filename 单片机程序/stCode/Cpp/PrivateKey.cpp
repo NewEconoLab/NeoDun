@@ -15,6 +15,7 @@ extern "C"{
 
 PrivateKey::PrivateKey(u8* _data) 
 {
+		memset(this->data,0,PrivateKey::KEY_SIZE);
 		memmove(this->data,_data,PrivateKey::KEY_SIZE);
 }
 

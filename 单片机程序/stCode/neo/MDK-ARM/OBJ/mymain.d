@@ -43,3 +43,7 @@
 .\obj\mymain.o: ..\..\Cpp\Utils.h
 .\obj\mymain.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\mymain.o: ..\..\Cpp\main_define.h
+.\obj\mymain.o: ..\..\Algorithm\stmflash.h
+.\obj\mymain.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\mymain.o: ..\..\Algorithm\Algorithm.h
+.\obj\mymain.o: ..\..\Algorithm\showsign.h

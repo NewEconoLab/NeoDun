@@ -81,7 +81,7 @@ void HZ24_24(unsigned char x, unsigned char y, unsigned char num);
 void Show_HZ16_16(unsigned char x, unsigned char y, unsigned char d,unsigned char num1, unsigned char num2);
 void Show_HZ12_12(unsigned char x, unsigned char y, unsigned char d,unsigned char num1, unsigned char num2);
 void Show_HZ24_24(unsigned char x, unsigned char y, unsigned char d,unsigned char num1, unsigned char num2);
-
+void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse);
 #endif  
 
 #ifdef __cplusplus

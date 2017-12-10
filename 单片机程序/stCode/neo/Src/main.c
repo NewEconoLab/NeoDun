@@ -36,27 +36,15 @@
 #include "stm32f4xx_hal.h"
 #include "usb_device.h"
 
-/* USER CODE BEGIN Includes */
-
 #include "usbd_customhid.h"
-
-
-/* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
-
 RNG_HandleTypeDef hrng;
-
 IWDG_HandleTypeDef hiwdg;
-
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart1;
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -69,60 +57,27 @@ static void MX_UART4_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
 
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* USER CODE BEGIN 0 */
-
 extern  void my_main(void);
-
-/* USER CODE END 0 */
 
 int main(void)
 {
-
-  /* USER CODE BEGIN 1 */
-//	SCB->VTOR = FLASH_BASE | 0x10000;//设置偏移量
-	
-  /* USER CODE END 1 */
-
-  /* MCU Configuration----------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_CRC_Init();
-  MX_RNG_Init();
-//  MX_IWDG_Init();	
-  MX_UART4_Init();			//指纹
-  MX_USART2_UART_Init();//蓝牙
-  MX_USART1_UART_Init();//打印
-  MX_USB_DEVICE_Init();
-
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
-		my_main();
-//		USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,(uint8_t*)"12",16);
-//		HAL_Delay(300);
+		SCB->VTOR = FLASH_BASE | 0x10000;//设置偏移量
 		
-  }
-  /* USER CODE END 3 */
+		HAL_Init();//设置中断优先级，中断分组2
+		SystemClock_Config();
+		MX_GPIO_Init();
+		MX_CRC_Init();
+		MX_RNG_Init();
+//  MX_IWDG_Init();	
+		MX_UART4_Init();			//指纹
+		MX_USART2_UART_Init();//蓝牙
+		MX_USART1_UART_Init();//打印
+		MX_USB_DEVICE_Init();
 
+		while (1)
+		{
+			my_main();
+		}
 }
 
 /** System Clock Configuration
@@ -314,6 +269,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+	//马达配置
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 }
 
 /* USER CODE BEGIN 4 */

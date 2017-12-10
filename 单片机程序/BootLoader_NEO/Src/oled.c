@@ -9,14 +9,9 @@
 #include "Asc5x8.h" 	   //ascii 5*8字库
 #include "Asc6x12.h" 	   //ascii 8*16字库
 #include "Asc8x16.h" 	   //ascii 8*16字库
-#include "Asc12x24.h" 	   //ascii 12*24字库
-#include "Asc20x40.h" 	   //ascii 20*40字库
+#include "Asc12x24.h" 	 //ascii 12*24字库
 //自定义汉字库
-#include "HZ12X12_S.h" 	   //12*12宋体自定义汉字库
-#include "HZ16X16_S.h" 	   //16*16宋体自定义汉字库
-#include "HZ24X24_S.h" 	   //24*24宋体自定义汉字库
-// #include "HZ24X24_H.h" 	   //24*24宋体自定义汉字库
-// #include "HZ24X24_K.h" 	   //24*24宋体自定义汉字库
+#include "HZ12X12_S.h" 	 //12*12宋体自定义汉字库
 
 
 //向SSD1325写入一个字节。
@@ -630,89 +625,6 @@ void Show_HZ12_12(unsigned char  x,unsigned char  y, unsigned char  d,unsigned c
   }
 }
 
-/***************************************************************
-//  显示16*16点阵汉字 2015-05晶奥测试通过
-//  取模方式为：横向取模左高位,数据排列:从左到右从上到下    16列 16行 
-//   num：汉字在字库中的位置
-//   x: Start Column  开始列 范围 0~（256-16）
-//   y: Start Row   开始行 0~63 
-***************************************************************/
-void HZ16_16( unsigned char x, unsigned char y, unsigned char num)
-{
-	unsigned char x1,j ;
-	x1=x/4; 
-	Set_Column_Address(Shift+x1,Shift+x1+3); // 设置列坐标，shift为列偏移量由1322决定。3为16/4-1
-	Set_Row_Address(y,y+15); 
-	Set_Write_RAM();	 //	写显存
-	 
-	for(j=0;j<32;j++)
-	{
-		 Con_4_byte(HZ16X16_S[num*32+j]);
-	}
-  
-		
-}	
-
-//****************************************************
-//   写入一串16*16汉字 www.lcdsoc.com
-//    num1,num2：汉字在字库中的位置	 从num1显示到num2
-//    x: Start Column  开始列 范围 0~（255-16）
-//    y: Start Row    开始行 0~63
-//    d:字间距离 0为无间距 
-//x坐标和字间距d要为4的倍数
-//*****************************************************
-void Show_HZ16_16(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2)
-{
-  unsigned char  i,d1;
-  d1=d+16;
-  for(i=num1;i<num2+1;i++)
-  {
-  HZ16_16(x,y,i);
-  x=x+d1;             
-  }
-}
-
-/***************************************************************
-//  显示24*24点阵汉字 2015-05晶奥测试通过
-//  取模方式为：横向取模左高位,数据排列:从左到右从上到下    24列 24行 
-//   num：汉字在字库中的位置
-//   x: Start Column  开始列 范围 0~（255-16）
-//   y: Start Row   开始行 0~63 
-***************************************************************/
-void HZ24_24( unsigned char x, unsigned char y, unsigned char num)
-{
-	unsigned char x1,j ;
-	x1=x/4; 
-	Set_Column_Address(Shift+x1,Shift+x1+5); // 设置列坐标，shift为列偏移量由1322决定。3为16/4-1
-	Set_Row_Address(y,y+23); 
-	Set_Write_RAM();	 //	写显存
-	 
-	for(j=0;j<72;j++)
-	{
-		 Con_4_byte(HZ24X24_S[num*72+j]);	//宋体24*24 ····如需要楷体24*24（HZ24X24_K.h） ,黑体24*24（HZ24X24_H.h）包含相应的头文件并修改此处数组名
-	}
- 		
-}	
-
-//****************************************************
-//   写入一串24*24汉字 www.lcdsoc.com
-//    num1,num2：汉字在字库中的位置	 从num1显示到num2
-//    x: Start Column  开始列 范围 0~（255-16）
-//    y: Start Row    开始行 0~63
-//    d:字间距离 0为无间距 
-//    x坐标和字间距d要为4的倍数
-//*****************************************************
-void Show_HZ24_24(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2)
-{
-  unsigned char  i,d1;
-  d1=d+24;
-  for(i=num1;i<num2+1;i++)
-  {
-  HZ24_24(x,y,i);
-  x=x+d1;             
-  }
-}
-
  //==============================================================
 //功能描述：写入一组标准ASCII字符串	 5x8
 //参数：显示的位置（x,y），ch[]要显示的字符串
@@ -824,35 +736,6 @@ void Asc12_24(unsigned char x,unsigned char y,unsigned char ch[])
 			   }
 	 i++;
 	 x=x+12;//字间距，12为最小	
-  }
-}
-
-//==============================================================
-//功能描述：写入一组标准ASCII字符串	 20x40	 256*64 只能显示一行
-//参数：显示的位置（x,y），ch[]要显示的字符串
-//返回：无
-//==============================================================  
-void Asc20_40(unsigned char x,unsigned char y,unsigned char ch[])
-{
-  unsigned char x1,c=0, i=0,j=0;      
-  while (ch[i]!='\0')
-  {    
-    x1=x/4;
-	c =ch[i]-32;
-   /* if(x1>10)
-	   {x=0;
-	   x1=x/4;
-	    }  //只能显示一行		*/														
-    Set_Column_Address(Shift+x1,Shift+x1+5); // 设置列坐标，shift为列偏移量由1322决定 
-	Set_Row_Address(y,y+39); 
-	Set_Write_RAM();	 //	写显存    
-  	
-		for(j=0;j<120;j++)
-	 		  {
-				 Con_4_byte(ASC20X40[c*120+j]);	//数据转换
-			   }
-	 i++;
-	 x=x+20;//字间距，20为最小	
   }
 }
 
@@ -980,21 +863,6 @@ void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigne
 						for (j = 0; j < 48; j++) 
 						{
 								data = ASC12X24[c * 48 + j];
-								Con_4_byte(isReverse ? ~data : data);	//数据转换
-						}
-						break;
-				}
-				case 4://FONT_20X40
-				{
-						x1 = x / 4;
-						c = num + 16;
-						Set_Column_Address(0x1C + x1, 0x1C + x1 + 5); // 设置列坐标，shift为列偏移量由1322决定
-						Set_Row_Address(y, y + 39);
-						Set_Write_RAM();	 //	写显存
-
-						for (j = 0; j < 120; j++) 
-						{
-								data = ASC20X40[c * 120 + j];
 								Con_4_byte(isReverse ? ~data : data);	//数据转换
 						}
 						break;
