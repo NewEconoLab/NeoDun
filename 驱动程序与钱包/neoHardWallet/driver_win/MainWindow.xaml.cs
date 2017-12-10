@@ -249,7 +249,6 @@ namespace driver_win
 
             var addbytes = add.GetAddbytes();
 
-
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x02;
             msg.tag2 = 0x0a;//签

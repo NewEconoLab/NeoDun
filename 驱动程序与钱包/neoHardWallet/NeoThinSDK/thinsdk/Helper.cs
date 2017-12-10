@@ -40,6 +40,26 @@ namespace NEO.AllianceOfThinWallet.Cryptography
             return privateKey;
         }
 
+        public static string GetWifFromPrivateKey(byte[] privateKey)
+        {
+            if(privateKey.Length== 0) throw new ArgumentNullException();
+            byte[] data = new byte[38];
+            data[0] = 0x80;
+            Buffer.BlockCopy(privateKey, 0, data, 1, privateKey.Length);
+            data[33] = 0x01;
+
+            byte[] realdata = data.Take(data.Length - 4).ToArray();
+
+            byte[] checksum = sha256.ComputeHash(realdata);
+            checksum = sha256.ComputeHash(checksum);
+            byte[] sumcalc = checksum.Take(4).ToArray();
+
+            Buffer.BlockCopy(sumcalc, 0, data, 34, sumcalc.Length);
+
+            string wif = Base58.Encode(data);
+            return wif;
+        }
+
         public static byte[] GetPublicKeyFromPrivateKey(byte[] privateKey)
         {
             var PublicKey = ECC.ECCurve.Secp256r1.G * privateKey;

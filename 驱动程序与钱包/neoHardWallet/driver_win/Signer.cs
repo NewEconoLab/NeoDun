@@ -66,7 +66,7 @@ namespace NeoDun
         public delegate void ConfirmPasswordEventHandler(bool _suc);
         public ConfirmPasswordEventHandler confirmPasswordEventHandler;
 
-        public delegate void AddAddressEventHandler();
+        public delegate void AddAddressEventHandler(bool _suc);
         public AddAddressEventHandler addAddressEventHandler;
 
         public delegate void GetAddressListEventHandler();
@@ -77,6 +77,12 @@ namespace NeoDun
 
         public delegate void BackUpAddressEventHandler(string _privateKey);
         public BackUpAddressEventHandler backUpAddressEventHandler;
+
+        public delegate void SignEventHandler(byte[] _bytes);
+        public SignEventHandler signEventHandler;
+
+        public delegate void ShowSignerPasswordPageEventHandler();
+        public ShowSignerPasswordPageEventHandler showSignerPasswordPageEventHandler;
 
         public WatcherColl watcherColl = new WatcherColl();
 
@@ -119,6 +125,7 @@ namespace NeoDun
                         Message msg = null;
                         if (msgForSend.TryDequeue(out msg))
                         {
+                            //Console.WriteLine("123"+msg);
                             msg.ToData(data);
                             DriverS.Send(data);
 
@@ -253,7 +260,8 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
                     _new = true;
-                    getAddressListEventHandler();
+                    if(getAddressListEventHandler != null)
+                        getAddressListEventHandler();
                     //var count = msg.readUInt16(0);
                     //if (count == 0 && addressPool.addresses.Count != 0)
                     //{
@@ -275,11 +283,18 @@ namespace NeoDun
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xb1)
                 {
-                    addAddressEventHandler();
+                    if(addAddressEventHandler!=null)
+                        addAddressEventHandler(true);
+                }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xb2)
+                {
+                    if (addAddressEventHandler != null)
+                        addAddressEventHandler(false);
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc1)
                 {
-                    delAddressEventHandler();
+                    if(delAddressEventHandler!=null)
+                        delAddressEventHandler();
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
@@ -299,22 +314,26 @@ namespace NeoDun
                     byte privatekeylen = outdata[0];
                     byte[] privatekey = new byte[privatekeylen];
                     Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
-                    backUpAddressEventHandler(NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length));
+                    if(backUpAddressEventHandler!=null)
+                        backUpAddressEventHandler(NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length));
                     
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc3)//设置密码成功
                 {
-                    setPasswordEventHandler();
+                    if(setPasswordEventHandler!=null)
+                        setPasswordEventHandler();
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc5)//密码验证成功
                 {
-                    confirmPasswordEventHandler(true);
+                    if(confirmPasswordEventHandler!=null)
+                        confirmPasswordEventHandler(true);
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc6)//密码验证失败
                 {
-                    confirmPasswordEventHandler(false);
+                    if(confirmPasswordEventHandler!=null)
+                        confirmPasswordEventHandler(false);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xd3)
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xd1)
                 {
                     Console.WriteLine("msg:"+ msg);
                     MyJson.JsonNode_Object myjson = new MyJson.JsonNode_Object();
@@ -325,8 +344,15 @@ namespace NeoDun
                     myjson["删除地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(8));
                     myjson["备份地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(10));
                     myjson["备份钱包时进行是否要加密"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(12));
-                    getSingerInfoEventHandler(myjson);
+                    if (getSingerInfoEventHandler != null)
+                    {
+                        Console.WriteLine("收到签名机的消息并准备执行");
+                        getSingerInfoEventHandler(myjson);
+                    }
 
+                }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xd3)
+                {
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd4)
                 {
@@ -348,8 +374,14 @@ namespace NeoDun
                             break;
                         }
                     }
-
+                    if(signEventHandler!=null)
+                        signEventHandler(outdata);
                 }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe1)
+                {
+                    showSignerPasswordPageEventHandler();
+                }
+
             });
             watcherColl.OnRecv(msg, srcmsg);
             //if (userHandleRecv != null)

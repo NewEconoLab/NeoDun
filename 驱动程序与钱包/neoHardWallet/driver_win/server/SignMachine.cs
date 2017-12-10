@@ -52,7 +52,7 @@ namespace hhgate
             }
             else if (relativePath == "listaddress")
             {
-                var signer = driver_win.MainWindow.signer;
+                var signer = NeoDun.Signer.Ins;
                 MyJson.JsonNode_Object jsonr = new MyJson.JsonNode_Object();
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(0);
                 MyJson.JsonNode_Array adds = new MyJson.JsonNode_Array();
@@ -72,7 +72,8 @@ namespace hhgate
             }
             else if (relativePath == "sign")
             {
-                driver_win.DriverCtr.Ins.Sign(context, formdata);
+                //await sign(context, formdata);
+                await driver_win.DriverCtr.Ins.Sign(context, formdata);
                 return;
             }
             else if (relativePath == "addaddress")
@@ -154,6 +155,7 @@ namespace hhgate
                 return;
             }
             var src = formdata.mapParams["source"];
+
             var data = NeoDun.SignTool.HexString2Bytes(formdata.mapParams["data"]);
             var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
             var hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
@@ -170,12 +172,14 @@ namespace hhgate
             {
                 await Task.Delay(5);
                 var __block = signer.dataTable.getBlockBySha256(hashstr);
+                //Console.WriteLine("__block.dataidRemote:" + __block.dataidRemote);
                 if (__block.dataidRemote > 0 && __block.Check())
                 {
                     remoteid = __block.dataidRemote;
                     break;
                 }
             }
+            Console.WriteLine(22222222222222);
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);//加入监视器
 
@@ -229,6 +233,7 @@ namespace hhgate
             json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
             json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
 
+            Console.WriteLine(json.ToString());
             await context.Response.WriteAsync(json.ToString());
 
             signer.watcherColl.RemoveWatcher(watcher);

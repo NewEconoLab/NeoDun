@@ -22,7 +22,7 @@ namespace driver_win
         Address selectAddress = new Address();
         //缓存住的密码 
         string str_password = "";
-
+        string str_password2 = "";
         public WindowDriver()
         {
             InitializeComponent();
@@ -88,7 +88,8 @@ namespace driver_win
             //将点击的按钮对应成数字 a对应1
             int i = (int)button.Name[0] - 96;
             str_password += i.ToString();
-
+            str_password2 += " * ";
+            this.pwLabel.Content = str_password2;
             if (str_password.Length < 6)
             {
                 return;
@@ -96,6 +97,7 @@ namespace driver_win
             driverCtr.SetOrConfirmPassword(str_password);
             //清空缓存住的选择的密码
             str_password = "";
+            str_password2 = "";
         }
         //点击备份
         private void Backup_click(object sender, RoutedEventArgs e)
@@ -105,6 +107,8 @@ namespace driver_win
         //删除地址
         private void DeleteAddress_click(object sender, RoutedEventArgs e)
         {
+            if (selectAddress == null)
+                return;
             string str_addressType = selectAddress.type.ToString();
             string str_addressText = selectAddress.AddressText;
             if (string.IsNullOrEmpty(str_addressType) || string.IsNullOrEmpty(str_addressText))
@@ -113,6 +117,7 @@ namespace driver_win
                 return;
             }
             DeleteAddress();
+            selectAddress = null;
         }
         //隐藏消息框
         private void HideMessagePage_click(object sender, RoutedEventArgs e)
@@ -141,7 +146,7 @@ namespace driver_win
         //关闭所有页面
         private void HideAllPage()
         {
-            this.btn_relink.Visibility = Visibility.Collapsed;
+            //this.btn_relink.Visibility = Visibility.Collapsed;
             this.label_unlink.Visibility = Visibility.Collapsed;
             this.listBox.Visibility = Visibility.Collapsed;
             this.addBox.Visibility = Visibility.Collapsed;
@@ -252,6 +257,7 @@ namespace driver_win
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            UInit();
             signer.Stop();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -264,7 +270,6 @@ namespace driver_win
 
             //检测钱包有没有断开连接
         }
-
 
         private void Init()
         {
@@ -280,6 +285,10 @@ namespace driver_win
             driverCtr.setPasswordEventHandlerCallBack += NeedConfirmPassword;
             driverCtr.confirmPasswordfaildEventHandlerCallBack += ConfirmPasswordCallBack;
             driverCtr.privateKey2AddressEventHandlerCallBack += PrivateKey2AddressCallBack;
+            driverCtr.errorEventHandlerCallBack += ErrorMsgShow;
+
+            hhgate.CustomServer.BeginServer();
+
             //打开驱动页面后尝试连接签名机
             LinkSinger();
             UnActiveButton();
@@ -295,7 +304,14 @@ namespace driver_win
             driverCtr.confirmResetPasswordEventHandlerCallBack -= NeedConfirmPassword;
             driverCtr.setPasswordEventHandlerCallBack -= NeedConfirmPassword;
             driverCtr.confirmPasswordfaildEventHandlerCallBack -= ConfirmPasswordCallBack;
+            driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;
             driverCtr.privateKey2AddressEventHandlerCallBack -= PrivateKey2AddressCallBack;
+        }
+
+        private void ClearCache()
+        {
+            this.addresslist.Items.Clear();
+            str_password = "";
         }
 
         //连接签名机
@@ -303,19 +319,24 @@ namespace driver_win
         {
             driverCtr.LinkSinger();
         }
-        private void LinkSingerCallBack(string _label, Visibility _isShow)
+        private void LinkSingerCallBack(string _label, Visibility _isShow,bool _islink)
         {
             this.isLink.Content = _label;
             this.btn_relink.Visibility = _isShow;
+            if (!_islink)
+            {
+                HideAllPage();
+                ClearCache();
+            }
         }
 
         //获取签名机配置回掉
         private void GetSingerInfoCallBack(string _str, MyJson.JsonNode_Object myjson)
         {
             Dispatcher.Invoke((Action)delegate () {
-                this.pwLabel.Content = _str;
+                //this.pwLabel.Content = _str;
                 //显示密码验证的页面
-                ShowPwPage();
+                //ShowPwPage();
                 this.c3.IsChecked = myjson["新增地址时是否要密码验证"] as MyJson.JsonNode_ValueNumber;
                 this.c4.IsChecked = myjson["删除地址是否要密码验证"] as MyJson.JsonNode_ValueNumber;
                 this.c5.IsChecked = myjson["备份地址是否要密码验证"] as MyJson.JsonNode_ValueNumber;
@@ -385,10 +406,12 @@ namespace driver_win
         {
             driverCtr.AddAddress(this.lb_address.Text, this.tx_privateKey.Text);
         }
-        private void AddAddressCallBack()
+        private void AddAddressCallBack(bool _suc)
         {
             Dispatcher.Invoke((Action) delegate()
             {
+                if (!_suc)
+                    MessageBox.Show("已经拥有该地址或数据非法","通知");
                 //隐藏增加地址的页面
                 HideAddBox();
             });
@@ -409,6 +432,8 @@ namespace driver_win
         //备份密钥
         private void BackUpPrivateKey()
         {
+            if (selectAddress == null)
+                return;
             string str_addressType = selectAddress.type.ToString();
             string str_addressText = selectAddress.AddressText;
             if (string.IsNullOrEmpty(str_addressType) || string.IsNullOrEmpty(str_addressText))
@@ -417,6 +442,7 @@ namespace driver_win
                 return;
             }
             driverCtr.BackUpAddress(str_addressType, str_addressText);
+            selectAddress = null;
         }
         private void BackUpPrivateKeyCallBack()  //把从签名机要到的私钥备份到本地
         {
@@ -438,7 +464,10 @@ namespace driver_win
             
         }
 
-
+        private void ErrorMsgShow(string msg ,string header)
+        {
+            MessageBox.Show(msg, header);
+        }
 
         private void DevelopingFun(object sender, RoutedEventArgs e)
         {

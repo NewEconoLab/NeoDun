@@ -97,7 +97,10 @@ namespace NeoDun
         {
             return NEO.AllianceOfThinWallet.Cryptography.Helper.GetPrivateKeyFromWIF(_wif);
         }
-
+        public static string GetWifFromPrivateKey(byte[] _privatekey)
+        {
+            return NEO.AllianceOfThinWallet.Cryptography.Helper.GetWifFromPrivateKey(_privatekey);
+        }
         public static byte[] GetPublicKeyFromPrivateKey(byte[] privateKey)
         {
             return NEO.AllianceOfThinWallet.Cryptography.Helper.GetPublicKeyFromPrivateKey(privateKey);

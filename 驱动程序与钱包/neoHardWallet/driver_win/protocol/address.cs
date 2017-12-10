@@ -210,7 +210,12 @@ namespace NeoDun
             }
             else
             {
-                Console.WriteLine("personalInfo.sim.save.txt is null");
+                MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+                json["username"] = new MyJson.JsonNode_ValueString("");
+                json["password"] = new MyJson.JsonNode_ValueString("");
+                json["setting"] = new MyJson.JsonNode_ValueString("1, 0, 0, 1, 1, 1, 0");
+                System.IO.File.WriteAllText("personalInfo.sim.save.txt", json.ToString());
+                Load();
             }
         }
     }

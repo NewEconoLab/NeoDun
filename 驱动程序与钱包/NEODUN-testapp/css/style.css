@@ -1,0 +1,187 @@
+/*
+ * Style tweaks
+ * --------------------------------------------------
+ */
+
+html,
+body {
+    overflow-x: hidden;
+    /* Prevent scroll on narrow devices */
+}
+
+body {
+    padding-top: 70px;
+}
+
+footer {
+    padding: 30px 0;
+}
+
+* {
+    /* -moz-user-select: -moz-none; */
+    /* -moz-user-select: none; */
+    /* -o-user-select: none; */
+    /* -khtml-user-select: none; */
+    -webkit-user-select: none;
+    /* -ms-user-select: none; */
+    /* user-select: none; */
+}
+
+input {
+    -webkit-user-select: auto;
+    /*webkit浏览器*/
+}
+
+.copy {
+    -webkit-user-select: auto;
+}
+
+.loading {
+    width: 160px;
+    height: 56px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    line-height: 56px;
+    color: #fff;
+    padding-left: 60px;
+    font-size: 15px;
+    background: #000 url(../img/loader.gif) no-repeat 10px 50%;
+    opacity: 0.7;
+    z-index: 9999;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    filter: progid: DXImageTransform.Microsoft.Alpha(opacity=70);
+}
+
+.prompt {
+    display: none;
+}
+
+.danger {}
+
+.danger .input-hint {
+    border: 1px solid red;
+}
+
+.danger .prompt {
+    -webkit-text-fill-color: red;
+    -webkit-text-stroke-color: red;
+    display: block;
+}
+
+.startLoading {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+}
+
+.navbar-default .navbar-brand {
+    color: aliceblue;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: aliceblue;
+}
+
+
+/* phone */
+
+@media screen and (min-width: 320px) and (max-width: 480px) {}
+
+
+/* pad */
+
+@media only screen and (min-width: 321px) and (max-width: 1024px) {}
+
+
+/* pc */
+
+@media only screen and (min-width: 1029px) {
+    .container {
+        width: 50%;
+    }
+}
+
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+
+@media screen and (max-width: 767px) {
+    .row-offcanvas {
+        position: relative;
+        -webkit-transition: all .25s ease-out;
+        -o-transition: all .25s ease-out;
+        transition: all .25s ease-out;
+    }
+    .row-offcanvas-right {
+        right: 0;
+    }
+    .row-offcanvas-left {
+        left: 0;
+    }
+    .row-offcanvas-right .sidebar-offcanvas {
+        right: -50%;
+        /* 6 columns */
+    }
+    .row-offcanvas-left .sidebar-offcanvas {
+        left: -50%;
+        /* 6 columns */
+    }
+    .row-offcanvas-right.active {
+        right: 50%;
+        /* 6 columns */
+    }
+    .row-offcanvas-left.active {
+        left: 50%;
+        /* 6 columns */
+    }
+    .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 50%;
+        /* 6 columns */
+    }
+}
+
+
+/*字体图标 neo*/
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.eot?4rygy9');
+    src: url('../fonts/icomoon.eot?4rygy9#iefix') format('embedded-opentype'), url('../fonts/icomoon.ttf?4rygy9') format('truetype'), url('../fonts/icomoon.woff?4rygy9') format('woff'), url('../fonts/icomoon.svg?4rygy9#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-neo:before {
+    content: "\e900";
+}

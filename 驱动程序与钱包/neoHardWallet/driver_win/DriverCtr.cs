@@ -54,6 +54,8 @@ namespace driver_win
             signer.getAddressListEventHandler += GetAddressCallBack;
             signer.delAddressEventHandler += DeleteAddressCallBack;
             signer.backUpAddressEventHandler += BackUpAddressCallBack;
+            signer.signEventHandler += ConfirmSignCallBack;
+            signer.showSignerPasswordPageEventHandler += ShowSignerPasswordPageCallBack;
         }
 
         private void UInit()
@@ -65,9 +67,23 @@ namespace driver_win
             signer.getAddressListEventHandler -= GetAddressCallBack;
             signer.delAddressEventHandler -= DeleteAddressCallBack;
             signer.backUpAddressEventHandler -= BackUpAddressCallBack;
+            signer.signEventHandler -= ConfirmSignCallBack;
+            signer.showSignerPasswordPageEventHandler -= ShowSignerPasswordPageCallBack;
+
         }
 
+
+        public delegate void ErrorEventHandlerCallBack(string msg, string header);
+        public event ErrorEventHandlerCallBack errorEventHandlerCallBack;
+        private  void ErrorCallBack(string msg,string header)
+        {
+            if (errorEventHandlerCallBack != null)
+                errorEventHandlerCallBack(msg, header);
+        }
+
+
         #region 连接签名机
+        bool _islinking = false;
         public void LinkSinger(int count = 5,int time=5)
         {
             int _count = count;
@@ -78,17 +94,19 @@ namespace driver_win
                 _time--;
                 if (_count <= 0)
                 {
+                    _islinking = false;
                     //显示未连接 
                     timer.Stop();
                     timer = null;
-                    LinkCallBack("未连接",System.Windows.Visibility.Visible);
+                    LinkCallBack("未连接",System.Windows.Visibility.Visible,false);
                 }
                 else if (_time < 0)
                 {
+                    _islinking = false;
                     //显示重连失败
                     _count--;
                     _time = time;
-                    LinkCallBack("连接失败", System.Windows.Visibility.Collapsed);
+                    LinkCallBack("连接失败", System.Windows.Visibility.Collapsed,false);
                     await Task.Delay(2000);
                 }
                 else
@@ -96,27 +114,34 @@ namespace driver_win
                     //显示重连中
                     if (signer.CheckDevice() > 0)//有签名机连接了
                     {
-                        timer.Stop();
-                        timer = null;
-                        LinkCallBack("连接成功",System.Windows.Visibility.Collapsed);
+                        _time = time;
+                        //timer.Stop();
+                        //timer = null;
+                        LinkCallBack("连接成功",System.Windows.Visibility.Collapsed,true);
 
-                        //连接成功后去请求签名机的状态
-                        GetSingerInfo();
+
+                        //只在第一次连接的时候    连接成功后去请求签名机的状态
+                        if (!_islinking)
+                        {
+                            GetSingerInfo();
+                        }
                     }
                     else
                     {
-                        LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed);
+                        _islinking = false;
+                        LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed,false);
                         await Task.Delay(1000);
                     }
                 }
             });
             timer.Start();
         }
-        public delegate void LinkSingerEventHandlerCallBack(string str ,System.Windows.Visibility visibility);
+        public delegate void LinkSingerEventHandlerCallBack(string str ,System.Windows.Visibility visibility,bool _islink);
         public event LinkSingerEventHandlerCallBack linkSingerEventHandlerCallBack;
-        public void LinkCallBack(string str, System.Windows.Visibility visibility)
+        public void LinkCallBack(string str, System.Windows.Visibility visibility,bool _islink)
         {
-            linkSingerEventHandlerCallBack(str, visibility);
+            if(linkSingerEventHandlerCallBack != null)
+                linkSingerEventHandlerCallBack(str, visibility, _islink);
         }
         #endregion
 
@@ -127,20 +152,25 @@ namespace driver_win
             signMsg.tag1 = 0x02;
             signMsg.tag2 = 0x1b;
             signMsg.msgid = NeoDun.SignTool.RandomShort();
+            Console.WriteLine("开始发送获取信息");
             signer.SendMessage(signMsg, true);
         }
         public delegate void GetSingerInfoEventHandlerCallBack(string _str,MyJson.JsonNode_Object myjson);
         public event GetSingerInfoEventHandlerCallBack getSiggerInfoEventHandlerCallBack;
         public void getSingerInfoCallBack(MyJson.JsonNode_Object _json)
         {
+            _islinking = true;
+
             json_setting = _json;
             if (_json["是否是新设备"] as MyJson.JsonNode_ValueNumber)
             {
                 getSiggerInfoEventHandlerCallBack("检测到插入的钱包是新设备，请初始化钱包的密码", _json);
+                isNeedConfirmPasswordCallBack("检测到插入的钱包是新设备，请初始化钱包的密码");
             }
             else
             {
                 getSiggerInfoEventHandlerCallBack("请输入你的密码", _json);
+                isNeedConfirmPasswordCallBack("请输入你的密码(6位)");
                 //json_setting = MyJson.Parse(_str) as MyJson.JsonNode_Object;
             }
         }
@@ -161,10 +191,21 @@ namespace driver_win
 
         public delegate void IsNeedConfirmPasswordEventHandlerCallBack(string _str);
         public event IsNeedConfirmPasswordEventHandlerCallBack isNeedConfirmPasswordEventHandlerCallBack;
+        private string pwLabel ="";
         public void isNeedConfirmPasswordCallBack(string _str="请输入你的密码")
         {
-            isNeedConfirmPasswordEventHandlerCallBack(_str);
+            pwLabel = _str;
+            NeoDun.Message signMsg = new NeoDun.Message();
+            signMsg.tag1 = 0x02;
+            signMsg.tag2 = 0x1c;
+            signMsg.msgid = NeoDun.SignTool.RandomShort();
+            signer.SendMessage(signMsg, true);
         }
+        public void ShowSignerPasswordPageCallBack()
+        {
+            isNeedConfirmPasswordEventHandlerCallBack(pwLabel);
+        }
+
         #endregion
 
         #region 上报签名机驱动的新设置
@@ -193,25 +234,37 @@ namespace driver_win
         #endregion
 
         #region 密码的验证和设置
+        private bool pwlock = false;
         public void SetOrConfirmPassword(string str_password)
         {
             if (json_setting["是否是新设备"] as MyJson.JsonNode_ValueNumber == true)
             {
+                if (pwlock)
+                {
+                    ErrorCallBack("正在执行，请勿重复操作","通知");
+                    return;
+                }
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += GetSingerInfo;
 
-                //byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+                byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
 
                 NeoDun.Message signMsg = new NeoDun.Message();
                 signMsg.tag1 = 0x02;
                 signMsg.tag2 = 0x0b;//设置密码
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
-                signMsg.writeUInt16(0, (UInt16)str_password.Length);
-                signMsg.writeHash256(2, str_password);
+                signMsg.writeUInt16(0, (UInt16)bytes_password.Length);
+                Array.Copy(bytes_password, 0, signMsg.data, 2, bytes_password.Length);
                 signer.SendMessage(signMsg, true);
+                pwlock = true;
             }
             else
             { //向钱包验证密码
+                if (pwlock)
+                {
+                    ErrorCallBack("正在执行，请勿重复操作", "通知");
+                    return;
+                }
                 if (confirmPasswordEventHandlerCallBack == null)
                 {//设置验证密码默认做的是获得地址
                     confirmPasswordEventHandlerCallBack += GetAddressList;
@@ -225,6 +278,7 @@ namespace driver_win
                 signMsg.writeUInt16(0, (UInt16)bytes_password.Length);
                 Array.Copy(bytes_password, 0, signMsg.data, 2, bytes_password.Length);
                 signer.SendMessage(signMsg, true);
+                pwlock = true;
             }
         }
 
@@ -233,18 +287,21 @@ namespace driver_win
         public event SetPasswordEventHandlerCallBack setPasswordEventHandlerCallBack;
         public void SetPasswordCallBack()
         {
+            pwlock = false;
             json_setting["是否是新设备"] = new MyJson.JsonNode_ValueNumber(false);
             confirmPasswordEventHandlerCallBack = null;
-            setPasswordEventHandlerCallBack("请输入你的密码");
+            setPasswordEventHandlerCallBack("请输入你的密码(6位)");
         }
         //验证密码成功
         public delegate void ConfirmPasswordEventHandlerCallBack();
         public event ConfirmPasswordEventHandlerCallBack confirmPasswordEventHandlerCallBack;//密码验证成功之后要做的事情
         public event ConfirmPasswordEventHandlerCallBack confirmPasswordfaildEventHandlerCallBack;//密码验证失败之后要做的事情
-        public void ConfirmPasswordCallBack(bool _suc)
+        public async void ConfirmPasswordCallBack(bool _suc)
         {
+            pwlock = false;
             if (_suc)
             {
+                await Task.Delay(50);
                 confirmPasswordEventHandlerCallBack();
                 confirmPasswordEventHandlerCallBack = null;
             }
@@ -258,14 +315,14 @@ namespace driver_win
         #region 增加地址
         public delegate void PrivateKey2AddressEventHandlerCallBack(string privateKey,string address,string err);
         public event PrivateKey2AddressEventHandlerCallBack privateKey2AddressEventHandlerCallBack;
-        public void PrivateKey2Address_FromText(string _str)
+        public void PrivateKey2Address_FromText(string _wif)
         {
             try
             {
-                byte[] privateKey = NeoDun.SignTool.HexString2Bytes(_str);
+                byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_wif);
                 byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
                 string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
-                privateKey2AddressEventHandlerCallBack(_str, str_address, "添加成功");
+                privateKey2AddressEventHandlerCallBack(_wif, str_address, "添加成功");
             }
             catch
             {
@@ -280,11 +337,11 @@ namespace driver_win
                 dialog.Filter = "文本文件|*.txt";
                 if (dialog.ShowDialog() == true)
                 {
-                    string str_privateKey = System.IO.File.ReadAllText(dialog.FileName);
-                    byte[] privateKey = NeoDun.SignTool.HexString2Bytes(str_privateKey);
+                    string _wif = System.IO.File.ReadAllText(dialog.FileName);
+                    byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_wif);
                     byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
                     string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
-                    privateKey2AddressEventHandlerCallBack(str_privateKey, str_address, "");
+                    privateKey2AddressEventHandlerCallBack(_wif, str_address, "");
                 }
                 else
                 {
@@ -300,13 +357,13 @@ namespace driver_win
 
 
         private string str_address;
-        private string str_privateKey;
+        private byte[] str_privateKey;
         public void AddAddress(string _address,string _privateKey)
         {
             if (string.IsNullOrEmpty(_address) || string.IsNullOrEmpty(_privateKey))
                 return;
             str_address = _address;
-            str_privateKey = _privateKey;
+            str_privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_privateKey);
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.新增地址时是否要密码验证))
             {
                 //需要密码验证
@@ -324,23 +381,30 @@ namespace driver_win
             string str_addressType = "Neo";
             UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), str_addressType);
             byte[] bytes_address = NeoDun.SignTool.DecodeBase58(str_address);
-            byte[] privateKey = NeoDun.SignTool.HexString2Bytes(str_privateKey);
-            byte[] hash = NeoDun.SignTool.ComputeSHA256(privateKey, 0, privateKey.Length);
+            //byte[] privateKey = NeoDun.SignTool.HexString2Bytes(str_privateKey);
+            byte[] hash = NeoDun.SignTool.ComputeSHA256(str_privateKey, 0, str_privateKey.Length);
             string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
 
-            NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)privateKey.Length, NeoDun.DataBlockFrom.FromDriver);
-            block.data = privateKey;
+            NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)str_privateKey.Length, NeoDun.DataBlockFrom.FromDriver);
+            block.data = str_privateKey;
             signer.SendDataBlock(block);
             //轮询等待发送完成，需要加入超时机制
             uint remoteid = 0;
+            uint time = 0;
             while (true)
             {
                 await Task.Delay(5);
+                time += 5;
                 var __block = signer.dataTable.getBlockBySha256(str_hash);
                 if (__block.dataidRemote > 0 && __block.Check())
                 {
                     remoteid = __block.dataidRemote;
                     break;
+                }
+                //if (time > 5000)
+                {
+                    //errorEventHandlerCallBack("超时","通知");
+                //    break;
                 }
             }
             NeoDun.Message signMsg = new NeoDun.Message();
@@ -353,14 +417,14 @@ namespace driver_win
             signMsg.writeUInt32(42, remoteid);
             signer.SendMessage(signMsg, true);
         }
-        public delegate void AddAddressEventHandlerCallBack();
+        public delegate void AddAddressEventHandlerCallBack(bool _suc);
         public event AddAddressEventHandlerCallBack addAddressEventHandlerCallBack;
-        public void AddAddressCallBack()
+        public void AddAddressCallBack(bool _suc)
         {
             if (addAddressEventHandlerCallBack != null)
             {
                 confirmPasswordEventHandlerCallBack = null;
-                addAddressEventHandlerCallBack();
+                addAddressEventHandlerCallBack(_suc);
             }
 
             //重新获取一次地址
@@ -464,8 +528,9 @@ namespace driver_win
         public event BackUpAddressEventHandlerCallBack backUpAddressEventHandlerCallBack;
         public void BackUpAddressCallBack(string _privateKey)
         {
+            string wif = NeoDun.SignTool.GetWifFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey));
             confirmPasswordEventHandlerCallBack = null;
-            System.IO.File.WriteAllText("backup.sim.save.txt", _privateKey);
+            System.IO.File.WriteAllText("backup.sim.save.txt", wif);
             backUpAddressEventHandlerCallBack();
             GetAddressList();
         }
@@ -496,19 +561,10 @@ namespace driver_win
 
 
         #region  签名 sign   -------后面改
-        static IOwinContext context;
-        static FormData formdata;
         string hashstr;
-        public void Sign(IOwinContext _context, FormData _formdata)
-        {
-            context = _context;
-            formdata = _formdata;
-            //需要密码验证
-            isNeedConfirmPasswordCallBack();
-            confirmPasswordEventHandlerCallBack = null;
-            confirmPasswordEventHandlerCallBack += ConfirmSign;
-        }
-        private async void ConfirmSign()
+        byte[] outdata;
+        bool isgetdata=false;
+        public async Task Sign(IOwinContext context, FormData formdata)
         {
             if (formdata.mapParams.ContainsKey("data") == false
                 || formdata.mapParams.ContainsKey("source") == false)
@@ -517,11 +573,25 @@ namespace driver_win
                 return;
             }
             var src = formdata.mapParams["source"];
+            Console.WriteLine(src);
+            Console.WriteLine(formdata.mapParams["data"]);
             var data = NeoDun.SignTool.HexString2Bytes(formdata.mapParams["data"]);
             var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
             hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
 
-            var signer = driver_win.MainWindow.signer;
+            isgetdata = false;
+            confirmPasswordEventHandlerCallBack = null;
+            confirmPasswordEventHandlerCallBack += ConfirmSign;
+            isNeedConfirmPasswordCallBack("您正在进行签名验证，请输入你的密码");
+            while (true)
+            {
+                await Task.Delay(50);
+                if (isgetdata)
+                {
+                    break;
+                }
+            }
+
             {//发送待签名数据块
                 var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
                 block.data = data;
@@ -539,6 +609,7 @@ namespace driver_win
                     break;
                 }
             }
+
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);//加入监视器
 
@@ -547,7 +618,6 @@ namespace driver_win
             {//发送签名报文
                 var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, src);
                 var addbytes = add.GetAddbytes();
-
                 signMsg.tag1 = 0x02;
                 signMsg.tag2 = 0x0a;//签
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
@@ -556,19 +626,20 @@ namespace driver_win
 
                 //这个dataid 要上一个block 传送完毕了才知道
                 signMsg.writeUInt32(42, remoteid);
-
                 signer.SendMessage(signMsg, true);
             }
+            while (true)
+            {
+                await Task.Delay(5);
+                if (outdata != null)
+                    break;
+            }
 
-            signer.watcherColl.RemoveWatcher(watcher);
-        }
-
-        private async void ConfirmSignCallBack(byte[] outdata)
-        {
             //读出来，拼为http响应，发回去
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["srchash"] = new MyJson.JsonNode_ValueString(hashstr);
+
             var pubkeylen = outdata[0];
             var pubkey = new byte[pubkeylen];
             Array.Copy(outdata, 1, pubkey, 0, pubkeylen);
@@ -577,7 +648,18 @@ namespace driver_win
             json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
             json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
 
+            signer.watcherColl.RemoveWatcher(watcher);
             await context.Response.WriteAsync(json.ToString());
+        }
+        private void ConfirmSign()
+        {
+            isgetdata = true;
+            GetAddressList();
+        }
+
+        private void ConfirmSignCallBack(byte[] _outdata)
+        {
+            outdata = _outdata;
         }
 
 

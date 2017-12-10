@@ -289,18 +289,19 @@ namespace driver_win
                 SignTool.ContractTransaction ct = null;
                 try
                 {
-                    ct = SignTool.ParseTransforData(data.data) as SignTool.ContractTransaction;
-                    string stex = "有一笔交易需要你签名，是否同意。\n";
-                    if (ct != null)
-                    {
-                        foreach (var o in ct.outputs)
-                        {
-                            if (o.toAddress == addr.AddressText)
-                                continue;
-                            stex += "对" + o.toAddress + "支付:" + o.assetId + "=" + o.assetCount;
-                        }
-                    }
-                    if (MessageBox.Show(stex, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    //ct = SignTool.ParseTransforData(data.data) as SignTool.ContractTransaction;
+                    //string stex = "有一笔交易需要你签名，是否同意。\n";
+                    //if (ct != null)
+                    //{
+                    //    foreach (var o in ct.outputs)
+                    //    {
+                    //        if (o.toAddress == addr.AddressText)
+                    //            continue;
+                    //        stex += "对" + o.toAddress + "支付:" + o.assetId + "=" + o.assetCount;
+                    //    }
+                    //}
+                    //if (MessageBox.Show(stex, "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    if(true)
                     {
                         var datas = SignTool.SignData(addr.privatekey, data.data);
                         var datapubkey = SignTool.GetPublicKeyFromPrivateKey(addr.privatekey);
@@ -443,7 +444,9 @@ namespace driver_win
             if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//设置钱包密码
             {
                 byte passwordlen = (byte)recv.readUInt16(0);
-                string str_password = recv.readHash256(2,3);
+                byte[] bytes_password = new byte[passwordlen];
+                Array.Copy(recv.data, 2, bytes_password, 0, passwordlen);
+                string str_password = personalinfo.GetString(bytes_password);
                 string realpassword = "";
                 this.Dispatcher.Invoke((Action)delegate () {
                     //将传过来的伪密码转换成实际密码
@@ -516,7 +519,7 @@ namespace driver_win
             {
                 NeoDun.Message msg = new NeoDun.Message();
                 msg.tag1 = 0x02;
-                msg.tag2 = 0xd3;
+                msg.tag2 = 0xd1;
                 msg.msgid = recv.msgid;
                 string[] _setting = personalinfo.setting;
                 msg.writeUInt16(0, UInt16.Parse(_setting[0]));
@@ -526,6 +529,7 @@ namespace driver_win
                 msg.writeUInt16(8, UInt16.Parse(_setting[4]));
                 msg.writeUInt16(10, UInt16.Parse(_setting[5]));
                 msg.writeUInt16(12, UInt16.Parse(_setting[6]));
+                Console.WriteLine("收到驱动获取消息的通知并开始返还");
                 this.SendMsg(msg);
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x1a)
@@ -541,7 +545,7 @@ namespace driver_win
                 personalinfo.SetSetting(setting);
                 NeoDun.Message msg = new NeoDun.Message();
                 msg.tag1 = 0x02;
-                msg.tag2 = 0xd1;
+                msg.tag2 = 0xd3;
                 msg.msgid = recv.msgid;
                 this.SendMsg(msg);
             }
