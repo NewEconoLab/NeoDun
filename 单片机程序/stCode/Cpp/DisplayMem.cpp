@@ -17,6 +17,7 @@ extern unsigned char ASC20X40[];
 extern unsigned char  HZ12X12_S[];
 extern unsigned char  HZ16X16_S[];
 extern unsigned char  HZ24X24_S[];
+extern RNG_HandleTypeDef hrng;
 
 namespace view {
 
@@ -562,6 +563,47 @@ int DisplayMem::drawxNumber(int x, int y, long long num, int len,FONT_t font)
 				drawInt(x+size*t,y,temp,font,false);
 		}
 		return 0;
+}
+
+int DisplayMem::GetPassportArray(int *data)
+{
+		HAL_StatusTypeDef status = HAL_OK;	
+		uint32_t tmp = 0;
+		int i = 0;
+		int t = 0;
+		
+		for(i=0;i<9;i++)
+		{			
+				status = HAL_RNG_GenerateRandomNumber(&hrng,&tmp);
+				if(status != 0)//Ëæ»úÊý³ö´í
+						return 0;
+				tmp =	tmp%9;
+				if(tmp == 0)	tmp = i;
+				t = data[i];
+				data[i] = data[tmp];
+				data[tmp] = t;
+		}
+		
+		Show_num(108,6,data[0],2,0);
+		Show_num(124,6,data[1],2,0);
+		Show_num(140,6,data[2],2,0);	
+		Show_num(108,24,data[3],2,0);
+		Show_num(124,24,data[4],2,0);
+		Show_num(140,24,data[5],2,0);	
+		Show_num(108,42,data[6],2,0);
+		Show_num(124,42,data[7],2,0);
+		Show_num(140,42,data[8],2,0);
+		
+		return 1;
+}
+
+void DisplayMem::GetPassportFromString(u8 *data,int *src,u32 *desc)
+{
+		int i;
+		for(i=0;i<6;i++)
+		{
+				desc[i] = src[data[i]-49];
+		}
 }
 
 }

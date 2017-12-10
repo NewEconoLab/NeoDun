@@ -1,7 +1,7 @@
 /*
  * CMD.h
  *
- *  Created on: 2017��7��30��
+ *  Created on: 2017年7月30日
  *      Author: Administrator
  */
 
@@ -9,7 +9,7 @@
 #define CPP_CMD_H_
 
 
-#define CMD_CRC_FAILED							0x00e0		//CRCУ�����
+#define CMD_CRC_FAILED							0x00e0		//CRC校验出错
 
 #define	CMD_NOTIFY_DATA							0x0101		//
 #define	CMD_PULL_DATA								0x0110		//
@@ -35,37 +35,59 @@
 
 
 
-#define CMD_QUERY_ADDRESS						0x0201		//��ѯ�豸��ַ���
-#define CMD_RETURN_ADDRESS					0x02a0		//����һ����ַ
-#define CMD_RETURN_ADDRESS_OK				0x02a1		//���ص�ַ����
+#define CMD_QUERY_ADDRESS						0x0201		//查询设备地址情况
+#define CMD_RETURN_ADDRESS					0x02a0		//返回一条地址
+#define CMD_RETURN_ADDRESS_OK				0x02a1		//返回地址结束
 
 //add by hkh
 #define CMD_SIGN_DATA								0x020a
 #define CMD_SIGN_OK									0x02a8
 #define CMD_SIGN_FAILED							0x02e0
+//设置密码
+#define CMD_SET_PASSPORT						0x020b
+#define CMD_SET_OK									0x02c3
+#define CMD_SET_FAILED							0x02c4
+//验证密码
+#define CMD_VERIFY_PASSPORT					0x020c
+#define CMD_VERIFY_OK								0x02c5
+#define CMD_VERIFY_FAILED						0x02c6
+//判断钱包是否是新钱包
+#define CMD_WALLET_ISNEW						0x020d
+#define CMD_WALLET_NEW							0x02b5
+#define CMD_WALLET_OLD							0x02b6
+//设置配置信息
+#define CMD_SET_INFO								0x021a
+#define CMD_SET_INFO_OK							0x02d3
+#define CMD_SET_INFO_FAILED					0x02d4
+//获取配置信息
+#define CMD_GET_INFO								0x021b
+#define CMD_GET_INFO_OK							0x02d1
+#define CMD_GET_INFO_FAILED					0x02d2
+//上位机发起密码验证，告诉下位机显示密码界面
+#define CMD_SHOW_PASSPORT						0x021c
+#define CMD_SHOW_OK									0x02e1
+#define CMD_SHOW_FAILED							0x02e2									
 
-
-
-//#define CMD_CLEAR_ALL_CACHE					0x0200		//������л�������
-//#define CMD_TRANSMIT_BLOCK_DATA			0x0201		//����һ������
-//#define CMD_VERIFY_BLOCK_DATA				0x0202		//��֤һ������
-//#define CMD_GET_HARDWARE_INFO				0x0300		//��ѯӲ����Ϣ
-//#define CMD_GET_ADDR_LIST 					0x0301		//��ѯ��ַ�б�
-//#define CMD_GET_PUBLIC_KEY					0x0302		//��ù�Կ
-//#define CMD_SHOW_PRIVATE_KEY				0x0303		//��ʾ˽Կ
+//#define CMD_CLEAR_ALL_CACHE					0x0200		//清除所有缓存数据
+//#define CMD_TRANSMIT_BLOCK_DATA			0x0201		//传输一块数据
+//#define CMD_VERIFY_BLOCK_DATA				0x0202		//验证一块数据
+//#define CMD_GET_HARDWARE_INFO				0x0300		//查询硬件信息
+//#define CMD_GET_ADDR_LIST 					0x0301		//查询地址列表
+//#define CMD_GET_PUBLIC_KEY					0x0302		//获得公钥
+//#define CMD_SHOW_PRIVATE_KEY				0x0303		//显示私钥
 //
-//#define CMD_FINGER_PRINT_INIT				0x0400		//ָ�Ƴ�ʼ��
-//#define CMD_FINGER_PRINT_RECORD			0x0401		//¼��ָ��
+//#define CMD_FINGER_PRINT_INIT				0x0400		//指纹初始化
+//#define CMD_FINGER_PRINT_RECORD			0x0401		//录制指纹
 //
-//#define CMD_SAVE_PRIVATE_PAIR 			0x0500 		//�������������ݱ���Ϊ˽Կ��
-//#define CMD_CHANGE_NAME_LOGO 				0x0501		// �޸ĵ�ַ���ǳƺ�logo
+//#define CMD_SAVE_PRIVATE_PAIR 			0x0500 		//将缓存区的数据保存为私钥对
+//#define CMD_CHANGE_NAME_LOGO 				0x0501		// 修改地址的昵称和logo
 //
-////ǩ������
-//#define CMD_CHECK_CACHE_DATA 				0x0600 		//ǩ��������������
-//#define CMD_VERIFY_CACHE_DATA 			0x0601 		//��֤������������
+////签名管理
+//#define CMD_CHECK_CACHE_DATA 				0x0600 		//签名缓存区的数据
+//#define CMD_VERIFY_CACHE_DATA 			0x0601 		//验证缓存区的数据
 //
-////��̬�������
-//#define CMD_DYNAMIC_PASSWORD_MANAGE 0x0700		//��̬�������
+////动态密码管理
+//#define CMD_DYNAMIC_PASSWORD_MANAGE 0x0700		//动态密码管理
 
 
 #endif /* CPP_CMD_H_ */

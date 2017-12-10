@@ -48,7 +48,6 @@
 ".\obj\fingerprintpacket.o"
 ".\obj\fingerutil.o"
 ".\obj\oled281.o"
-".\obj\oled281_test.o"
 ".\obj\algorithm.o"
 ".\obj\bignum.o"
 ".\obj\encrypt.o"

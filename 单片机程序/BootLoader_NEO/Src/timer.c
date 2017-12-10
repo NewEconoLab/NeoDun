@@ -49,6 +49,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim==(&TIM3_Handler))
     {
 				time_counter++;
-				printf("定时器时间到！！\r\n");
+//				printf("定时器时间到！！\r\n");
     }
 }

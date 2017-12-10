@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "stm32f4xx_hal.h"
+#include "main_define.h"
 
 typedef __IO uint32_t  vu32;
 
@@ -13,8 +14,20 @@ typedef __IO uint32_t  vu32;
 #define STM32_FLASH_BASE 0x08000000 		//STM32 FLASH的起始地址
 #define FLASH_WAITETIME  50000          //FLASH等待超时时间
 
-//FLASH地址
-#define	DATA_COUNT	0x080E0000	//扇区11，地址私钥对总数的地址
+//开发板调试
+#define ADDR_FLASH_COUNT				((uint32_t)0x08040000)
+#define ADDR_FLASH_SET					((uint32_t)0x08040200)
+#define ADDR_FLASH_PASSPORT			((uint32_t)0x08040400)
+#define ADDR_FLASH_ACTUAL	      ADDR_FLASH_SECTOR_7
+#define FLASH_SECTOR_USE				FLASH_SECTOR_6
+
+//正常使用
+//#define ADDR_FLASH_COUNT				((uint32_t)0x0800C000)
+//#define ADDR_FLASH_SET					((uint32_t)0x0800C200)
+//#define ADDR_FLASH_PASSPORT			((uint32_t)0x0800C400)
+//#define ADDR_FLASH_ACTUAL    	  ADDR_FLASH_SECTOR_6
+//#define FLASH_SECTOR_USE				FLASH_SECTOR_3
+
 
 //FLASH 扇区的起始地址
 #define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) 	//扇区0起始地址, 16 Kbytes  
@@ -29,6 +42,7 @@ typedef __IO uint32_t  vu32;
 #define ADDR_FLASH_SECTOR_9     ((uint32_t)0x080A0000) 	//扇区9起始地址, 128 Kbytes  
 #define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) 	//扇区10起始地址,128 Kbytes  
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) 	//扇区11起始地址,128 Kbytes  
+#define MAX_ADDR_FLASH					((uint32_t)0x08100000)
 
 #ifdef __cplusplus
  extern "C" {
@@ -42,9 +56,16 @@ void STMFLASH_Erase_Sectors(uint32_t sector);
 void STMFLASH_WriteWord(uint32_t faddr,uint32_t value);	 
 
 
-void Updata_Count_Num(uint32_t count);	 
-	 
-	 
+void Update_Count_Num(uint32_t count);
+uint32_t Get_Count_Num(void);	 
+void Update_PowerOn_Count(void);
+void Updata_Set_Flag(SIGN_SET_FLAG *Flag);	 
+void Update_Passport(uint32_t* passport);	 
+void Get_Passport(uint32_t* passport);	 
+uint32_t Get_Flash_EMPTY(void);
+uint32_t Get_Flash_Address(char *add,uint32_t count);
+void Update_PowerOn_SetFlag(SIGN_SET_FLAG *Flag);	 
+
 #ifdef __cplusplus
  }
 #endif

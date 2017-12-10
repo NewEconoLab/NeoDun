@@ -7,8 +7,6 @@
 #include "ripemd160.h"
 #include "Algorithm.h"
 
-extern char Dec[BUFSIZ];				//存储10进制的大数
-extern char Hex[BUFSIZ];				//存储16进制的大数
 extern char finaladdress[50];
 extern char Alphabet[58];
 
@@ -28,6 +26,8 @@ void Alg_GetAddressFromPublic(uint8_t * PublicKey, char *address,int len)
 		uint8_t hash2[20];
 		uint8_t data[21] = {0x17};
 		
+		memset(hash1,0,32);
+		memset(hash2,0,20);
 		memset(address,0,40);
 		if((len != 33)&&(len != 65))
 				return;
@@ -80,7 +80,8 @@ void Base58_Encode(uint8_t *buff,int lenin,char *result,int *lenout)
 		uint8_t alldata[25];
 		uint8_t digest[32];
 		uint8_t digest1[32];	
-	  char address58[BUFSIZ];	
+	  char address58[BUFSIZ] = "";
+		char Hex[BUFSIZ] = "";
 		int i,hashlen =32;
 	
 //		printf("buff:");
@@ -134,7 +135,8 @@ void Base58_Encode(uint8_t *buff,int lenin,char *result,int *lenout)
 *******************************************************************/	
 void Alg_Base58Encode(uint8_t *dataIn , int dataInLen , char *dataOut , int *dataoutLen )
 {	
-	  char address58[BUFSIZ];	
+	  char address58[BUFSIZ] = "";
+		char Hex[BUFSIZ] = "";
 		int i;	
 		
 	  //进行base58编码，得到address
@@ -197,8 +199,9 @@ void Alg_Base58Decode(char    *dataIn , int dataInLen , uint8_t *dataOut , int *
 				a[0] = '5';
 				a[1] = '8';
 		}
-		DecToHex(bi,result_hex);				
-		StringToHex(result_hex,strlen(result_hex)/2,bytes);//将字符数组保存成uuint8_t数组
+		DecToHex(bi,result_hex);
+		j = strlen(result_hex)/2;
+		StringToHex(result_hex,j,bytes);//将字符数组保存成uint8_t数组
 				
 		if((sizeof(bytes)>1)&&(bytes[0]==0)&&(bytes[1]>=0x80))//是否为特殊情况？
 				stripSignByte = 1;
@@ -219,9 +222,9 @@ void Alg_Base58Decode(char    *dataIn , int dataInLen , uint8_t *dataOut , int *
 				for(i=0;i<dataInLen-leadingZeros;i++)
 						dataOut[i+leadingZeros] = bytes[i];
 		}	
-		i = 0;
-		while(dataOut[++i] != 0)
+		
+		while(dataOut[--j] == 0)//避免数组中间出现0的情况，出现计数错误
 		{				
 		}		
-		*dataoutLen = i;		
+		*dataoutLen = j + 1;	
 }

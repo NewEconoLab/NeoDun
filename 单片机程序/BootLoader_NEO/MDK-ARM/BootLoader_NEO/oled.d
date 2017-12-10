@@ -41,7 +41,4 @@ bootloader_neo\oled.o: ../Inc/Asc5x8.h
 bootloader_neo\oled.o: ../Inc/Asc6x12.h
 bootloader_neo\oled.o: ../Inc/Asc8x16.h
 bootloader_neo\oled.o: ../Inc/Asc12x24.h
-bootloader_neo\oled.o: ../Inc/Asc20x40.h
 bootloader_neo\oled.o: ../Inc/HZ12X12_S.h
-bootloader_neo\oled.o: ../Inc/HZ16X16_S.h
-bootloader_neo\oled.o: ../Inc/HZ24X24_S.h

@@ -129,7 +129,7 @@ void AW9136_Init(void)
 #endif		
 
 		value2 = I2C_read_reg(0x01);
-		printf("AW9136 GCR:0x%4x\r\n",value2);
+		printf("AW9136 GCR:0x%x\r\n",value2);
 		
 		AW9136_LED_ON();
 //		AW_LedReleaseTouch();
@@ -342,9 +342,9 @@ unsigned char AW91xx_Auto_Cali(void)
 	unsigned int buf[6];
 	unsigned int ofr_cfg[6];
 	unsigned int sen_num;
-
+#ifdef Printf_Debug	
 	printf("%s Enter\n", __func__);
-	
+#endif	
 	if(cali_num == 0){
 		ofr_cfg[0] = I2C_read_reg(0x13);
 		ofr_cfg[1] = I2C_read_reg(0x14);
@@ -517,7 +517,9 @@ void AW_NormalMode_Proc(void)
 		if(cali_flag)
 		{
 				AW91xx_Auto_Cali();
+#ifdef Printf_Debug				
 				printf("cali_flag = %d\r\n",cali_flag);
+#endif			
 				if(cali_flag == 0)
 				{			
 						if(cali_used)
@@ -629,7 +631,9 @@ void AW_center_press(void)
 {		
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
+#ifdef Printf_Debug	
 				printf("AW9136 right press \n");
+#endif			
 				Key_Flag.Sign_Key_right_Flag = 1;
 		}
 	}		
@@ -637,8 +641,10 @@ void AW_center_press(void)
 void AW_center_release(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))	
-		{		
+		{
+#ifdef Printf_Debug				
 				printf("AW9136 right release \n");
+#endif			
 				Key_Flag.Sign_Key_right_Flag = 1;
 		}
 }
@@ -647,7 +653,9 @@ void AW_right_press(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
+#ifdef Printf_Debug				
 				printf("AW9136 left press \n");
+#endif
 				Key_Flag.Sign_Key_left_Flag = 1;
 		}	
 }
@@ -656,7 +664,9 @@ void AW_right_release(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))	
 		{
+#ifdef Printf_Debug	
 				printf("AW9136 left release \n");
+#endif			
 				Key_Flag.Sign_Key_left_Flag = 1;
 		}
 	}
@@ -680,7 +690,9 @@ void Home_Key_press(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
+#ifdef Printf_Debug				
 				printf("中间按键按下！！！\n");
+#endif			
 				Key_Flag.Sign_Key_center_Flag = 1;
 		}
 }
