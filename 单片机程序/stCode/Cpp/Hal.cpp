@@ -109,8 +109,8 @@ void Hal::SendUSBData(u8 *data , int len)
 void Hal::HardwareInit() 
 {
 		OLED281_Init();
-		AW9136_Init();
 		__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE);
+		AW9136_Init();
 }
 
 void Hal::Start_Motor(int mtime)

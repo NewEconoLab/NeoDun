@@ -28,6 +28,7 @@ extern "C"
 
 //add by hkh
 //#define printf_debug
+#define HID_Delay
 
 volatile int hid_flag = 0;
 u8 hid_data[64];
@@ -117,7 +118,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										if (dataLen < 64 * 1024) 
 										{
 												packCount = (dataLen + DATA_PACK_SIZE - 1) / DATA_PACK_SIZE;
-												packIndex++;
+												packIndex = 0;
 												u8* hash = data + 8;
 												memmove(this->hashRecord, hash, 32);
 #ifdef printf_debug						
@@ -126,7 +127,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												//Utils::PrintArray(hash, 32);
 #endif										
 												Commands command;
-												command.CreateDataQuest(CMD_PULL_DATA, reqSerial = Utils::RandomInteger(), 0, packCount - 1, hash, 32);
+												command.CreateDataQuest(CMD_PULL_DATA, this->reqSerial = Utils::RandomInteger(), 0, packCount - 1, hash, 32);
 												command.SendToPc();
 										} 
 										else 
@@ -145,10 +146,11 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 #ifdef printf_debug						
 										printf("Index = %d\r\n", Index);
 #endif							
-										if (serial == reqSerial) 
+										if (serial == this->reqSerial) 
 										{
 												memmove(this->dataSave + packIndex * DATA_PACK_SIZE, data + 6,DATA_PACK_SIZE);
 												packIndexRecord[packIndex] = true;
+												packIndex++;
 										} 
 										else 
 										{
@@ -156,6 +158,9 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												printf("not this serial");
 #endif									
 										}
+#ifdef printf_debug						
+										printf("packIndex = %d\r\n", packIndex);
+#endif											
 										break;
 								}
 								case CMD_PULL_DATA://0x0110  上位机请求数据
@@ -173,8 +178,10 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												command.AppendBytes(&pd[0],1);
 												command.AppendBytes(&pd[1],1);												
 												command.AppendBytes(this->dataSave+i*DATA_PACK_SIZE,50);
-												command.SendToPc();				
-												for(int j = 0;j<0xfffff;j++);									
+												command.SendToPc();
+#ifdef HID_Delay													
+												for(u32 j = 0;j<0xfffff;j++);
+#endif												
 										}
 										
 										Commands command( CMD_PULL_DATA_REQ_OVER, serialId);
@@ -189,7 +196,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										if (isAllPackGot()) 
 										{
 												u8 res[32];
-												Utils::Sha256(dataSave+ packIndex*DATA_PACK_SIZE, this->dataLen , res, 32);
+												Utils::Sha256(dataSave, this->dataLen , res, 32);
 #ifdef printf_debug										
 												printf("All pack got \r\n");
 												Utils::PrintArray(res, 32);
@@ -201,7 +208,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														printf("hash ok \r\n");
 #endif											
 														Commands command( CMD_ACK_HASH_OK, this->notifySerial);												
-														command.AppendU32(packIndex);//告诉上位机的数据分配ID			
+														command.AppendU32(packIndex);//告诉上位机的数据分配ID，即硬件钱包存了几片数据			
 														command.AppendBytes(res, 32);
 														command.SendToPc();
 												} 
@@ -227,7 +234,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 #endif													
 																Commands command;
 																u8 hash[32];
-																command.CreateDataQuest(CMD_PULL_DATA, reqSerial, i, i,hash, 32);
+																command.CreateDataQuest(CMD_PULL_DATA, this->reqSerial, i, i,hash, 32);
 																command.SendToPc();
 														}
 												}
@@ -301,7 +308,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												printf("Base58 content address:%s\r\n",temp);
 												printf("dataId0=%d\r\n",dataId0);	
 #endif									
-												PrivateKey prkey(this->dataSave + dataId0 * DATA_PACK_SIZE);//私钥的来自第一包(0x01a2)的数据																	
+												PrivateKey prkey(this->dataSave + (dataId0-1) * DATA_PACK_SIZE);//私钥的来自第一包(0x01a2)的数据，疑问，永远是第一包，可以去掉dataId0	 																
 												PublicKey pubK = prkey.GetPublicKey(true);
 												uint8_t pubKEY[33];
 												memset(pubKEY,0,33);
@@ -374,7 +381,6 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								case CMD_QUERY_ADDRESS ://0x0201  查询地址
 								{
 										int i=0;
-										u32 j;
 										u32 count = Get_Count_Num();
 										u32 address_flash = 0x08060000;
 										int serialId_add = Utils::ReadU16(data + 2);
@@ -413,7 +419,9 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 #ifdef printf_debug									
 												printf("count = 0x%x \r\n", count);
 #endif										
-												for(j = 0;j<0xfffff;j++);
+#ifdef HID_Delay													
+												for(u32 j = 0;j<0xfffff;j++);
+#endif									
 												address_flash += 80;
 										}
 										
@@ -424,6 +432,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								}
 								case CMD_GET_PRIKEY://0x0206  获取地址安全信息
 								{						
+										int serialId_getprikey = Utils::ReadU16(data + 2);
 										u16 addressType = Utils::ReadU16(data+8);
 #ifdef printf_debug							
 										printf("Get security message\r\n");
@@ -466,16 +475,18 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																hash1[i] = privateKey[i-1];
 														Utils::Sha256(hash1, 33, hash, 32);														
 														memmove(this->dataSave, hash1,33);
-														if(1)
+														for(int t=0;t<1;t++)
 														{
-																Commands command( CMD_NOTIFY_DATA, reqSerial);
+																this->reqSerial = Utils::RandomInteger();
+																Commands command( CMD_NOTIFY_DATA, this->reqSerial);
 																command.AppendU32(33);
 																command.AppendBytes(hash,32);
 																command.SendToPc();		
+#ifdef HID_Delay															
+																for(u32 j = 0;j<0xfffff;j++);
+#endif															
 														}
-														for(i = 0;i<0xfffff;i++);
-//														HAL_Delay(100);
-														Commands command( CMD_RETURN_MESSAGE, reqSerial);
+														Commands command( CMD_RETURN_MESSAGE, serialId_getprikey);
 														command.AppendU32(32);
 														command.AppendBytes(hash,32);
 														command.SendToPc();																				
@@ -500,6 +511,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										char temp[40] = "";									
 										u32 count;
 										u32 address_flash;
+										int serialId_sign_data = Utils::ReadU16(data + 2);
 										u16 addressType = Utils::ReadU16(data + 4);							  							
 										u32 dataId0 = Utils::ReadU32(data +46);
 										u8 privateKey[32];
@@ -520,11 +532,14 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												address_flash = Get_Flash_Address(temp,count);						
 										}
 										memset(privateKey,0,32);
-										STMFLASH_Read(address_flash,(u32 *)privateKey,8);
-																		
+										STMFLASH_Read(address_flash+40,(u32 *)privateKey,8);
+#ifdef printf_debug									
+//										printf("privateKey:\r\n");
+//										Utils::PrintArray(privateKey,32);
+#endif																													
 										SIGN_Out_Para Sign;
 										memset(&Sign,0,sizeof(Sign));
-										int result = Alg_ShowSignData(this->dataSave + (dataId0-2) * DATA_PACK_SIZE,this->dataLen,&Sign);//?????
+										int result = Alg_ShowSignData(this->dataSave,this->dataLen,&Sign);//?????
 										if(result == 1)
 										{
 												Commands command( CMD_SIGN_FAILED, serialId);
@@ -541,33 +556,49 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												{
 														continue;
 												}
-												
+/*********************************************************************************************************************
+交易转账时的显示页面：
+										转账 xxx NEO/GAS 给
+													xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+										确认发送？
+										取消          确认          取消		
+*********************************************************************************************************************/												
 												view::DisplayMem::getInstance().clearAll();//清除显示
-												//手续费 money NEO,确认发送？   浮点数用整数和小数分别显示
-												view::DisplayMem::getInstance().drawHZString(0,0,0,2);
-												//显示手续费   该值为一个long long型  对应的十进制数的低八位数为小数
+												//转账
+												view::DisplayMem::getInstance().drawHZString(0,0,22,23);
+												
+												//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
 												int count_bit=0;
 												int count_int = 0;//表示整数部分占用的显示位数
-												int count_dec = 0;//表示小数部分后缀的零的个数
+												int count_dec = 8;//表示小数部分后缀的零的个数
 												
-												count_int = view::DisplayMem::getInstance().drawNumber(40,0,Sign.money[i]/100000000,8,view::FONT_8X16);
+												count_int = view::DisplayMem::getInstance().drawNumber(28,0,Sign.money[i]/100000000,8,view::FONT_8X16);
 												if(Sign.money[i]%100000000)//消除值正好为100000000的显示BUG
 												{
-														view::DisplayMem::getInstance().drawString(40+count_int*8,0,".");												
-														count_dec = view::DisplayMem::getInstance().drawxNumber(40+(count_int+1)*8,0,Sign.money[i]%100000000,8,view::FONT_8X16) - 1;//-1是把小数点算进去
+														view::DisplayMem::getInstance().drawString(28+count_int*8,0,".");												
+														count_dec = view::DisplayMem::getInstance().drawxNumber(28+(count_int+1)*8,0,Sign.money[i]%100000000,8,view::FONT_8X16) - 1;//-1是把小数点算进去
 												}
 												if(Sign.money[i] == 0)//值为0的情况
 														count_dec = 8;
-												count_bit = 40 + (count_int + 8 -count_dec)*8 + 4; //40是前面占用的显示，+4是显示空隙，美观
+												count_bit = 28 + (count_int + 8 -count_dec)*8 + 4; //28是前面占用的显示，+4是显示空隙，美观
 												
-												//view::DisplayMem::getInstance().drawString(40,0,"0.1");
-												view::DisplayMem::getInstance().drawString(count_bit,0,"NEO");
-												view::DisplayMem::getInstance().drawHZString(count_bit+26,0,3,8);
-											
+												if(Sign.money[i]%100000000)												
+														view::DisplayMem::getInstance().drawString(count_bit,0,"GAS");												
+												else
+														view::DisplayMem::getInstance().drawString(count_bit,0,"NEO");
+												count_bit = count_bit + 28;//3*8 + 4											
+												
+												//给
+												view::DisplayMem::getInstance().drawHZString(count_bit,0,24,24);
+												//显示地址
+												view::DisplayMem::getInstance().drawString(0,16,Sign.address[i],view::FONT_6X12);
+//												//确认发送？
+//												view::DisplayMem::getInstance().drawHZString(0,32,4,8);												
+												//取消  确定  取消
 												view::DisplayMem::getInstance().drawHZString(36,48,9,10);
 												view::DisplayMem::getInstance().drawHZString(124,48,4,5);	
 												view::DisplayMem::getInstance().drawHZString(208,48,9,10);		
-												
+												//显示三角形
 												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],5,7,48,60);//画三角形
 												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],27,29,48,60);//画三角形
 												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],48,50,48,60);//画三角形	
@@ -580,40 +611,68 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												if(Key_Flag.Sign_Key_center_Flag)//签名机按键按下同意按钮
 												{		
 														Key_Flag.Sign_Key_Flag = 0;
-														u8 hash[32];
+														u8 hash_all[32];
+														u8 hash_sign[32];
 														int len;
 														u8 resultsign[64];
-													
-														for(int m=0;m<64;m++) resultsignRecord[m] = 0;
+														
+														memset(hash_all,0,32);
+														memset(hash_sign,0,32);
+														memset(resultsign,0,64);
+														memset(resultsignRecord,0,98);
 														//签名的结果保存
 														Alg_ECDSASignData(this->dataSave + dataId0 * DATA_PACK_SIZE,this->dataLen,resultsign,&len,privateKey);
 														
 														//组合成最终的数据，长度1字节+公钥33字节+签名结果64字节
-														PrivateKey prkey(privateKey);															
+														PrivateKey prkey(privateKey);													
+#ifdef printf_debug									
+//														printf("privateKey:\r\n");
+//														Utils::PrintArray(prkey.getData(),32);
+#endif															
 														PublicKey pubK = prkey.GetPublicKey(true);
 														uint8_t pubKEY[33]; 
-														memmove(pubKEY,pubK.getData(),33);																				
+														memmove(pubKEY,pubK.getData(),33);
+#ifdef printf_debug									
+//														printf("pubKEY:\r\n");
+//														Utils::PrintArray(pubKEY,33);
+#endif													
+
+
+														//需要确定上位机具体是要哪个数据，是长度为98的，还是长度为64的？？？？
 														resultsignRecord[0] = 33;
 														memmove(resultsignRecord+1,pubKEY,33);
 														memmove(resultsignRecord+34,resultsign,64);
-													
+
+														Utils::Sha256(resultsignRecord, 98, hash_all, 32);	
+														clearData();														
+//														memmove(this->dataSave, resultsign,DATA_PACK_SIZE);
+//														memmove(this->dataSave + DATA_PACK_SIZE, resultsign + DATA_PACK_SIZE,64-DATA_PACK_SIZE);
+														memmove(this->dataSave, resultsignRecord,DATA_PACK_SIZE);
+														memmove(this->dataSave + DATA_PACK_SIZE, resultsignRecord + DATA_PACK_SIZE,98-DATA_PACK_SIZE);
+														
+														Utils::Sha256(resultsign, 64, hash_sign, 32);														
+#ifdef printf_debug														
+														printf("hash\r\n");
+														Utils::PrintArray(hash_all,32);																												
+														Utils::PrintArray(hash_sign,32);
+														printf("*********************************\r\n");
 														Utils::PrintArray(resultsignRecord,98);
-														Utils::Sha256(resultsignRecord, 98, hash, 32);										
-														
-														if(1)//准备好数据块，飞回去		将outdata 发回上位机
+#endif															
+														for(int t=0;t<1;t++)//准备好数据块，飞回去		将outdata 发回上位机
 														{
-																reqSerial = Utils::RandomInteger();
-																Commands command( CMD_NOTIFY_DATA, reqSerial);
-																command.AppendU32(len);
-																command.AppendBytes(hash,32);
+																this->reqSerial = Utils::RandomInteger();
+																Commands command( CMD_NOTIFY_DATA, this->reqSerial);
+																command.AppendU32(98);
+																command.AppendBytes(hash_all,32);
 																command.SendToPc();
-														}
-														
-														for(int j = 0;j<0xfffff;j++);
+#ifdef HID_Delay														
+																for(u32 j = 0;j<0xfffff;j++);
+#endif																
+														}													
 														//再发条通知消息 告诉上位机hash
-														Commands command( CMD_SIGN_OK, serialId);
-														command.AppendU32(len);
-														command.AppendBytes(hash,32);									
+														Commands command( CMD_SIGN_OK, serialId_sign_data);
+														command.AppendU32(98);
+														command.AppendBytes(hash_all,32);									
 														command.SendToPc();
 														view::DisplayMem::getInstance().clearAll();//清屏
 														view::DisplayMem::getInstance().drawString(92,20,"NeoDun",view::FONT_12X24);
@@ -829,7 +888,7 @@ void ReceiveAnalysis::clearData()
 
 bool ReceiveAnalysis::isAllPackGot() 
 {
-		for (int i = 1; i < packCount; i++) 
+		for (int i = 0; i < packCount; i++) 
 		{
 				if (!packIndexRecord[i]) 
 				{

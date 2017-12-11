@@ -194,7 +194,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -211,48 +210,52 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>48</LineNumber>
+          <LineNumber>658</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134293056</Address>
+          <Address>134280574</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Algorithm\ripemd160.c</Filename>
+          <Filename>C:\Users\Administrator\Desktop\NeoDun\鍗曠墖鏈虹▼搴?stCode\Cpp\ReceiveAnalysis.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\\../../Cpp/ReceiveAnalysis.cpp\658</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>24</LineNumber>
+          <LineNumber>658</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134263066</Address>
+          <Address>134280656</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Algorithm\ripemd160.c</Filename>
+          <Filename>C:\Users\Administrator\Desktop\NeoDun\鍗曠墖鏈虹▼搴?stCode\Cpp\ReceiveAnalysis.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\\../../Cpp/ReceiveAnalysis.cpp\658</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>670</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134280668</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>C:\Users\Administrator\Desktop\NeoDun\鍗曠墖鏈虹▼搴?stCode\Cpp\ReceiveAnalysis.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\\../../Cpp/ReceiveAnalysis.cpp\670</Expression>
         </Bp>
       </Breakpoint>
-      <WatchWindow1>
-        <Ww>
-          <count>0</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ripemd160_blockDWords</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ripemd160_stateMD160</ItemText>
-        </Ww>
-      </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
@@ -262,87 +265,87 @@
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_buffer</ItemText>
+          <ItemText>ripemd160_stateMD160</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>ripemd160_blockDWords</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_stateMD160</ItemText>
+          <ItemText>ripemd160_buffer</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_stateMD160</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>bufferLen</ItemText>
+          <ItemText>ripemd160_stateMD160</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>partInBase</ItemText>
+          <ItemText>ripemd160_stateMD160</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>2</WinNumber>
-          <ItemText>partInLen</ItemText>
+          <ItemText>bufferLen</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_buffer</ItemText>
+          <ItemText>partInBase</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash</ItemText>
+          <ItemText>partInLen</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash2</ItemText>
+          <ItemText>ripemd160_buffer</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_buffer</ItemText>
+          <ItemText>hash</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>partInLen</ItemText>
+          <ItemText>hash2</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>bufferLen</ItemText>
+          <ItemText>ripemd160_buffer</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>partInBase</ItemText>
+          <ItemText>partInLen</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_buffer</ItemText>
+          <ItemText>bufferLen</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_buffer</ItemText>
+          <ItemText>partInBase</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ripemd160_blockDWords</ItemText>
+          <ItemText>ripemd160_buffer</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
@@ -352,57 +355,57 @@
         <Ww>
           <count>19</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash1</ItemText>
+          <ItemText>ripemd160_blockDWords</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash1</ItemText>
+          <ItemText>ripemd160_buffer</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash2</ItemText>
+          <ItemText>hash1</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>2</WinNumber>
-          <ItemText>data</ItemText>
+          <ItemText>hash1</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>2</WinNumber>
-          <ItemText>result</ItemText>
+          <ItemText>hash2</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>2</WinNumber>
-          <ItemText>result</ItemText>
+          <ItemText>data</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash1</ItemText>
+          <ItemText>result</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hash2</ItemText>
+          <ItemText>result</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>2</WinNumber>
-          <ItemText>pubKEY</ItemText>
+          <ItemText>hash1</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>2</WinNumber>
-          <ItemText>prkey</ItemText>
+          <ItemText>hash2</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>2</WinNumber>
-          <ItemText>pubK</ItemText>
+          <ItemText>pubKEY</ItemText>
         </Ww>
         <Ww>
           <count>30</count>
@@ -412,140 +415,150 @@
         <Ww>
           <count>31</count>
           <WinNumber>2</WinNumber>
-          <ItemText>pubKEY</ItemText>
+          <ItemText>pubK</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>2</WinNumber>
-          <ItemText>dataSave</ItemText>
+          <ItemText>prkey</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
           <WinNumber>2</WinNumber>
-          <ItemText>buff</ItemText>
+          <ItemText>pubKEY</ItemText>
         </Ww>
         <Ww>
           <count>34</count>
           <WinNumber>2</WinNumber>
-          <ItemText>len</ItemText>
+          <ItemText>dataSave</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>2</WinNumber>
-          <ItemText>desc</ItemText>
+          <ItemText>buff</ItemText>
         </Ww>
         <Ww>
           <count>36</count>
           <WinNumber>2</WinNumber>
-          <ItemText>src</ItemText>
+          <ItemText>len</ItemText>
         </Ww>
         <Ww>
           <count>37</count>
           <WinNumber>2</WinNumber>
-          <ItemText>flag</ItemText>
+          <ItemText>desc</ItemText>
         </Ww>
         <Ww>
           <count>38</count>
           <WinNumber>2</WinNumber>
-          <ItemText>passport</ItemText>
+          <ItemText>src</ItemText>
         </Ww>
         <Ww>
           <count>39</count>
           <WinNumber>2</WinNumber>
-          <ItemText>count</ItemText>
+          <ItemText>flag</ItemText>
         </Ww>
         <Ww>
           <count>40</count>
           <WinNumber>2</WinNumber>
-          <ItemText>desc</ItemText>
+          <ItemText>passport</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
           <WinNumber>2</WinNumber>
-          <ItemText>src</ItemText>
+          <ItemText>count</ItemText>
         </Ww>
         <Ww>
           <count>42</count>
           <WinNumber>2</WinNumber>
-          <ItemText>i</ItemText>
+          <ItemText>desc</ItemText>
         </Ww>
         <Ww>
           <count>43</count>
           <WinNumber>2</WinNumber>
-          <ItemText>j</ItemText>
+          <ItemText>src</ItemText>
         </Ww>
         <Ww>
           <count>44</count>
           <WinNumber>2</WinNumber>
-          <ItemText>count</ItemText>
+          <ItemText>i</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>2</WinNumber>
-          <ItemText>address_flash</ItemText>
+          <ItemText>j</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>2</WinNumber>
-          <ItemText>serialId_add</ItemText>
+          <ItemText>count</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ble_data</ItemText>
+          <ItemText>address_flash</ItemText>
         </Ww>
         <Ww>
           <count>48</count>
           <WinNumber>2</WinNumber>
-          <ItemText>i</ItemText>
+          <ItemText>serialId_add</ItemText>
         </Ww>
         <Ww>
           <count>49</count>
           <WinNumber>2</WinNumber>
-          <ItemText>j</ItemText>
+          <ItemText>ble_data</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>2</WinNumber>
-          <ItemText>count</ItemText>
+          <ItemText>i</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>2</WinNumber>
-          <ItemText>serialId_add</ItemText>
+          <ItemText>j</ItemText>
         </Ww>
         <Ww>
           <count>52</count>
           <WinNumber>2</WinNumber>
-          <ItemText>lenout</ItemText>
+          <ItemText>count</ItemText>
         </Ww>
         <Ww>
           <count>53</count>
           <WinNumber>2</WinNumber>
-          <ItemText>lenout</ItemText>
+          <ItemText>serialId_add</ItemText>
         </Ww>
         <Ww>
           <count>54</count>
           <WinNumber>2</WinNumber>
-          <ItemText>desc</ItemText>
+          <ItemText>lenout</ItemText>
         </Ww>
         <Ww>
           <count>55</count>
           <WinNumber>2</WinNumber>
-          <ItemText>src</ItemText>
+          <ItemText>lenout</ItemText>
         </Ww>
         <Ww>
           <count>56</count>
           <WinNumber>2</WinNumber>
-          <ItemText>result_hex</ItemText>
+          <ItemText>desc</ItemText>
         </Ww>
         <Ww>
           <count>57</count>
           <WinNumber>2</WinNumber>
-          <ItemText>bytes</ItemText>
+          <ItemText>src</ItemText>
         </Ww>
         <Ww>
           <count>58</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>result_hex</ItemText>
+        </Ww>
+        <Ww>
+          <count>59</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>bytes</ItemText>
+        </Ww>
+        <Ww>
+          <count>60</count>
           <WinNumber>2</WinNumber>
           <ItemText>bi</ItemText>
         </Ww>
@@ -652,7 +665,7 @@
 
   <Group>
     <GroupName>Application/User</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

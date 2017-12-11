@@ -647,7 +647,6 @@ Section Cross References
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPc) for view::DisplayMem::drawString(int, int, char*)
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to displaymem.o(i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE) for view::DisplayMem::drawxNumber(int, int, long long, int, view::FONT_t)
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to encrypt.o(i.Alg_ECDSASignData) for Alg_ECDSASignData
-    receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to utils.o(i._ZN5Utils10PrintArrayEPhi) for Utils::PrintArray(unsigned char*, int)
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to stmflash.o(i.Update_Passport) for Update_Passport
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to stmflash.o(i.Updata_Set_Flag) for Updata_Set_Flag
     receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi) refers to stmflash.o(i.Get_Passport) for Get_Passport
@@ -2388,6 +2387,7 @@ Removing Unused input sections from the image.
     Removing utils.o(.rev16_text), (4 bytes).
     Removing utils.o(.revsh_text), (4 bytes).
     Removing utils.o(.rrx_text), (6 bytes).
+    Removing utils.o(i._ZN5Utils10PrintArrayEPhi), (44 bytes).
     Removing utils.o(i._ZN5Utils11PrintStringEPci), (40 bytes).
     Removing utils.o(i._ZN5UtilsC1Ev), (2 bytes).
     Removing utils.o(.ARM.exidx), (8 bytes).
@@ -2734,7 +2734,7 @@ Removing Unused input sections from the image.
     Removing cdcmple.o(.text), (48 bytes).
     Removing receiveanalysis.o(.ARM.exidx), (8 bytes).
 
-775 unused section(s) (total 84316 bytes) removed from the image.
+776 unused section(s) (total 84360 bytes) removed from the image.
 
 ==============================================================================
 
@@ -2751,60 +2751,60 @@ Image Symbol Table
     ../clib/microlib/cpp/cpp_init.c          0x00000000   Number         0  cpp_init.o ABSOLUTE
     ../clib/microlib/cpp/cpp_init.c          0x00000000   Number         0  cpp_init.o ABSOLUTE
     ../clib/microlib/cpp/cpp_unwinder.c      0x00000000   Number         0  cpp_unwinder.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isblank_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isdigit_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalpha_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isprint_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  ldiv.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
     ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmovea.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/string/strcmp.c         0x00000000   Number         0  strcmp.o ABSOLUTE
     ../clib/microlib/string/strcpy.c         0x00000000   Number         0  strcpy.o ABSOLUTE
@@ -2815,8 +2815,8 @@ Image Symbol Table
     ../fplib/microlib/fpadd.c                0x00000000   Number         0  dadd.o ABSOLUTE
     ../fplib/microlib/fpdiv.c                0x00000000   Number         0  ddiv.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  depilogue.o ABSOLUTE
-    ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixl.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixul.o ABSOLUTE
+    ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixl.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dflti.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dfltl.o ABSOLUTE
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  dmul.o ABSOLUTE
@@ -2984,8 +2984,8 @@ Image Symbol Table
     .text                                    0x08010668   Section        0  llshl.o(.text)
     .text                                    0x08010686   Section        0  llushr.o(.text)
     .text                                    0x080106a6   Section        0  llsshr.o(.text)
-    .text                                    0x080106ca   Section        0  iusefp.o(.text)
     .text                                    0x080106ca   Section        0  depilogue.o(.text)
+    .text                                    0x080106ca   Section        0  iusefp.o(.text)
     .text                                    0x08010784   Section        0  ddiv.o(.text)
     .text                                    0x08010862   Section        0  dscalb.o(.text)
     .text                                    0x08010890   Section       48  cdrcmple.o(.text)
@@ -3368,125 +3368,124 @@ Image Symbol Table
     i._ZN15ReceiveAnalysis11hashCompareEPhS0_ 0x0801e08c   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis11hashCompareEPhS0_)
     i._ZN15ReceiveAnalysis12isAllPackGotEv   0x0801e0ac   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis12isAllPackGotEv)
     i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi 0x0801e0cc   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi)
-    i._ZN15ReceiveAnalysis4PollEv            0x0801f6e8   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis4PollEv)
-    i._ZN15ReceiveAnalysis9clearDataEv       0x0801f6fe   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis9clearDataEv)
-    i._ZN15ReceiveAnalysis9crc_frameEPhi     0x0801f72c   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis9crc_frameEPhi)
-    i._ZN15ReceiveAnalysisC1Ev               0x0801f76c   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
-    i._ZN3Hal11SendUSBDataEPhi               0x0801f798   Section        0  hal.o(i._ZN3Hal11SendUSBDataEPhi)
-    i._ZN3Hal11Start_MotorEi                 0x0801f7c0   Section        0  hal.o(i._ZN3Hal11Start_MotorEi)
-    i._ZN3Hal11getInstanceEv                 0x0801f7e8   Section        0  hal.o(i._ZN3Hal11getInstanceEv)
-    i._ZN3Hal12HardwareInitEv                0x0801f814   Section        0  hal.o(i._ZN3Hal12HardwareInitEv)
-    i._ZN3HalC1Ev                            0x0801f838   Section        0  hal.o(i._ZN3HalC1Ev)
-    i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE 0x0801f83a   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE)
-    i._ZN4view10DisplayMem10drawStringEiiPc  0x0801f8f2   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPc)
-    i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE 0x0801f924   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE)
-    i._ZN4view10DisplayMem11drawPictureEPhiiii 0x0801f978   Section        0  displaymem.o(i._ZN4view10DisplayMem11drawPictureEPhiiii)
-    i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE 0x0801f99e   Section        0  displaymem.o(i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE)
-    i._ZN4view10DisplayMem11getInstanceEv    0x0801fa98   Section        0  displaymem.o(i._ZN4view10DisplayMem11getInstanceEv)
-    i._ZN4view10DisplayMem12drawHZStringEiiii 0x0801fac4   Section        0  displaymem.o(i._ZN4view10DisplayMem12drawHZStringEiiii)
-    i._ZN4view10DisplayMem16GetPassportArrayEPi 0x0801fafc   Section        0  displaymem.o(i._ZN4view10DisplayMem16GetPassportArrayEPi)
-    i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb 0x0801fbec   Section        0  displaymem.o(i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb)
-    i._ZN4view10DisplayMem7LCD_PowEii        0x0801fd6c   Section        0  displaymem.o(i._ZN4view10DisplayMem7LCD_PowEii)
-    i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb 0x0801fd9c   Section        0  displaymem.o(i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb)
-    i._ZN4view10DisplayMem8clearAllEv        0x0801fffc   Section        0  displaymem.o(i._ZN4view10DisplayMem8clearAllEv)
-    i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb 0x08020008   Section        0  displaymem.o(i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb)
-    i._ZN4view10DisplayMem9clearAreaEiiii    0x08020268   Section        0  displaymem.o(i._ZN4view10DisplayMem9clearAreaEiiii)
-    i._ZN4view10DisplayMemC1Ev               0x0802029e   Section        0  displaymem.o(i._ZN4view10DisplayMemC1Ev)
-    i._ZN5Utils10PrintArrayEPhi              0x080202a0   Section        0  utils.o(i._ZN5Utils10PrintArrayEPhi)
-    i._ZN5Utils10ReverseU16Et                0x080202cc   Section        0  utils.o(i._ZN5Utils10ReverseU16Et)
-    i._ZN5Utils13MemoryCompareEPvS0_i        0x080202d8   Section        0  utils.o(i._ZN5Utils13MemoryCompareEPvS0_i)
-    i._ZN5Utils13RandomIntegerEv             0x080202f8   Section        0  utils.o(i._ZN5Utils13RandomIntegerEv)
-    i._ZN5Utils5Crc32EjPhi                   0x08020300   Section        0  utils.o(i._ZN5Utils5Crc32EjPhi)
-    i._ZN5Utils6Sha256EPhjS0_j               0x0802033c   Section        0  utils.o(i._ZN5Utils6Sha256EPhjS0_j)
-    i._ZN5Utils7ReadU16EPh                   0x080203d0   Section        0  utils.o(i._ZN5Utils7ReadU16EPh)
-    i._ZN5Utils7ReadU32EPh                   0x080203dc   Section        0  utils.o(i._ZN5Utils7ReadU32EPh)
-    i._ZN5Utils8WriteU16EtPh                 0x080203f4   Section        0  utils.o(i._ZN5Utils8WriteU16EtPh)
-    i._ZN5Utils8WriteU32EjPh                 0x080203fc   Section        0  utils.o(i._ZN5Utils8WriteU32EjPh)
-    i._ZN7AddressC1Ev                        0x0802040c   Section        0  address.o(i._ZN7AddressC1Ev)
-    i._ZN8Commands11AppendBytesEPhi          0x08020410   Section        0  commands.o(i._ZN8Commands11AppendBytesEPhi)
-    i._ZN8Commands15CreateDataQuestEttttPhj  0x08020434   Section        0  commands.o(i._ZN8Commands15CreateDataQuestEttttPhj)
-    i._ZN8Commands8SendToPcEv                0x080204bc   Section        0  commands.o(i._ZN8Commands8SendToPcEv)
-    i._ZN8Commands9AppendU16Et               0x080204ec   Section        0  commands.o(i._ZN8Commands9AppendU16Et)
-    i._ZN8Commands9AppendU32Et               0x0802050c   Section        0  commands.o(i._ZN8Commands9AppendU32Et)
-    i._ZN8CommandsC1Ett                      0x0802052c   Section        0  commands.o(i._ZN8CommandsC1Ett)
-    i._ZN8CommandsC1Ev                       0x08020564   Section        0  commands.o(i._ZN8CommandsC1Ev)
-    i._ZN9PublicKeyC1Ev                      0x0802057c   Section        0  publickey.o(i._ZN9PublicKeyC1Ev)
-    i._ZNK10PrivateKey7getDataEv             0x0802057e   Section        0  privatekey.o(i._ZNK10PrivateKey7getDataEv)
-    i._ZNK9PublicKey7getDataEv               0x08020580   Section        0  publickey.o(i._ZNK9PublicKey7getDataEv)
-    i.__0printf$8                            0x08020584   Section        0  printf8.o(i.__0printf$8)
-    i.__ARM_fpclassify                       0x080205a4   Section        0  fpclassify.o(i.__ARM_fpclassify)
-    i.__aeabi_vec_ctor_nocookie_nodtor       0x080205d4   Section        0  aeabi_vec_ctor_nocookie_nodtor.o(i.__aeabi_vec_ctor_nocookie_nodtor)
-    i.__cxa_guard_acquire                    0x080205f8   Section        0  cxa_guard_acquire.o(i.__cxa_guard_acquire)
-    i.__hardfp_pow                           0x08020608   Section        0  pow.o(i.__hardfp_pow)
-    i.__kernel_poly                          0x08021240   Section        0  poly.o(i.__kernel_poly)
-    i.__mathlib_dbl_divzero                  0x08021338   Section        0  dunder.o(i.__mathlib_dbl_divzero)
-    i.__mathlib_dbl_infnan2                  0x08021368   Section        0  dunder.o(i.__mathlib_dbl_infnan2)
-    i.__mathlib_dbl_invalid                  0x08021380   Section        0  dunder.o(i.__mathlib_dbl_invalid)
-    i.__mathlib_dbl_overflow                 0x080213a0   Section        0  dunder.o(i.__mathlib_dbl_overflow)
-    i.__mathlib_dbl_underflow                0x080213c0   Section        0  dunder.o(i.__mathlib_dbl_underflow)
-    i.__scatterload_copy                     0x080213e0   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x080213ee   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x080213f0   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.__set_errno                            0x08021400   Section        0  errno.o(i.__set_errno)
-    i.__sti___10_myMain_cpp_Disp             0x0802140c   Section        0  mymain.o(i.__sti___10_myMain_cpp_Disp)
-    __sti___10_myMain_cpp_Disp               0x0802140d   Thumb Code    12  mymain.o(i.__sti___10_myMain_cpp_Disp)
-    i._printf_core                           0x0802141c   Section        0  printf8.o(i._printf_core)
-    _printf_core                             0x0802141d   Thumb Code   996  printf8.o(i._printf_core)
-    i._printf_post_padding                   0x0802182c   Section        0  printf8.o(i._printf_post_padding)
-    _printf_post_padding                     0x0802182d   Thumb Code    36  printf8.o(i._printf_post_padding)
-    i._printf_pre_padding                    0x08021850   Section        0  printf8.o(i._printf_pre_padding)
-    _printf_pre_padding                      0x08021851   Thumb Code    46  printf8.o(i._printf_pre_padding)
-    i.bigadd                                 0x0802187e   Section        0  bignum.o(i.bigadd)
-    i.bigdiv                                 0x080219c4   Section        0  showsign.o(i.bigdiv)
-    i.bigmul                                 0x08021b70   Section        0  bignum.o(i.bigmul)
-    i.bigpow                                 0x08021c86   Section        0  bignum.o(i.bigpow)
-    i.convert2to16                           0x08021d5c   Section        0  showsign.o(i.convert2to16)
-    i.crl_DRBG_AES128_Generate               0x08021e28   Section        0  crypto.o(i.crl_DRBG_AES128_Generate)
-    i.delay_ms                               0x08021fea   Section        0  oled281.o(i.delay_ms)
-    delay_ms                                 0x08021feb   Thumb Code    12  oled281.o(i.delay_ms)
-    i.delay_us                               0x08021ff8   Section        0  myiic.o(i.delay_us)
-    i.fabs                                   0x08022040   Section        0  fabs.o(i.fabs)
-    i.fputc                                  0x08022058   Section        0  forprintf.o(i.fputc)
-    i.free                                   0x08022070   Section        0  malloc.o(i.free)
-    i.main                                   0x080220c0   Section        0  main.o(i.main)
-    i.malloc                                 0x080220fc   Section        0  malloc.o(i.malloc)
-    i.my_main                                0x08022168   Section        0  mymain.o(i.my_main)
-    i.ripemd160_EndHash                      0x08022214   Section        0  ripemd160.o(i.ripemd160_EndHash)
-    i.ripemd160_F                            0x080222a0   Section        0  ripemd160.o(i.ripemd160_F)
-    i.ripemd160_G                            0x080222aa   Section        0  ripemd160.o(i.ripemd160_G)
-    i.ripemd160_H                            0x080222ba   Section        0  ripemd160.o(i.ripemd160_H)
-    i.ripemd160_HashData                     0x080222c8   Section        0  ripemd160.o(i.ripemd160_HashData)
-    i.ripemd160_I                            0x0802237c   Section        0  ripemd160.o(i.ripemd160_I)
-    i.ripemd160_J                            0x0802238c   Section        0  ripemd160.o(i.ripemd160_J)
-    i.sqrt                                   0x08022398   Section        0  sqrt.o(i.sqrt)
-    i.strupr                                 0x08022406   Section        0  showsign.o(i.strupr)
-    t._ZN5queueI7AddressLi20EEC1Ev           0x0802242c   Section        0  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
-    .constdata                               0x08022454   Section       16  stm32f4xx_hal_rcc.o(.constdata)
-    .constdata                               0x08022464   Section        4  receiveanalysis.o(.constdata)
-    .constdata                               0x08022468   Section      192  encrypt.o(.constdata)
-    .constdata                               0x08022528   Section        4  getaddress.o(.constdata)
-    .constdata                               0x0802252c   Section      516  showsign.o(.constdata)
-    .constdata                               0x08022730   Section       45  aw9136.o(.constdata)
-    __func__                                 0x08022730   Data          14  aw9136.o(.constdata)
-    __func__                                 0x0802273e   Data          13  aw9136.o(.constdata)
-    __func__                                 0x0802274b   Data          18  aw9136.o(.constdata)
-    .constdata                               0x08022760   Section     6040  crypto.o(.constdata)
-    table_reduction8                         0x08023188   Data         512  crypto.o(.constdata)
-    table_reduction4                         0x08023388   Data          32  crypto.o(.constdata)
-    pad                                      0x08023d18   Data          64  crypto.o(.constdata)
-    .constdata                               0x08023ef8   Section      136  pow.o(.constdata)
-    bp                                       0x08023ef8   Data          16  pow.o(.constdata)
-    dp_h                                     0x08023f08   Data          16  pow.o(.constdata)
-    dp_l                                     0x08023f18   Data          16  pow.o(.constdata)
-    L                                        0x08023f28   Data          48  pow.o(.constdata)
-    P                                        0x08023f58   Data          40  pow.o(.constdata)
-    .constdata                               0x08023f80   Section      129  ctype_o.o(.constdata)
-    .constdata                               0x08024004   Section        4  ctype_o.o(.constdata)
-    table                                    0x08024004   Data           4  ctype_o.o(.constdata)
-    .constdata                               0x08024008   Section        8  qnan.o(.constdata)
-    .conststring                             0x08024010   Section       66  showsign.o(.conststring)
-    .init_array                              0x08024074   Section        4  mymain.o(.init_array)
-    .init_array                              0x08024078   Section        0  cpp_init.o(.init_array)
+    i._ZN15ReceiveAnalysis4PollEv            0x0801f79c   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis4PollEv)
+    i._ZN15ReceiveAnalysis9clearDataEv       0x0801f7b2   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis9clearDataEv)
+    i._ZN15ReceiveAnalysis9crc_frameEPhi     0x0801f7e0   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysis9crc_frameEPhi)
+    i._ZN15ReceiveAnalysisC1Ev               0x0801f820   Section        0  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
+    i._ZN3Hal11SendUSBDataEPhi               0x0801f84c   Section        0  hal.o(i._ZN3Hal11SendUSBDataEPhi)
+    i._ZN3Hal11Start_MotorEi                 0x0801f874   Section        0  hal.o(i._ZN3Hal11Start_MotorEi)
+    i._ZN3Hal11getInstanceEv                 0x0801f89c   Section        0  hal.o(i._ZN3Hal11getInstanceEv)
+    i._ZN3Hal12HardwareInitEv                0x0801f8c8   Section        0  hal.o(i._ZN3Hal12HardwareInitEv)
+    i._ZN3HalC1Ev                            0x0801f8ec   Section        0  hal.o(i._ZN3HalC1Ev)
+    i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE 0x0801f8ee   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE)
+    i._ZN4view10DisplayMem10drawStringEiiPc  0x0801f9a6   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPc)
+    i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE 0x0801f9d8   Section        0  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE)
+    i._ZN4view10DisplayMem11drawPictureEPhiiii 0x0801fa2c   Section        0  displaymem.o(i._ZN4view10DisplayMem11drawPictureEPhiiii)
+    i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE 0x0801fa52   Section        0  displaymem.o(i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE)
+    i._ZN4view10DisplayMem11getInstanceEv    0x0801fb4c   Section        0  displaymem.o(i._ZN4view10DisplayMem11getInstanceEv)
+    i._ZN4view10DisplayMem12drawHZStringEiiii 0x0801fb78   Section        0  displaymem.o(i._ZN4view10DisplayMem12drawHZStringEiiii)
+    i._ZN4view10DisplayMem16GetPassportArrayEPi 0x0801fbb0   Section        0  displaymem.o(i._ZN4view10DisplayMem16GetPassportArrayEPi)
+    i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb 0x0801fca0   Section        0  displaymem.o(i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb)
+    i._ZN4view10DisplayMem7LCD_PowEii        0x0801fe20   Section        0  displaymem.o(i._ZN4view10DisplayMem7LCD_PowEii)
+    i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb 0x0801fe50   Section        0  displaymem.o(i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb)
+    i._ZN4view10DisplayMem8clearAllEv        0x080200b0   Section        0  displaymem.o(i._ZN4view10DisplayMem8clearAllEv)
+    i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb 0x080200bc   Section        0  displaymem.o(i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb)
+    i._ZN4view10DisplayMem9clearAreaEiiii    0x0802031c   Section        0  displaymem.o(i._ZN4view10DisplayMem9clearAreaEiiii)
+    i._ZN4view10DisplayMemC1Ev               0x08020352   Section        0  displaymem.o(i._ZN4view10DisplayMemC1Ev)
+    i._ZN5Utils10ReverseU16Et                0x08020354   Section        0  utils.o(i._ZN5Utils10ReverseU16Et)
+    i._ZN5Utils13MemoryCompareEPvS0_i        0x08020360   Section        0  utils.o(i._ZN5Utils13MemoryCompareEPvS0_i)
+    i._ZN5Utils13RandomIntegerEv             0x08020380   Section        0  utils.o(i._ZN5Utils13RandomIntegerEv)
+    i._ZN5Utils5Crc32EjPhi                   0x08020388   Section        0  utils.o(i._ZN5Utils5Crc32EjPhi)
+    i._ZN5Utils6Sha256EPhjS0_j               0x080203c4   Section        0  utils.o(i._ZN5Utils6Sha256EPhjS0_j)
+    i._ZN5Utils7ReadU16EPh                   0x08020458   Section        0  utils.o(i._ZN5Utils7ReadU16EPh)
+    i._ZN5Utils7ReadU32EPh                   0x08020464   Section        0  utils.o(i._ZN5Utils7ReadU32EPh)
+    i._ZN5Utils8WriteU16EtPh                 0x0802047c   Section        0  utils.o(i._ZN5Utils8WriteU16EtPh)
+    i._ZN5Utils8WriteU32EjPh                 0x08020484   Section        0  utils.o(i._ZN5Utils8WriteU32EjPh)
+    i._ZN7AddressC1Ev                        0x08020494   Section        0  address.o(i._ZN7AddressC1Ev)
+    i._ZN8Commands11AppendBytesEPhi          0x08020498   Section        0  commands.o(i._ZN8Commands11AppendBytesEPhi)
+    i._ZN8Commands15CreateDataQuestEttttPhj  0x080204bc   Section        0  commands.o(i._ZN8Commands15CreateDataQuestEttttPhj)
+    i._ZN8Commands8SendToPcEv                0x08020544   Section        0  commands.o(i._ZN8Commands8SendToPcEv)
+    i._ZN8Commands9AppendU16Et               0x08020574   Section        0  commands.o(i._ZN8Commands9AppendU16Et)
+    i._ZN8Commands9AppendU32Et               0x08020594   Section        0  commands.o(i._ZN8Commands9AppendU32Et)
+    i._ZN8CommandsC1Ett                      0x080205b4   Section        0  commands.o(i._ZN8CommandsC1Ett)
+    i._ZN8CommandsC1Ev                       0x080205ec   Section        0  commands.o(i._ZN8CommandsC1Ev)
+    i._ZN9PublicKeyC1Ev                      0x08020604   Section        0  publickey.o(i._ZN9PublicKeyC1Ev)
+    i._ZNK10PrivateKey7getDataEv             0x08020606   Section        0  privatekey.o(i._ZNK10PrivateKey7getDataEv)
+    i._ZNK9PublicKey7getDataEv               0x08020608   Section        0  publickey.o(i._ZNK9PublicKey7getDataEv)
+    i.__0printf$8                            0x0802060c   Section        0  printf8.o(i.__0printf$8)
+    i.__ARM_fpclassify                       0x0802062c   Section        0  fpclassify.o(i.__ARM_fpclassify)
+    i.__aeabi_vec_ctor_nocookie_nodtor       0x0802065c   Section        0  aeabi_vec_ctor_nocookie_nodtor.o(i.__aeabi_vec_ctor_nocookie_nodtor)
+    i.__cxa_guard_acquire                    0x08020680   Section        0  cxa_guard_acquire.o(i.__cxa_guard_acquire)
+    i.__hardfp_pow                           0x08020690   Section        0  pow.o(i.__hardfp_pow)
+    i.__kernel_poly                          0x080212c8   Section        0  poly.o(i.__kernel_poly)
+    i.__mathlib_dbl_divzero                  0x080213c0   Section        0  dunder.o(i.__mathlib_dbl_divzero)
+    i.__mathlib_dbl_infnan2                  0x080213f0   Section        0  dunder.o(i.__mathlib_dbl_infnan2)
+    i.__mathlib_dbl_invalid                  0x08021408   Section        0  dunder.o(i.__mathlib_dbl_invalid)
+    i.__mathlib_dbl_overflow                 0x08021428   Section        0  dunder.o(i.__mathlib_dbl_overflow)
+    i.__mathlib_dbl_underflow                0x08021448   Section        0  dunder.o(i.__mathlib_dbl_underflow)
+    i.__scatterload_copy                     0x08021468   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x08021476   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x08021478   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.__set_errno                            0x08021488   Section        0  errno.o(i.__set_errno)
+    i.__sti___10_myMain_cpp_Disp             0x08021494   Section        0  mymain.o(i.__sti___10_myMain_cpp_Disp)
+    __sti___10_myMain_cpp_Disp               0x08021495   Thumb Code    12  mymain.o(i.__sti___10_myMain_cpp_Disp)
+    i._printf_core                           0x080214a4   Section        0  printf8.o(i._printf_core)
+    _printf_core                             0x080214a5   Thumb Code   996  printf8.o(i._printf_core)
+    i._printf_post_padding                   0x080218b4   Section        0  printf8.o(i._printf_post_padding)
+    _printf_post_padding                     0x080218b5   Thumb Code    36  printf8.o(i._printf_post_padding)
+    i._printf_pre_padding                    0x080218d8   Section        0  printf8.o(i._printf_pre_padding)
+    _printf_pre_padding                      0x080218d9   Thumb Code    46  printf8.o(i._printf_pre_padding)
+    i.bigadd                                 0x08021906   Section        0  bignum.o(i.bigadd)
+    i.bigdiv                                 0x08021a4c   Section        0  showsign.o(i.bigdiv)
+    i.bigmul                                 0x08021bf8   Section        0  bignum.o(i.bigmul)
+    i.bigpow                                 0x08021d0e   Section        0  bignum.o(i.bigpow)
+    i.convert2to16                           0x08021de4   Section        0  showsign.o(i.convert2to16)
+    i.crl_DRBG_AES128_Generate               0x08021eb0   Section        0  crypto.o(i.crl_DRBG_AES128_Generate)
+    i.delay_ms                               0x08022072   Section        0  oled281.o(i.delay_ms)
+    delay_ms                                 0x08022073   Thumb Code    12  oled281.o(i.delay_ms)
+    i.delay_us                               0x08022080   Section        0  myiic.o(i.delay_us)
+    i.fabs                                   0x080220c8   Section        0  fabs.o(i.fabs)
+    i.fputc                                  0x080220e0   Section        0  forprintf.o(i.fputc)
+    i.free                                   0x080220f8   Section        0  malloc.o(i.free)
+    i.main                                   0x08022148   Section        0  main.o(i.main)
+    i.malloc                                 0x08022184   Section        0  malloc.o(i.malloc)
+    i.my_main                                0x080221f0   Section        0  mymain.o(i.my_main)
+    i.ripemd160_EndHash                      0x0802229c   Section        0  ripemd160.o(i.ripemd160_EndHash)
+    i.ripemd160_F                            0x08022328   Section        0  ripemd160.o(i.ripemd160_F)
+    i.ripemd160_G                            0x08022332   Section        0  ripemd160.o(i.ripemd160_G)
+    i.ripemd160_H                            0x08022342   Section        0  ripemd160.o(i.ripemd160_H)
+    i.ripemd160_HashData                     0x08022350   Section        0  ripemd160.o(i.ripemd160_HashData)
+    i.ripemd160_I                            0x08022404   Section        0  ripemd160.o(i.ripemd160_I)
+    i.ripemd160_J                            0x08022414   Section        0  ripemd160.o(i.ripemd160_J)
+    i.sqrt                                   0x08022420   Section        0  sqrt.o(i.sqrt)
+    i.strupr                                 0x0802248e   Section        0  showsign.o(i.strupr)
+    t._ZN5queueI7AddressLi20EEC1Ev           0x080224b4   Section        0  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
+    .constdata                               0x080224dc   Section       16  stm32f4xx_hal_rcc.o(.constdata)
+    .constdata                               0x080224ec   Section        4  receiveanalysis.o(.constdata)
+    .constdata                               0x080224f0   Section      192  encrypt.o(.constdata)
+    .constdata                               0x080225b0   Section        4  getaddress.o(.constdata)
+    .constdata                               0x080225b4   Section      516  showsign.o(.constdata)
+    .constdata                               0x080227b8   Section       45  aw9136.o(.constdata)
+    __func__                                 0x080227b8   Data          14  aw9136.o(.constdata)
+    __func__                                 0x080227c6   Data          13  aw9136.o(.constdata)
+    __func__                                 0x080227d3   Data          18  aw9136.o(.constdata)
+    .constdata                               0x080227e8   Section     6040  crypto.o(.constdata)
+    table_reduction8                         0x08023210   Data         512  crypto.o(.constdata)
+    table_reduction4                         0x08023410   Data          32  crypto.o(.constdata)
+    pad                                      0x08023da0   Data          64  crypto.o(.constdata)
+    .constdata                               0x08023f80   Section      136  pow.o(.constdata)
+    bp                                       0x08023f80   Data          16  pow.o(.constdata)
+    dp_h                                     0x08023f90   Data          16  pow.o(.constdata)
+    dp_l                                     0x08023fa0   Data          16  pow.o(.constdata)
+    L                                        0x08023fb0   Data          48  pow.o(.constdata)
+    P                                        0x08023fe0   Data          40  pow.o(.constdata)
+    .constdata                               0x08024008   Section      129  ctype_o.o(.constdata)
+    .constdata                               0x0802408c   Section        4  ctype_o.o(.constdata)
+    table                                    0x0802408c   Data           4  ctype_o.o(.constdata)
+    .constdata                               0x08024090   Section        8  qnan.o(.constdata)
+    .conststring                             0x08024098   Section       66  showsign.o(.conststring)
+    .init_array                              0x080240fc   Section        4  mymain.o(.init_array)
+    .init_array                              0x08024100   Section        0  cpp_init.o(.init_array)
     .data                                    0x20000000   Section        1  usbd_ctlreq.o(.data)
     cfgidx                                   0x20000000   Data           1  usbd_ctlreq.o(.data)
     .data                                    0x20000004   Section      122  usbd_customhid.o(.data)
@@ -3513,42 +3512,42 @@ Image Symbol Table
     .data                                    0x20000150   Section       84  receiveanalysis.o(.data)
     _ZGVins                                  0x200001a0   Data           4  receiveanalysis.o(.data)
     .data                                    0x200001a4   Section        1  utils.o(.data)
-    .data                                    0x200001a5   Section    21304  oled281.o(.data)
-    .data                                    0x200054e0   Section       24  ripemd160.o(.data)
-    ripemd160_count                          0x200054e0   Data           4  ripemd160.o(.data)
-    ripemd160_stateMD160                     0x200054e4   Data          20  ripemd160.o(.data)
-    .data                                    0x200054f8   Section       62  showsign.o(.data)
-    index_add                                0x200054f8   Data           4  showsign.o(.data)
-    .data                                    0x20005538   Section       24  aw9136.o(.data)
-    debug_level                              0x20005548   Data           4  aw9136.o(.data)
-    WorkMode                                 0x2000554c   Data           4  aw9136.o(.data)
-    .data                                    0x20005550   Section        4  mvars.o(.data)
-    .data                                    0x20005554   Section        4  mvars.o(.data)
-    .data                                    0x20005558   Section        4  errno.o(.data)
-    _errno                                   0x20005558   Data           4  errno.o(.data)
-    .bss                                     0x2000555c   Section      220  main.o(.bss)
-    .bss                                     0x20005638   Section      548  usb_device.o(.bss)
-    .bss                                     0x2000585c   Section      512  usbd_desc.o(.bss)
-    .bss                                     0x20005a5c   Section      948  usbd_conf.o(.bss)
-    .bss                                     0x20005e10   Section       32  stm32f4xx_hal_flash.o(.bss)
-    .bss                                     0x20005e30   Section       28  mymain.o(.bss)
-    .bss                                     0x20005e4c   Section       64  commands.o(.bss)
-    .bss                                     0x20005e8c   Section       32  irq_handler.o(.bss)
-    .bss                                     0x20005eac   Section    68932  receiveanalysis.o(.bss)
-    ins                                      0x20005efc   Data       68852  receiveanalysis.o(.bss)
-    .bss                                     0x20016bf0   Section     1024  utils.o(.bss)
-    .bss                                     0x20016ff0   Section     4144  encrypt.o(.bss)
-    P_key                                    0x20016ff0   Data         200  encrypt.o(.bss)
-    result1                                  0x200170b8   Data         128  encrypt.o(.bss)
-    preallocated_buffer                      0x20017138   Data        3584  encrypt.o(.bss)
-    .bss                                     0x20018020   Section      128  ripemd160.o(.bss)
-    ripemd160_blockDWords                    0x20018020   Data          64  ripemd160.o(.bss)
-    ripemd160_buffer                         0x20018060   Data          64  ripemd160.o(.bss)
-    .bss                                     0x200180a0   Section      562  showsign.o(.bss)
-    final                                    0x200180a0   Data         512  showsign.o(.bss)
-    .bss                                     0x200182d4   Section       48  aw9136.o(.bss)
-    HEAP                                     0x20018308   Section      512  startup_stm32f407xx.o(HEAP)
-    STACK                                    0x20018508   Section     8192  startup_stm32f407xx.o(STACK)
+    .data                                    0x200001a5   Section    21328  oled281.o(.data)
+    .data                                    0x200054f8   Section       24  ripemd160.o(.data)
+    ripemd160_count                          0x200054f8   Data           4  ripemd160.o(.data)
+    ripemd160_stateMD160                     0x200054fc   Data          20  ripemd160.o(.data)
+    .data                                    0x20005510   Section       62  showsign.o(.data)
+    index_add                                0x20005510   Data           4  showsign.o(.data)
+    .data                                    0x20005550   Section       24  aw9136.o(.data)
+    debug_level                              0x20005560   Data           4  aw9136.o(.data)
+    WorkMode                                 0x20005564   Data           4  aw9136.o(.data)
+    .data                                    0x20005568   Section        4  mvars.o(.data)
+    .data                                    0x2000556c   Section        4  mvars.o(.data)
+    .data                                    0x20005570   Section        4  errno.o(.data)
+    _errno                                   0x20005570   Data           4  errno.o(.data)
+    .bss                                     0x20005574   Section      220  main.o(.bss)
+    .bss                                     0x20005650   Section      548  usb_device.o(.bss)
+    .bss                                     0x20005874   Section      512  usbd_desc.o(.bss)
+    .bss                                     0x20005a74   Section      948  usbd_conf.o(.bss)
+    .bss                                     0x20005e28   Section       32  stm32f4xx_hal_flash.o(.bss)
+    .bss                                     0x20005e48   Section       28  mymain.o(.bss)
+    .bss                                     0x20005e64   Section       64  commands.o(.bss)
+    .bss                                     0x20005ea4   Section       32  irq_handler.o(.bss)
+    .bss                                     0x20005ec4   Section    68932  receiveanalysis.o(.bss)
+    ins                                      0x20005f14   Data       68852  receiveanalysis.o(.bss)
+    .bss                                     0x20016c08   Section     1024  utils.o(.bss)
+    .bss                                     0x20017008   Section     4144  encrypt.o(.bss)
+    P_key                                    0x20017008   Data         200  encrypt.o(.bss)
+    result1                                  0x200170d0   Data         128  encrypt.o(.bss)
+    preallocated_buffer                      0x20017150   Data        3584  encrypt.o(.bss)
+    .bss                                     0x20018038   Section      128  ripemd160.o(.bss)
+    ripemd160_blockDWords                    0x20018038   Data          64  ripemd160.o(.bss)
+    ripemd160_buffer                         0x20018078   Data          64  ripemd160.o(.bss)
+    .bss                                     0x200180b8   Section      562  showsign.o(.bss)
+    final                                    0x200180b8   Data         512  showsign.o(.bss)
+    .bss                                     0x200182ec   Section       48  aw9136.o(.bss)
+    HEAP                                     0x20018320   Section      512  startup_stm32f407xx.o(HEAP)
+    STACK                                    0x20018520   Section     8192  startup_stm32f407xx.o(STACK)
 
     Global Symbols
 
@@ -4043,127 +4042,126 @@ Image Symbol Table
     ReceiveAnalysis::GetInstance()           0x0801e061   Thumb Code    36  receiveanalysis.o(i._ZN15ReceiveAnalysis11GetInstanceEv)
     ReceiveAnalysis::hashCompare(unsigned char*, unsigned char*) 0x0801e08d   Thumb Code    32  receiveanalysis.o(i._ZN15ReceiveAnalysis11hashCompareEPhS0_)
     ReceiveAnalysis::isAllPackGot()          0x0801e0ad   Thumb Code    32  receiveanalysis.o(i._ZN15ReceiveAnalysis12isAllPackGotEv)
-    ReceiveAnalysis::PackDataFromPcCallback(unsigned char*, int) 0x0801e0cd   Thumb Code  5626  receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi)
-    ReceiveAnalysis::Poll()                  0x0801f6e9   Thumb Code    22  receiveanalysis.o(i._ZN15ReceiveAnalysis4PollEv)
-    ReceiveAnalysis::clearData()             0x0801f6ff   Thumb Code    46  receiveanalysis.o(i._ZN15ReceiveAnalysis9clearDataEv)
-    ReceiveAnalysis::crc_frame(unsigned char*, int) 0x0801f72d   Thumb Code    62  receiveanalysis.o(i._ZN15ReceiveAnalysis9crc_frameEPhi)
-    ReceiveAnalysis::ReceiveAnalysis()       0x0801f76d   Thumb Code    38  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
-    ReceiveAnalysis::ReceiveAnalysis__sub_object() 0x0801f76d   Thumb Code     0  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
-    Hal::SendUSBData(unsigned char*, int)    0x0801f799   Thumb Code    36  hal.o(i._ZN3Hal11SendUSBDataEPhi)
-    Hal::Start_Motor(int)                    0x0801f7c1   Thumb Code    34  hal.o(i._ZN3Hal11Start_MotorEi)
-    Hal::getInstance()                       0x0801f7e9   Thumb Code    36  hal.o(i._ZN3Hal11getInstanceEv)
-    Hal::HardwareInit()                      0x0801f815   Thumb Code    30  hal.o(i._ZN3Hal12HardwareInitEv)
-    Hal::Hal()                               0x0801f839   Thumb Code     2  hal.o(i._ZN3HalC1Ev)
-    Hal::Hal__sub_object()                   0x0801f839   Thumb Code     0  hal.o(i._ZN3HalC1Ev)
-    view::DisplayMem::drawNumber(int, int, long long, int, view::FONT_t) 0x0801f83b   Thumb Code   184  displaymem.o(i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE)
-    view::DisplayMem::drawString(int, int, char*) 0x0801f8f3   Thumb Code    50  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPc)
-    view::DisplayMem::drawString(int, int, char*, view::FONT_t) 0x0801f925   Thumb Code    84  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE)
-    view::DisplayMem::drawPicture(unsigned char*, int, int, int, int) 0x0801f979   Thumb Code    38  displaymem.o(i._ZN4view10DisplayMem11drawPictureEPhiiii)
-    view::DisplayMem::drawxNumber(int, int, long long, int, view::FONT_t) 0x0801f99f   Thumb Code   248  displaymem.o(i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE)
-    view::DisplayMem::getInstance()          0x0801fa99   Thumb Code    36  displaymem.o(i._ZN4view10DisplayMem11getInstanceEv)
-    view::DisplayMem::drawHZString(int, int, int, int) 0x0801fac5   Thumb Code    54  displaymem.o(i._ZN4view10DisplayMem12drawHZStringEiiii)
-    view::DisplayMem::GetPassportArray(int*) 0x0801fafd   Thumb Code   234  displaymem.o(i._ZN4view10DisplayMem16GetPassportArrayEPi)
-    view::DisplayMem::drawHZ(int, int, int, view::FONT_HZ_t, bool) 0x0801fbed   Thumb Code   372  displaymem.o(i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb)
-    view::DisplayMem::LCD_Pow(int, int)      0x0801fd6d   Thumb Code    46  displaymem.o(i._ZN4view10DisplayMem7LCD_PowEii)
-    view::DisplayMem::drawInt(int, int, int, view::FONT_t, bool) 0x0801fd9d   Thumb Code   588  displaymem.o(i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb)
-    view::DisplayMem::clearAll()             0x0801fffd   Thumb Code    12  displaymem.o(i._ZN4view10DisplayMem8clearAllEv)
-    view::DisplayMem::drawChar(int, int, char, view::FONT_t, bool) 0x08020009   Thumb Code   588  displaymem.o(i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb)
-    view::DisplayMem::clearArea(int, int, int, int) 0x08020269   Thumb Code    54  displaymem.o(i._ZN4view10DisplayMem9clearAreaEiiii)
-    view::DisplayMem::DisplayMem()           0x0802029f   Thumb Code     2  displaymem.o(i._ZN4view10DisplayMemC1Ev)
-    view::DisplayMem::DisplayMem__sub_object() 0x0802029f   Thumb Code     0  displaymem.o(i._ZN4view10DisplayMemC1Ev)
-    Utils::PrintArray(unsigned char*, int)   0x080202a1   Thumb Code    32  utils.o(i._ZN5Utils10PrintArrayEPhi)
-    Utils::ReverseU16(unsigned short)        0x080202cd   Thumb Code    12  utils.o(i._ZN5Utils10ReverseU16Et)
-    Utils::MemoryCompare(void*, void*, int)  0x080202d9   Thumb Code    32  utils.o(i._ZN5Utils13MemoryCompareEPvS0_i)
-    Utils::RandomInteger()                   0x080202f9   Thumb Code     8  utils.o(i._ZN5Utils13RandomIntegerEv)
-    Utils::Crc32(unsigned, unsigned char*, int) 0x08020301   Thumb Code    50  utils.o(i._ZN5Utils5Crc32EjPhi)
-    Utils::Sha256(unsigned char*, unsigned, unsigned char*, unsigned) 0x0802033d   Thumb Code    86  utils.o(i._ZN5Utils6Sha256EPhjS0_j)
-    Utils::ReadU16(unsigned char*)           0x080203d1   Thumb Code    12  utils.o(i._ZN5Utils7ReadU16EPh)
-    Utils::ReadU32(unsigned char*)           0x080203dd   Thumb Code    24  utils.o(i._ZN5Utils7ReadU32EPh)
-    Utils::WriteU16(unsigned short, unsigned char*) 0x080203f5   Thumb Code     8  utils.o(i._ZN5Utils8WriteU16EtPh)
-    Utils::WriteU32(unsigned, unsigned char*) 0x080203fd   Thumb Code    16  utils.o(i._ZN5Utils8WriteU32EjPh)
-    Address::Address()                       0x0802040d   Thumb Code     2  address.o(i._ZN7AddressC1Ev)
-    Address::Address__sub_object()           0x0802040d   Thumb Code     0  address.o(i._ZN7AddressC1Ev)
-    Commands::AppendBytes(unsigned char*, int) 0x08020411   Thumb Code    30  commands.o(i._ZN8Commands11AppendBytesEPhi)
-    Commands::CreateDataQuest(unsigned short, unsigned short, unsigned short, unsigned short, unsigned char*, unsigned) 0x08020435   Thumb Code   132  commands.o(i._ZN8Commands15CreateDataQuestEttttPhj)
-    Commands::SendToPc()                     0x080204bd   Thumb Code    44  commands.o(i._ZN8Commands8SendToPcEv)
-    Commands::AppendU16(unsigned short)      0x080204ed   Thumb Code    26  commands.o(i._ZN8Commands9AppendU16Et)
-    Commands::AppendU32(unsigned short)      0x0802050d   Thumb Code    26  commands.o(i._ZN8Commands9AppendU32Et)
-    Commands::Commands(unsigned short, unsigned short) 0x0802052d   Thumb Code    52  commands.o(i._ZN8CommandsC1Ett)
-    Commands::Commands__sub_object(unsigned short, unsigned short) 0x0802052d   Thumb Code     0  commands.o(i._ZN8CommandsC1Ett)
-    Commands::Commands()                     0x08020565   Thumb Code    20  commands.o(i._ZN8CommandsC1Ev)
-    Commands::Commands__sub_object()         0x08020565   Thumb Code     0  commands.o(i._ZN8CommandsC1Ev)
-    PublicKey::PublicKey()                   0x0802057d   Thumb Code     2  publickey.o(i._ZN9PublicKeyC1Ev)
-    PublicKey::PublicKey__sub_object()       0x0802057d   Thumb Code     0  publickey.o(i._ZN9PublicKeyC1Ev)
-    PrivateKey::getData() const              0x0802057f   Thumb Code     2  privatekey.o(i._ZNK10PrivateKey7getDataEv)
-    PublicKey::getData() const               0x08020581   Thumb Code     2  publickey.o(i._ZNK9PublicKey7getDataEv)
-    __0printf$8                              0x08020585   Thumb Code    22  printf8.o(i.__0printf$8)
-    __1printf$8                              0x08020585   Thumb Code     0  printf8.o(i.__0printf$8)
-    __2printf                                0x08020585   Thumb Code     0  printf8.o(i.__0printf$8)
-    __ARM_fpclassify                         0x080205a5   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
-    __aeabi_vec_ctor_nocookie_nodtor         0x080205d5   Thumb Code    36  aeabi_vec_ctor_nocookie_nodtor.o(i.__aeabi_vec_ctor_nocookie_nodtor)
-    __cxa_guard_acquire                      0x080205f9   Thumb Code    16  cxa_guard_acquire.o(i.__cxa_guard_acquire)
-    __hardfp_pow                             0x08020609   Thumb Code  3044  pow.o(i.__hardfp_pow)
-    __kernel_poly                            0x08021241   Thumb Code   248  poly.o(i.__kernel_poly)
-    __mathlib_dbl_divzero                    0x08021339   Thumb Code    28  dunder.o(i.__mathlib_dbl_divzero)
-    __mathlib_dbl_infnan2                    0x08021369   Thumb Code    20  dunder.o(i.__mathlib_dbl_infnan2)
-    __mathlib_dbl_invalid                    0x08021381   Thumb Code    24  dunder.o(i.__mathlib_dbl_invalid)
-    __mathlib_dbl_overflow                   0x080213a1   Thumb Code    24  dunder.o(i.__mathlib_dbl_overflow)
-    __mathlib_dbl_underflow                  0x080213c1   Thumb Code    24  dunder.o(i.__mathlib_dbl_underflow)
-    __scatterload_copy                       0x080213e1   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x080213ef   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x080213f1   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    __set_errno                              0x08021401   Thumb Code     6  errno.o(i.__set_errno)
-    bigadd                                   0x0802187f   Thumb Code   324  bignum.o(i.bigadd)
-    bigdiv                                   0x080219c5   Thumb Code   390  showsign.o(i.bigdiv)
-    bigmul                                   0x08021b71   Thumb Code   278  bignum.o(i.bigmul)
-    bigpow                                   0x08021c87   Thumb Code   214  bignum.o(i.bigpow)
-    convert2to16                             0x08021d5d   Thumb Code   186  showsign.o(i.convert2to16)
-    crl_DRBG_AES128_Generate                 0x08021e29   Thumb Code   450  crypto.o(i.crl_DRBG_AES128_Generate)
-    delay_us                                 0x08021ff9   Thumb Code    66  myiic.o(i.delay_us)
-    fabs                                     0x08022041   Thumb Code    24  fabs.o(i.fabs)
-    fputc                                    0x08022059   Thumb Code    20  forprintf.o(i.fputc)
-    free                                     0x08022071   Thumb Code    76  malloc.o(i.free)
-    main                                     0x080220c1   Thumb Code    50  main.o(i.main)
-    malloc                                   0x080220fd   Thumb Code    92  malloc.o(i.malloc)
-    my_main                                  0x08022169   Thumb Code   132  mymain.o(i.my_main)
-    ripemd160_EndHash                        0x08022215   Thumb Code   130  ripemd160.o(i.ripemd160_EndHash)
-    ripemd160_F                              0x080222a1   Thumb Code    10  ripemd160.o(i.ripemd160_F)
-    ripemd160_G                              0x080222ab   Thumb Code    16  ripemd160.o(i.ripemd160_G)
-    ripemd160_H                              0x080222bb   Thumb Code    12  ripemd160.o(i.ripemd160_H)
-    ripemd160_HashData                       0x080222c9   Thumb Code   162  ripemd160.o(i.ripemd160_HashData)
-    ripemd160_I                              0x0802237d   Thumb Code    16  ripemd160.o(i.ripemd160_I)
-    ripemd160_J                              0x0802238d   Thumb Code    12  ripemd160.o(i.ripemd160_J)
-    sqrt                                     0x08022399   Thumb Code   110  sqrt.o(i.sqrt)
-    strupr                                   0x08022407   Thumb Code    36  showsign.o(i.strupr)
-    queue<Address, (int)20>::queue()         0x0802242d   Thumb Code    36  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
-    queue<Address, (int)20>::queue__sub_object() 0x0802242d   Thumb Code     0  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
-    APBAHBPrescTable                         0x08022454   Data          16  stm32f4xx_hal_rcc.o(.constdata)
-    P_256_a                                  0x08022468   Data          32  encrypt.o(.constdata)
-    P_256_b                                  0x08022488   Data          32  encrypt.o(.constdata)
-    P_256_p                                  0x080224a8   Data          32  encrypt.o(.constdata)
-    P_256_n                                  0x080224c8   Data          32  encrypt.o(.constdata)
-    P_256_Gx                                 0x080224e8   Data          32  encrypt.o(.constdata)
-    P_256_Gy                                 0x08022508   Data          32  encrypt.o(.constdata)
-    Sbox                                     0x08022760   Data         256  crypto.o(.constdata)
-    InvSbox                                  0x08022860   Data         256  crypto.o(.constdata)
-    rcon                                     0x08022960   Data          40  crypto.o(.constdata)
-    enc_table                                0x08022988   Data        1024  crypto.o(.constdata)
-    dec_table                                0x08022d88   Data        1024  crypto.o(.constdata)
-    SP1                                      0x080233a8   Data         256  crypto.o(.constdata)
-    SP2                                      0x080234a8   Data         256  crypto.o(.constdata)
-    SP3                                      0x080235a8   Data         256  crypto.o(.constdata)
-    SP4                                      0x080236a8   Data         256  crypto.o(.constdata)
-    SP5                                      0x080237a8   Data         256  crypto.o(.constdata)
-    SP6                                      0x080238a8   Data         256  crypto.o(.constdata)
-    SP7                                      0x080239a8   Data         256  crypto.o(.constdata)
-    SP8                                      0x08023aa8   Data         256  crypto.o(.constdata)
-    K256                                     0x08023ba8   Data         256  crypto.o(.constdata)
-    __ctype_table                            0x08023f80   Data         129  ctype_o.o(.constdata)
-    __mathlib_zero                           0x08024008   Data           8  qnan.o(.constdata)
-    Region$$Table$$Base                      0x08024054   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08024074   Number         0  anon$$obj.o(Region$$Table)
-    SHT$$INIT_ARRAY$$Base                    0x08024074   Number         0  mymain.o(.init_array)
-    SHT$$INIT_ARRAY$$Limit                   0x08024078   Number         0  cpp_init.o(.init_array)
+    ReceiveAnalysis::PackDataFromPcCallback(unsigned char*, int) 0x0801e0cd   Thumb Code  5796  receiveanalysis.o(i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi)
+    ReceiveAnalysis::Poll()                  0x0801f79d   Thumb Code    22  receiveanalysis.o(i._ZN15ReceiveAnalysis4PollEv)
+    ReceiveAnalysis::clearData()             0x0801f7b3   Thumb Code    46  receiveanalysis.o(i._ZN15ReceiveAnalysis9clearDataEv)
+    ReceiveAnalysis::crc_frame(unsigned char*, int) 0x0801f7e1   Thumb Code    62  receiveanalysis.o(i._ZN15ReceiveAnalysis9crc_frameEPhi)
+    ReceiveAnalysis::ReceiveAnalysis()       0x0801f821   Thumb Code    38  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
+    ReceiveAnalysis::ReceiveAnalysis__sub_object() 0x0801f821   Thumb Code     0  receiveanalysis.o(i._ZN15ReceiveAnalysisC1Ev)
+    Hal::SendUSBData(unsigned char*, int)    0x0801f84d   Thumb Code    36  hal.o(i._ZN3Hal11SendUSBDataEPhi)
+    Hal::Start_Motor(int)                    0x0801f875   Thumb Code    34  hal.o(i._ZN3Hal11Start_MotorEi)
+    Hal::getInstance()                       0x0801f89d   Thumb Code    36  hal.o(i._ZN3Hal11getInstanceEv)
+    Hal::HardwareInit()                      0x0801f8c9   Thumb Code    30  hal.o(i._ZN3Hal12HardwareInitEv)
+    Hal::Hal()                               0x0801f8ed   Thumb Code     2  hal.o(i._ZN3HalC1Ev)
+    Hal::Hal__sub_object()                   0x0801f8ed   Thumb Code     0  hal.o(i._ZN3HalC1Ev)
+    view::DisplayMem::drawNumber(int, int, long long, int, view::FONT_t) 0x0801f8ef   Thumb Code   184  displaymem.o(i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE)
+    view::DisplayMem::drawString(int, int, char*) 0x0801f9a7   Thumb Code    50  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPc)
+    view::DisplayMem::drawString(int, int, char*, view::FONT_t) 0x0801f9d9   Thumb Code    84  displaymem.o(i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE)
+    view::DisplayMem::drawPicture(unsigned char*, int, int, int, int) 0x0801fa2d   Thumb Code    38  displaymem.o(i._ZN4view10DisplayMem11drawPictureEPhiiii)
+    view::DisplayMem::drawxNumber(int, int, long long, int, view::FONT_t) 0x0801fa53   Thumb Code   248  displaymem.o(i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE)
+    view::DisplayMem::getInstance()          0x0801fb4d   Thumb Code    36  displaymem.o(i._ZN4view10DisplayMem11getInstanceEv)
+    view::DisplayMem::drawHZString(int, int, int, int) 0x0801fb79   Thumb Code    54  displaymem.o(i._ZN4view10DisplayMem12drawHZStringEiiii)
+    view::DisplayMem::GetPassportArray(int*) 0x0801fbb1   Thumb Code   234  displaymem.o(i._ZN4view10DisplayMem16GetPassportArrayEPi)
+    view::DisplayMem::drawHZ(int, int, int, view::FONT_HZ_t, bool) 0x0801fca1   Thumb Code   372  displaymem.o(i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb)
+    view::DisplayMem::LCD_Pow(int, int)      0x0801fe21   Thumb Code    46  displaymem.o(i._ZN4view10DisplayMem7LCD_PowEii)
+    view::DisplayMem::drawInt(int, int, int, view::FONT_t, bool) 0x0801fe51   Thumb Code   588  displaymem.o(i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb)
+    view::DisplayMem::clearAll()             0x080200b1   Thumb Code    12  displaymem.o(i._ZN4view10DisplayMem8clearAllEv)
+    view::DisplayMem::drawChar(int, int, char, view::FONT_t, bool) 0x080200bd   Thumb Code   588  displaymem.o(i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb)
+    view::DisplayMem::clearArea(int, int, int, int) 0x0802031d   Thumb Code    54  displaymem.o(i._ZN4view10DisplayMem9clearAreaEiiii)
+    view::DisplayMem::DisplayMem()           0x08020353   Thumb Code     2  displaymem.o(i._ZN4view10DisplayMemC1Ev)
+    view::DisplayMem::DisplayMem__sub_object() 0x08020353   Thumb Code     0  displaymem.o(i._ZN4view10DisplayMemC1Ev)
+    Utils::ReverseU16(unsigned short)        0x08020355   Thumb Code    12  utils.o(i._ZN5Utils10ReverseU16Et)
+    Utils::MemoryCompare(void*, void*, int)  0x08020361   Thumb Code    32  utils.o(i._ZN5Utils13MemoryCompareEPvS0_i)
+    Utils::RandomInteger()                   0x08020381   Thumb Code     8  utils.o(i._ZN5Utils13RandomIntegerEv)
+    Utils::Crc32(unsigned, unsigned char*, int) 0x08020389   Thumb Code    50  utils.o(i._ZN5Utils5Crc32EjPhi)
+    Utils::Sha256(unsigned char*, unsigned, unsigned char*, unsigned) 0x080203c5   Thumb Code    86  utils.o(i._ZN5Utils6Sha256EPhjS0_j)
+    Utils::ReadU16(unsigned char*)           0x08020459   Thumb Code    12  utils.o(i._ZN5Utils7ReadU16EPh)
+    Utils::ReadU32(unsigned char*)           0x08020465   Thumb Code    24  utils.o(i._ZN5Utils7ReadU32EPh)
+    Utils::WriteU16(unsigned short, unsigned char*) 0x0802047d   Thumb Code     8  utils.o(i._ZN5Utils8WriteU16EtPh)
+    Utils::WriteU32(unsigned, unsigned char*) 0x08020485   Thumb Code    16  utils.o(i._ZN5Utils8WriteU32EjPh)
+    Address::Address()                       0x08020495   Thumb Code     2  address.o(i._ZN7AddressC1Ev)
+    Address::Address__sub_object()           0x08020495   Thumb Code     0  address.o(i._ZN7AddressC1Ev)
+    Commands::AppendBytes(unsigned char*, int) 0x08020499   Thumb Code    30  commands.o(i._ZN8Commands11AppendBytesEPhi)
+    Commands::CreateDataQuest(unsigned short, unsigned short, unsigned short, unsigned short, unsigned char*, unsigned) 0x080204bd   Thumb Code   132  commands.o(i._ZN8Commands15CreateDataQuestEttttPhj)
+    Commands::SendToPc()                     0x08020545   Thumb Code    44  commands.o(i._ZN8Commands8SendToPcEv)
+    Commands::AppendU16(unsigned short)      0x08020575   Thumb Code    26  commands.o(i._ZN8Commands9AppendU16Et)
+    Commands::AppendU32(unsigned short)      0x08020595   Thumb Code    26  commands.o(i._ZN8Commands9AppendU32Et)
+    Commands::Commands(unsigned short, unsigned short) 0x080205b5   Thumb Code    52  commands.o(i._ZN8CommandsC1Ett)
+    Commands::Commands__sub_object(unsigned short, unsigned short) 0x080205b5   Thumb Code     0  commands.o(i._ZN8CommandsC1Ett)
+    Commands::Commands()                     0x080205ed   Thumb Code    20  commands.o(i._ZN8CommandsC1Ev)
+    Commands::Commands__sub_object()         0x080205ed   Thumb Code     0  commands.o(i._ZN8CommandsC1Ev)
+    PublicKey::PublicKey()                   0x08020605   Thumb Code     2  publickey.o(i._ZN9PublicKeyC1Ev)
+    PublicKey::PublicKey__sub_object()       0x08020605   Thumb Code     0  publickey.o(i._ZN9PublicKeyC1Ev)
+    PrivateKey::getData() const              0x08020607   Thumb Code     2  privatekey.o(i._ZNK10PrivateKey7getDataEv)
+    PublicKey::getData() const               0x08020609   Thumb Code     2  publickey.o(i._ZNK9PublicKey7getDataEv)
+    __0printf$8                              0x0802060d   Thumb Code    22  printf8.o(i.__0printf$8)
+    __1printf$8                              0x0802060d   Thumb Code     0  printf8.o(i.__0printf$8)
+    __2printf                                0x0802060d   Thumb Code     0  printf8.o(i.__0printf$8)
+    __ARM_fpclassify                         0x0802062d   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
+    __aeabi_vec_ctor_nocookie_nodtor         0x0802065d   Thumb Code    36  aeabi_vec_ctor_nocookie_nodtor.o(i.__aeabi_vec_ctor_nocookie_nodtor)
+    __cxa_guard_acquire                      0x08020681   Thumb Code    16  cxa_guard_acquire.o(i.__cxa_guard_acquire)
+    __hardfp_pow                             0x08020691   Thumb Code  3044  pow.o(i.__hardfp_pow)
+    __kernel_poly                            0x080212c9   Thumb Code   248  poly.o(i.__kernel_poly)
+    __mathlib_dbl_divzero                    0x080213c1   Thumb Code    28  dunder.o(i.__mathlib_dbl_divzero)
+    __mathlib_dbl_infnan2                    0x080213f1   Thumb Code    20  dunder.o(i.__mathlib_dbl_infnan2)
+    __mathlib_dbl_invalid                    0x08021409   Thumb Code    24  dunder.o(i.__mathlib_dbl_invalid)
+    __mathlib_dbl_overflow                   0x08021429   Thumb Code    24  dunder.o(i.__mathlib_dbl_overflow)
+    __mathlib_dbl_underflow                  0x08021449   Thumb Code    24  dunder.o(i.__mathlib_dbl_underflow)
+    __scatterload_copy                       0x08021469   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x08021477   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x08021479   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    __set_errno                              0x08021489   Thumb Code     6  errno.o(i.__set_errno)
+    bigadd                                   0x08021907   Thumb Code   324  bignum.o(i.bigadd)
+    bigdiv                                   0x08021a4d   Thumb Code   390  showsign.o(i.bigdiv)
+    bigmul                                   0x08021bf9   Thumb Code   278  bignum.o(i.bigmul)
+    bigpow                                   0x08021d0f   Thumb Code   214  bignum.o(i.bigpow)
+    convert2to16                             0x08021de5   Thumb Code   186  showsign.o(i.convert2to16)
+    crl_DRBG_AES128_Generate                 0x08021eb1   Thumb Code   450  crypto.o(i.crl_DRBG_AES128_Generate)
+    delay_us                                 0x08022081   Thumb Code    66  myiic.o(i.delay_us)
+    fabs                                     0x080220c9   Thumb Code    24  fabs.o(i.fabs)
+    fputc                                    0x080220e1   Thumb Code    20  forprintf.o(i.fputc)
+    free                                     0x080220f9   Thumb Code    76  malloc.o(i.free)
+    main                                     0x08022149   Thumb Code    50  main.o(i.main)
+    malloc                                   0x08022185   Thumb Code    92  malloc.o(i.malloc)
+    my_main                                  0x080221f1   Thumb Code   132  mymain.o(i.my_main)
+    ripemd160_EndHash                        0x0802229d   Thumb Code   130  ripemd160.o(i.ripemd160_EndHash)
+    ripemd160_F                              0x08022329   Thumb Code    10  ripemd160.o(i.ripemd160_F)
+    ripemd160_G                              0x08022333   Thumb Code    16  ripemd160.o(i.ripemd160_G)
+    ripemd160_H                              0x08022343   Thumb Code    12  ripemd160.o(i.ripemd160_H)
+    ripemd160_HashData                       0x08022351   Thumb Code   162  ripemd160.o(i.ripemd160_HashData)
+    ripemd160_I                              0x08022405   Thumb Code    16  ripemd160.o(i.ripemd160_I)
+    ripemd160_J                              0x08022415   Thumb Code    12  ripemd160.o(i.ripemd160_J)
+    sqrt                                     0x08022421   Thumb Code   110  sqrt.o(i.sqrt)
+    strupr                                   0x0802248f   Thumb Code    36  showsign.o(i.strupr)
+    queue<Address, (int)20>::queue()         0x080224b5   Thumb Code    36  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
+    queue<Address, (int)20>::queue__sub_object() 0x080224b5   Thumb Code     0  receiveanalysis.o(t._ZN5queueI7AddressLi20EEC1Ev)
+    APBAHBPrescTable                         0x080224dc   Data          16  stm32f4xx_hal_rcc.o(.constdata)
+    P_256_a                                  0x080224f0   Data          32  encrypt.o(.constdata)
+    P_256_b                                  0x08022510   Data          32  encrypt.o(.constdata)
+    P_256_p                                  0x08022530   Data          32  encrypt.o(.constdata)
+    P_256_n                                  0x08022550   Data          32  encrypt.o(.constdata)
+    P_256_Gx                                 0x08022570   Data          32  encrypt.o(.constdata)
+    P_256_Gy                                 0x08022590   Data          32  encrypt.o(.constdata)
+    Sbox                                     0x080227e8   Data         256  crypto.o(.constdata)
+    InvSbox                                  0x080228e8   Data         256  crypto.o(.constdata)
+    rcon                                     0x080229e8   Data          40  crypto.o(.constdata)
+    enc_table                                0x08022a10   Data        1024  crypto.o(.constdata)
+    dec_table                                0x08022e10   Data        1024  crypto.o(.constdata)
+    SP1                                      0x08023430   Data         256  crypto.o(.constdata)
+    SP2                                      0x08023530   Data         256  crypto.o(.constdata)
+    SP3                                      0x08023630   Data         256  crypto.o(.constdata)
+    SP4                                      0x08023730   Data         256  crypto.o(.constdata)
+    SP5                                      0x08023830   Data         256  crypto.o(.constdata)
+    SP6                                      0x08023930   Data         256  crypto.o(.constdata)
+    SP7                                      0x08023a30   Data         256  crypto.o(.constdata)
+    SP8                                      0x08023b30   Data         256  crypto.o(.constdata)
+    K256                                     0x08023c30   Data         256  crypto.o(.constdata)
+    __ctype_table                            0x08024008   Data         129  ctype_o.o(.constdata)
+    __mathlib_zero                           0x08024090   Data           8  qnan.o(.constdata)
+    Region$$Table$$Base                      0x080240dc   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x080240fc   Number         0  anon$$obj.o(Region$$Table)
+    SHT$$INIT_ARRAY$$Base                    0x080240fc   Number         0  mymain.o(.init_array)
+    SHT$$INIT_ARRAY$$Limit                   0x08024100   Number         0  cpp_init.o(.init_array)
     USBD_CUSTOM_HID                          0x20000004   Data          56  usbd_customhid.o(.data)
     hcrc                                     0x20000080   Data           8  main.o(.data)
     FS_Desc                                  0x20000088   Data          28  usbd_desc.o(.data)
@@ -4186,44 +4184,44 @@ Image Symbol Table
     ASC8X16                                  0x20000925   Data        1536  oled281.o(.data)
     ASC12X24                                 0x20000f25   Data        4608  oled281.o(.data)
     ASC20X40                                 0x20002125   Data       11520  oled281.o(.data)
-    HZ12X12_S                                0x20004e25   Data         576  oled281.o(.data)
-    HZ16X16_S                                0x20005065   Data         352  oled281.o(.data)
-    HZ24X24_S                                0x200051c5   Data         792  oled281.o(.data)
-    Alphabet                                 0x200054fc   Data          58  showsign.o(.data)
-    aw9136_init_flag                         0x20005538   Data           4  aw9136.o(.data)
-    cali_flag                                0x2000553c   Data           1  aw9136.o(.data)
-    cali_num                                 0x2000553d   Data           1  aw9136.o(.data)
-    cali_cnt                                 0x2000553e   Data           1  aw9136.o(.data)
-    cali_used                                0x2000553f   Data           1  aw9136.o(.data)
-    old_cali_dir                             0x20005540   Data           6  aw9136.o(.data)
-    __microlib_freelist                      0x20005550   Data           4  mvars.o(.data)
-    __microlib_freelist_initialised          0x20005554   Data           4  mvars.o(.data)
-    hrng                                     0x2000555c   Data          12  main.o(.bss)
-    hiwdg                                    0x20005568   Data          16  main.o(.bss)
-    huart4                                   0x20005578   Data          64  main.o(.bss)
-    huart2                                   0x200055b8   Data          64  main.o(.bss)
-    huart1                                   0x200055f8   Data          64  main.o(.bss)
-    hUsbDeviceFS                             0x20005638   Data         548  usb_device.o(.bss)
-    USBD_StrDesc                             0x2000585c   Data         512  usbd_desc.o(.bss)
-    hpcd_USB_OTG_FS                          0x20005a5c   Data         948  usbd_conf.o(.bss)
-    pFlash                                   0x20005e10   Data          32  stm32f4xx_hal_flash.o(.bss)
-    Set_Flag                                 0x20005e30   Data          28  mymain.o(.bss)
-    Commands::data                           0x20005e4c   Data          64  commands.o(.bss)
-    ble_data                                 0x20005e8c   Data          32  irq_handler.o(.bss)
-    hid_data                                 0x20005eac   Data          64  receiveanalysis.o(.bss)
-    Key_Flag                                 0x20005eec   Data          16  receiveanalysis.o(.bss)
-    table                                    0x20016bf0   Data        1024  utils.o(.bss)
-    MessDigest_t1                            0x20017f38   Data          32  encrypt.o(.bss)
-    pub_x                                    0x20017f58   Data          50  encrypt.o(.bss)
-    pub_y                                    0x20017f8a   Data          50  encrypt.o(.bss)
-    sign_r                                   0x20017fbc   Data          50  encrypt.o(.bss)
-    sign_s                                   0x20017fee   Data          50  encrypt.o(.bss)
-    finaladdress                             0x200182a0   Data          50  showsign.o(.bss)
-    old_ofr_cfg                              0x200182d4   Data          24  aw9136.o(.bss)
-    Ini_sum                                  0x200182ec   Data          24  aw9136.o(.bss)
-    __heap_base                              0x20018308   Data           0  startup_stm32f407xx.o(HEAP)
-    __heap_limit                             0x20018508   Data           0  startup_stm32f407xx.o(HEAP)
-    __initial_sp                             0x2001a508   Data           0  startup_stm32f407xx.o(STACK)
+    HZ12X12_S                                0x20004e25   Data         600  oled281.o(.data)
+    HZ16X16_S                                0x2000507d   Data         352  oled281.o(.data)
+    HZ24X24_S                                0x200051dd   Data         792  oled281.o(.data)
+    Alphabet                                 0x20005514   Data          58  showsign.o(.data)
+    aw9136_init_flag                         0x20005550   Data           4  aw9136.o(.data)
+    cali_flag                                0x20005554   Data           1  aw9136.o(.data)
+    cali_num                                 0x20005555   Data           1  aw9136.o(.data)
+    cali_cnt                                 0x20005556   Data           1  aw9136.o(.data)
+    cali_used                                0x20005557   Data           1  aw9136.o(.data)
+    old_cali_dir                             0x20005558   Data           6  aw9136.o(.data)
+    __microlib_freelist                      0x20005568   Data           4  mvars.o(.data)
+    __microlib_freelist_initialised          0x2000556c   Data           4  mvars.o(.data)
+    hrng                                     0x20005574   Data          12  main.o(.bss)
+    hiwdg                                    0x20005580   Data          16  main.o(.bss)
+    huart4                                   0x20005590   Data          64  main.o(.bss)
+    huart2                                   0x200055d0   Data          64  main.o(.bss)
+    huart1                                   0x20005610   Data          64  main.o(.bss)
+    hUsbDeviceFS                             0x20005650   Data         548  usb_device.o(.bss)
+    USBD_StrDesc                             0x20005874   Data         512  usbd_desc.o(.bss)
+    hpcd_USB_OTG_FS                          0x20005a74   Data         948  usbd_conf.o(.bss)
+    pFlash                                   0x20005e28   Data          32  stm32f4xx_hal_flash.o(.bss)
+    Set_Flag                                 0x20005e48   Data          28  mymain.o(.bss)
+    Commands::data                           0x20005e64   Data          64  commands.o(.bss)
+    ble_data                                 0x20005ea4   Data          32  irq_handler.o(.bss)
+    hid_data                                 0x20005ec4   Data          64  receiveanalysis.o(.bss)
+    Key_Flag                                 0x20005f04   Data          16  receiveanalysis.o(.bss)
+    table                                    0x20016c08   Data        1024  utils.o(.bss)
+    MessDigest_t1                            0x20017f50   Data          32  encrypt.o(.bss)
+    pub_x                                    0x20017f70   Data          50  encrypt.o(.bss)
+    pub_y                                    0x20017fa2   Data          50  encrypt.o(.bss)
+    sign_r                                   0x20017fd4   Data          50  encrypt.o(.bss)
+    sign_s                                   0x20018006   Data          50  encrypt.o(.bss)
+    finaladdress                             0x200182b8   Data          50  showsign.o(.bss)
+    old_ofr_cfg                              0x200182ec   Data          24  aw9136.o(.bss)
+    Ini_sum                                  0x20018304   Data          24  aw9136.o(.bss)
+    __heap_base                              0x20018320   Data           0  startup_stm32f407xx.o(HEAP)
+    __heap_limit                             0x20018520   Data           0  startup_stm32f407xx.o(HEAP)
+    __initial_sp                             0x2001a520   Data           0  startup_stm32f407xx.o(STACK)
 
 
 
@@ -4233,9 +4231,9 @@ Memory Map of the image
 
   Image Entry point : 0x08010189
 
-  Load Region LR_IROM1 (Base: 0x08010000, Size: 0x000195d4, Max: 0x000f0000, ABSOLUTE, COMPRESSED[0x0001624c])
+  Load Region LR_IROM1 (Base: 0x08010000, Size: 0x00019674, Max: 0x000f0000, ABSOLUTE, COMPRESSED[0x000162ec])
 
-    Execution Region ER_IROM1 (Base: 0x08010000, Size: 0x00014078, Max: 0x000f0000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08010000, Size: 0x00014100, Max: 0x000f0000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -4636,128 +4634,127 @@ Memory Map of the image
     0x0801e060   0x0000002c   Code   RO         3846    i._ZN15ReceiveAnalysis11GetInstanceEv  receiveanalysis.o
     0x0801e08c   0x00000020   Code   RO         3847    i._ZN15ReceiveAnalysis11hashCompareEPhS0_  receiveanalysis.o
     0x0801e0ac   0x00000020   Code   RO         3848    i._ZN15ReceiveAnalysis12isAllPackGotEv  receiveanalysis.o
-    0x0801e0cc   0x0000161c   Code   RO         3849    i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi  receiveanalysis.o
-    0x0801f6e8   0x00000016   Code   RO         3850    i._ZN15ReceiveAnalysis4PollEv  receiveanalysis.o
-    0x0801f6fe   0x0000002e   Code   RO         3851    i._ZN15ReceiveAnalysis9clearDataEv  receiveanalysis.o
-    0x0801f72c   0x0000003e   Code   RO         3852    i._ZN15ReceiveAnalysis9crc_frameEPhi  receiveanalysis.o
-    0x0801f76a   0x00000002   PAD
-    0x0801f76c   0x0000002c   Code   RO         3854    i._ZN15ReceiveAnalysisC1Ev  receiveanalysis.o
-    0x0801f798   0x00000028   Code   RO         3492    i._ZN3Hal11SendUSBDataEPhi  hal.o
-    0x0801f7c0   0x00000028   Code   RO         3493    i._ZN3Hal11Start_MotorEi  hal.o
-    0x0801f7e8   0x0000002c   Code   RO         3494    i._ZN3Hal11getInstanceEv  hal.o
-    0x0801f814   0x00000024   Code   RO         3495    i._ZN3Hal12HardwareInitEv  hal.o
-    0x0801f838   0x00000002   Code   RO         3502    i._ZN3HalC1Ev       hal.o
-    0x0801f83a   0x000000b8   Code   RO         3213    i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE  displaymem.o
-    0x0801f8f2   0x00000032   Code   RO         3214    i._ZN4view10DisplayMem10drawStringEiiPc  displaymem.o
-    0x0801f924   0x00000054   Code   RO         3215    i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE  displaymem.o
-    0x0801f978   0x00000026   Code   RO         3218    i._ZN4view10DisplayMem11drawPictureEPhiiii  displaymem.o
-    0x0801f99e   0x000000f8   Code   RO         3219    i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE  displaymem.o
-    0x0801fa96   0x00000002   PAD
-    0x0801fa98   0x0000002c   Code   RO         3220    i._ZN4view10DisplayMem11getInstanceEv  displaymem.o
-    0x0801fac4   0x00000036   Code   RO         3221    i._ZN4view10DisplayMem12drawHZStringEiiii  displaymem.o
-    0x0801fafa   0x00000002   PAD
-    0x0801fafc   0x000000f0   Code   RO         3227    i._ZN4view10DisplayMem16GetPassportArrayEPi  displaymem.o
-    0x0801fbec   0x00000180   Code   RO         3229    i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb  displaymem.o
-    0x0801fd6c   0x0000002e   Code   RO         3230    i._ZN4view10DisplayMem7LCD_PowEii  displaymem.o
-    0x0801fd9a   0x00000002   PAD
-    0x0801fd9c   0x00000260   Code   RO         3231    i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb  displaymem.o
-    0x0801fffc   0x0000000c   Code   RO         3232    i._ZN4view10DisplayMem8clearAllEv  displaymem.o
-    0x08020008   0x00000260   Code   RO         3233    i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb  displaymem.o
-    0x08020268   0x00000036   Code   RO         3234    i._ZN4view10DisplayMem9clearAreaEiiii  displaymem.o
-    0x0802029e   0x00000002   Code   RO         3236    i._ZN4view10DisplayMemC1Ev  displaymem.o
-    0x080202a0   0x0000002c   Code   RO         4178    i._ZN5Utils10PrintArrayEPhi  utils.o
-    0x080202cc   0x0000000c   Code   RO         4179    i._ZN5Utils10ReverseU16Et  utils.o
-    0x080202d8   0x00000020   Code   RO         4181    i._ZN5Utils13MemoryCompareEPvS0_i  utils.o
-    0x080202f8   0x00000008   Code   RO         4182    i._ZN5Utils13RandomIntegerEv  utils.o
-    0x08020300   0x0000003c   Code   RO         4183    i._ZN5Utils5Crc32EjPhi  utils.o
-    0x0802033c   0x00000094   Code   RO         4184    i._ZN5Utils6Sha256EPhjS0_j  utils.o
-    0x080203d0   0x0000000c   Code   RO         4185    i._ZN5Utils7ReadU16EPh  utils.o
-    0x080203dc   0x00000018   Code   RO         4186    i._ZN5Utils7ReadU32EPh  utils.o
-    0x080203f4   0x00000008   Code   RO         4187    i._ZN5Utils8WriteU16EtPh  utils.o
-    0x080203fc   0x00000010   Code   RO         4188    i._ZN5Utils8WriteU32EjPh  utils.o
-    0x0802040c   0x00000002   Code   RO         4275    i._ZN7AddressC1Ev   address.o
-    0x0802040e   0x00000002   PAD
-    0x08020410   0x00000024   Code   RO         3730    i._ZN8Commands11AppendBytesEPhi  commands.o
-    0x08020434   0x00000088   Code   RO         3731    i._ZN8Commands15CreateDataQuestEttttPhj  commands.o
-    0x080204bc   0x00000030   Code   RO         3732    i._ZN8Commands8SendToPcEv  commands.o
-    0x080204ec   0x00000020   Code   RO         3733    i._ZN8Commands9AppendU16Et  commands.o
-    0x0802050c   0x00000020   Code   RO         3734    i._ZN8Commands9AppendU32Et  commands.o
-    0x0802052c   0x00000038   Code   RO         3735    i._ZN8CommandsC1Ett  commands.o
-    0x08020564   0x00000018   Code   RO         3736    i._ZN8CommandsC1Ev  commands.o
-    0x0802057c   0x00000002   Code   RO         4396    i._ZN9PublicKeyC1Ev  publickey.o
-    0x0802057e   0x00000002   Code   RO         4345    i._ZNK10PrivateKey7getDataEv  privatekey.o
-    0x08020580   0x00000002   Code   RO         4397    i._ZNK9PublicKey7getDataEv  publickey.o
-    0x08020582   0x00000002   PAD
-    0x08020584   0x00000020   Code   RO         6895    i.__0printf$8       mc_w.l(printf8.o)
-    0x080205a4   0x00000030   Code   RO         7014    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
-    0x080205d4   0x00000024   Code   RO         6620    i.__aeabi_vec_ctor_nocookie_nodtor  cpprt_w.l(aeabi_vec_ctor_nocookie_nodtor.o)
-    0x080205f8   0x00000010   Code   RO         6614    i.__cxa_guard_acquire  cpprt_w.l(cxa_guard_acquire.o)
-    0x08020608   0x00000c38   Code   RO         6623    i.__hardfp_pow      m_wm.l(pow.o)
-    0x08021240   0x000000f8   Code   RO         7016    i.__kernel_poly     m_wm.l(poly.o)
-    0x08021338   0x00000030   Code   RO         6994    i.__mathlib_dbl_divzero  m_wm.l(dunder.o)
-    0x08021368   0x00000014   Code   RO         6996    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
-    0x0802137c   0x00000004   PAD
-    0x08021380   0x00000020   Code   RO         6997    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
-    0x080213a0   0x00000020   Code   RO         6998    i.__mathlib_dbl_overflow  m_wm.l(dunder.o)
-    0x080213c0   0x00000020   Code   RO         7000    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
-    0x080213e0   0x0000000e   Code   RO         7086    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x080213ee   0x00000002   Code   RO         7087    i.__scatterload_null  mc_w.l(handlers.o)
-    0x080213f0   0x0000000e   Code   RO         7088    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x080213fe   0x00000002   PAD
-    0x08021400   0x0000000c   Code   RO         7059    i.__set_errno       mc_w.l(errno.o)
-    0x0802140c   0x00000010   Code   RO         3616    i.__sti___10_myMain_cpp_Disp  mymain.o
-    0x0802141c   0x00000410   Code   RO         6902    i._printf_core      mc_w.l(printf8.o)
-    0x0802182c   0x00000024   Code   RO         6903    i._printf_post_padding  mc_w.l(printf8.o)
-    0x08021850   0x0000002e   Code   RO         6904    i._printf_pre_padding  mc_w.l(printf8.o)
-    0x0802187e   0x00000144   Code   RO         4733    i.bigadd            bignum.o
-    0x080219c2   0x00000002   PAD
-    0x080219c4   0x000001ac   Code   RO         5156    i.bigdiv            showsign.o
-    0x08021b70   0x00000116   Code   RO         4734    i.bigmul            bignum.o
-    0x08021c86   0x000000d6   Code   RO         4735    i.bigpow            bignum.o
-    0x08021d5c   0x000000cc   Code   RO         5157    i.convert2to16      showsign.o
-    0x08021e28   0x000001c2   Code   RO         5883    i.crl_DRBG_AES128_Generate  Sha256.lib(crypto.o)
-    0x08021fea   0x0000000c   Code   RO         4514    i.delay_ms          oled281.o
-    0x08021ff6   0x00000002   PAD
-    0x08021ff8   0x00000048   Code   RO         5614    i.delay_us          myiic.o
-    0x08022040   0x00000018   Code   RO         7010    i.fabs              m_wm.l(fabs.o)
-    0x08022058   0x00000018   Code   RO         1001    i.fputc             forprintf.o
-    0x08022070   0x00000050   Code   RO         6949    i.free              mc_w.l(malloc.o)
-    0x080220c0   0x0000003c   Code   RO          509    i.main              main.o
-    0x080220fc   0x0000006c   Code   RO         6950    i.malloc            mc_w.l(malloc.o)
-    0x08022168   0x000000ac   Code   RO         3617    i.my_main           mymain.o
-    0x08022214   0x0000008c   Code   RO         5066    i.ripemd160_EndHash  ripemd160.o
-    0x080222a0   0x0000000a   Code   RO         5067    i.ripemd160_F       ripemd160.o
-    0x080222aa   0x00000010   Code   RO         5068    i.ripemd160_G       ripemd160.o
-    0x080222ba   0x0000000c   Code   RO         5069    i.ripemd160_H       ripemd160.o
-    0x080222c6   0x00000002   PAD
-    0x080222c8   0x000000b4   Code   RO         5070    i.ripemd160_HashData  ripemd160.o
-    0x0802237c   0x00000010   Code   RO         5071    i.ripemd160_I       ripemd160.o
-    0x0802238c   0x0000000c   Code   RO         5072    i.ripemd160_J       ripemd160.o
-    0x08022398   0x0000006e   Code   RO         7021    i.sqrt              m_wm.l(sqrt.o)
-    0x08022406   0x00000024   Code   RO         5159    i.strupr            showsign.o
-    0x0802242a   0x00000002   PAD
-    0x0802242c   0x00000028   Code   RO         3923    t._ZN5queueI7AddressLi20EEC1Ev  receiveanalysis.o
-    0x08022454   0x00000010   Data   RO         1573    .constdata          stm32f4xx_hal_rcc.o
-    0x08022464   0x00000004   Data   RO         3866    .constdata          receiveanalysis.o
-    0x08022468   0x000000c0   Data   RO         4785    .constdata          encrypt.o
-    0x08022528   0x00000004   Data   RO         5022    .constdata          getaddress.o
-    0x0802252c   0x00000204   Data   RO         5161    .constdata          showsign.o
-    0x08022730   0x0000002d   Data   RO         5434    .constdata          aw9136.o
-    0x0802275d   0x00000003   PAD
-    0x08022760   0x00001798   Data   RO         5894    .constdata          Sha256.lib(crypto.o)
-    0x08023ef8   0x00000088   Data   RO         6626    .constdata          m_wm.l(pow.o)
-    0x08023f80   0x00000081   Data   RO         6643    .constdata          mc_w.l(ctype_o.o)
-    0x08024001   0x00000003   PAD
-    0x08024004   0x00000004   Data   RO         6644    .constdata          mc_w.l(ctype_o.o)
-    0x08024008   0x00000008   Data   RO         7018    .constdata          m_wm.l(qnan.o)
-    0x08024010   0x00000042   Data   RO         5162    .conststring        showsign.o
-    0x08024052   0x00000002   PAD
-    0x08024054   0x00000020   Data   RO         7084    Region$$Table       anon$$obj.o
-    0x08024074   0x00000004   Data   RO         3622    .init_array         mymain.o
-    0x08024078   0x00000000   Data   RO         6978    .init_array         mc_w.l(cpp_init.o)
+    0x0801e0cc   0x000016d0   Code   RO         3849    i._ZN15ReceiveAnalysis22PackDataFromPcCallbackEPhi  receiveanalysis.o
+    0x0801f79c   0x00000016   Code   RO         3850    i._ZN15ReceiveAnalysis4PollEv  receiveanalysis.o
+    0x0801f7b2   0x0000002e   Code   RO         3851    i._ZN15ReceiveAnalysis9clearDataEv  receiveanalysis.o
+    0x0801f7e0   0x0000003e   Code   RO         3852    i._ZN15ReceiveAnalysis9crc_frameEPhi  receiveanalysis.o
+    0x0801f81e   0x00000002   PAD
+    0x0801f820   0x0000002c   Code   RO         3854    i._ZN15ReceiveAnalysisC1Ev  receiveanalysis.o
+    0x0801f84c   0x00000028   Code   RO         3492    i._ZN3Hal11SendUSBDataEPhi  hal.o
+    0x0801f874   0x00000028   Code   RO         3493    i._ZN3Hal11Start_MotorEi  hal.o
+    0x0801f89c   0x0000002c   Code   RO         3494    i._ZN3Hal11getInstanceEv  hal.o
+    0x0801f8c8   0x00000024   Code   RO         3495    i._ZN3Hal12HardwareInitEv  hal.o
+    0x0801f8ec   0x00000002   Code   RO         3502    i._ZN3HalC1Ev       hal.o
+    0x0801f8ee   0x000000b8   Code   RO         3213    i._ZN4view10DisplayMem10drawNumberEiixiNS_6FONT_tE  displaymem.o
+    0x0801f9a6   0x00000032   Code   RO         3214    i._ZN4view10DisplayMem10drawStringEiiPc  displaymem.o
+    0x0801f9d8   0x00000054   Code   RO         3215    i._ZN4view10DisplayMem10drawStringEiiPcNS_6FONT_tE  displaymem.o
+    0x0801fa2c   0x00000026   Code   RO         3218    i._ZN4view10DisplayMem11drawPictureEPhiiii  displaymem.o
+    0x0801fa52   0x000000f8   Code   RO         3219    i._ZN4view10DisplayMem11drawxNumberEiixiNS_6FONT_tE  displaymem.o
+    0x0801fb4a   0x00000002   PAD
+    0x0801fb4c   0x0000002c   Code   RO         3220    i._ZN4view10DisplayMem11getInstanceEv  displaymem.o
+    0x0801fb78   0x00000036   Code   RO         3221    i._ZN4view10DisplayMem12drawHZStringEiiii  displaymem.o
+    0x0801fbae   0x00000002   PAD
+    0x0801fbb0   0x000000f0   Code   RO         3227    i._ZN4view10DisplayMem16GetPassportArrayEPi  displaymem.o
+    0x0801fca0   0x00000180   Code   RO         3229    i._ZN4view10DisplayMem6drawHZEiiiNS_9FONT_HZ_tEb  displaymem.o
+    0x0801fe20   0x0000002e   Code   RO         3230    i._ZN4view10DisplayMem7LCD_PowEii  displaymem.o
+    0x0801fe4e   0x00000002   PAD
+    0x0801fe50   0x00000260   Code   RO         3231    i._ZN4view10DisplayMem7drawIntEiiiNS_6FONT_tEb  displaymem.o
+    0x080200b0   0x0000000c   Code   RO         3232    i._ZN4view10DisplayMem8clearAllEv  displaymem.o
+    0x080200bc   0x00000260   Code   RO         3233    i._ZN4view10DisplayMem8drawCharEiicNS_6FONT_tEb  displaymem.o
+    0x0802031c   0x00000036   Code   RO         3234    i._ZN4view10DisplayMem9clearAreaEiiii  displaymem.o
+    0x08020352   0x00000002   Code   RO         3236    i._ZN4view10DisplayMemC1Ev  displaymem.o
+    0x08020354   0x0000000c   Code   RO         4179    i._ZN5Utils10ReverseU16Et  utils.o
+    0x08020360   0x00000020   Code   RO         4181    i._ZN5Utils13MemoryCompareEPvS0_i  utils.o
+    0x08020380   0x00000008   Code   RO         4182    i._ZN5Utils13RandomIntegerEv  utils.o
+    0x08020388   0x0000003c   Code   RO         4183    i._ZN5Utils5Crc32EjPhi  utils.o
+    0x080203c4   0x00000094   Code   RO         4184    i._ZN5Utils6Sha256EPhjS0_j  utils.o
+    0x08020458   0x0000000c   Code   RO         4185    i._ZN5Utils7ReadU16EPh  utils.o
+    0x08020464   0x00000018   Code   RO         4186    i._ZN5Utils7ReadU32EPh  utils.o
+    0x0802047c   0x00000008   Code   RO         4187    i._ZN5Utils8WriteU16EtPh  utils.o
+    0x08020484   0x00000010   Code   RO         4188    i._ZN5Utils8WriteU32EjPh  utils.o
+    0x08020494   0x00000002   Code   RO         4275    i._ZN7AddressC1Ev   address.o
+    0x08020496   0x00000002   PAD
+    0x08020498   0x00000024   Code   RO         3730    i._ZN8Commands11AppendBytesEPhi  commands.o
+    0x080204bc   0x00000088   Code   RO         3731    i._ZN8Commands15CreateDataQuestEttttPhj  commands.o
+    0x08020544   0x00000030   Code   RO         3732    i._ZN8Commands8SendToPcEv  commands.o
+    0x08020574   0x00000020   Code   RO         3733    i._ZN8Commands9AppendU16Et  commands.o
+    0x08020594   0x00000020   Code   RO         3734    i._ZN8Commands9AppendU32Et  commands.o
+    0x080205b4   0x00000038   Code   RO         3735    i._ZN8CommandsC1Ett  commands.o
+    0x080205ec   0x00000018   Code   RO         3736    i._ZN8CommandsC1Ev  commands.o
+    0x08020604   0x00000002   Code   RO         4396    i._ZN9PublicKeyC1Ev  publickey.o
+    0x08020606   0x00000002   Code   RO         4345    i._ZNK10PrivateKey7getDataEv  privatekey.o
+    0x08020608   0x00000002   Code   RO         4397    i._ZNK9PublicKey7getDataEv  publickey.o
+    0x0802060a   0x00000002   PAD
+    0x0802060c   0x00000020   Code   RO         6895    i.__0printf$8       mc_w.l(printf8.o)
+    0x0802062c   0x00000030   Code   RO         7014    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
+    0x0802065c   0x00000024   Code   RO         6620    i.__aeabi_vec_ctor_nocookie_nodtor  cpprt_w.l(aeabi_vec_ctor_nocookie_nodtor.o)
+    0x08020680   0x00000010   Code   RO         6614    i.__cxa_guard_acquire  cpprt_w.l(cxa_guard_acquire.o)
+    0x08020690   0x00000c38   Code   RO         6623    i.__hardfp_pow      m_wm.l(pow.o)
+    0x080212c8   0x000000f8   Code   RO         7016    i.__kernel_poly     m_wm.l(poly.o)
+    0x080213c0   0x00000030   Code   RO         6994    i.__mathlib_dbl_divzero  m_wm.l(dunder.o)
+    0x080213f0   0x00000014   Code   RO         6996    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
+    0x08021404   0x00000004   PAD
+    0x08021408   0x00000020   Code   RO         6997    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
+    0x08021428   0x00000020   Code   RO         6998    i.__mathlib_dbl_overflow  m_wm.l(dunder.o)
+    0x08021448   0x00000020   Code   RO         7000    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
+    0x08021468   0x0000000e   Code   RO         7086    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08021476   0x00000002   Code   RO         7087    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08021478   0x0000000e   Code   RO         7088    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08021486   0x00000002   PAD
+    0x08021488   0x0000000c   Code   RO         7059    i.__set_errno       mc_w.l(errno.o)
+    0x08021494   0x00000010   Code   RO         3616    i.__sti___10_myMain_cpp_Disp  mymain.o
+    0x080214a4   0x00000410   Code   RO         6902    i._printf_core      mc_w.l(printf8.o)
+    0x080218b4   0x00000024   Code   RO         6903    i._printf_post_padding  mc_w.l(printf8.o)
+    0x080218d8   0x0000002e   Code   RO         6904    i._printf_pre_padding  mc_w.l(printf8.o)
+    0x08021906   0x00000144   Code   RO         4733    i.bigadd            bignum.o
+    0x08021a4a   0x00000002   PAD
+    0x08021a4c   0x000001ac   Code   RO         5156    i.bigdiv            showsign.o
+    0x08021bf8   0x00000116   Code   RO         4734    i.bigmul            bignum.o
+    0x08021d0e   0x000000d6   Code   RO         4735    i.bigpow            bignum.o
+    0x08021de4   0x000000cc   Code   RO         5157    i.convert2to16      showsign.o
+    0x08021eb0   0x000001c2   Code   RO         5883    i.crl_DRBG_AES128_Generate  Sha256.lib(crypto.o)
+    0x08022072   0x0000000c   Code   RO         4514    i.delay_ms          oled281.o
+    0x0802207e   0x00000002   PAD
+    0x08022080   0x00000048   Code   RO         5614    i.delay_us          myiic.o
+    0x080220c8   0x00000018   Code   RO         7010    i.fabs              m_wm.l(fabs.o)
+    0x080220e0   0x00000018   Code   RO         1001    i.fputc             forprintf.o
+    0x080220f8   0x00000050   Code   RO         6949    i.free              mc_w.l(malloc.o)
+    0x08022148   0x0000003c   Code   RO          509    i.main              main.o
+    0x08022184   0x0000006c   Code   RO         6950    i.malloc            mc_w.l(malloc.o)
+    0x080221f0   0x000000ac   Code   RO         3617    i.my_main           mymain.o
+    0x0802229c   0x0000008c   Code   RO         5066    i.ripemd160_EndHash  ripemd160.o
+    0x08022328   0x0000000a   Code   RO         5067    i.ripemd160_F       ripemd160.o
+    0x08022332   0x00000010   Code   RO         5068    i.ripemd160_G       ripemd160.o
+    0x08022342   0x0000000c   Code   RO         5069    i.ripemd160_H       ripemd160.o
+    0x0802234e   0x00000002   PAD
+    0x08022350   0x000000b4   Code   RO         5070    i.ripemd160_HashData  ripemd160.o
+    0x08022404   0x00000010   Code   RO         5071    i.ripemd160_I       ripemd160.o
+    0x08022414   0x0000000c   Code   RO         5072    i.ripemd160_J       ripemd160.o
+    0x08022420   0x0000006e   Code   RO         7021    i.sqrt              m_wm.l(sqrt.o)
+    0x0802248e   0x00000024   Code   RO         5159    i.strupr            showsign.o
+    0x080224b2   0x00000002   PAD
+    0x080224b4   0x00000028   Code   RO         3923    t._ZN5queueI7AddressLi20EEC1Ev  receiveanalysis.o
+    0x080224dc   0x00000010   Data   RO         1573    .constdata          stm32f4xx_hal_rcc.o
+    0x080224ec   0x00000004   Data   RO         3866    .constdata          receiveanalysis.o
+    0x080224f0   0x000000c0   Data   RO         4785    .constdata          encrypt.o
+    0x080225b0   0x00000004   Data   RO         5022    .constdata          getaddress.o
+    0x080225b4   0x00000204   Data   RO         5161    .constdata          showsign.o
+    0x080227b8   0x0000002d   Data   RO         5434    .constdata          aw9136.o
+    0x080227e5   0x00000003   PAD
+    0x080227e8   0x00001798   Data   RO         5894    .constdata          Sha256.lib(crypto.o)
+    0x08023f80   0x00000088   Data   RO         6626    .constdata          m_wm.l(pow.o)
+    0x08024008   0x00000081   Data   RO         6643    .constdata          mc_w.l(ctype_o.o)
+    0x08024089   0x00000003   PAD
+    0x0802408c   0x00000004   Data   RO         6644    .constdata          mc_w.l(ctype_o.o)
+    0x08024090   0x00000008   Data   RO         7018    .constdata          m_wm.l(qnan.o)
+    0x08024098   0x00000042   Data   RO         5162    .conststring        showsign.o
+    0x080240da   0x00000002   PAD
+    0x080240dc   0x00000020   Data   RO         7084    Region$$Table       anon$$obj.o
+    0x080240fc   0x00000004   Data   RO         3622    .init_array         mymain.o
+    0x08024100   0x00000000   Data   RO         6978    .init_array         mc_w.l(cpp_init.o)
 
 
-    Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x0001a508, Max: 0x00020000, ABSOLUTE, COMPRESSED[0x000021d4])
+    Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x0001a520, Max: 0x00020000, ABSOLUTE, COMPRESSED[0x000021ec])
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -4780,33 +4777,33 @@ Memory Map of the image
     0x2000014d   0x00000003   PAD
     0x20000150   0x00000054   Data   RW         3867    .data               receiveanalysis.o
     0x200001a4   0x00000001   Data   RW         4204    .data               utils.o
-    0x200001a5   0x00005338   Data   RW         4515    .data               oled281.o
-    0x200054dd   0x00000003   PAD
-    0x200054e0   0x00000018   Data   RW         5074    .data               ripemd160.o
-    0x200054f8   0x0000003e   Data   RW         5163    .data               showsign.o
-    0x20005536   0x00000002   PAD
-    0x20005538   0x00000018   Data   RW         5435    .data               aw9136.o
-    0x20005550   0x00000004   Data   RW         7055    .data               mc_w.l(mvars.o)
-    0x20005554   0x00000004   Data   RW         7056    .data               mc_w.l(mvars.o)
-    0x20005558   0x00000004   Data   RW         7060    .data               mc_w.l(errno.o)
-    0x2000555c   0x000000dc   Zero   RW          510    .bss                main.o
-    0x20005638   0x00000224   Zero   RW          665    .bss                usb_device.o
-    0x2000585c   0x00000200   Zero   RW          705    .bss                usbd_desc.o
-    0x20005a5c   0x000003b4   Zero   RW          793    .bss                usbd_conf.o
-    0x20005e10   0x00000020   Zero   RW         1896    .bss                stm32f4xx_hal_flash.o
-    0x20005e30   0x0000001c   Zero   RW         3620    .bss                mymain.o
-    0x20005e4c   0x00000040   Zero   RW         3744    .bss                commands.o
-    0x20005e8c   0x00000020   Zero   RW         3804    .bss                irq_handler.o
-    0x20005eac   0x00010d44   Zero   RW         3865    .bss                receiveanalysis.o
-    0x20016bf0   0x00000400   Zero   RW         4203    .bss                utils.o
-    0x20016ff0   0x00001030   Zero   RW         4784    .bss                encrypt.o
-    0x20018020   0x00000080   Zero   RW         5073    .bss                ripemd160.o
-    0x200180a0   0x00000232   Zero   RW         5160    .bss                showsign.o
-    0x200182d2   0x00000002   PAD
-    0x200182d4   0x00000030   Zero   RW         5433    .bss                aw9136.o
-    0x20018304   0x00000004   PAD
-    0x20018308   0x00000200   Zero   RW         3074    HEAP                startup_stm32f407xx.o
-    0x20018508   0x00002000   Zero   RW         3073    STACK               startup_stm32f407xx.o
+    0x200001a5   0x00005350   Data   RW         4515    .data               oled281.o
+    0x200054f5   0x00000003   PAD
+    0x200054f8   0x00000018   Data   RW         5074    .data               ripemd160.o
+    0x20005510   0x0000003e   Data   RW         5163    .data               showsign.o
+    0x2000554e   0x00000002   PAD
+    0x20005550   0x00000018   Data   RW         5435    .data               aw9136.o
+    0x20005568   0x00000004   Data   RW         7055    .data               mc_w.l(mvars.o)
+    0x2000556c   0x00000004   Data   RW         7056    .data               mc_w.l(mvars.o)
+    0x20005570   0x00000004   Data   RW         7060    .data               mc_w.l(errno.o)
+    0x20005574   0x000000dc   Zero   RW          510    .bss                main.o
+    0x20005650   0x00000224   Zero   RW          665    .bss                usb_device.o
+    0x20005874   0x00000200   Zero   RW          705    .bss                usbd_desc.o
+    0x20005a74   0x000003b4   Zero   RW          793    .bss                usbd_conf.o
+    0x20005e28   0x00000020   Zero   RW         1896    .bss                stm32f4xx_hal_flash.o
+    0x20005e48   0x0000001c   Zero   RW         3620    .bss                mymain.o
+    0x20005e64   0x00000040   Zero   RW         3744    .bss                commands.o
+    0x20005ea4   0x00000020   Zero   RW         3804    .bss                irq_handler.o
+    0x20005ec4   0x00010d44   Zero   RW         3865    .bss                receiveanalysis.o
+    0x20016c08   0x00000400   Zero   RW         4203    .bss                utils.o
+    0x20017008   0x00001030   Zero   RW         4784    .bss                encrypt.o
+    0x20018038   0x00000080   Zero   RW         5073    .bss                ripemd160.o
+    0x200180b8   0x00000232   Zero   RW         5160    .bss                showsign.o
+    0x200182ea   0x00000002   PAD
+    0x200182ec   0x00000030   Zero   RW         5433    .bss                aw9136.o
+    0x2001831c   0x00000004   PAD
+    0x20018320   0x00000200   Zero   RW         3074    HEAP                startup_stm32f407xx.o
+    0x20018520   0x00002000   Zero   RW         3073    STACK               startup_stm32f407xx.o
 
 
 ==============================================================================
@@ -4816,54 +4813,54 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-         2          0          0          0          0        472   address.o
-         0          0          0          0          0        564   algorithm.o
-      2570        350         45         24         48      18370   aw9136.o
-       816          0          0          0          0       3183   bignum.o
-       364         34          0          0         64       5976   commands.o
-      2656         96          0          5          0     295548   displaymem.o
-      1180        128        192          0       4144      13985   encrypt.o
-        96         32          0          4          0      29405   forprintf.o
-      1032         28          4          0          0       4757   getaddress.o
-       162         24          0          5          0       9572   hal.o
-        76         20          0          1         32       2430   irq_handler.o
-       756         78          0          8        220       6453   main.o
-       748        114          0          0          0       5193   myiic.o
-       188         44          4         44         28       4922   mymain.o
-      1790         42          0      21304          0      10281   oled281.o
-       162         28          0          0          0       2156   privatekey.o
-         4          0          0          0          0        944   publickey.o
-      6022        174          4         84      68932      19963   receiveanalysis.o
-      7176        106          0         24        128      10223   ripemd160.o
-      8282        424        582         62        562      16973   showsign.o
-        36          8        392          0       8704        932   startup_stm32f407xx.o
-       150         16          0          4          0       4214   stm32f4xx_hal.o
-       308         22          0          0          0      31863   stm32f4xx_hal_cortex.o
-        36          0          0          0          0       1047   stm32f4xx_hal_crc.o
-       604         62          0          0         32       6010   stm32f4xx_hal_flash.o
-       336         20          0          0          0       2786   stm32f4xx_hal_flash_ex.o
-       560         52          0          0          0       3047   stm32f4xx_hal_gpio.o
-       384         48          0          0          0       2777   stm32f4xx_hal_msp.o
-      2646          0          0          0          0      10089   stm32f4xx_hal_pcd.o
-        92          0          0          0          0       1824   stm32f4xx_hal_pcd_ex.o
-      2040         66         16          0          0       6019   stm32f4xx_hal_rcc.o
-       192          0          0          0          0       1970   stm32f4xx_hal_rng.o
-       658         10          0          0          0       1852   stm32f4xx_hal_uart.o
-      3098         58          0          0          0      20534   stm32f4xx_ll_usb.o
-       970        122          0          0          0      10367   stmflash.o
-       100         18          0         20          0       1369   system_stm32f4xx.o
-        52         16          0          0        548        728   usb_device.o
-       748         20          0          0        948      13774   usbd_conf.o
-       792          0          0          0          0     364165   usbd_core.o
-      1584         30          0          1          0      10744   usbd_ctlreq.o
-        52         16          0         56          0       2257   usbd_custom_hid_if.o
-       580         28          0        122          0       9655   usbd_customhid.o
-       312        136          0         52        512       5367   usbd_desc.o
-       174          0          0          0          0       4628   usbd_ioreq.o
-       444         96          0          1       1024       6791   utils.o
+         2          0          0          0          0        488   address.o
+         0          0          0          0          0        584   algorithm.o
+      2570        350         45         24         48      18874   aw9136.o
+       816          0          0          0          0       3243   bignum.o
+       364         34          0          0         64       6164   commands.o
+      2656         96          0          5          0     295952   displaymem.o
+      1180        128        192          0       4144      14285   encrypt.o
+        96         32          0          4          0      29489   forprintf.o
+      1032         28          4          0          0       4849   getaddress.o
+       162         24          0          5          0       9732   hal.o
+        76         20          0          1         32       2518   irq_handler.o
+       756         78          0          8        220       6657   main.o
+       748        114          0          0          0       5357   myiic.o
+       188         44          4         44         28       5046   mymain.o
+      1790         42          0      21328          0      10661   oled281.o
+       162         28          0          0          0       2232   privatekey.o
+         4          0          0          0          0        984   publickey.o
+      6202        174          4         84      68932      20687   receiveanalysis.o
+      7176        106          0         24        128      10475   ripemd160.o
+      8282        424        582         62        562      17273   showsign.o
+        36          8        392          0       8704        944   startup_stm32f407xx.o
+       150         16          0          4          0       4350   stm32f4xx_hal.o
+       308         22          0          0          0      32019   stm32f4xx_hal_cortex.o
+        36          0          0          0          0       1083   stm32f4xx_hal_crc.o
+       604         62          0          0         32       6198   stm32f4xx_hal_flash.o
+       336         20          0          0          0       2858   stm32f4xx_hal_flash_ex.o
+       560         52          0          0          0       3119   stm32f4xx_hal_gpio.o
+       384         48          0          0          0       2869   stm32f4xx_hal_msp.o
+      2646          0          0          0          0      10301   stm32f4xx_hal_pcd.o
+        92          0          0          0          0       1884   stm32f4xx_hal_pcd_ex.o
+      2040         66         16          0          0       6167   stm32f4xx_hal_rcc.o
+       192          0          0          0          0       2026   stm32f4xx_hal_rng.o
+       658         10          0          0          0       1912   stm32f4xx_hal_uart.o
+      3098         58          0          0          0      21070   stm32f4xx_ll_usb.o
+       970        122          0          0          0      10655   stmflash.o
+       100         18          0         20          0       1425   system_stm32f4xx.o
+        52         16          0          0        548        764   usb_device.o
+       748         20          0          0        948      14190   usbd_conf.o
+       792          0          0          0          0     364785   usbd_core.o
+      1584         30          0          1          0      11004   usbd_ctlreq.o
+        52         16          0         56          0       2345   usbd_custom_hid_if.o
+       580         28          0        122          0       9895   usbd_customhid.o
+       312        136          0         52        512       5535   usbd_desc.o
+       174          0          0          0          0       4756   usbd_ioreq.o
+       400         84          0          1       1024       6419   utils.o
 
     ----------------------------------------------------------------------
-     51078       2566       1276      21840      85932     986179   Object Totals
+     51214       2554       1276      21864      85932     994123   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         48          0          5         19          6          0   (incl. Padding)
 
@@ -4949,15 +4946,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     74444       3168       7596      21852      85932    1189649   Grand Totals
-     74444       3168       7596       8660      85932    1189649   ELF Image Totals (compressed)
-     74444       3168       7596       8660          0          0   ROM Totals
+     74580       3156       7596      21876      85932    1197693   Grand Totals
+     74580       3156       7596       8684      85932    1197693   ELF Image Totals (compressed)
+     74580       3156       7596       8684          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                82040 (  80.12kB)
-    Total RW  Size (RW Data + ZI Data)            107784 ( 105.26kB)
-    Total ROM Size (Code + RO Data + RW Data)      90700 (  88.57kB)
+    Total RO  Size (Code + RO Data)                82176 (  80.25kB)
+    Total RW  Size (RW Data + ZI Data)            107808 ( 105.28kB)
+    Total ROM Size (Code + RO Data + RW Data)      90860 (  88.73kB)
 
 ==============================================================================
 

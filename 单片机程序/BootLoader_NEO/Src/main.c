@@ -32,7 +32,9 @@
 				扇区3：		 16KB		 开机密码、设置标识、计数总数
 				扇区4-5：  192KB		 APP程序 
 				扇区6-11： 768KB   私钥地址对
-				** 15、VID一致  PID不同，PID为22352时，表示这个是钱包
+** 15、VID一致  PID不同，PID为22352时，表示这个是钱包
+** 16、BootLoader问题，如果BootLoader停留的时间不够AW9136初始化，会导致程序进入AW9136的sleep模式，导致速度变慢
+				解决办法：只有进入升级界面的时候，才初始化AW9136，不然只初始化，中间按键有效
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -52,10 +54,10 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_RNG_Init(void);
+//static void MX_RNG_Init(void);
 //static void GetPassportArray(int *data);
 
-#define HID_REC_LEN 100*1024
+#define HID_REC_LEN 110*1024
 u8 HID_RX_BUF[HID_REC_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.    
 u32 HID_RX_CNT = 0;
 
@@ -63,50 +65,31 @@ extern volatile unsigned char left_key_flag;
 extern volatile unsigned char center_key_flag;
 extern volatile unsigned char right_key_flag;
 extern volatile int time_counter;
-volatile int passport_flag = 0;//密码验证标志位
 volatile int cancel_flag = 0;
-int num[9] = {1,2,3,4,5,6,7,8,9};//随机密码，生成数组
 
 int main(void)
 {
 		u32 oldcount=0;	//老的USB接收数据值	
 		u32 applenth=0;	//接收到的app代码长度
 	
-		HAL_Init();
-		SystemClock_Config();
-		MX_GPIO_Init();
+		//硬件初始化
+		HAL_Init();						//终端分组2
+		SystemClock_Config(); //系统时钟168MHz
+		MX_GPIO_Init();				//IO口初始化
+		Center_button_init();	//中间按钮初始化
 		MX_USART1_UART_Init();//打印信息串口
-//		MX_USB_DEVICE_Init();
 		MX_USART2_UART_Init();//蓝牙串口
 		TIM3_Init(5000-1,8400-1);//500ms进入一次中断计数
-		MX_RNG_Init();	      
-		OLED_Init();
-		AW9136_Init();
-//		HAL_Delay(5000);//等待AW9136初始化完成
+//		MX_RNG_Init();	      
+		OLED_Init();					
 		
-		//开机显示随机9宫格密码
-//		Asc8_16(0,0,"PassPort:");		
-//		GetPassportArray(num);		
-		
-		//这两行代码为了调试，BootLoader程序先不加密码
-		passport_flag = 1;
-//		HAL_Delay(3000);
-
-//不需要开机密码时，省去这几步
-//		while(1)
-//		{						
-//				if(passport_flag)
-//				{						
-//						break;
-//				}
-//		}
-//		Fill_RAM(0x00);//不需要开机密码时，省去清屏
-
+		//开机界面
 		Asc12_24( 20,10 ,"Welcome Use NeoDun");
 		Asc8_16(104,44,"Cancel");
 		
+		//开启2s定时，这段时间来检测按键
 		__HAL_RCC_TIM3_CLK_ENABLE();//开启定时器
-		while(time_counter < 10)		//2s过后
+		while(time_counter < 4)		  //2s过后
 		{		
 				if(center_key_flag)
 				{
@@ -117,21 +100,21 @@ int main(void)
 		__HAL_RCC_TIM3_CLK_DISABLE();
 		time_counter = 0;
 		
-		HAL_Delay(50);
-		
-		if(cancel_flag == 0)//没有检测到按键按下，直接跳转到APP程序
+		//没有检测到按键按下，直接跳转到APP程序
+		if(cancel_flag == 0)
 		{				
 				iap_load_app(FLASH_APP1_ADDR);
 		}
 		cancel_flag = 0;
 		
+		//确认进入升级模式后，再初始化AW9136和USB	
+		MX_USB_DEVICE_Init();			
+		AW9136_Init();		
 		Fill_RAM(0x00);//清屏
 		Asc8_16(48,10,"Firmware Update Mode");
 		Asc8_16(10,48,"updata");
 		Asc8_16(112,48,"load");
 		Asc8_16(206,48,"clear");
-		
-		MX_USB_DEVICE_Init();//确认进入升级模式后，再初始化USB		
 
 		//进入循环前，清除按键标志位
 		left_key_flag = 0;
@@ -147,8 +130,7 @@ int main(void)
 								applenth=HID_RX_CNT;
 								oldcount=0;
 								HID_RX_CNT=0;
-								printf("用户程序接收完成!\r\n");
-								printf("代码长度:%dBytes\r\n",applenth);
+								printf("len of code:%dBytes\r\n",applenth);
 						}
 						else 
 								oldcount=HID_RX_CNT;			
@@ -171,6 +153,7 @@ int main(void)
 				else if(right_key_flag)//清除固件
 				{
 						applenth=0;
+						memset(HID_RX_BUF,0,HID_REC_LEN);
 						STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
 						STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
 					
@@ -264,17 +247,17 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* RNG init function */
-static void MX_RNG_Init(void)
-{
+///* RNG init function */
+//static void MX_RNG_Init(void)
+//{
 
-  hrng.Instance = RNG;
-  if (HAL_RNG_Init(&hrng) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+//  hrng.Instance = RNG;
+//  if (HAL_RNG_Init(&hrng) != HAL_OK)
+//  {
+//    _Error_Handler(__FILE__, __LINE__);
+//  }
 
-}
+//}
 
 /* USART1 init function */
 static void MX_USART1_UART_Init(void)
@@ -374,86 +357,14 @@ static void MX_GPIO_Init(void)
 void USB_DataReceiveHander(uint8_t *data,int len)
 {
 		int i = 0;
-		int cmd = 0;
-		int serialId = 0;		
-		u32 passport[6] = {0,0,0,0,0,0};
-		u32 get_passport[6];
-		
-		if(passport_flag)//通过密码验证
+		if(HID_RX_CNT<HID_REC_LEN)
 		{
-				if(HID_RX_CNT<HID_REC_LEN)
+				for(i=0;i<len;i++)
 				{
-						for(i=0;i<len;i++)
-						{
-								HID_RX_BUF[i+HID_RX_CNT] = data[i];
-						}
-						HID_RX_CNT = HID_RX_CNT + len;
+						HID_RX_BUF[i+HID_RX_CNT] = data[i];
 				}
-		}
-		else//没有通过密码验证的HID传输
-		{
-				printf("HID receive data:\r\n");
-				PrintArray(data,len);
-				if (crc_frame(data, len)) 
-				{
-						cmd = ReverseU16(ReadU16(data));
-						serialId = ReadU16(data + 2);	
-						printf("cmd = 0x%x\r\n",cmd);
-						printf("serialId = 0x%x\r\n",serialId);
-		
-						switch (cmd) 
-						{
-							case CMD_SET_FIRSTPASSPORT://设置密码
-								{
-										memmove(passport,data+4,6);								//密码长度为6位
-										STMFLASH_Erase_Sectors(FLASH_SECTOR_6);		//清除密码存储地址的值
-										STMFLASH_Write(0x08040000,passport,6); 		//重新写入新的密码
-										serialId = ReadU16(data + 2);							
-										CreateDataQuest(CMD_SET_OK,serialId,data);//设置密码OK
-										SendToPc(data);	
-										break;
-								}
-								case CMD_VERIFY_PASSPORT://验证密码
-								{		
-										memcpy(get_passport,data+4,6);						//得到上位机传输的密码
-										STMFLASH_Read(0x08040000,passport,6);			//读取之前设置的密码
-										if(MemoryCompare(passport,get_passport,6))//比对密码
-										{
-												serialId = ReadU16(data + 2);
-												CreateDataQuest(CMD_VERIFY_OK,serialId,data);//告知上位机密码验证通过
-												SendToPc(data);
-												passport_flag = 1;													 //置密码验证标志位
-										}
-										else
-										{
-												serialId = ReadU16(data + 2);
-												CreateDataQuest(CMD_VERIFY_ERROR,serialId,data);//告知上位机密码验证未通过
-												SendToPc(data);
-												passport_flag = 0;															//不改变密码验证标志位
-										}
-										break;
-								}
-								case CMD_GET_ARRAY://上位机索取密码的序列
-								{
-										serialId = ReadU16(data + 2);
-										CreateDataQuest(CMD_SEND_ARRAY,serialId,data);//返回给上位机密码序列
-										memmove(data+4,num,9);
-										SendToPc(data);											
-										break;
-								}
-								default :
-										printf("not handle CMD = %x\r\n",cmd);
-								break;
-						}
-				} 
-				else 
-				{
-						serialId = ReadU16(data + 2);
-						CreateDataQuest(CMD_CRC_FAILED,serialId,data);//crc校验不通过
-						SendToPc(data);			
-						printf("crc error\r\n");
-				}				
-		}		
+				HID_RX_CNT = HID_RX_CNT + len;
+		}	
 }
 
 /**

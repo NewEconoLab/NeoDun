@@ -1,8 +1,8 @@
 bootloader_neo\stmflash.o: ..\Src\stmflash.c
 bootloader_neo\stmflash.o: ../Inc/stmflash.h
-bootloader_neo\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-bootloader_neo\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-bootloader_neo\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+bootloader_neo\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+bootloader_neo\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader_neo\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 bootloader_neo\stmflash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 bootloader_neo\stmflash.o: ../Inc/stm32f4xx_hal_conf.h
 bootloader_neo\stmflash.o: ../Inc/main.h
