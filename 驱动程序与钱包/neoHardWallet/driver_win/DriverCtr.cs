@@ -562,7 +562,7 @@ namespace driver_win
 
         #region  签名 sign   -------后面改
         string hashstr;
-        byte[] outdata = { 1,2,3};
+        byte[] outdata ;
         bool isgetdata=false;
         public async Task Sign(IOwinContext context, FormData formdata)
         {
@@ -592,50 +592,50 @@ namespace driver_win
                 }
             }
 
-            //{//发送待签名数据块
-            //    var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
-            //    block.data = data;
-            //    signer.SendDataBlock(block);//need a finish callback.
-            //}
-            ////轮询等待发送完成，需要加入超时机制
-            //uint remoteid = 0;
-            //while (true)
-            //{
-            //    await Task.Delay(5);
-            //    var __block = signer.dataTable.getBlockBySha256(hashstr);
-            //    if (__block.dataidRemote > 0 && __block.Check())
-            //    {
-            //        remoteid = __block.dataidRemote;
-            //        break;
-            //    }
-            //}
-            //
-            //Watcher watcher = new Watcher();
-            //signer.watcherColl.AddWatcher(watcher);//加入监视器
-            //
-            //NeoDun.Message signMsg = new NeoDun.Message();
-            //
-            //{//发送签名报文
-            //    var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, src);
-            //    var addbytes = add.GetAddbytes();
-            //    signMsg.tag1 = 0x02;
-            //    signMsg.tag2 = 0x0a;//签
-            //    signMsg.msgid = NeoDun.SignTool.RandomShort();
-            //    signMsg.writeUInt16(0, (UInt16)add.type);//neo tag
-            //    Array.Copy(addbytes, 0, signMsg.data, 2, addbytes.Length);//addbytes
-            //
-            //    //这个dataid 要上一个block 传送完毕了才知道
-            //    signMsg.writeUInt32(42, remoteid);
-            //    signer.SendMessage(signMsg, true);
-            //}
-            //while (true)
-            //{
-            //    await Task.Delay(5);
-            //    if (outdata != null)
-            //        break;
-            //}
-            //
-            ////读出来，拼为http响应，发回去
+            {//发送待签名数据块
+                var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
+                block.data = data;
+                signer.SendDataBlock(block);//need a finish callback.
+            }
+            //轮询等待发送完成，需要加入超时机制
+            uint remoteid = 0;
+            while (true)
+            {
+                await Task.Delay(5);
+                var __block = signer.dataTable.getBlockBySha256(hashstr);
+                if (__block.dataidRemote > 0 && __block.Check())
+                {
+                    remoteid = __block.dataidRemote;
+                    break;
+                }
+            }
+            
+            Watcher watcher = new Watcher();
+            signer.watcherColl.AddWatcher(watcher);//加入监视器
+            
+            NeoDun.Message signMsg = new NeoDun.Message();
+            
+            {//发送签名报文
+                var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, src);
+                var addbytes = add.GetAddbytes();
+                signMsg.tag1 = 0x02;
+                signMsg.tag2 = 0x0a;//签
+                signMsg.msgid = NeoDun.SignTool.RandomShort();
+                signMsg.writeUInt16(0, (UInt16)add.type);//neo tag
+                Array.Copy(addbytes, 0, signMsg.data, 2, addbytes.Length);//addbytes
+            
+                //这个dataid 要上一个block 传送完毕了才知道
+                signMsg.writeUInt32(42, remoteid);
+                signer.SendMessage(signMsg, true);
+            }
+            while (true)
+            {
+                await Task.Delay(5);
+                if (outdata != null)
+                    break;
+            }
+            
+            //读出来，拼为http响应，发回去
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["srchash"] = new MyJson.JsonNode_ValueString(hashstr);
