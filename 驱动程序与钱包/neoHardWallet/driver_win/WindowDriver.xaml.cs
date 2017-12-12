@@ -88,7 +88,8 @@ namespace driver_win
             //将点击的按钮对应成数字 a对应1
             int i = (int)button.Name[0] - 96;
             str_password += i.ToString();
-            str_password2 += " * ";
+            //str_password2 += " * ";
+            str_password2 += i.ToString();
             this.pwLabel.Content = str_password2;
             if (str_password.Length < 6)
             {

@@ -648,18 +648,18 @@ namespace driver_win
             json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
             json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
 
-            //signer.watcherColl.RemoveWatcher(watcher);
+            signer.watcherColl.RemoveWatcher(watcher);
             await context.Response.WriteAsync(json.ToString());
         }
         private void ConfirmSign()
         {
             isgetdata = true;
-            GetAddressList();
         }
 
         private void ConfirmSignCallBack(byte[] _outdata)
         {
             outdata = _outdata;
+            GetAddressList();
         }
 
 

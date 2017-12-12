@@ -39920,10 +39920,13 @@ var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTran
             var transaction = transactions;
             return signData(transaction, fromAccount.address).then((res) => {
                 var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
-                console.log(sign);
-                console.log(res.data.signdata);
                 var publickeyEncoded = fromAccount.publickeyEncoded;
-                var jsonData = { 'publicKey': publickeyEncoded, 'signature': sign, 'transaction': transaction };
+                console.log(publickeyEncoded);
+                var publickeyEncoded2 = res.data.pubkey;
+                console.log(publickeyEncoded2);
+                var sign2 = res.data.signdata;
+
+                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction };
                 return _axios2.default.post(network.rpcEndpoint + '/broadcast', _qs2.default.stringify(jsonData)).then(function (response) {
                     return response;
                 }).catch(function (error) {
