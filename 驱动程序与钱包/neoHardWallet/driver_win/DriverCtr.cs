@@ -659,7 +659,7 @@ namespace driver_win
         private void ConfirmSignCallBack(byte[] _outdata)
         {
             outdata = _outdata;
-            GetAddressList();
+//            GetAddressList();
         }
 
 

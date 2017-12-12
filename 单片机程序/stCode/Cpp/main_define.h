@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define printf_debug
+#define HID_Delay
+
 typedef struct
 {
 		int Sign_Key_Flag;				//防误按的标志位

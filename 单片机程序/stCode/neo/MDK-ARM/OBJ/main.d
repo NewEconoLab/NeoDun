@@ -42,3 +42,4 @@
 .\obj\main.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h
 .\obj\main.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h
 .\obj\main.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h
+.\obj\main.o: ..\..\Cpp\main_define.h

@@ -19,7 +19,6 @@
 
 #define CMD_ERR_DATA_TOO_BIG				0x01e0		//
 #define CMD_ERR_HASH								0x0112		//
-
 #define CMD_ACK_HASH_OK							0x0111		//
 
 #define CMD_DEL_ADDRESS							0x0203		

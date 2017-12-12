@@ -27,9 +27,6 @@ extern "C"
 }
 
 //add by hkh
-//#define printf_debug
-#define HID_Delay
-
 volatile int hid_flag = 0;
 u8 hid_data[64];
 int len_hid;
@@ -621,7 +618,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														memset(resultsign,0,64);
 														memset(resultsignRecord,0,98);
 														//签名的结果保存
-														Alg_ECDSASignData(this->dataSave + dataId0 * DATA_PACK_SIZE,this->dataLen,resultsign,&len,privateKey);
+														Alg_ECDSASignData(this->dataSave,this->dataLen,resultsign,&len,privateKey);
 														
 														//组合成最终的数据，长度1字节+公钥33字节+签名结果64字节
 														PrivateKey prkey(privateKey);													
@@ -753,15 +750,24 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								u8* passport = data+6;
 								u32 passport_array[6] = {0,0,0,0,0,0};
 								u32 passport_old[6] = {0,0,0,0,0,0}; 
-							
+								
+								if((len == 0)||(Utils::ReadU16(data+6) == 0))//出错
+								{
+										Commands command( CMD_VERIFY_FAILED, serialId);//告知上位机密码验证未通过
+										command.SendToPc();
+										passport_flag = 0;
+										view::DisplayMem::getInstance().drawString(34,24,"Error");
+										break;
+								}
+								
 								Alg_Base58Encode(passport,len,passport_new,&len_out);
 #ifdef printf_debug							
 								printf("passport_new: %s\r\n",passport_new);							
 #endif							
 								for(i=0;i<6;i++)
-								{
+								{										
 										passport_array[i] = passport_num[passport_new[i] - 0x31];
-								}
+								}														
 								Get_Passport(passport_old);
 								if(Utils::MemoryCompare(passport_old,passport_array,6))
 								{
