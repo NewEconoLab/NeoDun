@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define printf_debug
+//#define printf_debug
 #define HID_Delay
 
 typedef struct

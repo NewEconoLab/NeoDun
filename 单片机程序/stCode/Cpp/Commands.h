@@ -20,6 +20,9 @@ private:
 		int index;
 public:
 		Commands(  );
+		static  Commands & getInstance();
+		void SendHidFrame(u16 cmd, u16 serial, u32 len, u8* dec,u8 len_dec);
+
 		Commands( u16 cmd , u16 serial );
 		void CreateDataQuest(u16 cmd, u16 serial,u16 firstIndex,u16 lastIndex,u8 *hash,u32 hashLen);
 		void AppendU16(u16 data);

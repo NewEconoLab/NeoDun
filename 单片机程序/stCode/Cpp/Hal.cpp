@@ -101,8 +101,8 @@ void Hal::Delay(int ms)
 void Hal::SendUSBData(u8 *data , int len)
 {
 		USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,data,len);
-		USBD_CUSTOM_HID_HandleTypeDef     *hhid = (USBD_CUSTOM_HID_HandleTypeDef*)&hUsbDeviceFS;
-		while(hhid->state == CUSTOM_HID_BUSY);
+//		USBD_CUSTOM_HID_HandleTypeDef     *hhid = (USBD_CUSTOM_HID_HandleTypeDef*)&hUsbDeviceFS;
+//		while(hhid->state == CUSTOM_HID_BUSY);
 }
 
 
