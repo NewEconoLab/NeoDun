@@ -552,7 +552,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										int status = 1;
 										for(i=0;i<Sign.countOutputs;i++)
 										{
-												if(Utils::MemoryCompare(Sign.address[i],temp,strlen(Sign.address[i])))//对地址进行比较
+												if(Utils::MemoryCompare(Sign.address[i],temp,strlen(Sign.address[i])) == 0)//对地址进行比较,不一样
 												{
 														status = 0;
 														break;
