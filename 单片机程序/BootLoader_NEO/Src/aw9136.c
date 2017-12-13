@@ -71,7 +71,24 @@ void I2C_write_reg(u8 WriteAddr,u16 DataToWrite)
   IIC2_Stop();													//产生一个停止条件 
 	HAL_Delay(10);	 
 }
+void Center_button_init(void)
+{
+		GPIO_InitTypeDef GPIO_Initure;
 
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+	
+    //PA0  中间按钮PA0 
+    GPIO_Initure.Pin=GPIO_PIN_0;
+    GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;  		 //下降沿触发
+    GPIO_Initure.Pull=GPIO_PULLUP;          		 //上拉
+    HAL_GPIO_Init(GPIOA,&GPIO_Initure);		
+	
+    //中断线0-PA0
+    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为3
+    HAL_NVIC_EnableIRQ(EXTI0_IRQn);         //使能中断线2 
+
+		aw9136_key_flag = 1;
+}
 /**********************************************************
  PC2   aw9136_INT
  PC3   aw9136_PDN
@@ -85,13 +102,13 @@ void AW9136_Init(void)
     GPIO_InitTypeDef GPIO_Initure;
     
     __HAL_RCC_GPIOC_CLK_ENABLE();   //使能GPIOC时钟
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-		
-    //PA0  中间按钮PA0 
-    GPIO_Initure.Pin=GPIO_PIN_0;
-    GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;  		 //下降沿触发
-    GPIO_Initure.Pull=GPIO_PULLUP;          		 //上拉
-    HAL_GPIO_Init(GPIOA,&GPIO_Initure);				
+//    __HAL_RCC_GPIOA_CLK_ENABLE();
+//		
+//    //PA0  中间按钮PA0 
+//    GPIO_Initure.Pin=GPIO_PIN_0;
+//    GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;  		 //下降沿触发
+//    GPIO_Initure.Pull=GPIO_PULLUP;          		 //上拉
+//    HAL_GPIO_Init(GPIOA,&GPIO_Initure);				
 	
     //PC2初始化设置  
     GPIO_Initure.Pin=GPIO_PIN_2;
@@ -106,9 +123,9 @@ void AW9136_Init(void)
     GPIO_Initure.Speed=GPIO_SPEED_HIGH;    			 //快速
     HAL_GPIO_Init(GPIOC,&GPIO_Initure);
 	
-    //中断线0-PA0
-    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为3
-    HAL_NVIC_EnableIRQ(EXTI0_IRQn);         //使能中断线2  			
+//    //中断线0-PA0
+//    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为3
+//    HAL_NVIC_EnableIRQ(EXTI0_IRQn);         //使能中断线2  			
 	
     //中断线2-PC2
     HAL_NVIC_SetPriority(EXTI2_IRQn,2,3);   //抢占优先级为2，子优先级为3
@@ -345,7 +362,7 @@ unsigned char AW91xx_Auto_Cali(void)
 	unsigned int ofr_cfg[6];
 	unsigned int sen_num;
 
-	printf("%s Enter\n", __func__);
+//	printf("%s Enter\n", __func__);
 	
 	if(cali_num == 0){
 		ofr_cfg[0] = I2C_read_reg(0x13);
@@ -519,7 +536,7 @@ void AW_NormalMode_Proc(void)
 		if(cali_flag)
 		{
 				AW91xx_Auto_Cali();
-				printf("cali_flag = %d\r\n",cali_flag);
+//				printf("cali_flag = %d\r\n",cali_flag);
 				if(cali_flag == 0)
 				{			
 						if(cali_used)

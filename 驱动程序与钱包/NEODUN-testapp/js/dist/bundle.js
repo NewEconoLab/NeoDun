@@ -13851,6 +13851,8 @@ var getHash = exports.getHash = function getHash($SignatureScript) {
 };
 
 var signatureData = exports.signatureData = function signatureData($data, $privateKey) {
+    console.log("$data", $data.toString('hex'));
+    console.log("$privateKey", $privateKey.toString('hex'));
     var msg = _cryptoJs2.default.enc.Hex.parse($data);
     var msgHash = _cryptoJs2.default.SHA256(msg);
     var msgHashHex = new Buffer(msgHash.toString(), "hex");
@@ -39917,13 +39919,14 @@ var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTran
         return getTransactions(net, fromAccount.address, toAddress, amount, assetId).then(function (transactions) {
             var transaction = transactions;
             return signData(transaction, fromAccount.address).then((res) => {
-                console.log(transaction);
-                var signn = res.data.signdata;
                 var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
-                console.log(sign);
-                console.log(signn);
                 var publickeyEncoded = fromAccount.publickeyEncoded;
-                var jsonData = { 'publicKey': publickeyEncoded, 'signature': signn, 'transaction': transaction };
+                console.log(publickeyEncoded);
+                var publickeyEncoded2 = res.data.pubkey;
+                console.log(publickeyEncoded2);
+                var sign2 = res.data.signdata;
+
+                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction };
                 return _axios2.default.post(network.rpcEndpoint + '/broadcast', _qs2.default.stringify(jsonData)).then(function (response) {
                     return response;
                 }).catch(function (error) {

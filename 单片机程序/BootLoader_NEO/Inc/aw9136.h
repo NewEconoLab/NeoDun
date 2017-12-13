@@ -224,5 +224,6 @@ void AW_left_slip(void);
 void Home_Key_press(void);
 
 void AW_LedReleaseTouch(void);
+void Center_button_init(void);
 
 #endif

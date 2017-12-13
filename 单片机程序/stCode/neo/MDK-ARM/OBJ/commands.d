@@ -45,3 +45,4 @@
 .\obj\commands.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h
 .\obj\commands.o: ..\..\Cpp\Utils.h
 .\obj\commands.o: ..\..\Cpp\Hal.h
+.\obj\commands.o: ..\..\Cpp\main_define.h

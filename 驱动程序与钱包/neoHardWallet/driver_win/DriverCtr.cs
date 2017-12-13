@@ -562,7 +562,7 @@ namespace driver_win
 
         #region  签名 sign   -------后面改
         string hashstr;
-        byte[] outdata;
+        byte[] outdata ;
         bool isgetdata=false;
         public async Task Sign(IOwinContext context, FormData formdata)
         {
@@ -609,12 +609,12 @@ namespace driver_win
                     break;
                 }
             }
-
+            
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);//加入监视器
-
+            
             NeoDun.Message signMsg = new NeoDun.Message();
-
+            
             {//发送签名报文
                 var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, src);
                 var addbytes = add.GetAddbytes();
@@ -623,7 +623,7 @@ namespace driver_win
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
                 signMsg.writeUInt16(0, (UInt16)add.type);//neo tag
                 Array.Copy(addbytes, 0, signMsg.data, 2, addbytes.Length);//addbytes
-
+            
                 //这个dataid 要上一个block 传送完毕了才知道
                 signMsg.writeUInt32(42, remoteid);
                 signer.SendMessage(signMsg, true);
@@ -634,7 +634,7 @@ namespace driver_win
                 if (outdata != null)
                     break;
             }
-
+            
             //读出来，拼为http响应，发回去
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
@@ -654,12 +654,12 @@ namespace driver_win
         private void ConfirmSign()
         {
             isgetdata = true;
-            GetAddressList();
         }
 
         private void ConfirmSignCallBack(byte[] _outdata)
         {
             outdata = _outdata;
+//            GetAddressList();
         }
 
 
