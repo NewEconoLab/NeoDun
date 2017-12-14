@@ -25,6 +25,18 @@ extern "C"
 #include "encrypt.h"
 
 }
+//45 02a8
+//43 02a8
+//42 02a8
+//41 02a8
+//40 OK
+//35 OK     34/33 02a8
+//30 OK			30/32 ERROR
+//28 OK			27 0101 
+//27 ERROR
+//25 0101
+//20 0101
+#define delay_hid 31
 
 //add by hkh
 volatile int hid_flag = 0;
@@ -405,8 +417,8 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 #ifdef printf_debug									
 												printf("lenout:%d\r\n",lenout);
 												Utils::PrintArray(result,lenout);
+												printf("i:%d\r\n",i);												
 #endif									
-												printf("i:%d\r\n",i);
 												Commands command( CMD_RETURN_ADDRESS, serialId_add);
 												command.AppendU16(i);
 												command.AppendU16((int)count);
@@ -482,7 +494,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,33,hash,32);																	
 #ifdef HID_Delay															
 //																for(u32 j = 0;j<0xfffff;j++);
-																HAL_Delay(100);
+																HAL_Delay(delay_hid);
 #endif															
 //														}													
 //														Commands command( CMD_RETURN_MESSAGE, serialId_getprikey);
@@ -649,7 +661,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														PrivateKey prkey(privateKey);													
 #ifdef printf_debug									
 //														printf("privateKey:\r\n");
-//														Utils::PrintArray(prkey.getData(),32);
+														Utils::PrintArray(prkey.getData(),32);
 #endif															
 														PublicKey pubK = prkey.GetPublicKey(true);
 														uint8_t pubKEY[33]; 
@@ -690,7 +702,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,98,hash_all,32);
 #ifdef HID_Delay														
 //																for(u32 j = 0;j<0xfffff;j++);
-																HAL_Delay(100);
+																HAL_Delay(delay_hid);
 #endif																
 //														}													
 														//再发条通知消息 告诉上位机hash
