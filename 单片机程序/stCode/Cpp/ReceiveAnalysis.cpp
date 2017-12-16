@@ -25,18 +25,8 @@ extern "C"
 #include "encrypt.h"
 
 }
-//45 02a8
-//43 02a8
-//42 02a8
-//41 02a8
-//40 OK
-//35 OK     34/33 02a8
-//30 OK			30/32 ERROR
-//28 OK			27 0101 
-//27 ERROR
-//25 0101
-//20 0101
-#define delay_hid 31
+
+#define delay_hid 35
 
 //add by hkh
 volatile int hid_flag = 0;
@@ -189,7 +179,8 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												command.AppendBytes(this->dataSave+i*DATA_PACK_SIZE,50);
 												command.SendToPc();
 #ifdef HID_Delay													
-												for(u32 j = 0;j<0xfffff;j++);
+												//for(u32 j = 0;j<0xfffff;j++);
+												HAL_Delay(delay_hid);
 #endif												
 										}
 										
@@ -429,7 +420,8 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												printf("count = 0x%x \r\n", count);
 #endif										
 #ifdef HID_Delay													
-												for(u32 j = 0;j<0xfffff;j++);
+												//for(u32 j = 0;j<0xfffff;j++);
+												HAL_Delay(delay_hid);
 #endif									
 												address_flash += 80;
 										}
@@ -484,6 +476,11 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																hash1[i] = privateKey[i-1];
 														Utils::Sha256(hash1, 33, hash, 32);														
 														memmove(this->dataSave, hash1,33);
+														
+												
+		
+														
+														
 //														for(int t=0;t<1;t++)
 //														{
 														this->reqSerial = Utils::RandomInteger();
@@ -492,17 +489,22 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 //																command.AppendBytes(hash,32);
 //																command.SendToPc();		
 														Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,33,hash,32);																	
-#ifdef HID_Delay															
-//																for(u32 j = 0;j<0xfffff;j++);
-																HAL_Delay(delay_hid);
-#endif															
+												
 //														}													
 //														Commands command( CMD_RETURN_MESSAGE, serialId_getprikey);
 //														command.AppendU32(32);
 //														command.AppendBytes(hash,32);
 //														command.SendToPc();
+
+
+#ifdef HID_Delay															
+//																for(u32 j = 0;j<0xfffff;j++);
+																HAL_Delay(delay_hid);
+#endif	
+
+
 														Commands::getInstance().SendHidFrame(CMD_RETURN_MESSAGE,serialId_getprikey,32,hash,32);
-														HAL_Delay(100);
+		
 														break;
 												}
 												else if((Key_Flag.Sign_Key_left_Flag)||(Key_Flag.Sign_Key_right_Flag))//拒绝
@@ -692,6 +694,9 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														printf("*********************************\r\n");
 														Utils::PrintArray(resultsignRecord,98);
 #endif															
+
+
+
 //														for(int t=0;t<1;t++)//准备好数据块，飞回去		将outdata 发回上位机
 //														{
 														this->reqSerial = Utils::RandomInteger();
@@ -700,18 +705,21 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 //																command.AppendBytes(hash_all,32);
 //																command.SendToPc();
 														Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,98,hash_all,32);
-#ifdef HID_Delay														
-//																for(u32 j = 0;j<0xfffff;j++);
-																HAL_Delay(delay_hid);
-#endif																
+														
 //														}													
 														//再发条通知消息 告诉上位机hash
 //														Commands command( CMD_SIGN_OK, serialId_sign_data);
 //														command.AppendU32(98);
 //														command.AppendBytes(hash_all,32);									
 //														command.SendToPc();
-														Commands::getInstance().SendHidFrame(CMD_SIGN_OK,serialId_sign_data,98,hash_all,32);
-														HAL_Delay(100);
+
+#ifdef HID_Delay														
+//																for(u32 j = 0;j<0xfffff;j++);
+																HAL_Delay(delay_hid);
+#endif	
+
+														
+														Commands::getInstance().SendHidFrame(CMD_SIGN_OK,serialId_sign_data,98,hash_all,32);														
 														
 														view::DisplayMem::getInstance().clearAll();//清屏
 														view::DisplayMem::getInstance().drawString(92,20,"NeoDun",view::FONT_12X24);

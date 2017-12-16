@@ -157,6 +157,8 @@ namespace NeoDun
                     if (len % 50 > 0)
                         piececount++;
 
+                    await System.Threading.Tasks.Task.Delay(50);//add bu hkh 1216
+
                     System.Threading.ThreadPool.QueueUserWorkItem((__state) =>
                     {
                         NeoDun.Message _msg = new NeoDun.Message();
