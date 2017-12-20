@@ -1,6 +1,6 @@
 bootloader_neo\forprintf.o: ..\Src\forPrintf.c
-bootloader_neo\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-bootloader_neo\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+bootloader_neo\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+bootloader_neo\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 bootloader_neo\forprintf.o: ../Inc/stm32f4xx_hal_conf.h
 bootloader_neo\forprintf.o: ../Inc/main.h
@@ -9,7 +9,7 @@ bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_de
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Include/core_cm4.h
-bootloader_neo\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader_neo\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Include/core_cmInstr.h
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 bootloader_neo\forprintf.o: ../Drivers/CMSIS/Include/core_cmFunc.h
@@ -35,5 +35,5 @@ bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_ua
 bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 bootloader_neo\forprintf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
-bootloader_neo\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\rt_misc.h
-bootloader_neo\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+bootloader_neo\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\rt_misc.h
+bootloader_neo\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

@@ -20,6 +20,23 @@ Commands::Commands(  )
 		index = 0;
 }
 
+Commands& Commands::getInstance() 
+{
+		static Commands command;
+		return command;
+}
+
+void Commands::SendHidFrame(u16 cmd, u16 serial, u32 len, u8* dec,u8 len_dec)
+{
+		memset(data,0,sizeof(data));
+		index = 0;
+		Utils::WriteU16( Utils::ReverseU16(cmd)  , this->data + index);index +=2;
+		Utils::WriteU16( serial , this->data + index);index +=2;
+		Utils::WriteU32( len , this->data + index);index +=4;
+		memmove(data + index,dec,len_dec);index += len_dec;
+		SendToPc();		
+}
+
 void Commands::CreateDataQuest(u16 cmd, u16 serial, u16 firstIndex, u16 lastIndex, u8* hash, u32 hashLen) 
 {
 		memset(data,0,sizeof(data));
