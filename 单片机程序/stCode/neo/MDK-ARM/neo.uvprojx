@@ -309,8 +309,8 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8010000</StartAddress>
-                <Size>0xf0000</Size>
+                <StartAddress>0x8000000</StartAddress>
+                <Size>0x100000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -674,24 +674,19 @@
               <FilePath>..\..\Cpp\Hal.cpp</FilePath>
             </File>
             <File>
+              <FileName>irq_handler.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\Cpp\irq_handler.cpp</FilePath>
+            </File>
+            <File>
               <FileName>myMain.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\Cpp\myMain.cpp</FilePath>
             </File>
             <File>
-              <FileName>KeyScan.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\KeyScan.cpp</FilePath>
-            </File>
-            <File>
               <FileName>Commands.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\Cpp\Commands.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>irq_handler.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\irq_handler.cpp</FilePath>
             </File>
             <File>
               <FileName>ReceiveAnalysis.cpp</FileName>
@@ -707,11 +702,6 @@
               <FileName>Sha256.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\..\Cpp\Sha256.lib</FilePath>
-            </File>
-            <File>
-              <FileName>Address.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\Address.cpp</FilePath>
             </File>
             <File>
               <FileName>PrivateKey.cpp</FileName>
