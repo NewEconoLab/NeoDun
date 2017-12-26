@@ -302,8 +302,8 @@ namespace driver_win
                 signMsg.tag2 = 0x0c;//验证密码
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
                 signMsg.writeUInt16(0, (UInt16)bytes_password.Length);
-                signMsg.data[3] = bytes[0];
-                signMsg.data[4] = bytes[1];
+                signMsg.data[2] = bytes[0];
+                signMsg.data[3] = bytes[1];
                 Array.Copy(bytes_password, 0, signMsg.data,4, bytes_password.Length);
                 signer.SendMessage(signMsg, true);
                 pwlock = true;

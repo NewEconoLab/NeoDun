@@ -25,7 +25,7 @@ extern "C"
 #include "encrypt.h"
 }
 
-#define 	delay_hid 	5		
+#define 	delay_hid 	15		
 
 //add by hkh
 volatile int hid_flag = 0;
@@ -715,52 +715,6 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										}
 										break;
 								}
-								case CMD_SET_PASSPORT://设置密码  0x020b
-								{
-										if(passport_flag_set)
-										{
-												passport_flag_set = 0;
-												int i = 0;
-												char passport_new[6] = "";
-												u32 passport_array[6] = {0,0,0,0,0,0};
-												int len_out = 0;
-												int len = Utils::ReadU16(data+4);								
-												u8* passport = data+6;
-												
-												if((Utils::ReadU16(data+6))&&(len != 0))
-												{
-														//memset(passport_new,0,6);
-														Alg_Base58Encode(passport,len,passport_new,&len_out);
-						#ifdef printf_debug							
-														printf("passport_new: %s\r\n",passport_new);
-						#endif							
-														for(i=0;i<6;i++)
-														{
-																passport_array[i] = passport_num[passport_new[i] - 0x31];
-														}	
-						//								view::DisplayMem::getInstance().GetPassportFromString((u8*)passport_new,passport_num,passport_array);								
-														Update_Passport(passport_array);//更新FLASH中密码的值
-														
-														
-														if(Set_Flag.New_Device_Flag)//初次设置了密码，则设备不再是新设备
-														{
-																Set_Flag.New_Device_Flag = 0;
-																Updata_Set_Flag(&Set_Flag);
-														}
-														
-														Commands command( CMD_SET_OK, serialId);
-														command.SendToPc();											
-														break;
-												}
-												else
-												{
-														Commands command( CMD_SET_FAILED, serialId);
-														command.SendToPc();											
-														break;								
-												}
-										}
-										break;
-								}
 								case CMD_SET_INFO:  //0x021a
 								{								
 										//Set_Flag.New_Device_Flag = Utils::ReadU16(data + 4);
@@ -782,27 +736,6 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												command.SendToPc();												
 										}
 										break;
-								}
-								case CMD_GET_INFO:  //0x021b
-								{															
-										if(1)
-										{																			
-												Commands command( CMD_GET_INFO_OK, serialId);
-												command.AppendU16(Set_Flag.New_Device_Flag);
-												command.AppendU16(Set_Flag.Auto_Show_Flag);
-												command.AppendU16(Set_Flag.Auto_Update_Flag);
-												command.AppendU16(Set_Flag.Add_Address_Flag);
-												command.AppendU16(Set_Flag.Del_Address_Flag);
-												command.AppendU16(Set_Flag.Backup_Address_Flag);
-												command.AppendU16(Set_Flag.Backup_Address_Encrypt_Flag);
-												command.SendToPc();										
-										}
-										else
-										{
-												Commands command( CMD_GET_INFO_FAILED, serialId);
-												command.SendToPc();										
-										}
-										break;
 								}								
 								default:			
 								break;
@@ -812,12 +745,33 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 				//没验证密码时，只能做以下几步
 				switch (cmd)
 				{
+						case CMD_GET_INFO:  //0x021b
+						{															
+								if(1)
+								{																			
+										Commands command( CMD_GET_INFO_OK, serialId);
+										command.AppendU16(Set_Flag.New_Device_Flag);
+										command.AppendU16(Set_Flag.Auto_Show_Flag);
+										command.AppendU16(Set_Flag.Auto_Update_Flag);
+										command.AppendU16(Set_Flag.Add_Address_Flag);
+										command.AppendU16(Set_Flag.Del_Address_Flag);
+										command.AppendU16(Set_Flag.Backup_Address_Flag);
+										command.AppendU16(Set_Flag.Backup_Address_Encrypt_Flag);
+										command.SendToPc();										
+								}
+								else
+								{
+										Commands command( CMD_GET_INFO_FAILED, serialId);
+										command.SendToPc();										
+								}
+								break;
+						}					
 						case CMD_VERIFY_PASSPORT://验证密码  0x020c
 						{
 								int i = 0;
 								char passport_new[6] = "";
 								int len_out = 0;
-								u16 function_code = Utils::ReadU16(data+6);
+								u16 function_code = Utils::ReverseU16(Utils::ReadU16(data+6));
 #ifdef printf_debug							
 								printf("Verify function_code: 0x%x\r\n",function_code);							
 #endif							
@@ -883,6 +837,54 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								}
 								break;
 						}
+						case CMD_SET_PASSPORT://设置密码  0x020b
+						{
+								if(Set_Flag.New_Device_Flag)
+										passport_flag_set = 1;
+								if(passport_flag_set)
+								{
+										passport_flag_set = 0;
+										int i = 0;
+										char passport_new[6] = "";
+										u32 passport_array[6] = {0,0,0,0,0,0};
+										int len_out = 0;
+										int len = Utils::ReadU16(data+4);								
+										u8* passport = data+6;
+										
+										if((Utils::ReadU16(data+6))&&(len != 0))
+										{
+												//memset(passport_new,0,6);
+												Alg_Base58Encode(passport,len,passport_new,&len_out);
+				#ifdef printf_debug							
+												printf("passport_new: %s\r\n",passport_new);
+				#endif							
+												for(i=0;i<6;i++)
+												{
+														passport_array[i] = passport_num[passport_new[i] - 0x31];
+												}	
+				//								view::DisplayMem::getInstance().GetPassportFromString((u8*)passport_new,passport_num,passport_array);								
+												Update_Passport(passport_array);//更新FLASH中密码的值
+												
+												
+												if(Set_Flag.New_Device_Flag)//初次设置了密码，则设备不再是新设备
+												{
+														Set_Flag.New_Device_Flag = 0;
+														Updata_Set_Flag(&Set_Flag);
+												}
+												
+												Commands command( CMD_SET_OK, serialId);
+												command.SendToPc();											
+												break;
+										}
+										else
+										{
+												Commands command( CMD_SET_FAILED, serialId);
+												command.SendToPc();											
+												break;								
+										}
+								}
+								break;
+						}						
 						case CMD_SHOW_PASSPORT: //0x021c
 						{							
 								int value = 0;
