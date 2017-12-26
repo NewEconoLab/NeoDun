@@ -277,7 +277,8 @@ namespace driver_win
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += GetSingerInfo;
 
-                byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+               // byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+                byte[] bytes_password = NeoDun.SignTool.HexString2Bytes(str_password);
 
                 NeoDun.Message signMsg = new NeoDun.Message();
                 signMsg.tag1 = 0x02;
@@ -300,7 +301,8 @@ namespace driver_win
                     confirmPasswordEventHandlerCallBack += GetAddressList;
                 }
 
-                byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+                byte[] bytes_password = NeoDun.SignTool.HexString2Bytes(str_password);
+
                 NeoDun.Message signMsg = new NeoDun.Message();
                 signMsg.tag1 = 0x02;
                 signMsg.tag2 = 0x0c;//验证密码
@@ -394,7 +396,19 @@ namespace driver_win
         {
             if (string.IsNullOrEmpty(_address) || string.IsNullOrEmpty(_privateKey))
                 return;
+
+            //地址查重 
+            foreach (var add in signer.addressPool.addresses)
+            {
+                if (add.AddressText == _address)
+                {
+                    ErrorCallBack("地址重复","通知");
+                    return;
+
+                }
+            }
             str_address = _address;
+
             str_privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_privateKey);
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.新增地址时是否要密码验证))
             {
