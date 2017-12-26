@@ -3,11 +3,8 @@
 
 #include <stdint.h>
 
-#define printf_debug
+//#define printf_debug
 #define HID_Delay
-
-#define ADDR_XiaoYi 0x0101
-#define ADDR_SIZE   40
 
 typedef struct
 {

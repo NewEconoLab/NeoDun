@@ -44,6 +44,7 @@
 #include "iap.h"
 #include "timer.h"
 #include "stmflash.h"
+#include "cmd.h"
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;

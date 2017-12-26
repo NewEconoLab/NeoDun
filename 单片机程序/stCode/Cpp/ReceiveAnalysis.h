@@ -9,6 +9,8 @@
 #define CPP_RECEIVEANALYSIS_H_
 
 #include "myType.h"
+#include "queue.h"
+#include "Address.h"
 
 class ReceiveAnalysis 
 {
@@ -33,6 +35,9 @@ private:
 		bool packIndexRecord[(DATA_BLOCK_SIZE+DATA_PACK_SIZE-1)/DATA_PACK_SIZE ];
 		u8 hashRecord[32];	//PC传过来的hash值的记录
 		u8 resultsignRecord[98];
+
+		queue<Address,20> addreses;
+
 		
 public:
 		static ReceiveAnalysis & GetInstance();
