@@ -1,7 +1,6 @@
 .\obj\publickey.o: ..\..\Cpp\PublicKey.cpp
 .\obj\publickey.o: ..\..\Cpp\PublicKey.h
 .\obj\publickey.o: ..\..\Cpp\myType.h
-.\obj\publickey.o: ..\..\Cpp\Address.h
 .\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\publickey.o: ..\..\Algorithm\Algorithm.h
 .\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

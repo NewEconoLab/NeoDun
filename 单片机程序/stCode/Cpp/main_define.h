@@ -6,6 +6,9 @@
 //#define printf_debug
 #define HID_Delay
 
+#define ADDR_XiaoYi 0x0101
+#define ADDR_SIZE   40
+
 typedef struct
 {
 		int Sign_Key_Flag;				//防误按的标志位

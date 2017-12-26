@@ -17,6 +17,21 @@ typedef struct
     long long money[10];
 }SIGN_Out_Para;
 
+//不同的交易类型定义的数组和变量，输出不同的数据
+typedef struct
+{
+		uint64_t Nonce;				//MinerTransaction
+		uint8_t Claims[68]; 	//ClaimTransaction			PrevHash:0-63,PrevIndex:64-67
+		uint8_t PublicKey[64];//EnrollmentTransaction
+		int AssetType;				//RegisterTransaction
+		uint64_t Amount;			//RegisterTransaction
+		int Precision;				//RegisterTransaction
+		uint8_t Owner[66];		//RegisterTransaction
+		uint8_t Admin[40];		//RegisterTransaction
+		uint8_t Code[6];			//PublishTransaction
+		int NeedStorage;			//PublishTransaction
+		int64_t Gas;					//InvocationTransaction	
+}SIGN_Out_Data;
 
 int GetIndexFromBuff(char *buff,char ch);
 int Ascii2Dec(char ch);

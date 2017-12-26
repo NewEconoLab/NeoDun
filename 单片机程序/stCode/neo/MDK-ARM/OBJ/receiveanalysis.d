@@ -1,8 +1,6 @@
 .\obj\receiveanalysis.o: ..\..\Cpp\ReceiveAnalysis.cpp
 .\obj\receiveanalysis.o: ..\..\Cpp\ReceiveAnalysis.h
 .\obj\receiveanalysis.o: ..\..\Cpp\myType.h
-.\obj\receiveanalysis.o: ..\..\Cpp\queue.h
-.\obj\receiveanalysis.o: ..\..\Cpp\Address.h
 .\obj\receiveanalysis.o: ..\..\Cpp\Utils.h
 .\obj\receiveanalysis.o: ..\..\Cpp\CMD.h
 .\obj\receiveanalysis.o: ..\..\Cpp\Commands.h

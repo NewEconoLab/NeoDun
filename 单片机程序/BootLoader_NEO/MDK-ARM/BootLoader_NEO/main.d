@@ -46,4 +46,3 @@ bootloader_neo\main.o: ../Inc/iap.h
 bootloader_neo\main.o: ../Inc/timer.h
 bootloader_neo\main.o: ../Inc/stmflash.h
 bootloader_neo\main.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
-bootloader_neo\main.o: ../Inc/cmd.h

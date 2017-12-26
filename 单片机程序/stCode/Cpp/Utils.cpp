@@ -137,6 +137,13 @@ bool Utils::MemoryCompare(void* left, void* right, int size)
 		return true;
 }
 
-
+void Utils::HexToNum(u8 *src,int len, char *dec)
+{
+		for(int i=0;i<len;i++)
+		{
+				dec[2*i] = (src[i])/16 + 0x30;
+				dec[2*i+1] = (src[i])%16 + 0x30;
+		}
+}
 
 

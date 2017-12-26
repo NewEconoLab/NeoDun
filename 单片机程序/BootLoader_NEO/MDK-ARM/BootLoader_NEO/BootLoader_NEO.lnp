@@ -39,7 +39,6 @@
 "bootloader_neo\iap.o"
 "bootloader_neo\sys.o"
 "bootloader_neo\timer.o"
-"bootloader_neo\cmd.o"
 --library_type=microlib --strict --scatter "BootLoader_NEO\BootLoader_NEO.sct"
 
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols

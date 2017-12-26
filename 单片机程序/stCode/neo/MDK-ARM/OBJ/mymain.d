@@ -34,12 +34,9 @@
 .\obj\mymain.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 .\obj\mymain.o: ..\..\Cpp\Hal.h
 .\obj\mymain.o: ..\..\Cpp\myType.h
-.\obj\mymain.o: ..\..\Cpp\KeyScan.h
 .\obj\mymain.o: ..\..\Cpp\Commands.h
 .\obj\mymain.o: ..\..\Cpp\DisplayMem.h
 .\obj\mymain.o: ..\..\Cpp\ReceiveAnalysis.h
-.\obj\mymain.o: ..\..\Cpp\queue.h
-.\obj\mymain.o: ..\..\Cpp\Address.h
 .\obj\mymain.o: ..\..\Cpp\Utils.h
 .\obj\mymain.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\mymain.o: ..\..\Cpp\main_define.h
