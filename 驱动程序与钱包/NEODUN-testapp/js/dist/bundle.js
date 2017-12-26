@@ -19795,34 +19795,39 @@ var vm = new Vue({
         //交易登录
         loginWallet: function loginWallet() {
             var index = this.loginData.walletIndex;
-            var ciphertext = this.wallets[index].ciphertext;
-            var privateKey = wallet.decryptNeodunPrivateKey(ciphertext, this.loginData.password);
-            this.businessMessage.publickeyEncoded = wallet.getPublicKey(privateKey, true);
+            //var ciphertext = this.wallets[index].ciphertext;
+            //var privateKey = wallet.decryptNeodunPrivateKey(ciphertext, this.loginData.password);
+            //this.businessMessage.publickeyEncoded = wallet.getPublicKey(privateKey, true);
             this.businessMessage.account = this.wallets[this.loginData.walletIndex].allassets[0];
             this.businessMessage.address = this.wallets[this.loginData.walletIndex].address;
             if (privateKey == '0') {
-                // $('#loginWallet').modal('hide');
-                this.alertMessage = "密码错误请重新输入";
-                $('#alert').modal('show');
+             // $('#loginWallet').modal('hide');
+             this.alertMessage = "密码错误请重新输入";
+             $('#alert').modal('show');
             } else {
-                this.businessMessage.privatekey = privateKey;
-                $('#loginWallet').modal('hide');
-                this.alertMessage = "登录成功，开始交易吧";
-                $('#businessAlert').modal('show');
-            }
+             this.businessMessage.privatekey = privateKey;
+             $('#loginWallet').modal('hide');
+             this.alertMessage = "登录成功，开始交易吧";
+           $('#businessAlert').modal('show');
+           }
+            
             //清空登录信息
-            this.loginData = {
-                walletIndex: index,
-                ciphertext: '',
-                password: ''
-            };
+            //this.loginData = {
+            //    walletIndex: index,
+            ////    ciphertext: '',
+            //    password: ''
+            //};
         },
 
         //交易
         business: function business() {
             if (this.verifyAddReminder('business') == 'validated') {
+                console.log(123123);
                 $('#businessOpen').modal('hide');
-                $('#loginWallet').modal('show');
+                this.businessMessage.account = this.wallets[this.loginData.walletIndex].allassets[0];
+                this.businessMessage.address = this.wallets[this.loginData.walletIndex].address;
+                $('#businessAlert').modal('show');
+                //$('#loginWallet').modal('show');
             };
             return;
             // $('#businessMessage').modal('show');
@@ -39856,11 +39861,14 @@ var getBlockCount = exports.getBlockCount = function getBlockCount(net) {
 
 // use a public blockchain explorer (currently antchain.xyz) to get the current balance of an account
 // returns dictionary with both ANS and ANC
-var getBalance = exports.getBalance = function getBalance(net, address) {
+    var getBalance = exports.getBalance = function getBalance(net, address) {
+        console.log("address:" + address);
+        console.log("net:" + net);
     var network = getNetworkEndpoints(net);
     var rpcURL = '/address/';
     var apiURL = '/api/v1/address/info/';
     return _axios2.default.get(network.rpcEndpoint + rpcURL + address).then(function (res) {
+        console.log("res:" + res.data);
         if (res.data.result !== 'No Address!') {
             // get ANS
             // console.log(res.data);
@@ -39919,14 +39927,15 @@ var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTran
         return getTransactions(net, fromAccount.address, toAddress, amount, assetId).then(function (transactions) {
             var transaction = transactions;
             return signData(transaction, fromAccount.address).then((res) => {
-                var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
-                var publickeyEncoded = fromAccount.publickeyEncoded;
-                console.log(publickeyEncoded);
-                var publickeyEncoded2 = res.data.pubkey;
-                console.log(publickeyEncoded2);
-                var sign2 = res.data.signdata;
+                //var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
+                //var publickeyEncoded = fromAccount.publickeyEncoded;
 
-                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction };
+                var publickeyEncoded2 = res.data.pubkey;
+                var sign2 = res.data.signdata;
+                console.log("sign:" + sign2);
+                console.log("publickeyEncoded:" + publickeyEncoded2);
+
+                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction, node:'seed5.neo.org'};
                 return _axios2.default.post(network.rpcEndpoint + '/broadcast', _qs2.default.stringify(jsonData)).then(function (response) {
                     return response;
                 }).catch(function (error) {
