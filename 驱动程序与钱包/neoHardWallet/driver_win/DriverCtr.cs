@@ -172,7 +172,7 @@ namespace driver_win
             else
             {
                 getSiggerInfoEventHandlerCallBack("请输入你的密码", _json);
-                isNeedConfirmPasswordCallBack(0x02,0x0c,"请输入你的密码(6位)");
+                isNeedConfirmPasswordCallBack(0x02,0x01,"请输入你的密码(6位)");
                 //json_setting = MyJson.Parse(_str) as MyJson.JsonNode_Object;
             }
         }
