@@ -572,8 +572,16 @@ namespace driver_win
             //需要密码验证
             isNeedConfirmPasswordCallBack(0x02,0x0b);
             confirmPasswordEventHandlerCallBack = null;
+            confirmPasswordEventHandlerCallBack += ConfirmResetPassword_;
+        }
+        private void ConfirmResetPassword_()
+        {
+            //需要密码验证
+            isNeedConfirmPasswordCallBack(0x02, 0x0b);
+            confirmPasswordEventHandlerCallBack = null;
             confirmPasswordEventHandlerCallBack += ConfirmResetPassword;
         }
+
         public delegate void ConfirmResetPasswordEventHandlerCallBack(string _str);
         public event ConfirmResetPasswordEventHandlerCallBack confirmResetPasswordEventHandlerCallBack;
         private void ConfirmResetPassword()
@@ -581,6 +589,7 @@ namespace driver_win
             confirmResetPasswordEventHandlerCallBack("请输入新密码");
             json_setting["是否是新设备"] = new MyJson.JsonNode_ValueNumber(true);
         }
+
 
 
         #endregion
