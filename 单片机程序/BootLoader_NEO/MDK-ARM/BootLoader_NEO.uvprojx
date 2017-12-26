@@ -631,6 +631,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\timer.c</FilePath>
             </File>
+            <File>
+              <FileName>cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\cmd.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

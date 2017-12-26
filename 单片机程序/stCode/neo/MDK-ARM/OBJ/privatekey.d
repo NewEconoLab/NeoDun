@@ -2,6 +2,7 @@
 .\obj\privatekey.o: ..\..\Cpp\PrivateKey.h
 .\obj\privatekey.o: ..\..\Cpp\PublicKey.h
 .\obj\privatekey.o: ..\..\Cpp\myType.h
+.\obj\privatekey.o: ..\..\Cpp\Address.h
 .\obj\privatekey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\privatekey.o: ..\..\Cpp\Utils.h
 .\obj\privatekey.o: ..\..\Algorithm\Algorithm.h

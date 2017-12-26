@@ -9,6 +9,7 @@
 #define CPP_PUBLICKEY_H_
 
 #include "myType.h"
+#include "Address.h"
 
 class PublicKey {
 public:
@@ -17,6 +18,8 @@ public:
 	PublicKey(u8 *_data);
 	PublicKey( );
 	u8* getData() const;
+	Address GetAddress();
+
 };
 
 #endif /* CPP_PUBLICKEY_H_ */

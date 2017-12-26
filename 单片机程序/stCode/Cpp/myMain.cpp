@@ -20,18 +20,10 @@
 ** 5、数据ID分配需要传给上位机，第一个ID是下发的私钥，第二个ID是数据包，ID是下位机先定的，每完成一次完整的数据交互，清除ID并清空数组，
 每个ID对应着50字节的数据
 ** 6、HID连续发送出错，问题出在串号，发送HID延时等待状态
-** 7、安全性考虑
-			查询地址					不需要密码
-			增加地址					可设置是否重复		保存
-			删除地址					可设置是否重复		保存
-			获取安全信息			可设置是否重复		保存
-			交易签名					重复						不保存
-			保存安全设置			重复						不保存
-			重置密码					重复						不保存
-** 8、整理工程，修改CUSTOM_HID_EPIN_SIZE和CUSTOM_HID_EPOUT_SIZE的值
 ********************************************************************************************************/
 #include "stm32f4xx_hal.h"
 #include "Hal.h"
+#include "KeyScan.h"
 #include "Commands.h"
 #include "DisplayMem.h"
 #include "ReceiveAnalysis.h"
@@ -43,6 +35,7 @@
 
 using namespace view;
 extern "C" void my_main();
+//extern "C" void oled281_test(void );
 
 DisplayMem &Disp = DisplayMem::getInstance();
 
@@ -52,12 +45,7 @@ extern int len_hid;
 extern SIGN_KEY_FLAG Key_Flag;
 SIGN_SET_FLAG Set_Flag;
 
-volatile int passport_flag_poweron = 0;	//开机密码验证标志位
-volatile int passport_flag_sign = 0;		//交易签名验证标志位
-volatile int passport_flag_set = 0;			//设置密码验证标志位
-volatile int passport_flag_add = 0;			//增加地址验证标志位
-volatile int passport_flag_del = 0;			//删除地址验证标志位
-volatile int passport_flag_bek = 0;			//备份地址验证标志位
+volatile int passport_flag = 0;//密码验证标志位
 int passport_num[9] = {1,2,3,4,5,6,7,8,9};//随机密码，生成数组
 
 void my_main() 
@@ -75,7 +63,7 @@ void my_main()
 
 //		//这两句作为调试		
 //		Disp.drawString(92,20,"NeoDun",view::FONT_12X24);
-//		passport_flag_poweron = 1;
+//		passport_flag = 1;
 
 		while (1) 
 		{

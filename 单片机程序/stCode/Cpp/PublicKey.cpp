@@ -29,3 +29,10 @@ PublicKey::PublicKey()
 
 }
 
+Address PublicKey::GetAddress() 
+{
+		Address address ;
+		int len = 0;
+		Alg_GetAddressFromPublic(this->data,(char*)address.getContent(),len);
+		return address;
+}

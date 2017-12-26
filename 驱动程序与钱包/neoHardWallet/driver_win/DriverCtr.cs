@@ -28,6 +28,9 @@ namespace driver_win
 
         private byte[] bytes = new byte[2];
 
+
+        private MyJson.JsonNode_Object isFirstConfirm = new MyJson.JsonNode_Object();
+
         private MyJson.JsonNode_Object json_setting = new MyJson.JsonNode_Object();
         private DriverCtr()
         {
@@ -57,6 +60,7 @@ namespace driver_win
             signer.signEventHandler += ConfirmSignCallBack;
             signer.showSignerPasswordPageEventHandler += ShowSignerPasswordPageCallBack;
             signer.setSettingInfoEventHandler += SetSettingInfoCallBack;
+            signer.errorEventHandler += ErrorCallBack;
         }
 
         private void UInit()
@@ -71,17 +75,11 @@ namespace driver_win
             signer.signEventHandler -= ConfirmSignCallBack;
             signer.showSignerPasswordPageEventHandler -= ShowSignerPasswordPageCallBack;
             signer.setSettingInfoEventHandler -= SetSettingInfoCallBack;
+            signer.errorEventHandler -= ErrorCallBack;
 
         }
 
 
-        public delegate void ErrorEventHandlerCallBack(string msg, string header);
-        public event ErrorEventHandlerCallBack errorEventHandlerCallBack;
-        private  void ErrorCallBack(string msg,string header)
-        {
-            if (errorEventHandlerCallBack != null)
-                errorEventHandlerCallBack(msg, header);
-        }
 
 
         #region 连接签名机
@@ -164,6 +162,11 @@ namespace driver_win
             _islinking = true;
 
             json_setting = _json;
+
+            isFirstConfirm["新增地址时是否要密码验证"] = new MyJson.JsonNode_ValueNumber(true);
+            isFirstConfirm["删除地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(true);
+            isFirstConfirm["备份地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(true);
+
             if (_json["是否是新设备"] as MyJson.JsonNode_ValueNumber)
             {
                 getSiggerInfoEventHandlerCallBack("检测到插入的钱包是新设备，请初始化钱包的密码", _json);
@@ -172,7 +175,7 @@ namespace driver_win
             else
             {
                 getSiggerInfoEventHandlerCallBack("请输入你的密码", _json);
-                isNeedConfirmPasswordCallBack(0x02,0x01,"请输入你的密码(6位)");
+                isNeedConfirmPasswordCallBack(0x02,0x01,"请输入你的密码");
                 //json_setting = MyJson.Parse(_str) as MyJson.JsonNode_Object;
             }
         }
@@ -180,8 +183,9 @@ namespace driver_win
         //根据设置判断是不是要验证密码
         public bool IsNeedConfirmPassword(NeoDun.Enum_DriverFun _funName)
         {
-            if (json_setting[_funName.ToString()] as MyJson.JsonNode_ValueNumber)
+            if (isFirstConfirm[_funName.ToString()] as MyJson.JsonNode_ValueNumber)
             {//如果配置需要验证密码   就先回掉弹出密码验证 再把当前委托再赋值给验证密码callback委托
+                isFirstConfirm[_funName.ToString()] = new MyJson.JsonNode_ValueNumber(false);
                 return true;
             }
             else//如果配置不需要验证密码 就直接执行委托
@@ -557,8 +561,9 @@ namespace driver_win
         public void BackUpAddressCallBack(string _privateKey)
         {
             string wif = NeoDun.SignTool.GetWifFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey));
+            string address = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey)));
             confirmPasswordEventHandlerCallBack = null;
-            System.IO.File.WriteAllText("backup.sim.save.txt", wif);
+            System.IO.File.WriteAllText(address + ".backup.sim.save.txt", wif);
             backUpAddressEventHandlerCallBack();
             GetAddressList();
         }
@@ -570,13 +575,6 @@ namespace driver_win
         public void ResetPassword()
         {
             //需要密码验证
-            isNeedConfirmPasswordCallBack(0x02,0x0b);
-            confirmPasswordEventHandlerCallBack = null;
-            confirmPasswordEventHandlerCallBack += ConfirmResetPassword_;
-        }
-        private void ConfirmResetPassword_()
-        {
-            //需要密码验证
             isNeedConfirmPasswordCallBack(0x02, 0x0b);
             confirmPasswordEventHandlerCallBack = null;
             confirmPasswordEventHandlerCallBack += ConfirmResetPassword;
@@ -586,7 +584,7 @@ namespace driver_win
         public event ConfirmResetPasswordEventHandlerCallBack confirmResetPasswordEventHandlerCallBack;
         private void ConfirmResetPassword()
         {
-            confirmResetPasswordEventHandlerCallBack("请输入新密码");
+            isNeedConfirmPasswordCallBack(0x02, 0x0b,"请输入新密码");
             json_setting["是否是新设备"] = new MyJson.JsonNode_ValueNumber(true);
         }
 
@@ -700,6 +698,16 @@ namespace driver_win
         }
 
 
+        #endregion
+
+        #region 各种失败汇总
+        public delegate void ErrorEventHandlerCallBack(string msg, string header = "警告");
+        public event ErrorEventHandlerCallBack errorEventHandlerCallBack;
+        private void ErrorCallBack(string msg, string header)
+        {
+            if (errorEventHandlerCallBack != null)
+                errorEventHandlerCallBack(msg, header);
+        }
         #endregion
 
     }
