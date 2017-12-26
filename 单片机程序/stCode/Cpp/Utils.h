@@ -27,6 +27,7 @@ public:
 		static void PrintArray(u8 data[] , int len );
 		static void PrintString(char * data , int len );
 		static bool MemoryCompare(void *left , void *right , int size);
+		static void HexToNum(u8 *src,int len, char *dec);
 };
 
 

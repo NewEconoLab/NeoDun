@@ -964,21 +964,6 @@ uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb)
 int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 {
 		int i,j,index=0,index_type=0,length=0,fb=0;
-		//不同的交易类型定义的数组和变量
-		uint64_t Nonce=0;//MinerTransaction
-		uint8_t Claims[68]; //ClaimTransaction			PrevHash:0-63,PrevIndex:64-67
-		uint8_t PublicKey[64];//EnrollmentTransaction
-		//RegisterTransaction
-		int AssetType;
-		uint64_t Amount;
-		int Precision;
-		uint8_t Owner[66];
-		uint8_t Admin[40];
-		//PublishTransaction
-		uint8_t Code[6];
-		int NeedStorage;
-		//InvocationTransaction
-		int64_t Gas;
 		//通用的数据结构，数组和变量定义
 		int type,Version,countAttributes,countInputs,countOutputs;		
 		uint8_t Input[32];
@@ -988,7 +973,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		uint8_t address_data[21] = {0x17};
 		char result_address[50] = "";
 		int len_address=0;
-			
+		SIGN_Out_Data sign_data;
+		memset(&sign_data,0,sizeof(sign_data));	
+		
 		//交易类型
 		type = dataIn[0];
 #ifdef	Printf	
@@ -1009,10 +996,10 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				{
 						if(Version == 0)
 						{
-								Nonce = (dataIn[2]/16)*pow(16,7) + (dataIn[2]%16)*pow(16,6) + (dataIn[3]/16)*pow(16,5) + (dataIn[3]%16)*pow(16,4)
+								sign_data.Nonce = (dataIn[2]/16)*pow(16,7) + (dataIn[2]%16)*pow(16,6) + (dataIn[3]/16)*pow(16,5) + (dataIn[3]%16)*pow(16,4)
 												+(dataIn[4]/16)*pow(16,3) + (dataIn[4]%16)*pow(16,2) + (dataIn[5]/16)*pow(16,1) + (dataIn[5]%16)*pow(16,0);
 #ifdef	Printf									
-								printf("Nonce:%lld\r\n",Nonce);
+								printf("Nonce:%lld\r\n",sign_data.Nonce);
 #endif								
 								index_type = 4;
 								break;
@@ -1039,15 +1026,15 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif							
 								for(i=0;i<34;i++)
 								{		
-										Claims[i] = dataIn[2+i];
+										sign_data.Claims[i] = dataIn[2+i];
 #ifdef	Printf									
-										printf("%x",Claims[i]);
+										printf("%x",sign_data.Claims[i]);
 #endif							
 								}
 #ifdef	Printf			
 								printf("\r\n");
 #endif							
-								if(sizeof(Claims) == 0)
+								if(sign_data.Claims[0] == 0)
 										return 1;
 								index_type = 34;
 								break;
@@ -1066,9 +1053,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif							
 							for(i=0;i<64;i++)
 								{
-										PublicKey[i] = dataIn[2+i];
+										sign_data.PublicKey[i] = dataIn[2+i];
 #ifdef	Printf			
-										printf("%x",PublicKey[i]);
+										printf("%x",sign_data.PublicKey[i]);
 #endif							
 								}
 #ifdef	Printf
@@ -1086,9 +1073,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				{
 						if(Version == 0)
 						{
-								AssetType = dataIn[2];
+								sign_data.AssetType = dataIn[2];
 #ifdef	Printf							
-								printf("AssetType:%d\r\n",AssetType);
+								printf("AssetType:%d\r\n",sign_data.AssetType);
 #endif								
 								index_type += 1;							
 								//Name:
@@ -1104,18 +1091,18 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif								
 								index_type += length;									
 								//Amount														
-								Amount = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
+								sign_data.Amount = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
 												+(dataIn[index_type+4]/16)*pow(16,11) + (dataIn[index_type+4]%16)*pow(16,10) + (dataIn[index_type+5]/16)*pow(16,9) + (dataIn[index_type+5]%16)*pow(16,8)
 												+(dataIn[index_type+6]/16)*pow(16,7) + (dataIn[index_type+6]%16)*pow(16,6) + (dataIn[index_type+7]/16)*pow(16,5) + (dataIn[index_type+7]%16)*pow(16,4)
 												+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);
 #ifdef	Printf								
-								printf("Amount:%lld\r\n",Amount);
+								printf("Amount:%lld\r\n",sign_data.Amount);
 #endif							
 								index_type += 8;
 								//Precision
-								Precision = dataIn[index_type+2];
+								sign_data.Precision = dataIn[index_type+2];
 #ifdef	Printf				
-								printf("Precision:%d\r\n",Precision);								
+								printf("Precision:%d\r\n",sign_data.Precision);								
 #endif								
 								index_type += 1;
 								//Owner
@@ -1124,9 +1111,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif
 								for(i=0;i<33;i++)
 								{
-										Owner[i] = dataIn[i+index_type+2];
+										sign_data.Owner[i] = dataIn[i+index_type+2];
 #ifdef	Printf			
-										printf("%x",Owner[i]);
+										printf("%x",sign_data.Owner[i]);
 #endif							
 								}
 #ifdef	Printf								
@@ -1139,9 +1126,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif							
 								for(i=0;i<20;i++)	
 								{
-										Admin[i] = dataIn[i+index_type+2];
+										sign_data.Admin[i] = dataIn[i+index_type+2];
 #ifdef	Printf									
-										printf("%x",Admin[i]);
+										printf("%x",sign_data.Admin[i]);
 #endif							
 								}
 #ifdef	Printf			
@@ -1174,9 +1161,9 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif						
 						for(i=0;i<3;i++)
 						{
-								Code[i] = dataIn[2+i];
+								sign_data.Code[i] = dataIn[2+i];
 #ifdef	Printf				
-								printf("%x",Code[i]);
+								printf("%x",sign_data.Code[i]);
 #endif						
 						}
 #ifdef	Printf				
@@ -1184,14 +1171,14 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 #endif						
 						if(Version == 1)
 						{
-								NeedStorage = dataIn[5];
+								sign_data.NeedStorage = dataIn[5];
 						}
 						else 
 						{
-								NeedStorage = 0;
+								sign_data.NeedStorage = 0;
 						}
 #ifdef	Printf							
-						printf("NeedStorage:%d\r\n",NeedStorage);
+						printf("NeedStorage:%d\r\n",sign_data.NeedStorage);
 #endif						
 						index_type += 4;
 						//NameP:						
@@ -1276,19 +1263,19 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						index_type += length;													
 						if(Version == 1)
 						{
-								Gas = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
+								sign_data.Gas = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
 											+(dataIn[index_type+4]/16)*pow(16,11) + (dataIn[index_type+4]%16)*pow(16,10) + (dataIn[index_type+5]/16)*pow(16,9) + (dataIn[index_type+5]%16)*pow(16,8)
 											+(dataIn[index_type+6]/16)*pow(16,7) + (dataIn[index_type+6]%16)*pow(16,6) + (dataIn[index_type+7]/16)*pow(16,5) + (dataIn[index_type+7]%16)*pow(16,4)
 											+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);
 #ifdef	Printf				
-								printf("Gas:%lld\r\n",Gas);	
+								printf("Gas:%lld\r\n",sign_data.Gas);	
 #endif								
 								index_type += 8;	
-								if(Gas < 0) return 1;															
+								if(sign_data.Gas < 0) return 1;															
 						}
 						else
 						{
-							Gas = 0;// Fixed.Zero 表示为0
+								sign_data.Gas = 0;// Fixed.Zero 表示为0
 						}						
 						break;
 				}

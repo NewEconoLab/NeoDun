@@ -21,49 +21,46 @@
 #define CMD_ERR_HASH								0x0112		//
 #define CMD_ACK_HASH_OK							0x0111		//
 
-#define CMD_DEL_ADDRESS							0x0203		
+#define CMD_DEL_ADDRESS							0x0203		//删除地址
 #define CMD_DEL_ADDRESS_OK					0x02c1
 #define CMD_DEL_ADDRESS_FAILED			0x02c2
 
-#define CMD_ADD_ADDRESS							0x0204		//
+#define CMD_ADD_ADDRESS							0x0204		//增加地址
 #define CMD_ADDR_ADD_OK							0x02b1		//
 #define CMD_ADDR_ADD_FAILED					0x02b2		//
 
-#define CMD_GET_PRIKEY							0x0206
+#define CMD_GET_PRIKEY							0x0206		//获取安全信息
 #define CMD_RETURN_MESSAGE					0x02a4
-
-
 
 #define CMD_QUERY_ADDRESS						0x0201		//查询设备地址情况
 #define CMD_RETURN_ADDRESS					0x02a0		//返回一条地址
 #define CMD_RETURN_ADDRESS_OK				0x02a1		//返回地址结束
 
-//add by hkh
-#define CMD_SIGN_DATA								0x020a
+#define CMD_SIGN_DATA								0x020a		//数据签名
 #define CMD_SIGN_OK									0x02a8
 #define CMD_SIGN_FAILED							0x02e0
-//设置密码
-#define CMD_SET_PASSPORT						0x020b
+
+#define CMD_SET_PASSPORT						0x020b		//设置密码
 #define CMD_SET_OK									0x02c3
 #define CMD_SET_FAILED							0x02c4
-//验证密码
-#define CMD_VERIFY_PASSPORT					0x020c
+
+#define CMD_VERIFY_PASSPORT					0x020c		//验证密码
 #define CMD_VERIFY_OK								0x02c5
 #define CMD_VERIFY_FAILED						0x02c6
-//判断钱包是否是新钱包
-#define CMD_WALLET_ISNEW						0x020d
-#define CMD_WALLET_NEW							0x02b5
-#define CMD_WALLET_OLD							0x02b6
-//设置配置信息
-#define CMD_SET_INFO								0x021a
+
+//#define CMD_WALLET_ISNEW						0x020d		//判断钱包是否是新钱包
+//#define CMD_WALLET_NEW							0x02b5
+//#define CMD_WALLET_OLD							0x02b6
+
+#define CMD_SET_INFO								0x021a		//设置配置信息
 #define CMD_SET_INFO_OK							0x02d3
 #define CMD_SET_INFO_FAILED					0x02d4
-//获取配置信息
-#define CMD_GET_INFO								0x021b
+
+#define CMD_GET_INFO								0x021b		//获取配置信息
 #define CMD_GET_INFO_OK							0x02d1
 #define CMD_GET_INFO_FAILED					0x02d2
-//上位机发起密码验证，告诉下位机显示密码界面
-#define CMD_SHOW_PASSPORT						0x021c
+
+#define CMD_SHOW_PASSPORT						0x021c		//上位机发起密码验证，告诉下位机显示密码界面
 #define CMD_SHOW_OK									0x02e1
 #define CMD_SHOW_FAILED							0x02e2									
 
