@@ -87,6 +87,9 @@ namespace NeoDun
         public delegate void SetSettingInfoEventHandler();
         public SetSettingInfoEventHandler setSettingInfoEventHandler;
 
+        public delegate void ErrorEventHandler(string _str,string _header);
+        public ErrorEventHandler errorEventHandler;
+
         public WatcherColl watcherColl = new WatcherColl();
 
 
@@ -301,6 +304,11 @@ namespace NeoDun
                     if(delAddressEventHandler!=null)
                         delAddressEventHandler();
                 }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xc2)
+                {
+                    if (errorEventHandler != null)
+                        errorEventHandler("删除地址失败","错误");
+                }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
                     string outdataHash = msg.readHash256(4);
@@ -358,6 +366,8 @@ namespace NeoDun
                 }
                 if (msg.tag1 == 0x02&& msg.tag2 == 0xd2)
                 {
+                    if (errorEventHandler != null)
+                        errorEventHandler("设置失败","错误");
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd3)
                 {
