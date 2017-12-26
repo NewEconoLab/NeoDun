@@ -277,7 +277,8 @@ namespace driver_win
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += GetSingerInfo;
 
-                byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+               // byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+                byte[] bytes_password = NeoDun.SignTool.HexString2Bytes(str_password);
 
                 NeoDun.Message signMsg = new NeoDun.Message();
                 signMsg.tag1 = 0x02;
@@ -300,7 +301,8 @@ namespace driver_win
                     confirmPasswordEventHandlerCallBack += GetAddressList;
                 }
 
-                byte[] bytes_password = NeoDun.SignTool.DecodeBase58(str_password);
+                byte[] bytes_password = NeoDun.SignTool.HexString2Bytes(str_password);
+
                 NeoDun.Message signMsg = new NeoDun.Message();
                 signMsg.tag1 = 0x02;
                 signMsg.tag2 = 0x0c;//验证密码
