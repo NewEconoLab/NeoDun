@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NeoDun;
+﻿using hhgate;
 using Microsoft.Owin;
-using hhgate;
+using NeoDun;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static hhgate.SignMachine;
 
 namespace driver_win
 {
-   public class DriverCtr: NeoDun.IWatcher
+    public class DriverCtr: NeoDun.IWatcher
     {
 
         private static DriverCtr ins;
@@ -27,6 +25,8 @@ namespace driver_win
         private static Signer signer = Signer.Ins;
 
         private System.Windows.Threading.DispatcherTimer timer;
+
+        private byte[] bytes = new byte[2];
 
         private MyJson.JsonNode_Object json_setting = new MyJson.JsonNode_Object();
         private DriverCtr()
@@ -56,6 +56,7 @@ namespace driver_win
             signer.backUpAddressEventHandler += BackUpAddressCallBack;
             signer.signEventHandler += ConfirmSignCallBack;
             signer.showSignerPasswordPageEventHandler += ShowSignerPasswordPageCallBack;
+            signer.setSettingInfoEventHandler += SetSettingInfoCallBack;
         }
 
         private void UInit()
@@ -69,6 +70,7 @@ namespace driver_win
             signer.backUpAddressEventHandler -= BackUpAddressCallBack;
             signer.signEventHandler -= ConfirmSignCallBack;
             signer.showSignerPasswordPageEventHandler -= ShowSignerPasswordPageCallBack;
+            signer.setSettingInfoEventHandler -= SetSettingInfoCallBack;
 
         }
 
@@ -165,12 +167,12 @@ namespace driver_win
             if (_json["是否是新设备"] as MyJson.JsonNode_ValueNumber)
             {
                 getSiggerInfoEventHandlerCallBack("检测到插入的钱包是新设备，请初始化钱包的密码", _json);
-                isNeedConfirmPasswordCallBack("检测到插入的钱包是新设备，请初始化钱包的密码");
+                isNeedConfirmPasswordCallBack(0x02,0x0b,"检测到插入的钱包是新设备，请初始化钱包的密码");
             }
             else
             {
                 getSiggerInfoEventHandlerCallBack("请输入你的密码", _json);
-                isNeedConfirmPasswordCallBack("请输入你的密码(6位)");
+                isNeedConfirmPasswordCallBack(0x02,0x0c,"请输入你的密码(6位)");
                 //json_setting = MyJson.Parse(_str) as MyJson.JsonNode_Object;
             }
         }
@@ -192,9 +194,11 @@ namespace driver_win
         public delegate void IsNeedConfirmPasswordEventHandlerCallBack(string _str);
         public event IsNeedConfirmPasswordEventHandlerCallBack isNeedConfirmPasswordEventHandlerCallBack;
         private string pwLabel ="";
-        public void isNeedConfirmPasswordCallBack(string _str="请输入你的密码")
+        public void isNeedConfirmPasswordCallBack(byte b1,byte b2,string _str="请输入你的密码")
         {
             pwLabel = _str;
+            bytes[0] = b1;
+            bytes[1] = b2;
             NeoDun.Message signMsg = new NeoDun.Message();
             signMsg.tag1 = 0x02;
             signMsg.tag2 = 0x1c;
@@ -207,9 +211,21 @@ namespace driver_win
         }
 
         #endregion
-
+        private bool[] bools = new bool[6];
         #region 上报签名机驱动的新设置
-        public void SetSettingInfo(bool[] bools)
+        public void SetSettingInfo(bool[] _bools)
+        {
+            for (int i = 0; i < _bools.Length; i++)
+            {
+                bools[i] = _bools[i];
+            }
+            //需要密码验证
+            isNeedConfirmPasswordCallBack(0x02,0x1a);
+            confirmPasswordEventHandlerCallBack = null;
+            confirmPasswordEventHandlerCallBack += ConfirmSetSettingInfo;
+        }
+
+        private void ConfirmSetSettingInfo()
         {
             json_setting["连接钱包后是否自动弹出驱动界面"] = new MyJson.JsonNode_ValueNumber(bools[0]);
             json_setting["开机时是否自动检查更新"] = new MyJson.JsonNode_ValueNumber(bools[1]);
@@ -223,13 +239,23 @@ namespace driver_win
             signMsg.tag1 = 0x02;
             signMsg.tag2 = 0x1a;
             signMsg.msgid = NeoDun.SignTool.RandomShort();
-            signMsg.writeUInt16(2,Convert.ToUInt16(bools[0]));
-            signMsg.writeUInt16(4,Convert.ToUInt16(bools[1]));
-            signMsg.writeUInt16(6,Convert.ToUInt16(bools[2]));
-            signMsg.writeUInt16(8,Convert.ToUInt16(bools[3]));
-            signMsg.writeUInt16(10,Convert.ToUInt16(bools[4]));
-            signMsg.writeUInt16(12,Convert.ToUInt16(bools[5]));
+            signMsg.writeUInt16(2, Convert.ToUInt16(bools[0]));
+            signMsg.writeUInt16(4, Convert.ToUInt16(bools[1]));
+            signMsg.writeUInt16(6, Convert.ToUInt16(bools[2]));
+            signMsg.writeUInt16(8, Convert.ToUInt16(bools[3]));
+            signMsg.writeUInt16(10, Convert.ToUInt16(bools[4]));
+            signMsg.writeUInt16(12, Convert.ToUInt16(bools[5]));
             signer.SendMessage(signMsg, true);
+        }
+        public delegate void SetSettingInfoEventHandlerCallBack();
+        public SetSettingInfoEventHandlerCallBack setSetingInfoEventHandlerCallBack;
+        private void SetSettingInfoCallBack()
+        {
+            confirmPasswordEventHandlerCallBack = null;
+            if (setSetingInfoEventHandlerCallBack != null)
+                setSetingInfoEventHandlerCallBack();
+            //重新获取地址列表
+            GetAddressList();
         }
         #endregion
 
@@ -276,7 +302,9 @@ namespace driver_win
                 signMsg.tag2 = 0x0c;//验证密码
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
                 signMsg.writeUInt16(0, (UInt16)bytes_password.Length);
-                Array.Copy(bytes_password, 0, signMsg.data, 2, bytes_password.Length);
+                signMsg.data[3] = bytes[0];
+                signMsg.data[4] = bytes[1];
+                Array.Copy(bytes_password, 0, signMsg.data,4, bytes_password.Length);
                 signer.SendMessage(signMsg, true);
                 pwlock = true;
             }
@@ -367,7 +395,7 @@ namespace driver_win
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.新增地址时是否要密码验证))
             {
                 //需要密码验证
-                isNeedConfirmPasswordCallBack();
+                isNeedConfirmPasswordCallBack(0x02,0x04);
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += ConfirmAddAddress;
             }
@@ -461,7 +489,7 @@ namespace driver_win
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.删除地址是否要密码验证))
             {
                 //需要密码验证
-                isNeedConfirmPasswordCallBack();
+                isNeedConfirmPasswordCallBack(0x02,0x03);
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += ConfirmDeletaAddress;
             }
@@ -503,7 +531,7 @@ namespace driver_win
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.备份地址是否要密码验证))
             {
                 //需要密码验证
-                isNeedConfirmPasswordCallBack();
+                isNeedConfirmPasswordCallBack(0x02,0x06);
                 confirmPasswordEventHandlerCallBack = null;
                 confirmPasswordEventHandlerCallBack += ConfirmBackupAddress;
             }
@@ -542,7 +570,7 @@ namespace driver_win
         public void ResetPassword()
         {
             //需要密码验证
-            isNeedConfirmPasswordCallBack();
+            isNeedConfirmPasswordCallBack(0x02,0x0b);
             confirmPasswordEventHandlerCallBack = null;
             confirmPasswordEventHandlerCallBack += ConfirmResetPassword;
         }
@@ -582,7 +610,7 @@ namespace driver_win
             isgetdata = false;
             confirmPasswordEventHandlerCallBack = null;
             confirmPasswordEventHandlerCallBack += ConfirmSign;
-            isNeedConfirmPasswordCallBack("您正在进行签名验证，请输入你的密码");
+            isNeedConfirmPasswordCallBack(0x02,0x0a,"您正在进行签名验证，请输入你的密码");
             while (true)
             {
                 await Task.Delay(50);

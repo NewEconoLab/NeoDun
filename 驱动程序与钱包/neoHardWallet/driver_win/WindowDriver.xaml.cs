@@ -96,6 +96,7 @@ namespace driver_win
                 return;
             }
             driverCtr.SetOrConfirmPassword(str_password);
+            LockPwPage();
             //清空缓存住的选择的密码
             str_password = "";
             str_password2 = "";
@@ -181,6 +182,7 @@ namespace driver_win
         private void ShowPwPage()
         {
             HideAllPage();
+            UnLockPwPage();
             UnActiveButton();
             this.pwBox.Visibility = Visibility.Visible;
         }
@@ -286,6 +288,7 @@ namespace driver_win
             driverCtr.setPasswordEventHandlerCallBack += NeedConfirmPassword;
             driverCtr.confirmPasswordfaildEventHandlerCallBack += ConfirmPasswordCallBack;
             driverCtr.privateKey2AddressEventHandlerCallBack += PrivateKey2AddressCallBack;
+            driverCtr.setSetingInfoEventHandlerCallBack += SetSettingConfigCallBack;
             driverCtr.errorEventHandlerCallBack += ErrorMsgShow;
 
             hhgate.CustomServer.BeginServer();
@@ -307,12 +310,25 @@ namespace driver_win
             driverCtr.confirmPasswordfaildEventHandlerCallBack -= ConfirmPasswordCallBack;
             driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;
             driverCtr.privateKey2AddressEventHandlerCallBack -= PrivateKey2AddressCallBack;
+            driverCtr.setSetingInfoEventHandlerCallBack -= SetSettingConfigCallBack;
+            driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;
         }
 
         private void ClearCache()
         {
             this.addresslist.Items.Clear();
             str_password = "";
+        }
+
+        //锁住密码页面的按键
+        private void LockPwPage()
+        {
+            this.passwordList.IsEnabled = false;
+        }
+        //解锁密码页面的按键
+        private void UnLockPwPage()
+        {
+            this.passwordList.IsEnabled = true;
         }
 
         //连接签名机
@@ -350,6 +366,13 @@ namespace driver_win
             bool[] _bools = { (bool)this.c1.IsChecked , (bool)this.c2.IsChecked , (bool)this.c3.IsChecked,
             (bool)this.c4.IsChecked,(bool)this.c5.IsChecked,(bool)this.c6.IsChecked};
             driverCtr.SetSettingInfo(_bools);
+        }
+
+        private void SetSettingConfigCallBack()
+        {
+            Dispatcher.Invoke((Action)delegate () {
+                MessageBox.Show("设置成功", "提示");
+            });
         }
         //需要密码验证
         private void NeedConfirmPassword(string _str)

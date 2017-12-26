@@ -84,6 +84,9 @@ namespace NeoDun
         public delegate void ShowSignerPasswordPageEventHandler();
         public ShowSignerPasswordPageEventHandler showSignerPasswordPageEventHandler;
 
+        public delegate void SetSettingInfoEventHandler();
+        public SetSettingInfoEventHandler setSettingInfoEventHandler;
+
         public WatcherColl watcherColl = new WatcherColl();
 
 
@@ -353,8 +356,13 @@ namespace NeoDun
                     }
 
                 }
+                if (msg.tag1 == 0x02&& msg.tag2 == 0xd2)
+                {
+                }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd3)
                 {
+                    if(setSettingInfoEventHandler != null)
+                        setSettingInfoEventHandler();
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd4)
                 {

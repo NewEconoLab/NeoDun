@@ -445,7 +445,7 @@ namespace driver_win
             {
                 byte passwordlen = (byte)recv.readUInt16(0);
                 byte[] bytes_password = new byte[passwordlen];
-                Array.Copy(recv.data, 2, bytes_password, 0, passwordlen);
+                Array.Copy(recv.data, 4, bytes_password, 0, passwordlen);
                 string str_password = personalinfo.GetString(bytes_password);
                 string realpassword = "";
                 this.Dispatcher.Invoke((Action)delegate () {
@@ -469,7 +469,8 @@ namespace driver_win
             {
                 byte passwordlen = (byte)recv.readUInt16(0);
                 byte[] bytes_password = new byte[passwordlen];
-                Array.Copy(recv.data, 2, bytes_password, 0, passwordlen);
+                Console.WriteLine();
+                Array.Copy(recv.data, 4, bytes_password, 0, passwordlen);
                 string str_password = personalinfo.GetString(bytes_password);
                 string realpassword = "";
                 this.Dispatcher.Invoke((Action)delegate() {
