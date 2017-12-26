@@ -394,7 +394,19 @@ namespace driver_win
         {
             if (string.IsNullOrEmpty(_address) || string.IsNullOrEmpty(_privateKey))
                 return;
+
+            //地址查重 
+            foreach (var add in signer.addressPool.addresses)
+            {
+                if (add.AddressText == _address)
+                {
+                    ErrorCallBack("地址重复","通知");
+                    return;
+
+                }
+            }
             str_address = _address;
+
             str_privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_privateKey);
             if (IsNeedConfirmPassword(NeoDun.Enum_DriverFun.新增地址时是否要密码验证))
             {
