@@ -34,7 +34,7 @@ namespace hhgate
             }
             else if (relativePath == "state")
             {//查询状态
-                var signer = driver_win.MainWindow.signer;
+                var signer = NeoDun.Signer.Ins;
                 MyJson.JsonNode_Object jsonr = new MyJson.JsonNode_Object();
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(0);
                 int dc = signer.CheckDevice();
@@ -256,7 +256,7 @@ namespace hhgate
             byte[] hash = NeoDun.SignTool.ComputeSHA256(privateKey,0,privateKey.Length);
             string str_hash = NeoDun.SignTool.Bytes2HexString(hash,0,hash.Length);
 
-            Signer signer = driver_win.MainWindow.signer;
+            var signer = NeoDun.Signer.Ins;
             NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash,(UInt32)privateKey.Length,NeoDun.DataBlockFrom.FromDriver);
             block.data = privateKey;
             signer.SendDataBlock(block);
@@ -313,8 +313,8 @@ namespace hhgate
             UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), str_addressType);
             byte[] bytes_addressText = NeoDun.SignTool.DecodeBase58(formdata.mapParams["addresstext"]);
 
-            Signer signer = driver_win.MainWindow.signer;
-          
+            var signer = NeoDun.Signer.Ins;
+
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);//加入监视器
             NeoDun.Message signMsg = new NeoDun.Message();
@@ -354,7 +354,7 @@ namespace hhgate
             string addressText = formdata.mapParams["addresstext"];
             ushort addressType = (ushort)Enum.Parse(typeof(AddressType), formdata.mapParams["addresstype"]);
 
-            Signer signer = driver_win.MainWindow.signer;
+            var signer = NeoDun.Signer.Ins;
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);
             NeoDun.Message signMsg = new NeoDun.Message();
@@ -370,8 +370,26 @@ namespace hhgate
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
             {
-                string privateKey = msg.readHash256(4);
-                json["prikey"] = new MyJson.JsonNode_ValueString(privateKey);
+                string outdataHash = msg.readHash256(4);
+                byte[] outdata;
+                //轮询直到reciveid的数据被收到
+                while (true)
+                {
+                    await System.Threading.Tasks.Task.Delay(5);
+                    var __block = signer.dataTable.getBlockBySha256(outdataHash);
+                    if (__block.Check())
+                    {
+                        outdata = __block.data;
+                        break;
+                    }
+                }
+                byte privatekeylen = outdata[0];
+                byte[] privatekey = new byte[privatekeylen];
+                Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
+                string prikey = NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length);
+
+                //string privateKey = msg.readHash256(4);
+                json["prikey"] = new MyJson.JsonNode_ValueString(prikey);
                 await context.Response.WriteAsync(json.ToString());
             }
             else

@@ -133,7 +133,8 @@ namespace NeoDun
 
         public string GetString(byte[] _bts)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Encode(_bts);
+            return NeoDun.SignTool.Bytes2HexString(_bts,0,_bts.Length);
+            //return NEO.AllianceOfThinWallet.Cryptography.Base58.Encode(_bts);
         }
 
         public void SetUsername(string _username)

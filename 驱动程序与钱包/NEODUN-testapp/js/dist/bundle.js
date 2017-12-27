@@ -19795,39 +19795,51 @@ var vm = new Vue({
         //交易登录
         loginWallet: function loginWallet() {
             var index = this.loginData.walletIndex;
-            //var ciphertext = this.wallets[index].ciphertext;
+            var ciphertext = this.wallets[index].ciphertext;
+            console.log("ciphertext:" + ciphertext);
             //var privateKey = wallet.decryptNeodunPrivateKey(ciphertext, this.loginData.password);
-            //this.businessMessage.publickeyEncoded = wallet.getPublicKey(privateKey, true);
+            var privateKey = wallet.decryptNeodunPrivateKey(ciphertext, "111111");
+            this.businessMessage.publickeyEncoded = wallet.getPublicKey(privateKey, true);
             this.businessMessage.account = this.wallets[this.loginData.walletIndex].allassets[0];
             this.businessMessage.address = this.wallets[this.loginData.walletIndex].address;
-            if (privateKey == '0') {
-             // $('#loginWallet').modal('hide');
-             this.alertMessage = "密码错误请重新输入";
-             $('#alert').modal('show');
-            } else {
-             this.businessMessage.privatekey = privateKey;
-             $('#loginWallet').modal('hide');
-             this.alertMessage = "登录成功，开始交易吧";
-           $('#businessAlert').modal('show');
-           }
-            
+            console.log("privateKey:" + privateKey);
+            this.businessMessage.privatekey = privateKey;
+            console.log("~this.businessMessage.privatekey:" + this.businessMessage.privatekey);
+            $('#loginWallet').modal('hide');
+            this.alertMessage = "登录成功，开始交易吧";
+            $('#businessAlert').modal('show');
+
+
             //清空登录信息
-            //this.loginData = {
-            //    walletIndex: index,
-            ////    ciphertext: '',
-            //    password: ''
-            //};
+            this.loginData = {
+                walletIndex: index,
+                //    ciphertext: '',
+                password: ''
+            };
+
+        //   if (privateKey == '0') {
+        //    // $('#loginWallet').modal('hide');
+        //    this.alertMessage = "密码错误请重新输入";
+        //    $('#alert').modal('show');
+        //   } else {
+        //    this.businessMessage.privatekey = privateKey;
+        //    $('#loginWallet').modal('hide');
+        //    this.alertMessage = "登录成功，开始交易吧";
+        //  $('#businessAlert').modal('show');
+        //  }
+            
+           
         },
 
         //交易
         business: function business() {
             if (this.verifyAddReminder('business') == 'validated') {
-                console.log(123123);
                 $('#businessOpen').modal('hide');
                 this.businessMessage.account = this.wallets[this.loginData.walletIndex].allassets[0];
                 this.businessMessage.address = this.wallets[this.loginData.walletIndex].address;
-                $('#businessAlert').modal('show');
-                //$('#loginWallet').modal('show');
+                console.log("this.businessMessage.address:" + this.businessMessage.address);
+                //$('#businessAlert').modal('show');
+                $('#loginWallet').modal('show');
             };
             return;
             // $('#businessMessage').modal('show');
@@ -19838,10 +19850,11 @@ var vm = new Vue({
             var _this2 = this;
 
             var publicKeyEncoded = this.businessMessage.publickeyEncoded;
+            console.log(" this.businessMessage.privatekey"+this.businessMessage.privatekey);
             var privateKey = this.businessMessage.privatekey;
             $('#businessAlert').modal('hide');
             $('#loader').modal('show');
-            // console.log(wallet.getWIFFromPrivateKey(privateKey));
+            console.log("this.businessMessage.toAddress"+this.businessMessage.toAddress);
             api.sendAssetTransaction(api.TESTNET, this.businessMessage.toAddress, wallet.getWIFFromPrivateKey(privateKey), 'AntShares', this.businessMessage.amount).then(function (response) {
                 if (response.data.result) {
                     $('#loader').modal('hide');
@@ -20031,17 +20044,43 @@ var vm = new Vue({
                 }).catch(function (error) {
                     alert(error + "没有启动驱动");
                 });
-            }, 30000);
+            }, 10000);
         },
         saveDriverAddress: function saveDriverAddress() {
+            var arrF = [];
             for (var a = 0; a < this.newDriverAddress.length; a++) {
-                var allassets = walletList.getUnspent(this.newDriverAddress[a], this.isMainNet);
-                var objShow = new WalletObject('', this.newDriverAddress[a], allassets, '', false);
-                this.wallets.push(objShow);
-                walletList.addWallet(objShow);
-            }
+                var promise = (address) => {
+                    return new Promise((resolve, reject) => {
+                        api.getAddressePrivateKeyFromDriver(address, "Neo").then((response) => {
+                            var privateKey = response.data.prikey;
+                            var allassets = walletList.getUnspent(address, this.isMainNet);
+                            console.log("address" + address);
+                            console.log("privateKey" + privateKey);
+                            var encryptData = wallet.encryptNeodunPrivateKey(privateKey, "111111");
+                            console.log("encryptData" + encryptData);
+                            console.log("privateKey：" + wallet.decryptNeodunPrivateKey(encryptData, "111111"));
+                            var objShow = new WalletObject('', address, allassets, encryptData, false);
 
-            $('#saveDriverAddress').modal('hide');
+                            console.log("这里添加了一个地址" + JSON.stringify(objShow));
+                            this.wallets.push(objShow);
+                            walletList.addWallet(objShow);
+                            resolve();
+                        });
+                    }); 
+                }
+                   
+                arrF.push(promise(this.newDriverAddress[a]));
+            }
+            Promise.all(arrF)
+                .then(() => {
+                    $('#saveDriverAddress').modal('hide');
+                });
+
+           
+           
+
+
+           
         }
     }
 });
@@ -39774,7 +39813,7 @@ module.exports = CipherBase
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.queryAddressesFromDriver = exports.queryStateFormDriver = exports.sendAssetTransaction = exports.getTransactions = exports.getBalance = exports.getBlockCount = exports.getBlockByIndex = exports.getNetworkEndpoints = exports.allAssetIds = exports.ancId = exports.ansId = exports.TESTNET = exports.MAINNET = undefined;
+exports.getAddressePrivateKeyFromDriver = exports.queryAddressesFromDriver = exports.queryStateFormDriver = exports.sendAssetTransaction = exports.getTransactions = exports.getBalance = exports.getBlockCount = exports.getBlockByIndex = exports.getNetworkEndpoints = exports.allAssetIds = exports.ancId = exports.ansId = exports.TESTNET = exports.MAINNET = undefined;
 
 var _qs = __webpack_require__(183);
 
@@ -39862,17 +39901,16 @@ var getBlockCount = exports.getBlockCount = function getBlockCount(net) {
 // use a public blockchain explorer (currently antchain.xyz) to get the current balance of an account
 // returns dictionary with both ANS and ANC
     var getBalance = exports.getBalance = function getBalance(net, address) {
-        console.log("address:" + address);
-        console.log("net:" + net);
+        //console.log("address:" + address);
+        //console.log("net:" + net);
     var network = getNetworkEndpoints(net);
     var rpcURL = '/address/';
     var apiURL = '/api/v1/address/info/';
     return _axios2.default.get(network.rpcEndpoint + rpcURL + address).then(function (res) {
-        console.log("res:" + res.data);
         if (res.data.result !== 'No Address!') {
             // get ANS
             // console.log(res.data);
-
+            //console.log(res.data);
             var ans = res.data.balances == undefined ? 0 : getAns(res.data.balances);
             var anc = res.data.balances == undefined ? 0 : getAnc(res.data.balances);
             return { ANS: ans, ANC: anc };
@@ -39907,7 +39945,8 @@ var getTransactions = exports.getTransactions = function getTransactions(net, so
 // "fromWif" is sender WIF as string
 // "assetType" is "AntShares" or "AntCoins"
 // "amount" is integer amount to send (or float for ANC)     
-var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTransaction(net, toAddress, fromWif, assetType, amount) {
+    var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTransaction(net, toAddress, fromWif, assetType, amount) {
+        console.log("fromWif" + fromWif);
     var network = getNetworkEndpoints(net);
     var assetId = void 0,
         assetName = void 0,
@@ -39922,6 +39961,8 @@ var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTran
         assetSymbol = 'ANC';
     }
     var fromAccount = (0, _wallet.getAccountsFromWIFKey)(fromWif)[0];
+    console.log("fromAccount" + JSON.stringify(fromAccount));
+    console.log("address");
     return getBalance(net, fromAccount.address).then(function (response) {
         var balance = response[assetSymbol];
         return getTransactions(net, fromAccount.address, toAddress, amount, assetId).then(function (transactions) {
@@ -39961,8 +40002,8 @@ var sendAssetTransaction = exports.sendAssetTransaction = function sendAssetTran
 };
 
 //query address list
-var queryAddressesFromDriver = exports.queryAddressesFromDriver = function queryAddressesFromDriver() {
-    return _axios2.default.get('http://127.0.0.1:50288/_api/listaddress').then(function (res) {
+    var queryAddressesFromDriver = exports.queryAddressesFromDriver = function queryAddressesFromDriver() {
+        return _axios2.default.get('http://127.0.0.1:50288/_api/listaddress').then(function (res) {
         if (res.data.addresses.length > 0) {
             return { result: true, addresses: res.data.addresses };
         } else {
@@ -39974,6 +40015,14 @@ var queryAddressesFromDriver = exports.queryAddressesFromDriver = function query
     });
 };
 
+//query address privateKey
+    var getAddressePrivateKeyFromDriver = exports.getAddressePrivateKeyFromDriver = function getAddressePrivateKeyFromDriver(address, addressType) {
+        return _axios2.default.get(`http://127.0.0.1:50288/_api/addressinfo?addresstext=${address}&&addresstype=${addressType}`)
+        .catch(function (error) {
+        alert(error + '网络问题');
+        return { result: false };
+    });
+};
 
 
 //去驱动签名

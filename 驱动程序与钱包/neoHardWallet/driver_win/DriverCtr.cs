@@ -49,6 +49,10 @@ namespace driver_win
 
         private void Init()
         {
+            //var a = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes("9AB7E154840DACA3A2EFADAF0DF93CD3A5B51768C632F5433F86909D9B994A69")));
+
+
+
             //初始化各种委托
             signer.getSingerInfoEventHandler += getSingerInfoCallBack;
             signer.addAddressEventHandler += AddAddressCallBack;
@@ -573,7 +577,9 @@ namespace driver_win
         public event BackUpAddressEventHandlerCallBack backUpAddressEventHandlerCallBack;
         public void BackUpAddressCallBack(string _privateKey)
         {
+            Console.WriteLine(_privateKey);
             string wif = NeoDun.SignTool.GetWifFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey));
+            
             string address = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey)));
             confirmPasswordEventHandlerCallBack = null;
             System.IO.File.WriteAllText(address + ".backup.sim.save.txt", wif);

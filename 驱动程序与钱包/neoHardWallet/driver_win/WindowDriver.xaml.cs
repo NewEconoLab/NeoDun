@@ -472,7 +472,7 @@ namespace driver_win
         {
             Dispatcher.Invoke((Action)  delegate()
             {
-                MessageBox.Show("已经成功备份", "通知");
+                //MessageBox.Show("已经成功备份", "通知");
             });
         }
 
