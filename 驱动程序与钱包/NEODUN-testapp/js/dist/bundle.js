@@ -20011,7 +20011,7 @@ var vm = new Vue({
         findDriver: function findDriver() {
             var _this3 = this;
 
-            setInterval(function () {
+            
                 api.queryStateFormDriver().then(function (res) {
                     if (res.result) {
                         // this.alertMessage = "检测到有新的驱动接入";
@@ -20044,14 +20044,13 @@ var vm = new Vue({
                 }).catch(function (error) {
                     alert(error + "没有启动驱动");
                 });
-            }, 10000);
         },
         saveDriverAddress: function saveDriverAddress() {
             var arrF = [];
-            for (var a = 0; a < this.newDriverAddress.length; a++) {
+            for (var a = this.newDriverAddress.length-1; a < this.newDriverAddress.length; a++) {
                 var promise = (address) => {
                     return new Promise((resolve, reject) => {
-                        api.getAddressePrivateKeyFromDriver(address, "Neo").then((response) => {
+                        return api.getAddressePrivateKeyFromDriver(address, "Neo").then((response) => {
                             var privateKey = response.data.prikey;
                             var allassets = walletList.getUnspent(address, this.isMainNet);
                             console.log("address" + address);
@@ -20068,7 +20067,6 @@ var vm = new Vue({
                         });
                     }); 
                 }
-                   
                 arrF.push(promise(this.newDriverAddress[a]));
             }
             Promise.all(arrF)

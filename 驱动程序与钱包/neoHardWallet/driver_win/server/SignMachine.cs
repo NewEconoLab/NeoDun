@@ -352,54 +352,69 @@ namespace hhgate
             }
 
             string addressText = formdata.mapParams["addresstext"];
-            ushort addressType = (ushort)Enum.Parse(typeof(AddressType), formdata.mapParams["addresstype"]);
+            //ushort addressType = (ushort)Enum.Parse(typeof(AddressType), formdata.mapParams["addresstype"]);
 
             var signer = NeoDun.Signer.Ins;
             Watcher watcher = new Watcher();
-            signer.watcherColl.AddWatcher(watcher);
-            NeoDun.Message signMsg = new NeoDun.Message();
-            signMsg.tag1 = 0x02;
-            signMsg.tag2 = 0x06;
-            signMsg.writeUInt16(4, addressType);
-            byte[] hash_address = SignTool.DecodeBase58(addressText);
-            Array.Copy(hash_address,0,signMsg.data,6,hash_address.Length);
-            signer.SendMessage(signMsg,true);
-
-            var msg = await WaitBack(watcher, signMsg);
-            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
+           signer.watcherColl.AddWatcher(watcher);
+            driver_win.DriverCtr.Ins.privateKey = "";
+           driver_win.DriverCtr.Ins.BackUpAddress(formdata.mapParams["addresstype"],addressText);
+            string prikey = "";
+            while (true)
             {
-                string outdataHash = msg.readHash256(4);
-                byte[] outdata;
-                //轮询直到reciveid的数据被收到
-                while (true)
+                if (!string.IsNullOrEmpty(driver_win.DriverCtr.Ins.privateKey))
                 {
-                    await System.Threading.Tasks.Task.Delay(5);
-                    var __block = signer.dataTable.getBlockBySha256(outdataHash);
-                    if (__block.Check())
-                    {
-                        outdata = __block.data;
-                        break;
-                    }
-                }
-                byte privatekeylen = outdata[0];
-                byte[] privatekey = new byte[privatekeylen];
-                Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
-                string prikey = NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length);
+                    prikey = driver_win.DriverCtr.Ins.privateKey;
+                    break;
 
-                //string privateKey = msg.readHash256(4);
+                }
+                await System.Threading.Tasks.Task.Delay(50);
+
+            }
+
+            //NeoDun.Message signMsg = new NeoDun.Message();
+            //signMsg.tag1 = 0x02;
+            //signMsg.tag2 = 0x06;
+            //signMsg.writeUInt16(4, addressType);
+            //byte[] hash_address = SignTool.DecodeBase58(addressText);
+            //Array.Copy(hash_address,0,signMsg.data,6,hash_address.Length);
+            //signer.SendMessage(signMsg,true);
+
+            //var msg = await WaitBack(watcher, signMsg);
+            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            //json["tag"] = new MyJson.JsonNode_ValueNumber(0);
+            //if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
+            //{
+            //    string outdataHash = msg.readHash256(4);
+            //    byte[] outdata;
+            //    //轮询直到reciveid的数据被收到
+            //    while (true)
+            //    {
+            //        await System.Threading.Tasks.Task.Delay(5);
+            //        var __block = signer.dataTable.getBlockBySha256(outdataHash);
+            //        if (__block.Check())
+            //        {
+            //            outdata = __block.data;
+            //            break;
+            //        }
+            //    }
+            //    byte privatekeylen = outdata[0];
+            //    byte[] privatekey = new byte[privatekeylen];
+            //    Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
+            //    string prikey = NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length);
+            //
+            //    //string privateKey = msg.readHash256(4);
                 json["prikey"] = new MyJson.JsonNode_ValueString(prikey);
                 await context.Response.WriteAsync(json.ToString());
-            }
-            else
-            {
-                json["prikey"] = new MyJson.JsonNode_ValueString("error");
-                await context.Response.WriteAsync(json.ToString());
-            }
-
-            signer.watcherColl.RemoveWatcher(watcher);
-            return;
+            //}
+            //else
+            //{
+            //    json["prikey"] = new MyJson.JsonNode_ValueString("error");
+            //    await context.Response.WriteAsync(json.ToString());
+            //}
+            //
+            //signer.watcherColl.RemoveWatcher(watcher);
+            //return;
         }
     }
 
