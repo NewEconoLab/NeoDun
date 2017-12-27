@@ -20046,39 +20046,29 @@ var vm = new Vue({
                 });
         },
         saveDriverAddress: function saveDriverAddress() {
-            var arrF = [];
-            for (var a = this.newDriverAddress.length-1; a < this.newDriverAddress.length; a++) {
-                var promise = (address) => {
-                    return new Promise((resolve, reject) => {
-                        return api.getAddressePrivateKeyFromDriver(address, "Neo").then((response) => {
-                            var privateKey = response.data.prikey;
-                            var allassets = walletList.getUnspent(address, this.isMainNet);
-                            console.log("address" + address);
-                            console.log("privateKey" + privateKey);
-                            var encryptData = wallet.encryptNeodunPrivateKey(privateKey, "111111");
-                            console.log("encryptData" + encryptData);
-                            console.log("privateKey：" + wallet.decryptNeodunPrivateKey(encryptData, "111111"));
-                            var objShow = new WalletObject('', address, allassets, encryptData, false);
-
-                            console.log("这里添加了一个地址" + JSON.stringify(objShow));
-                            this.wallets.push(objShow);
-                            walletList.addWallet(objShow);
-                            resolve();
-                        });
-                    }); 
-                }
-                arrF.push(promise(this.newDriverAddress[a]));
+            if (this.newDriverAddress.length <= 0)
+            {
+                $('#saveDriverAddress').modal('hide');
+                return;
             }
-            Promise.all(arrF)
-                .then(() => {
-                    $('#saveDriverAddress').modal('hide');
-                });
 
-           
-           
+            var address = this.newDriverAddress[this.newDriverAddress.length - 1];
+            api.getAddressePrivateKeyFromDriver(address, "Neo").then((response) => {
+                var privateKey = response.data.prikey;
+                var allassets = walletList.getUnspent(address, this.isMainNet);
+                console.log("address" + address);
+                console.log("privateKey" + privateKey);
+                var encryptData = wallet.encryptNeodunPrivateKey(privateKey, "111111");
+                console.log("encryptData" + encryptData);
+                console.log("privateKey：" + wallet.decryptNeodunPrivateKey(encryptData, "111111"));
+                var objShow = new WalletObject('', address, allassets, encryptData, false);
 
-
-           
+                console.log("这里添加了一个地址" + JSON.stringify(objShow));
+                this.wallets.push(objShow);
+                walletList.addWallet(objShow);
+                this.newDriverAddress.pop();
+            });
+         
         }
     }
 });
