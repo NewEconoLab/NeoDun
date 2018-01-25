@@ -1,6 +1,6 @@
 .\obj\forprintf.o: ..\..\Cpp\forPrintf.c
-.\obj\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\obj\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\forprintf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
 .\obj\forprintf.o: ..\Inc\stm32f4xx_hal_conf.h
 .\obj\forprintf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h
@@ -8,7 +8,7 @@
 .\obj\forprintf.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\forprintf.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\forprintf.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\forprintf.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\forprintf.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\forprintf.o: ..\Drivers\CMSIS\Include\core_cmSimd.h
@@ -33,5 +33,5 @@
 .\obj\forprintf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd.h
 .\obj\forprintf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\forprintf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
-.\obj\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\rt_misc.h
-.\obj\forprintf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\obj\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\rt_misc.h
+.\obj\forprintf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h

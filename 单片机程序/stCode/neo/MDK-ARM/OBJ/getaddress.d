@@ -1,6 +1,6 @@
 .\obj\getaddress.o: ..\..\Algorithm\getaddress.c
 .\obj\getaddress.o: ..\..\Algorithm\getaddress.h
-.\obj\getaddress.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\getaddress.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\getaddress.o: ..\..\Algorithm\encrypt.h
 .\obj\getaddress.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\getaddress.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
@@ -15,7 +15,7 @@
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h
 .\obj\getaddress.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
-.\obj\getaddress.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\getaddress.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h
@@ -34,7 +34,7 @@
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\getaddress.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
-.\obj\getaddress.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\getaddress.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\getaddress.o: ..\..\STM32_Cryptographic_Library\inc\crypto.h
 .\obj\getaddress.o: ..\..\STM32_Cryptographic_Library\inc\config.h
 .\obj\getaddress.o: ..\..\STM32_Cryptographic_Library\inc\Common/types.h
@@ -94,7 +94,7 @@
 .\obj\getaddress.o: ..\..\STM32_Cryptographic_Library\inc\MATH/math.h
 .\obj\getaddress.o: ..\..\Algorithm\showsign.h
 .\obj\getaddress.o: ..\..\Algorithm\bignum.h
-.\obj\getaddress.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\getaddress.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\getaddress.o: ..\..\Algorithm\ripemd160.h
 .\obj\getaddress.o: ..\..\Algorithm\Algorithm.h
-.\obj\getaddress.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\getaddress.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

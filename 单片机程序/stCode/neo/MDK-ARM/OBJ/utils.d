@@ -8,14 +8,14 @@
 .\obj\utils.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\utils.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\utils.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\utils.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\utils.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\utils.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\utils.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\utils.o: ..\Drivers\CMSIS\Include\core_cmSimd.h
 .\obj\utils.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
-.\obj\utils.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\utils.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h
@@ -36,7 +36,7 @@
 .\obj\utils.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 .\obj\utils.o: ..\..\STM32_Cryptographic_Library\inc\crypto.h
 .\obj\utils.o: ..\..\STM32_Cryptographic_Library\inc\config.h
-.\obj\utils.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\utils.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\utils.o: ..\..\STM32_Cryptographic_Library\inc\Common/types.h
 .\obj\utils.o: ..\..\STM32_Cryptographic_Library\inc\Common/macros.h
 .\obj\utils.o: ..\..\STM32_Cryptographic_Library\inc\Common/err_codes.h

@@ -3,7 +3,7 @@
 .\obj\encrypt.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\encrypt.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\encrypt.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Include\core_cmSimd.h
@@ -14,7 +14,7 @@
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h
 .\obj\encrypt.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
-.\obj\encrypt.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\encrypt.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h
@@ -33,7 +33,7 @@
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\encrypt.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
-.\obj\encrypt.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\encrypt.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\crypto.h
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\config.h
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\Common/types.h
@@ -91,8 +91,8 @@
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\ECC/ecc.h
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\ECC/../MATH/math.h
 .\obj\encrypt.o: ..\..\STM32_Cryptographic_Library\inc\MATH/math.h
-.\obj\encrypt.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\encrypt.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\encrypt.o: ..\..\Algorithm\getaddress.h
 .\obj\encrypt.o: ..\..\Algorithm\Algorithm.h
-.\obj\encrypt.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\encrypt.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\encrypt.o: ..\..\Algorithm\showsign.h

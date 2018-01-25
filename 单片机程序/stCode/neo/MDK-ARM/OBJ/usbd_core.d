@@ -1,13 +1,13 @@
 .\obj\usbd_core.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c
 .\obj\usbd_core.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h
 .\obj\usbd_core.o: ..\Inc\usbd_conf.h
-.\obj\usbd_core.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\usbd_core.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\obj\usbd_core.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\usbd_core.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\usbd_core.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\usbd_core.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\usbd_core.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\usbd_core.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\usbd_core.o: ..\Drivers\CMSIS\Include\core_cmSimd.h

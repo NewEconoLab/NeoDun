@@ -8,11 +8,13 @@
 #define CALI_NUM			4
 #define CALI_RAW_MIN	1000
 #define CALI_RAW_MAX	3000
+#define CNT_INT				1			//重复进入多少次中断，实际校准的宏，现定为1次
 
 volatile unsigned char aw9136_key_flag = 0;
 volatile unsigned char left_key_flag = 0;
 volatile unsigned char center_key_flag = 0;
 volatile unsigned char right_key_flag = 0;
+volatile unsigned char double_key_flag = 0;
 
 unsigned char cali_flag = 0;
 unsigned char cali_num = 0;
@@ -21,6 +23,7 @@ unsigned char cali_used = 0;
 unsigned char old_cali_dir[6];	//	0: no cali		1: ofr pos cali		2: ofr neg cali
 unsigned int  old_ofr_cfg[6];
 long Ini_sum[6];
+
 #endif
 
 /**********************************************************
@@ -100,16 +103,8 @@ void AW9136_Init(void)
 		u16 value1 = 0;
 		u16 value2 = 0;
     GPIO_InitTypeDef GPIO_Initure;
-    
-    __HAL_RCC_GPIOC_CLK_ENABLE();   //使能GPIOC时钟
-//    __HAL_RCC_GPIOA_CLK_ENABLE();
-//		
-//    //PA0  中间按钮PA0 
-//    GPIO_Initure.Pin=GPIO_PIN_0;
-//    GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;  		 //下降沿触发
-//    GPIO_Initure.Pull=GPIO_PULLUP;          		 //上拉
-//    HAL_GPIO_Init(GPIOA,&GPIO_Initure);				
-	
+ 
+    __HAL_RCC_GPIOC_CLK_ENABLE();   //使能GPIOC时钟	
     //PC2初始化设置  
     GPIO_Initure.Pin=GPIO_PIN_2;
     GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;  		 //下降沿触发
@@ -121,11 +116,7 @@ void AW9136_Init(void)
     GPIO_Initure.Mode=GPIO_MODE_OUTPUT_PP;  		 //推挽输出
     GPIO_Initure.Pull=GPIO_PULLUP;          		 //上拉
     GPIO_Initure.Speed=GPIO_SPEED_HIGH;    			 //快速
-    HAL_GPIO_Init(GPIOC,&GPIO_Initure);
-	
-//    //中断线0-PA0
-//    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为3
-//    HAL_NVIC_EnableIRQ(EXTI0_IRQn);         //使能中断线2  			
+    HAL_GPIO_Init(GPIOC,&GPIO_Initure);		
 	
     //中断线2-PC2
     HAL_NVIC_SetPriority(EXTI2_IRQn,2,3);   //抢占优先级为2，子优先级为3
@@ -136,9 +127,8 @@ void AW9136_Init(void)
 		AW9136_pwron();
 		HAL_Delay(5);
 		
-		value1 = I2C_read_reg(0x00);
+		value1 = I2C_read_reg(0x00);	
 		printf("AW9136 chip ID:0x%4x\r\n",value1);
-		
 		AW_NormalMode();
 			
 #ifdef AW_AUTO_CALI
@@ -147,11 +137,9 @@ void AW9136_Init(void)
 		cali_cnt = 0;
 #endif		
 
-		value2 = I2C_read_reg(0x01);
-		printf("AW9136 GCR:0x%4x\r\n",value2);
-		
+		value2 = I2C_read_reg(0x01);	
+		printf("AW9136 GCR:0x%4x\r\n",value2);	
 		AW9136_LED_ON();
-//		AW_LedReleaseTouch();
 }
 
 void EXTI0_IRQHandler(void)
@@ -249,7 +237,7 @@ void AW_NormalMode(void)
 	I2C_write_reg(GDCFGR,N_GDCFGR);	// gesture key select
 	I2C_write_reg(TAPR1,N_TAPR1);		// double click 1
 	I2C_write_reg(TAPR2,N_TAPR2);		// double click 2
-	I2C_write_reg(TDTR,N_TDTR);			// double click time
+	I2C_write_reg(0x22,N_TDTR);			// double click time
 
 #ifndef AW_AUTO_CALI
 	I2C_write_reg(GIER,N_GIER);			// gesture and double click enable
@@ -260,7 +248,9 @@ void AW_NormalMode(void)
 	I2C_write_reg(GCR,N_GCR);				// LED enable and touch scan enable
 
 	WorkMode = 2;
+#ifdef Printf_Debug		
 	printf("%s Finish\n", __func__);
+#endif
 }
 
 /**********************************************************
@@ -322,7 +312,9 @@ void AW_SleepMode(void)
 	I2C_write_reg(GCR, S_GCR);   		// enable chip sensor function
 
 	WorkMode = 1;
+#ifdef Printf_Debug		
 	printf("%s Finish\n", __func__);
+#endif	
 }
 
 void AW9136_LED_ON(void)
@@ -383,7 +375,7 @@ unsigned char AW91xx_Auto_Cali(void)
 	for(i=0; i<6; i++) 
 		Ini_sum[i] = (cali_cnt==0)? (0) : (Ini_sum[i] + buf[i]);
 
-	if(cali_cnt==4){
+	if(cali_cnt==CNT_INT){
 		for(i=0; i<6; i++){
 			if((sen_num & (1<<i)) == 0)	{	// sensor used
 				if((Ini_sum[i]>>2) < CALI_RAW_MIN){
@@ -467,7 +459,7 @@ unsigned char AW91xx_Auto_Cali(void)
 		cali_num ++;
 	}
 
-	if(cali_cnt < 4){
+	if(cali_cnt < CNT_INT){
 		cali_cnt ++;
 	}else{
 		cali_cnt = 0;
@@ -484,9 +476,9 @@ unsigned char AW91xx_Auto_Cali(void)
 void AW_SleepMode_Proc(void)
 {
 	unsigned int buff1;
-
+#ifdef Printf_Debug	
 	printf("%s Enter\n", __func__);
-
+#endif
 #ifdef AW_AUTO_CALI
 	if(cali_flag){
 		AW91xx_Auto_Cali();
@@ -509,7 +501,7 @@ void AW_SleepMode_Proc(void)
 		buff1=I2C_read_reg(0x2e);			//read gesture interupt status
 		if(buff1 == 0x10)
 		{
-				AW_center_double();
+				AW_double();
 		}
 		else if(buff1 == 0x01)
 		{
@@ -528,15 +520,15 @@ void AW_SleepMode_Proc(void)
 **********************************************************/
 void AW_NormalMode_Proc(void)
 {
-		unsigned int buff1,buff2;
+		unsigned int buff1,buff2,buff3;
 #ifdef Printf_Debug		
 		printf("%s Enter\n", __func__);
+//		printf("cali_flag = %d\r\n",cali_flag);	
 #endif		
 #ifdef AW_AUTO_CALI	
 		if(cali_flag)
 		{
 				AW91xx_Auto_Cali();
-//				printf("cali_flag = %d\r\n",cali_flag);
 				if(cali_flag == 0)
 				{			
 						if(cali_used)
@@ -557,13 +549,17 @@ void AW_NormalMode_Proc(void)
 #endif
 		if(debug_level == 0)
 		{
+				buff3=I2C_read_reg(0x2e);
 				buff2=I2C_read_reg(0x32);		//read key interupt status
 				buff1=I2C_read_reg(0x31);
 
 #ifdef Printf_Debug				
-				printf("AW9136: reg0x31=0x%x, reg0x32=0x%x\n",buff1,buff2);
+//				printf("AW9136: reg0x31=0x%x, reg0x32=0x%x\n",buff1,buff2);
 #endif
-			
+				if(buff3 == 0x10)
+				{
+						AW_double();
+				}			
 				if(buff2 & 0x10)//S3 click
 				{						
 						if(buff1 == 0x00)
@@ -605,7 +601,7 @@ int AW9136_clear_intr(void)
 	int res;
 	res = I2C_read_reg(0x32);
 #ifdef Printf_Debug		
-	printf("%s: reg0x32=0x%x\n", __func__, res);
+//	printf("%s: reg0x32=0x%x\n", __func__, res);
 #endif	
 	return res;
 }
@@ -618,7 +614,7 @@ int AW9136_clear_intr(void)
 void AW9136_eint_work(void)
 {
 #ifdef Printf_Debug	
-	printf("%s Enter\n", __func__);
+//	printf("%s Enter\n", __func__);
 #endif
 	switch(WorkMode){
 		case 1:
@@ -680,9 +676,13 @@ void AW_right_release(void)
 		}
 }
 
-void AW_center_double(void)
+void AW_double(void)
 {
-		printf("AW9136 center double click \n");
+		if(aw9136_key_flag)			
+		{		
+				printf("AW9136 center double click \n");
+				double_key_flag = 1;
+		}
 }
 
 void AW_right_slip(void)

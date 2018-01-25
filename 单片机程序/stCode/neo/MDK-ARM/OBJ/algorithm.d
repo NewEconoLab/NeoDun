@@ -1,8 +1,8 @@
 .\obj\algorithm.o: ..\..\Algorithm\Algorithm.c
 .\obj\algorithm.o: ..\..\Algorithm\Algorithm.h
-.\obj\algorithm.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\algorithm.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\obj\algorithm.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\algorithm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\algorithm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\algorithm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\algorithm.o: ..\..\Algorithm\showsign.h
 .\obj\algorithm.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\algorithm.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h

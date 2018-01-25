@@ -2,7 +2,7 @@
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\usbd_conf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\usbd_conf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Include\core_cmSimd.h
@@ -13,7 +13,7 @@
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h
 .\obj\usbd_conf.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
-.\obj\usbd_conf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\usbd_conf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h
@@ -34,8 +34,8 @@
 .\obj\usbd_conf.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 .\obj\usbd_conf.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h
 .\obj\usbd_conf.o: ..\Inc\usbd_conf.h
-.\obj\usbd_conf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\obj\usbd_conf.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\usbd_conf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\usbd_conf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\usbd_conf.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h
 .\obj\usbd_conf.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h
 .\obj\usbd_conf.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h

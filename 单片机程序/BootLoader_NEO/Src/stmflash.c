@@ -1,5 +1,7 @@
 #include "stmflash.h"
 
+unsigned char wallet_status = 0;//1表示新钱包，0表示旧钱包
+
 //读取指定地址的半字(16位数据) 
 //faddr:读地址 
 //返回值:对应数据.
@@ -152,7 +154,19 @@ void STMFLASH_Erase_Sectors(uint32_t sector)
 		}
 }
 
-
+//从存储的地方去读PIN码，没有设置就是新钱包,不然就是旧钱包
+void Get_StatusOfWallet(void)
+{
+	
+	
+	
+		if(1)
+		{
+				wallet_status = 1;
+		}
+		else
+				wallet_status = 0;		
+}
 
 
 

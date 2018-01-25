@@ -1,13 +1,13 @@
 .\obj\showsign.o: ..\..\Algorithm\showsign.c
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
 .\obj\showsign.o: ..\..\Algorithm\showsign.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\showsign.o: ..\Drivers\CMSIS\Include\core_cmSimd.h
@@ -94,5 +94,5 @@
 .\obj\showsign.o: ..\..\STM32_Cryptographic_Library\inc\ECC/ecc.h
 .\obj\showsign.o: ..\..\STM32_Cryptographic_Library\inc\ECC/../MATH/math.h
 .\obj\showsign.o: ..\..\STM32_Cryptographic_Library\inc\MATH/math.h
-.\obj\showsign.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\obj\showsign.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\obj\showsign.o: ..\..\Algorithm\getaddress.h

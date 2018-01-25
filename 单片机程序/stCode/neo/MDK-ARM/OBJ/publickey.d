@@ -1,11 +1,11 @@
 .\obj\publickey.o: ..\..\Cpp\PublicKey.cpp
 .\obj\publickey.o: ..\..\Cpp\PublicKey.h
 .\obj\publickey.o: ..\..\Cpp\myType.h
-.\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\publickey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\publickey.o: ..\..\Algorithm\Algorithm.h
-.\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\obj\publickey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\publickey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\publickey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\publickey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\publickey.o: ..\..\Algorithm\showsign.h
 .\obj\publickey.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\publickey.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h

@@ -5,13 +5,13 @@
 .\obj\commands.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h
 .\obj\commands.o: ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h
 .\obj\commands.o: ..\Inc\usbd_conf.h
-.\obj\commands.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\commands.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\obj\commands.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\commands.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\commands.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\obj\commands.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\commands.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\commands.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
 .\obj\commands.o: ..\Drivers\CMSIS\Include\core_cm4.h
-.\obj\commands.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\commands.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\commands.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 .\obj\commands.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 .\obj\commands.o: ..\Drivers\CMSIS\Include\core_cmSimd.h

@@ -21,9 +21,9 @@
 #define N_SLPR					0x0023			// touch key enable
 #define N_SCFG1					0x0084			// scan time setting
 #define N_SCFG2					0x0287			// bit0~3 is sense seting
-#define N_OFR1					0x1515			// offset
-#define N_OFR2					0x1515			// offset
-#define N_OFR3					0x1515			// offset
+#define N_OFR1					0x1111			// offset 0x1515
+#define N_OFR2					0x1111			// offset
+#define N_OFR3					0x1111			// offset
 #define N_THR0					0x2328			//S1 press thred setting
 #define N_THR1					0x2328			//S2 press thred setting
 #define N_THR2					0x0a0a			//S3 press thred setting    0x2328
@@ -37,10 +37,10 @@
 #define N_MPTR					0x0005			//
 #define N_GDTR					0x0000			// gesture time setting
 #define N_GDCFGR				0x0000			//gesture  key select
-#define N_TAPR1					0x0000			//double click 1
+#define N_TAPR1					0x0032			//double click 1  0x0000
 #define N_TAPR2					0x0000			//double click 2
-#define N_TDTR					0x0000			//double click time
-#define N_GIER					0x0000			//gesture and double click enable
+#define N_TDTR					0x1932			//double click time 0x0000
+#define N_GIER					0x0010			//gesture and double click enable 0x0000
 #define N_GCR						0x0003			// GCR
 /**********************************************************
  AW9136 initial register @ mobile sleep AW_SleepMode()
@@ -217,7 +217,7 @@ void AW_left_release(void);
 void AW_center_release(void);
 void AW_right_release(void);
 
-void AW_center_double(void);
+void AW_double(void);
 void AW_right_slip(void);
 void AW_left_slip(void);
 

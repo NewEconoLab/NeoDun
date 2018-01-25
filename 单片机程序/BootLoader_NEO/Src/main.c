@@ -35,6 +35,8 @@
 ** 15、VID一致  PID不同，PID为22352时，表示这个是钱包
 ** 16、BootLoader问题，如果BootLoader停留的时间不够AW9136初始化，会导致程序进入AW9136的sleep模式，导致速度变慢
 				解决办法：只有进入升级界面的时候，才初始化AW9136，不然只初始化，中间按键有效
+** 17、通过写入0x1111进寄存器（N_OFR1~3）以及定义宏CNT_INT来提高AW9136的初始化速度
+** 18、增加触摸按键双击的识别N_TAPR1-2、N_TDTR、N_GIER寄存器的值,但是检测到双击操作时，单击也会被检测到
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -53,8 +55,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-//static void MX_RNG_Init(void);
-//static void GetPassportArray(int *data);
+static void NEO_Test(void);
+static void Set_PinCode(void);
 
 #define HID_REC_LEN 110*1024
 u8 HID_RX_BUF[HID_REC_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.    
@@ -63,7 +65,9 @@ u32 HID_RX_CNT = 0;
 extern volatile unsigned char left_key_flag;
 extern volatile unsigned char center_key_flag;
 extern volatile unsigned char right_key_flag;
+extern volatile unsigned char double_key_flag;
 extern volatile int time_counter;
+extern unsigned char wallet_status;
 volatile int cancel_flag = 0;
 
 int main(void)
@@ -78,8 +82,7 @@ int main(void)
 		Center_button_init();	//中间按钮初始化
 		MX_USART1_UART_Init();//打印信息串口
 		MX_USART2_UART_Init();//蓝牙串口
-		TIM3_Init(5000-1,8400-1);//500ms进入一次中断计数
-//		MX_RNG_Init();	      
+		TIM3_Init(5000-1,8400-1);//500ms进入一次中断计数      
 		OLED_Init();					
 		
 		//开机界面
@@ -115,6 +118,7 @@ int main(void)
 		Asc8_16(112,48,"load");
 		Asc8_16(206,48,"clear");
 
+//		Get_StatusOfWallet();
 		//进入循环前，清除按键标志位
 		left_key_flag = 0;
 		center_key_flag = 0;
@@ -159,37 +163,45 @@ int main(void)
 						Fill_Block(0,0,64,29,45);//清除这一行
 						Asc8_16(80,29,"Clear Finish");
 						right_key_flag = 0;
-				}	
+				}
+				if(double_key_flag)//生产测试功能
+				{
+						Fill_RAM(0x00);
+						Asc8_16( 52,4 ,"Enter NeoDun Test ?");
+						Asc8_16(24,44,"Cancel");
+						Asc8_16(124,44,"OK");
+						Asc8_16(184,44,"Cancel");
+						while(1)
+						{		
+								center_key_flag = 0;
+								right_key_flag = 0;
+								left_key_flag = 0;
+								
+								if(center_key_flag)
+								{
+										center_key_flag = 0;
+										double_key_flag = 0;
+										NEO_Test();
+										break;
+								}
+								else if((right_key_flag == 1)||(left_key_flag == 1))
+								{	
+										right_key_flag = 0;
+										left_key_flag = 0;
+										double_key_flag = 0;
+										Fill_RAM(0x00);
+										Asc12_24( 20,10 ,"Welcome Use NeoDun");
+										break;
+								}
+						}
+				}
+				if(wallet_status)//新钱包，设置PIN码
+				{
+						wallet_status = 0;
+						Set_PinCode();					
+				}
 		}
 }
-
-//void GetPassportArray(int *data)
-//{
-//		uint32_t tmp = 0;
-//		int i = 0;
-//		int t = 0;
-//		
-//		for(i=0;i<9;i++)
-//		{
-//				HAL_RNG_GenerateRandomNumber(&hrng,&tmp);
-//				tmp =	tmp%9;
-//				if(tmp == 0)	
-//						tmp = i;
-//				t = data[i];
-//				data[i] = data[tmp];
-//				data[tmp] = t;
-//		}
-//		
-//		Show_num(108,6,data[0],2,0);
-//		Show_num(124,6,data[1],2,0);
-//		Show_num(140,6,data[2],2,0);	
-//		Show_num(108,24,data[3],2,0);
-//		Show_num(124,24,data[4],2,0);
-//		Show_num(140,24,data[5],2,0);	
-//		Show_num(108,42,data[6],2,0);
-//		Show_num(124,42,data[7],2,0);
-//		Show_num(140,42,data[8],2,0);
-//}
 
 /** System Clock Configuration
 */
@@ -245,18 +257,6 @@ void SystemClock_Config(void)
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
-
-///* RNG init function */
-//static void MX_RNG_Init(void)
-//{
-
-//  hrng.Instance = RNG;
-//  if (HAL_RNG_Init(&hrng) != HAL_OK)
-//  {
-//    _Error_Handler(__FILE__, __LINE__);
-//  }
-
-//}
 
 /* USART1 init function */
 static void MX_USART1_UART_Init(void)
@@ -364,6 +364,72 @@ void USB_DataReceiveHander(uint8_t *data,int len)
 				}
 				HID_RX_CNT = HID_RX_CNT + len;
 		}	
+}
+
+static void NEO_Test(void)
+{
+		int i=0;
+		Fill_RAM(0x00);
+		Asc8_16( 84,4 ,"NeoDun Test");		
+		HAL_Delay(2000);
+		
+		for(i=0;i<5;i++)
+		{
+				Fill_RAM(0xFF);
+				HAL_Delay(1000);
+				Fill_RAM(0x00);
+				HAL_Delay(1000);
+		}
+/******************************************
+						NeoDun Test
+					Motor and Key Test
+		On						Exit					Off
+******************************************/		
+		Asc8_16( 84,4 ,"NeoDun Test");
+		Asc8_16( 56,24 ,"Motor and Key Test");
+		Asc8_16( 30,44 ,"On");
+		Asc8_16( 112,44 ,"Exit");
+		Asc8_16( 206,44 ,"Off");
+		center_key_flag = 0;
+		left_key_flag = 0;
+		right_key_flag = 0;
+		
+		while(!center_key_flag) //中间按键按下，退出
+		{
+				if(left_key_flag)
+				{
+						left_key_flag = 0;
+						HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+				}
+				else if(right_key_flag)
+				{
+						right_key_flag = 0;
+						HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
+				}
+		}
+		center_key_flag = 0;
+		Fill_RAM(0x00);
+		Asc12_24( 20,10 ,"Welcome Use NeoDun");
+}
+
+static void Set_PinCode(void)
+{
+/**************************************					
+							Pin:______  
+			-						OK					+
+**************************************/	
+		Fill_RAM(0x00);
+		Asc12_24(68,4,"Pin:______");
+		Asc12_24(37,36,"-");
+		Asc12_24(116,36,"OK");
+		Asc12_24(206,36,"+");
+	
+	
+	
+	
+	
+		Fill_RAM(0x00);
+		Asc12_24( 20,10 ,"Welcome Use NeoDun");	
 }
 
 /**

@@ -2,12 +2,12 @@
 .\obj\privatekey.o: ..\..\Cpp\PrivateKey.h
 .\obj\privatekey.o: ..\..\Cpp\PublicKey.h
 .\obj\privatekey.o: ..\..\Cpp\myType.h
-.\obj\privatekey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\privatekey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\privatekey.o: ..\..\Cpp\Utils.h
 .\obj\privatekey.o: ..\..\Algorithm\Algorithm.h
-.\obj\privatekey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\privatekey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\obj\privatekey.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\privatekey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\privatekey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\privatekey.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\privatekey.o: ..\..\Algorithm\showsign.h
 .\obj\privatekey.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 .\obj\privatekey.o: ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h

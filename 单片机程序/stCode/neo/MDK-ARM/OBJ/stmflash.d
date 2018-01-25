@@ -1,8 +1,8 @@
 .\obj\stmflash.o: ..\..\Algorithm\stmflash.c
 .\obj\stmflash.o: ..\..\Algorithm\stmflash.h
-.\obj\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\obj\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\obj\stmflash.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
 .\obj\stmflash.o: ..\Inc\stm32f4xx_hal_conf.h
 .\obj\stmflash.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h
@@ -35,4 +35,4 @@
 .\obj\stmflash.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\stmflash.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 .\obj\stmflash.o: ..\..\Cpp\main_define.h
-.\obj\stmflash.o: F:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\stmflash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
