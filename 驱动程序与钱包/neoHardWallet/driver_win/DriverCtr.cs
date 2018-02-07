@@ -187,7 +187,11 @@ namespace driver_win
         //根据设置判断是不是要验证密码
         public bool IsNeedConfirmPassword(NeoDun.Enum_DriverFun _funName)
         {
-            if (isFirstConfirm[_funName.ToString()] as MyJson.JsonNode_ValueNumber)
+            if (json_setting[_funName.ToString()] as MyJson.JsonNode_ValueNumber)
+            {
+                return true;
+            }
+            else if (isFirstConfirm[_funName.ToString()] as MyJson.JsonNode_ValueNumber)
             {//如果配置需要验证密码   就先回掉弹出密码验证 再把当前委托再赋值给验证密码callback委托
                 isFirstConfirm[_funName.ToString()] = new MyJson.JsonNode_ValueNumber(false);
                 return true;
