@@ -581,16 +581,23 @@ namespace driver_win
         }
         public delegate void BackUpAddressEventHandlerCallBack(string _str);
         public event BackUpAddressEventHandlerCallBack backUpAddressEventHandlerCallBack;
-        public void BackUpAddressCallBack(string _privateKey)
+        public void BackUpAddressCallBack(bool suc ,string _privateKey)
         {
-            
+            if (suc)
+            {
                 string wif = NeoDun.SignTool.GetWifFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey));
-
                 string address = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey)));
                 confirmPasswordEventHandlerCallBack = null;
                 System.IO.File.WriteAllText(address + ".backup.sim.save.txt", wif);
                 backUpAddressEventHandlerCallBack(_privateKey);
                 GetAddressList();
+            }
+            else
+            {
+                backUpAddressEventHandlerCallBack("");
+                GetAddressList();
+            }
+
         }
         #endregion
 

@@ -475,7 +475,10 @@ namespace driver_win
         {
             Dispatcher.Invoke((Action)  delegate()
             {
-                MessageBox.Show("已经成功备份", "通知");
+                if(string.IsNullOrEmpty(_str))
+                    MessageBox.Show("备份失败" + _str, "通知");
+                else
+                    MessageBox.Show("已经成功备份"+ _str, "通知");
             });
         }
 

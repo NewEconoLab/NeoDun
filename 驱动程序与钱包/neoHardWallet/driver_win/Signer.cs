@@ -75,7 +75,7 @@ namespace NeoDun
         public delegate void DelAddressEventHandler(bool _suc);
         public DelAddressEventHandler delAddressEventHandler;
 
-        public delegate void BackUpAddressEventHandler(string _privateKey);
+        public delegate void BackUpAddressEventHandler(bool suc ,string _privateKey);
         public BackUpAddressEventHandler backUpAddressEventHandler;
 
         public delegate void SignEventHandler(byte[] _bytes);
@@ -328,8 +328,13 @@ namespace NeoDun
                     byte[] privatekey = new byte[privatekeylen];
                     Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
                     if(backUpAddressEventHandler!=null)
-                        backUpAddressEventHandler(NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length));
+                        backUpAddressEventHandler(true,NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length));
                     
+                }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe0)
+                {
+                    if (backUpAddressEventHandler != null)
+                        backUpAddressEventHandler(false,"");
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc3)//设置密码成功
                 {
