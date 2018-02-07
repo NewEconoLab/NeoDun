@@ -11,7 +11,7 @@ namespace hhgate
     {
         public Dictionary<string, string> mapParams = new Dictionary<string, string>();
         public Dictionary<string, byte[]> mapFiles = new Dictionary<string, byte[]>();
-        public static async Task<FormData> FromRequest(IOwinRequest request)
+        public static FormData FromRequest(IOwinRequest request)
         {
             try
 
@@ -39,7 +39,7 @@ namespace hhgate
 
                             while (request.Body.CanRead)
                             {
-                                int read = await request.Body.ReadAsync(allfile, seek, leng - seek);
+                                int read = request.Body.Read(allfile, seek, leng - seek);
                                 seek += read;
                                 if (read == 0) break;
                             }
@@ -50,7 +50,7 @@ namespace hhgate
 
                             while (request.Body.CanRead)
                             {
-                                int read = await request.Body.ReadAsync(allfile, seek, 1024);
+                                int read = request.Body.Read(allfile, seek, 1024);
                                 seek += read;
                                 if (read == 0) break;
                             }
@@ -77,7 +77,7 @@ namespace hhgate
 
                             while (request.Body.CanRead)
                             {
-                                int read = await request.Body.ReadAsync(allfile, seek, leng - seek);
+                                int read = request.Body.Read(allfile, seek, leng - seek);
                                 seek += read;
                                 if (read == 0) break;
                             }
@@ -88,7 +88,7 @@ namespace hhgate
 
                             while (request.Body.CanRead)
                             {
-                                int read = await request.Body.ReadAsync(allfile, seek, 1024);
+                                int read = request.Body.Read(allfile, seek, 1024);
                                 seek += read;
                                 if (read == 0) break;
                             }

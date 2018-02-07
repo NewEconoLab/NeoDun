@@ -15,24 +15,24 @@ namespace hhgate
             this.pathOnDrive = pathOnDrive;
 
         }
-        public async Task HandleRequest(IOwinContext context, string rootpath, string relativePath)
+        public void HandleRequest(IOwinContext context, string rootpath, string relativePath)
         {
 
             var filepath = pathOnDrive + "\\" + relativePath;
             if (System.IO.File.Exists(filepath))
             {
-                await staticFile(context, filepath);
+                staticFile(context, filepath);
                 return;
             }
             else
             {
                 context.Response.StatusCode = 404;
                 context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync("miss file.");
+                context.Response.Write("miss file.");
                 return;
             }
         }
-        private static async Task staticFile(IOwinContext context, string path)
+        private static void staticFile(IOwinContext context, string path)
         {
             var bts = System.IO.File.ReadAllBytes(path);
             context.Response.ContentLength = bts.Length;
@@ -60,7 +60,7 @@ namespace hhgate
                     break;
 
             }
-            await context.Response.WriteAsync(bts);
+            context.Response.Write(bts);
             return;
         }
 

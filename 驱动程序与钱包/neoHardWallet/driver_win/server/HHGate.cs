@@ -11,10 +11,10 @@ namespace hhgate
     {
 
 
-        public async Task HandleRequest(IOwinContext context, string rootpath, string relativePath)
+        public void HandleRequest(IOwinContext context, string rootpath, string relativePath)
         {
             var api = relativePath.ToLower();
-            var formdata = await FormData.FromRequest(context.Request);
+            var formdata = FormData.FromRequest(context.Request);
             if (formdata == null)
             {
                 context.Response.StatusCode = 500;
@@ -22,48 +22,48 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["msg"] = new MyJson.JsonNode_ValueString("formdata format error.");
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
             if (relativePath == "ver")
             {
-                await ver(context, formdata);
+                ver(context, formdata);
                 return;
             }
             else if (relativePath == "filemap_list")
             {
-                await filemap_list(context, formdata);
+                filemap_list(context, formdata);
                 return;
             }
             else if (relativePath == "filemap_add")
             {
-                await filemap_add(context, formdata);
+                filemap_add(context, formdata);
                 return;
             }
             else if (relativePath == "filemap_remove")
             {
-                await filemap_remove(context, formdata);
+                filemap_remove(context, formdata);
                 return;
             }
             else if (relativePath == "file_list")
             {
-                await file_list(context, formdata);
+                file_list(context, formdata);
                 return;
             }
             else if (relativePath == "file_save")
             {
-                await file_save(context, formdata);
+                file_save(context, formdata);
                 return;
             }
             else if (relativePath == "file_remove")
             {
-                await file_remove(context, formdata);
+                file_remove(context, formdata);
                 return;
             }
             else if (relativePath == "file_cmd")
             {
-                await file_cmd(context, formdata);
+                file_cmd(context, formdata);
                 return;
             }
             else
@@ -71,21 +71,21 @@ namespace hhgate
                 MyJson.JsonNode_Object jsonr = new MyJson.JsonNode_Object();
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(-1000);
                 jsonr["msg"] = new MyJson.JsonNode_ValueString("unknown cmd.");
-                await context.Response.WriteAsync(jsonr.ToString());
+                context.Response.Write(jsonr.ToString());
             }
             return;
 
         }
-        private static async Task ver(IOwinContext context, FormData formdata)
+        private static void ver(IOwinContext context, FormData formdata)
         {
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             MyJson.JsonNode_Array maps = new MyJson.JsonNode_Array();
             json.SetDictValue("msg", "HardDrive Http Gate By GD3D 0.01");
-            await context.Response.WriteAsync(json.ToString());
+            context.Response.Write(json.ToString());
             return;
         }
-        private static async Task filemap_list(IOwinContext context, FormData formdata)
+        private static void filemap_list(IOwinContext context, FormData formdata)
         {
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
@@ -102,11 +102,11 @@ namespace hhgate
                     maps.Add(item);
                 }
             }
-            await context.Response.WriteAsync(json.ToString());
+            context.Response.Write(json.ToString());
             return;
         }
 
-        private static async Task filemap_add(IOwinContext context, FormData formdata)
+        private static void filemap_add(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url") && formdata.mapParams.ContainsKey("pathondrive"))
@@ -116,7 +116,7 @@ namespace hhgate
                 {
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
                 else
@@ -124,7 +124,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("add filemap fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
 
@@ -134,12 +134,12 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url & pathondrive.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
         }
-        private static async Task filemap_remove(IOwinContext context, FormData formdata)
+        private static void filemap_remove(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url"))
@@ -149,7 +149,7 @@ namespace hhgate
                 {
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
                 else
@@ -157,7 +157,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("remove filemap fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
 
@@ -167,13 +167,13 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
         }
 
-        private static async Task file_list(IOwinContext context, FormData formdata)
+        private static void file_list(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url") && formdata.mapParams.ContainsKey("path"))
@@ -211,7 +211,7 @@ namespace hhgate
                         }
                         _files.Add(item);
                     }
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
 
                 }
@@ -220,7 +220,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("file_list fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
 
@@ -230,13 +230,13 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url & path.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
         }
 
-        private static async Task file_save(IOwinContext context, FormData formdata)
+        private static void file_save(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url") && formdata.mapParams.ContainsKey("path") && formdata.mapFiles.ContainsKey("file"))
@@ -259,7 +259,7 @@ namespace hhgate
 
                         MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                         json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                        await context.Response.WriteAsync(json.ToString());
+                        context.Response.Write(json.ToString());
                         return;
                     }
                 }
@@ -272,7 +272,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("file_save fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
             }
@@ -281,12 +281,12 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url & path & file.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
         }
-        private static async Task file_remove(IOwinContext context, FormData formdata)
+        private static void file_remove(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url") && formdata.mapParams.ContainsKey("path"))
@@ -303,7 +303,7 @@ namespace hhgate
                         }
                         MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                         json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                        await context.Response.WriteAsync(json.ToString());
+                        context.Response.Write(json.ToString());
                         return;
                     }
                 }
@@ -316,7 +316,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("file_remove fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
             }
@@ -325,13 +325,13 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url & path & file.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 
         }
 
-        private static async Task file_cmd(IOwinContext context, FormData formdata)
+        private static void file_cmd(IOwinContext context, FormData formdata)
         {
 
             if (formdata.mapParams.ContainsKey("url") && formdata.mapParams.ContainsKey("path") && formdata.mapParams.ContainsKey("cmd"))
@@ -344,8 +344,8 @@ namespace hhgate
                         var path = System.IO.Path.Combine(p.pathOnDrive, formdata.mapParams["path"]);
                         var cmd = formdata.mapParams["cmd"];
 
-                        var text = await Cmd.Call(path, cmd);
-                        await context.Response.WriteAsync(text );
+                        var text = Cmd.Call(path, cmd);
+                        context.Response.Write(text );
                         return;
                     }
                 }
@@ -358,7 +358,7 @@ namespace hhgate
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(-2);
                     json["msg"] = new MyJson.JsonNode_ValueString("file_cmd fail.");
-                    await context.Response.WriteAsync(json.ToString());
+                    context.Response.Write(json.ToString());
                     return;
                 }
             }
@@ -367,7 +367,7 @@ namespace hhgate
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("need param: url & path & cmd.");
-                await context.Response.WriteAsync(json.ToString());
+                context.Response.Write(json.ToString());
                 return;
             }
 

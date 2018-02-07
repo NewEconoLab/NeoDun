@@ -72,7 +72,7 @@ namespace NeoDun
         public delegate void GetAddressListEventHandler();
         public GetAddressListEventHandler getAddressListEventHandler;
 
-        public delegate void DelAddressEventHandler();
+        public delegate void DelAddressEventHandler(bool _suc);
         public DelAddressEventHandler delAddressEventHandler;
 
         public delegate void BackUpAddressEventHandler(string _privateKey);
@@ -143,7 +143,7 @@ namespace NeoDun
         }
         void OnMsg(Message msg)
         {
-            Message srcmsg = null;
+            Message srcmsg = null; 
             if (msg.tag1 == 0x00 || msg.tag2 >= 0xa0)//如果是一条回复消息，找原始消息
             {
                 srcmsg = this.needBackMessage[msg.msgid];
@@ -302,12 +302,12 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc1)
                 {
                     if(delAddressEventHandler!=null)
-                        delAddressEventHandler();
+                        delAddressEventHandler(true);
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc2)
                 {
                     if (errorEventHandler != null)
-                        errorEventHandler("删除地址失败","错误");
+                        delAddressEventHandler(false);
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {

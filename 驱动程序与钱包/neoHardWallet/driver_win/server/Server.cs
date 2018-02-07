@@ -14,7 +14,7 @@ namespace hhgate
     {
         public interface IParser
         {
-            Task HandleRequest(IOwinContext context, string rootpath, string relativePath);
+            void HandleRequest(IOwinContext context, string rootpath, string relativePath);
         }
 
 
@@ -97,20 +97,20 @@ namespace hhgate
                 var relativePath = spath.Substring(i + 1);
                 if (mapParser.ContainsKey(rootpath))
                 {
-                    await mapParser[rootpath].HandleRequest(context, rootpath, relativePath);
+                    mapParser[rootpath].HandleRequest(context, rootpath, relativePath);
                     return;
                 }
                 else
                 {
                     context.Response.StatusCode = 404;
-                    await context.Response.WriteAsync("私有服务器,请询问管理员使用方法.");
+                    context.Response.Write("私有服务器,请询问管理员使用方法.");
                     return;
                 }
             }
             else
             {
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsync("私有服务器,请询问管理员使用方法.");
+                context.Response.Write("私有服务器,请询问管理员使用方法.");
                 return;
             }
         }

@@ -446,10 +446,13 @@ namespace driver_win
         {
             driverCtr.DeleteAddress(selectAddress.type.ToString(), selectAddress.AddressText.ToString());
         }
-        private void DeleteAddressCallBack()
+        private void DeleteAddressCallBack(bool suc)
         {
             Dispatcher.Invoke((Action) delegate() {
-                MessageBox.Show("删除成功", "提示");
+                if (suc)
+                    MessageBox.Show("删除成功", "提示");
+                else
+                    MessageBox.Show("删除失败", "提示");
             });
         }
 
@@ -468,11 +471,11 @@ namespace driver_win
             driverCtr.BackUpAddress(str_addressType, str_addressText);
             selectAddress.AddressText=null;
         }
-        private void BackUpPrivateKeyCallBack()  //把从签名机要到的私钥备份到本地
+        private void BackUpPrivateKeyCallBack(string _str)  //把从签名机要到的私钥备份到本地
         {
             Dispatcher.Invoke((Action)  delegate()
             {
-                //MessageBox.Show("已经成功备份", "通知");
+                MessageBox.Show("已经成功备份", "通知");
             });
         }
 

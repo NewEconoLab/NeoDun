@@ -39894,7 +39894,10 @@ var getBlockCount = exports.getBlockCount = function getBlockCount(net) {
     var network = getNetworkEndpoints(net);
     var rpcURL = '/address/';
     var apiURL = '/api/v1/address/info/';
+    console.log(network.rpcEndpoint + rpcURL + address);
     return _axios2.default.get(network.rpcEndpoint + rpcURL + address).then(function (res) {
+
+        console.log(res);
         if (res.data.result !== 'No Address!') {
             // get ANS
             // console.log(res.data);
@@ -39955,6 +39958,7 @@ var getTransactions = exports.getTransactions = function getTransactions(net, so
         var balance = response[assetSymbol];
         return getTransactions(net, fromAccount.address, toAddress, amount, assetId).then(function (transactions) {
             var transaction = transactions;
+            console.log(transaction);
             return signData(transaction, fromAccount.address).then((res) => {
                 //var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
                 //var publickeyEncoded = fromAccount.publickeyEncoded;
@@ -39964,7 +39968,7 @@ var getTransactions = exports.getTransactions = function getTransactions(net, so
                 console.log("sign:" + sign2);
                 console.log("publickeyEncoded:" + publickeyEncoded2);
 
-                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction, node:'seed5.neo.org'};
+                var jsonData = { 'publicKey': publickeyEncoded2, 'signature': sign2, 'transaction': transaction, node:'seed1.neo.org'};
                 return _axios2.default.post(network.rpcEndpoint + '/broadcast', _qs2.default.stringify(jsonData)).then(function (response) {
                     return response;
                 }).catch(function (error) {

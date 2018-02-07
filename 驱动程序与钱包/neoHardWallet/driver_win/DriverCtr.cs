@@ -288,7 +288,9 @@ namespace driver_win
                 signMsg.tag2 = 0x0b;//设置密码
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
                 signMsg.writeUInt16(0, (UInt16)bytes_password.Length);
-                Array.Copy(bytes_password, 0, signMsg.data, 2, bytes_password.Length);
+                signMsg.data[2] = bytes[0];
+                signMsg.data[3] = bytes[1];
+                Array.Copy(bytes_password, 0, signMsg.data, 4, bytes_password.Length);
                 signer.SendMessage(signMsg, true);
                 pwlock = true;
             }
@@ -531,21 +533,20 @@ namespace driver_win
             Array.Copy(bytes_addressText, 0, signMsg.data, 2, bytes_addressText.Length);
             signer.SendMessage(signMsg, true);
         }
-        public delegate void DeleteAddressEventHandlerCallBack();
+        public delegate void DeleteAddressEventHandlerCallBack(bool suc);
         public event DeleteAddressEventHandlerCallBack deleteAddressEventHandlerCallBack;
-        public void DeleteAddressCallBack()
+        public void DeleteAddressCallBack(bool suc)
         {
             confirmPasswordEventHandlerCallBack = null;
             if (deleteAddressEventHandlerCallBack!=null)
-                deleteAddressEventHandlerCallBack();
+                deleteAddressEventHandlerCallBack(suc);
             //重新获取地址列表
             GetAddressList();
         }
 
         #endregion
 
-        #region 备份地址
-        public string privateKey = "";
+        #region 备份地址(获取私钥)
         public void BackUpAddress(string _addressType , string _addressText)
         {
             str_addressType = _addressType;
@@ -574,7 +575,7 @@ namespace driver_win
             Array.Copy(hash_address, 0, signMsg.data, 6, hash_address.Length);
             signer.SendMessage(signMsg, true);
         }
-        public delegate void BackUpAddressEventHandlerCallBack();
+        public delegate void BackUpAddressEventHandlerCallBack(string _str);
         public event BackUpAddressEventHandlerCallBack backUpAddressEventHandlerCallBack;
         public void BackUpAddressCallBack(string _privateKey)
         {
@@ -584,9 +585,8 @@ namespace driver_win
                 string address = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey)));
                 confirmPasswordEventHandlerCallBack = null;
                 System.IO.File.WriteAllText(address + ".backup.sim.save.txt", wif);
-                backUpAddressEventHandlerCallBack();
+                backUpAddressEventHandlerCallBack(_privateKey);
                 GetAddressList();
-                privateKey = _privateKey;
         }
         #endregion
 
@@ -618,36 +618,21 @@ namespace driver_win
 
         #region  签名 sign   -------后面改
         string hashstr;
-        byte[] outdata ;
-        bool isgetdata=false;
-        public async Task Sign(IOwinContext context, FormData formdata)
+        byte[] data;
+        string src;
+        public void Sign(string _data ,string _src)
         {
-            if (formdata.mapParams.ContainsKey("data") == false
-                || formdata.mapParams.ContainsKey("source") == false)
-            {
-                await context.Response.WriteAsync("need param，data & source");
-                return;
-            }
-            var src = formdata.mapParams["source"];
-            Console.WriteLine(src);
-            Console.WriteLine(formdata.mapParams["data"]);
-            var data = NeoDun.SignTool.HexString2Bytes(formdata.mapParams["data"]);
+            src = _src;
+            data = NeoDun.SignTool.HexString2Bytes(_data);
             var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
             hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
 
-            isgetdata = false;
             confirmPasswordEventHandlerCallBack = null;
             confirmPasswordEventHandlerCallBack += ConfirmSign;
             isNeedConfirmPasswordCallBack(0x02,0x0a,"您正在进行签名验证，请输入你的密码");
-            while (true)
-            {
-                await Task.Delay(50);
-                if (isgetdata)
-                {
-                    break;
-                }
-            }
-
+        }   
+        private void ConfirmSign()
+        {
             {//发送待签名数据块
                 var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
                 block.data = data;
@@ -657,7 +642,7 @@ namespace driver_win
             uint remoteid = 0;
             while (true)
             {
-                await Task.Delay(5);
+                System.Threading.Thread.Sleep(100);
                 var __block = signer.dataTable.getBlockBySha256(hashstr);
                 if (__block.dataidRemote > 0 && __block.Check())
                 {
@@ -665,12 +650,12 @@ namespace driver_win
                     break;
                 }
             }
-            
+
             Watcher watcher = new Watcher();
             signer.watcherColl.AddWatcher(watcher);//加入监视器
-            
+
             NeoDun.Message signMsg = new NeoDun.Message();
-            
+
             {//发送签名报文
                 var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, src);
                 var addbytes = add.GetAddbytes();
@@ -679,43 +664,21 @@ namespace driver_win
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
                 signMsg.writeUInt16(0, (UInt16)add.type);//neo tag
                 Array.Copy(addbytes, 0, signMsg.data, 2, addbytes.Length);//addbytes
-            
+
                 //这个dataid 要上一个block 传送完毕了才知道
                 signMsg.writeUInt32(42, remoteid);
                 signer.SendMessage(signMsg, true);
             }
-            while (true)
-            {
-                await Task.Delay(5);
-                if (outdata != null)
-                    break;
-            }
-            
-            //读出来，拼为http响应，发回去
-            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            json["srchash"] = new MyJson.JsonNode_ValueString(hashstr);
 
-            var pubkeylen = outdata[0];
-            var pubkey = new byte[pubkeylen];
-            Array.Copy(outdata, 1, pubkey, 0, pubkeylen);
-            var signdata = outdata.Skip(pubkeylen + 1).ToArray();
-
-            json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
-            json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
-
-            signer.watcherColl.RemoveWatcher(watcher);
-            await context.Response.WriteAsync(json.ToString());
-        }
-        private void ConfirmSign()
-        {
-            isgetdata = true;
         }
 
+        public delegate void SignEventHandlerCallBack(byte[] outdata,string hashstr);
+        public event SignEventHandlerCallBack signEventHandlerCallBack;
         private void ConfirmSignCallBack(byte[] _outdata)
         {
-            outdata = _outdata;
-//            GetAddressList();
+            if (signEventHandlerCallBack != null)
+                signEventHandlerCallBack(_outdata, hashstr);
+            GetAddressList();
         }
 
 

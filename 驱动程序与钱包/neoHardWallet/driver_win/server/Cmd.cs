@@ -9,7 +9,7 @@ namespace hhgate
     class Cmd
     {
 
-        public static async Task<string> Call(string path, string text)
+        public static string Call(string path, string text)
         {
             int _end = 0;
             string outstr = "";
@@ -44,7 +44,8 @@ namespace hhgate
 
             while (_end == 0)
             {
-                await System.Threading.Tasks.Task.Delay(100);
+                System.Threading.Thread.Sleep(100);
+                // await System.Threading.Tasks.Task.Delay(100);
                 if((System.DateTime.Now -begin).TotalSeconds>10.0)
                 {
                     try
