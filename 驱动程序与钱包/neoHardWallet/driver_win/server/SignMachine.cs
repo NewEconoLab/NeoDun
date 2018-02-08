@@ -108,6 +108,8 @@ namespace hhgate
                 jsonr["msg"] = new MyJson.JsonNode_ValueString("unknown cmd.");
                 //await context.Response.WriteAsync(jsonr.ToString());
             }
+
+            linking = false;
             return;
 
         }
@@ -242,9 +244,9 @@ namespace hhgate
         //获取私钥
         private static void addressinfo(IOwinContext context, FormData formdata)
         {
-            if (formdata.mapParams.ContainsKey("addresstext") == false || formdata.mapParams.ContainsKey("addresstype") == false)
+            if (formdata.mapParams.ContainsKey("addresstext") == false)
             {
-                context.Response.Write("need param , addresstext&&addresstype");
+                context.Response.Write("need param , addresstext");
                 return;
             }
             string addressType = formdata.mapParams.ContainsKey("privatetype") ? formdata.mapParams["privatetype"] : "Neo";
@@ -252,7 +254,7 @@ namespace hhgate
 
             iOwinContext = context;
             driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack += addressinfoCallBack;
-            driver_win.DriverCtr.Ins.BackUpAddress(formdata.mapParams["addresstype"], addressText);
+            driver_win.DriverCtr.Ins.BackUpAddress(addressType, addressText);
             while (linking)
             {
                 System.Threading.Thread.Sleep(100);
@@ -261,6 +263,7 @@ namespace hhgate
         private static void addressinfoCallBack(string _privateKey)
         {
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["prikey"] = new MyJson.JsonNode_ValueString(_privateKey);
             iOwinContext.Response.WriteAsync(json.ToString());
             driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;

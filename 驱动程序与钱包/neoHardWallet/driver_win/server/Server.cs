@@ -97,7 +97,14 @@ namespace hhgate
                 var relativePath = spath.Substring(i + 1);
                 if (mapParser.ContainsKey(rootpath))
                 {
-                    mapParser[rootpath].HandleRequest(context, rootpath, relativePath);
+                    try
+                    {
+                        mapParser[rootpath].HandleRequest(context, rootpath, relativePath);
+                    }
+                    catch (Exception e)
+                    {
+                        context.Response.Write(e.ToString());
+                    }
                     return;
                 }
                 else
