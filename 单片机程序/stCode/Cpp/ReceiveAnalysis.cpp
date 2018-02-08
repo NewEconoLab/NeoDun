@@ -821,7 +821,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										char passport_new[6] = "";
 										u32 passport_array[6] = {0,0,0,0,0,0};
 										int len = Utils::ReadU16(data+4);								
-										u8* passport = data+6;
+										u8* passport = data+8;
 										
 										if((Utils::ReadU16(data+6))&&(len != 0))
 										{
