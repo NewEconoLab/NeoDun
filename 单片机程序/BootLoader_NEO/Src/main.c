@@ -47,6 +47,9 @@
 #include "timer.h"
 #include "stmflash.h"
 
+//#define test_for_debug
+
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 RNG_HandleTypeDef hrng;
@@ -118,7 +121,10 @@ int main(void)
 		Asc8_16(112,48,"load");
 		Asc8_16(206,48,"clear");
 
+#ifdef test_for_debug
 //		Get_StatusOfWallet();
+#endif
+		
 		//进入循环前，清除按键标志位
 		left_key_flag = 0;
 		center_key_flag = 0;
@@ -164,6 +170,7 @@ int main(void)
 						Asc8_16(80,29,"Clear Finish");
 						right_key_flag = 0;
 				}
+#ifdef test_for_debug				
 				if(double_key_flag)//生产测试功能
 				{
 						Fill_RAM(0x00);
@@ -195,6 +202,7 @@ int main(void)
 								}
 						}
 				}
+#endif				
 				if(wallet_status)//新钱包，设置PIN码
 				{
 						wallet_status = 0;
