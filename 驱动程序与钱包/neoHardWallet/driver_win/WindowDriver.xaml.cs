@@ -301,6 +301,8 @@ namespace driver_win
         {
             //解绑各种委托
             driverCtr.addAddressEventHandlerCallBack -= AddAddressCallBack;
+            driverCtr.deleteAddressEventHandlerCallBack -= DeleteAddressCallBack;
+            driverCtr.backUpAddressEventHandlerCallBack -= BackUpPrivateKeyCallBack;
             driverCtr.getAddresslistEventHandlerCallBack -= GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack -= LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack -= GetSingerInfoCallBack;

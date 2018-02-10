@@ -333,8 +333,8 @@ namespace NeoDun
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe0)
                 {
-                    if (backUpAddressEventHandler != null)
-                        backUpAddressEventHandler(false,"");
+                    if (errorEventHandler != null)
+                        errorEventHandler("异常处理~~~钱包拒绝访问","警告");
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc3)//设置密码成功
                 {

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NeoDun;
 using driver_win;
+using System.Text.RegularExpressions;
+
 namespace hhgate
 {
     public class SignMachine : CustomServer.IParser
@@ -26,6 +28,8 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
+
+            /*
             if (linking)
             {
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
@@ -34,6 +38,7 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
+            */
 
             if (relativePath == "ver")
             {
@@ -87,7 +92,7 @@ namespace hhgate
             else if (relativePath == "addaddress")
             {
                 linking = true;
-                addAddress(context,formdata);
+                addAddress(context, formdata);
             }
             else if (relativePath == "deladdress")
             {
@@ -98,7 +103,13 @@ namespace hhgate
             else if (relativePath == "addressinfo")
             {
                 linking = true;
-                addressinfo(context,formdata);
+                addressinfo(context, formdata);
+                return;
+            }
+            else if (relativePath == "comfirmpassword")
+            {
+                comfirming = true;
+                comfirmpassword(context, formdata);
                 return;
             }
             else
@@ -109,7 +120,6 @@ namespace hhgate
                 //await context.Response.WriteAsync(jsonr.ToString());
             }
 
-            linking = false;
             return;
 
         }
@@ -159,10 +169,15 @@ namespace hhgate
             }
         }
 
+        private static int timeoutTime = 2000000;
+        private static int time = 0;
+
         private static bool linking = false;
+        private static bool comfirming = false;
         private static IOwinContext iOwinContext;
+        private static IOwinContext iOwinContext_pw;
         //增加地址
-        private static void addAddress(IOwinContext context, FormData formdata)
+        private static void  addAddress(IOwinContext context, FormData formdata)
         {
             /// privateKey : 35673ECF9F18F44EBD1C9FC7CAC4327D72EEB08104EFFD20FBBB621341B80AC1
             if (formdata.mapParams.ContainsKey("wif") == false)
@@ -181,11 +196,21 @@ namespace hhgate
             while (linking)
             {
                 System.Threading.Thread.Sleep(100);
+                time += 100;
+                if (time > timeoutTime)
+                {
+                    iOwinContext.Response.Write("timeout");
+                    linking = false;
+                }
             }
-            
+            driver_win.DriverCtr.Ins.addAddressEventHandlerCallBack -= addAddressCallBack;
+
+            iOwinContext = null;
         }
         private static void addAddressCallBack(bool suc)
         {
+            if (iOwinContext == null)
+                return;
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             if (suc)
@@ -197,8 +222,6 @@ namespace hhgate
                 json["msg"] = new MyJson.JsonNode_ValueString("failed");
             }
             iOwinContext.Response.Write(json.ToString());
-            driver_win.DriverCtr.Ins.addAddressEventHandlerCallBack -= addAddressCallBack;
-
             linking = false;
         }
 
@@ -207,7 +230,7 @@ namespace hhgate
         {
             if (formdata.mapParams.ContainsKey("addresstext") == false)
             {
-                context.Response.WriteAsync("need param，addresstext");
+                context.Response.Write("need param，addresstext");
                 return;
             }
             string addressType = formdata.mapParams.ContainsKey("privatetype") ? formdata.mapParams["privatetype"] : "Neo";
@@ -216,14 +239,23 @@ namespace hhgate
             iOwinContext = context;
             driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack += delAddressCallBack;
             driver_win.DriverCtr.Ins.DeleteAddress(addressType, addressText);
-
             while (linking)
             {
                 System.Threading.Thread.Sleep(100);
+                time += 100;
+                if (time > timeoutTime)
+                {
+                    iOwinContext.Response.Write("timeout");
+                    linking = false;
+                }
             }
+            driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack -= delAddressCallBack;
+            iOwinContext = null;
         }
         private static void delAddressCallBack(bool suc)
         {
+            if (iOwinContext == null)
+                return;
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             if (suc)
@@ -236,9 +268,7 @@ namespace hhgate
             }
 
             iOwinContext.Response.WriteAsync(json.ToString());
-            driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack -= delAddressCallBack;
             linking = false;
-
         }
 
         //获取私钥
@@ -258,16 +288,26 @@ namespace hhgate
             while (linking)
             {
                 System.Threading.Thread.Sleep(100);
+                time += 100;
+                if (time > timeoutTime)
+                {
+                    iOwinContext.Response.Write("timeout");
+                    linking = false;
+                }
             }
+            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
+            iOwinContext = null;
         }
         private static void addressinfoCallBack(string _privateKey)
         {
+            if (iOwinContext == null)
+                return;
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["prikey"] = new MyJson.JsonNode_ValueString(_privateKey);
             iOwinContext.Response.WriteAsync(json.ToString());
-            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
             linking = false;
+
         }
 
 
@@ -286,10 +326,20 @@ namespace hhgate
             while (linking)
             {
                 System.Threading.Thread.Sleep(100);
+                time += 100;
+                if (time > timeoutTime)
+                {
+                    iOwinContext.Response.Write("timeout");
+                    linking = false;
+                }
             }
+            driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
+            iOwinContext = null;
         }
         private static void signCallBack(byte[] outdata,string hashstr)
         {
+            if (iOwinContext == null)
+                return;
             //读出来，拼为http响应，发回去
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
@@ -304,8 +354,68 @@ namespace hhgate
             json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
 
             iOwinContext.Response.Write(json.ToString());
-            driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
             linking = false;
+        }
+
+
+        //验证密码
+        private static void comfirmpassword(IOwinContext context, FormData formdata)
+        {
+            if (formdata.mapParams.ContainsKey("password") == false)
+            {
+                context.Response.Write("need param，password");
+                return;
+            }
+
+            string password = formdata.mapParams["password"];
+
+            //判断密码是否是6位并且全部是数字
+            if (password.Length == 6 && !Regex.IsMatch(password, @"^\d*$"))
+            {
+                context.Response.Write("need six length and number password");
+                return;
+            }
+
+            iOwinContext_pw = context;
+            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 += comfirmpasswordCallBack;
+            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 += comfirmpasswordFaildCallBack;
+            driver_win.DriverCtr.Ins.SetOrConfirmPassword(password);
+            while (comfirming)
+            {
+                int time = 0;
+                System.Threading.Thread.Sleep(100);
+                time += 100;
+                if (time > 30000)
+                {
+                    context.Response.Write("timeout");
+                    break;
+                }
+            }
+            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
+            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
+            iOwinContext_pw = null;
+        }
+        //成功验证回掉
+        private static void comfirmpasswordCallBack()
+        {
+            if (iOwinContext_pw == null)
+                return;
+            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
+            json["msg"] = new MyJson.JsonNode_ValueString("success");
+            iOwinContext_pw.Response.Write(json.ToString());
+            comfirming = false;
+        }
+        //失败验证回掉
+        private static void comfirmpasswordFaildCallBack()
+        {
+            if (iOwinContext == null)
+                return;
+            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
+            json["msg"] = new MyJson.JsonNode_ValueString("faild");
+            iOwinContext_pw.Response.Write(json.ToString());
+            comfirming = false;
         }
     }
 

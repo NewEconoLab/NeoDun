@@ -300,6 +300,7 @@ namespace driver_win
             }
             else
             { //向钱包验证密码
+                //判断是不是已经再验证密码
                 if (pwlock)
                 {
                     ErrorCallBack("正在执行，请勿重复操作", "通知");
@@ -335,21 +336,32 @@ namespace driver_win
             confirmPasswordEventHandlerCallBack = null;
             setPasswordEventHandlerCallBack("请输入你的密码(6位)");
         }
-        //验证密码成功
+        //验证密码结果
         public delegate void ConfirmPasswordEventHandlerCallBack();
         public event ConfirmPasswordEventHandlerCallBack confirmPasswordEventHandlerCallBack;//密码验证成功之后要做的事情
         public event ConfirmPasswordEventHandlerCallBack confirmPasswordfaildEventHandlerCallBack;//密码验证失败之后要做的事情
+        public event ConfirmPasswordEventHandlerCallBack confirmPasswordEventHandlerCallBack2;//密码验证成功之后要做的事情(接口)
+        public event ConfirmPasswordEventHandlerCallBack confirmPasswordfaildEventHandlerCallBack2;//密码验证失败之后要做的事情(接口)
         public async void ConfirmPasswordCallBack(bool _suc)
         {
             pwlock = false;
             if (_suc)
             {
                 await Task.Delay(50);
+                if (confirmPasswordEventHandlerCallBack2 != null)
+                {
+                    confirmPasswordEventHandlerCallBack2();
+                }
                 confirmPasswordEventHandlerCallBack();
                 confirmPasswordEventHandlerCallBack = null;
             }
             else
             {
+                if (confirmPasswordfaildEventHandlerCallBack2 != null)
+                {
+                    confirmPasswordfaildEventHandlerCallBack2();
+                    return;
+                }
                 confirmPasswordfaildEventHandlerCallBack();
             }
         }
@@ -454,6 +466,7 @@ namespace driver_win
                 if (__block.dataidRemote > 0 && __block.Check())
                 {
                     remoteid = __block.dataidRemote;
+                    __block.dataidRemote = 0;
                     break;
                 }
                 //if (time > 5000)
@@ -470,6 +483,7 @@ namespace driver_win
             Array.Copy(bytes_address, 0, signMsg.data, 2, bytes_address.Length);
             //这个dataid 要上一个block 传送完毕了才知道
             signMsg.writeUInt32(42, remoteid);
+            //await Task.Delay(50);
             signer.SendMessage(signMsg, true);
         }
         public delegate void AddAddressEventHandlerCallBack(bool _suc);
@@ -658,6 +672,7 @@ namespace driver_win
                 if (__block.dataidRemote > 0 && __block.Check())
                 {
                     remoteid = __block.dataidRemote;
+                    __block.dataidRemote = 0;
                     break;
                 }
             }
