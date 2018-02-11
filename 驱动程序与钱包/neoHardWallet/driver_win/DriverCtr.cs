@@ -609,7 +609,8 @@ namespace driver_win
             {
                 backUpAddressEventHandlerCallBack(false,"");
             }
-            GetAddressList();
+
+            getAddresslistEventHandlerCallBack();
         }
         #endregion
 
@@ -704,7 +705,8 @@ namespace driver_win
                 signEventHandlerCallBack(_outdata, hashstr, suc);
 
             System.Threading.Thread.Sleep(100);
-            GetAddressList();
+
+            getAddresslistEventHandlerCallBack();
         }
 
 

@@ -28,8 +28,6 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
-
-            /*
             if (linking)
             {
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
@@ -38,8 +36,6 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
-            */
-
             if (relativePath == "ver")
             {
                 ver(context, formdata);
@@ -169,7 +165,7 @@ namespace hhgate
             }
         }
 
-        private static int timeoutTime = 2000000;
+        private static int timeoutTime = 30000;
         private static int time = 0;
 
         private static bool linking = false;
@@ -199,13 +195,11 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
-                    iOwinContext.Response.Write("timeout");
                     linking = false;
+                    iOwinContext.Response.Write("timeout");
+                    driver_win.DriverCtr.Ins.GetAddressList();
                 }
             }
-            driver_win.DriverCtr.Ins.addAddressEventHandlerCallBack -= addAddressCallBack;
-
-            iOwinContext = null;
         }
         private static void addAddressCallBack(bool suc)
         {
@@ -221,8 +215,10 @@ namespace hhgate
             {
                 json["msg"] = new MyJson.JsonNode_ValueString("failed");
             }
-            iOwinContext.Response.Write(json.ToString());
             linking = false;
+            iOwinContext.Response.Write(json.ToString());
+            driver_win.DriverCtr.Ins.addAddressEventHandlerCallBack -= addAddressCallBack;
+            iOwinContext = null;
         }
 
         //删除地址
@@ -245,12 +241,12 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
-                    iOwinContext.Response.Write("timeout");
                     linking = false;
+                    iOwinContext.Response.Write("timeout");
+                    driver_win.DriverCtr.Ins.GetAddressList();
                 }
             }
-            driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack -= delAddressCallBack;
-            iOwinContext = null;
+
         }
         private static void delAddressCallBack(bool suc)
         {
@@ -266,9 +262,10 @@ namespace hhgate
             {
                 json["msg"] = new MyJson.JsonNode_ValueString("failed");
             }
-
-            iOwinContext.Response.WriteAsync(json.ToString());
             linking = false;
+            iOwinContext.Response.WriteAsync(json.ToString());
+            driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack -= delAddressCallBack;
+            iOwinContext = null;
         }
 
         //获取私钥
@@ -291,12 +288,11 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
-                    iOwinContext.Response.Write("timeout");
                     linking = false;
+                    iOwinContext.Response.Write("timeout");
+                    driver_win.DriverCtr.Ins.GetAddressList();
                 }
             }
-            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
-            iOwinContext = null;
         }
         private static void addressinfoCallBack(bool suc,string _privateKey)
         {
@@ -314,9 +310,11 @@ namespace hhgate
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("faild");
             }
-            iOwinContext.Response.WriteAsync(json.ToString());
             linking = false;
+            iOwinContext.Response.WriteAsync(json.ToString());
 
+            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
+            iOwinContext = null;
         }
 
 
@@ -338,12 +336,12 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
-                    iOwinContext.Response.Write("timeout");
                     linking = false;
+                    iOwinContext.Response.Write("timeout");
+                    driver_win.DriverCtr.Ins.GetAddressList();
                 }
             }
-            driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
-            iOwinContext = null;
+
         }
         private static void signCallBack(byte[] outdata,string hashstr,bool suc)
         {
@@ -370,9 +368,11 @@ namespace hhgate
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
                 json["msg"] = new MyJson.JsonNode_ValueString("faild");
             }
-
-            iOwinContext.Response.Write(json.ToString());
             linking = false;
+            iOwinContext.Response.Write(json.ToString());
+
+            driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
+            iOwinContext = null;
         }
 
 
@@ -406,12 +406,10 @@ namespace hhgate
                 if (time > 30000)
                 {
                     context.Response.Write("timeout");
+                    driver_win.DriverCtr.Ins.GetAddressList();
                     break;
                 }
             }
-            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
-            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
-            iOwinContext_pw = null;
         }
         //成功验证回掉
         private static void comfirmpasswordCallBack()
@@ -432,8 +430,11 @@ namespace hhgate
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["msg"] = new MyJson.JsonNode_ValueString("faild");
-            iOwinContext_pw.Response.Write(json.ToString());
             comfirming = false;
+            iOwinContext_pw.Response.Write(json.ToString());
+            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
+            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
+            iOwinContext_pw = null;
         }
     }
 
