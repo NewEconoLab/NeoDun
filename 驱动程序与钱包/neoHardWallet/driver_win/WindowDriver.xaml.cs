@@ -18,6 +18,8 @@ namespace driver_win
         public static NeoDun.Signer signer = NeoDun.Signer.Ins;
         public static DriverCtr driverCtr = DriverCtr.Ins;
 
+        public static bool isShowMsg = true;
+
         //当前选中的地址
         Address selectAddress = new Address();
         //缓存住的密码 
@@ -115,7 +117,7 @@ namespace driver_win
             string str_addressText = selectAddress.AddressText;
             if (string.IsNullOrEmpty(str_addressType) || string.IsNullOrEmpty(str_addressText))
             {
-                MessageBox.Show("请选择要删除的地址", "错误");
+                ErrorMsgShow("请选择要删除的地址", "错误");
                 return;
             }
             DeleteAddress();
@@ -373,7 +375,7 @@ namespace driver_win
         private void SetSettingConfigCallBack()
         {
             Dispatcher.Invoke((Action)delegate () {
-                MessageBox.Show("设置成功", "提示");
+                ErrorMsgShow("设置成功", "提示");
             });
         }
         //需要密码验证
@@ -393,7 +395,7 @@ namespace driver_win
                 this.pwLabel.Content = "请输入密码";
                 //显示密码验证的页面
                 ShowPwPage();
-                MessageBox.Show("密码错误", "提示");
+                ErrorMsgShow("密码错误", "提示");
             });
         }
 
@@ -423,7 +425,7 @@ namespace driver_win
                 this.lb_address.Text = _address;
                 if (!string.IsNullOrEmpty(err))
                 {
-                    MessageBox.Show(err, "提示");
+                    ErrorMsgShow(err, "提示");
                 }
             });
            
@@ -437,7 +439,7 @@ namespace driver_win
             Dispatcher.Invoke((Action) delegate()
             {
                 if (!_suc)
-                    MessageBox.Show("已经拥有该地址或数据非法","通知");
+                    ErrorMsgShow("已经拥有该地址或数据非法","通知");
                 //隐藏增加地址的页面
                 HideAddBox();
             });
@@ -452,9 +454,9 @@ namespace driver_win
         {
             Dispatcher.Invoke((Action) delegate() {
                 if (suc)
-                    MessageBox.Show("删除成功", "提示");
+                    ErrorMsgShow("删除成功", "提示");
                 else
-                    MessageBox.Show("删除失败", "提示");
+                    ErrorMsgShow("删除失败", "提示");
             });
         }
 
@@ -467,7 +469,7 @@ namespace driver_win
             string str_addressText = selectAddress.AddressText;
             if (string.IsNullOrEmpty(str_addressType) || string.IsNullOrEmpty(str_addressText))
             {
-                MessageBox.Show("请选择要备份的地址", "错误");
+                ErrorMsgShow("请选择要备份的地址", "错误");
                 return;
             }
             driverCtr.BackUpAddress(str_addressType, str_addressText);
@@ -478,9 +480,9 @@ namespace driver_win
             Dispatcher.Invoke((Action)  delegate()
             {
                 if(string.IsNullOrEmpty(_str))
-                    MessageBox.Show("备份失败" + _str, "通知");
+                    ErrorMsgShow("备份失败" + _str, "通知");
                 else
-                    MessageBox.Show("已经成功备份"+ _str, "通知");
+                    ErrorMsgShow("已经成功备份"+ _str, "通知");
             });
         }
 
@@ -503,7 +505,7 @@ namespace driver_win
 
         private void DevelopingFun(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("功能暂未开放","通知");
+            ErrorMsgShow("功能暂未开放","通知");
         }
        
 

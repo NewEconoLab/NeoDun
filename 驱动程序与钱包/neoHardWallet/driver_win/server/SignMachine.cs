@@ -336,22 +336,31 @@ namespace hhgate
             driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
             iOwinContext = null;
         }
-        private static void signCallBack(byte[] outdata,string hashstr)
+        private static void signCallBack(byte[] outdata,string hashstr,bool suc)
         {
             if (iOwinContext == null)
                 return;
             //读出来，拼为http响应，发回去
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            json["srchash"] = new MyJson.JsonNode_ValueString(hashstr);
+            if (suc)
+            {
+                json["tag"] = new MyJson.JsonNode_ValueNumber(0);
+                json["msg"] = new MyJson.JsonNode_ValueString("success");
+                json["srchash"] = new MyJson.JsonNode_ValueString(hashstr);
 
-            var pubkeylen = outdata[0];
-            var pubkey = new byte[pubkeylen];
-            Array.Copy(outdata, 1, pubkey, 0, pubkeylen);
-            var signdata = outdata.Skip(pubkeylen + 1).ToArray();
+                var pubkeylen = outdata[0];
+                var pubkey = new byte[pubkeylen];
+                Array.Copy(outdata, 1, pubkey, 0, pubkeylen);
+                var signdata = outdata.Skip(pubkeylen + 1).ToArray();
 
-            json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
-            json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
+                json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
+                json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
+            }
+            else
+            {
+                json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
+                json["msg"] = new MyJson.JsonNode_ValueString("faild");
+            }
 
             iOwinContext.Response.Write(json.ToString());
             linking = false;

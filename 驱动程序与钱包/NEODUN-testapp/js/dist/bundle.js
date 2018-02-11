@@ -19856,7 +19856,7 @@ var vm = new Vue({
             $('#loader').modal('show');
             console.log("this.businessMessage.toAddress"+this.businessMessage.toAddress);
             api.sendAssetTransaction(api.TESTNET, this.businessMessage.toAddress, wallet.getWIFFromPrivateKey(privateKey), 'AntShares', this.businessMessage.amount).then(function (response) {
-                if (response.data.result) {
+                if (response.data && response.data.result) {
                     $('#loader').modal('hide');
                     $('#businessAlert').modal('hide');
                     _this2.alertMessage = "交易成功";
@@ -39962,7 +39962,9 @@ var getTransactions = exports.getTransactions = function getTransactions(net, so
             return signData(transaction, fromAccount.address).then((res) => {
                 //var sign = (0, _wallet.signatureData)(transaction, fromAccount.privatekey);
                 //var publickeyEncoded = fromAccount.publickeyEncoded;
-
+                if (res.data.tag == -1) {
+                    return res.data.msg;
+                }
                 var publickeyEncoded2 = res.data.pubkey;
                 var sign2 = res.data.signdata;
                 console.log("sign:" + sign2);

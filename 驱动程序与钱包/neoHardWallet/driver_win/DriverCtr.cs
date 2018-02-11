@@ -698,12 +698,12 @@ namespace driver_win
 
         }
 
-        public delegate void SignEventHandlerCallBack(byte[] outdata,string hashstr);
+        public delegate void SignEventHandlerCallBack(byte[] outdata,string hashstr,bool suc);
         public event SignEventHandlerCallBack signEventHandlerCallBack;
-        private void ConfirmSignCallBack(byte[] _outdata)
+        private void ConfirmSignCallBack(byte[] _outdata,bool suc)
         {
             if (signEventHandlerCallBack != null)
-                signEventHandlerCallBack(_outdata, hashstr);
+                signEventHandlerCallBack(_outdata, hashstr, suc);
             GetAddressList();
         }
 
@@ -717,6 +717,7 @@ namespace driver_win
         {
             if (errorEventHandlerCallBack != null)
                 errorEventHandlerCallBack(msg, header);
+            GetAddressList();
         }
         #endregion
 

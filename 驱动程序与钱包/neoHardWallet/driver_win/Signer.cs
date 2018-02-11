@@ -78,7 +78,7 @@ namespace NeoDun
         public delegate void BackUpAddressEventHandler(bool suc ,string _privateKey);
         public BackUpAddressEventHandler backUpAddressEventHandler;
 
-        public delegate void SignEventHandler(byte[] _bytes);
+        public delegate void SignEventHandler(byte[] _bytes,bool suc);
         public SignEventHandler signEventHandler;
 
         public delegate void ShowSignerPasswordPageEventHandler();
@@ -336,6 +336,11 @@ namespace NeoDun
                     if (errorEventHandler != null)
                         errorEventHandler("异常处理~~~钱包拒绝访问","警告");
                 }
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
+                {
+                    if (signEventHandler != null)
+                        signEventHandler(null,false);
+                }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xc3)//设置密码成功
                 {
                     if(setPasswordEventHandler!=null)
@@ -400,9 +405,9 @@ namespace NeoDun
                         }
                     }
                     if(signEventHandler!=null)
-                        signEventHandler(outdata);
+                        signEventHandler(outdata,true);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xe1)
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xd5)
                 {
                     showSignerPasswordPageEventHandler();
                 }
