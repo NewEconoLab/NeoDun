@@ -154,10 +154,10 @@ void DisplayMem::drawString(int x, int y, char* c, FONT_t font) {
 		this->drawChar(x, y, c[i], font, false);
 		switch (font) {
 		case FONT_5X8:
-			x += 5;
+			x += 8;
 			break;
 		case FONT_6X12:
-			x += 6;
+			x += 8;
 			break;
 		case FONT_8X16:
 			x += 8;
@@ -185,10 +185,10 @@ void DisplayMem::drawString(int x, int y, char* c, FONT_t font,
 		this->drawChar(x, y, c[i], font, isReverse);
 		switch (font) {
 		case FONT_5X8:
-			x += 5;
+			x += 8;
 			break;
 		case FONT_6X12:
-			x += 6;
+			x += 8;
 			break;
 		case FONT_8X16:
 			x += 8;
@@ -208,10 +208,10 @@ void DisplayMem::drawLineSpace( int y, FONT_t font) {
 	int w = 0;
 	switch (font) {
 	case FONT_5X8:
-		w += 5;
+		w += 8;
 		break;
 	case FONT_6X12:
-		w += 6;
+		w += 8;
 		break;
 	case FONT_8X16:
 		w += 8;
@@ -313,7 +313,7 @@ void DisplayMem::drawHZString(int x, int y , int num1, int num2, FONT_HZ_t font)
 				switch (font) 
 				{
 				case FONT_12X12:
-					x += 12;
+					x += 16;
 					break;
 				case FONT_16X16:
 					x += 16;
@@ -342,7 +342,7 @@ void DisplayMem::drawHZString(int x, int y , int num1, int num2, FONT_HZ_t font,
 				switch (font) 
 				{
 				case FONT_12X12:
-					x += 12;
+					x += 16;
 					break;
 				case FONT_16X16:
 					x += 16;

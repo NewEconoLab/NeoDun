@@ -827,12 +827,15 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										{
 												//memset(passport_new,0,6);
 												Utils::HexToNum(passport,len,passport_new);
-				#ifdef printf_debug							
+#ifdef printf_debug							
 												printf("passport_new: %s\r\n",passport_new);
-				#endif							
+#endif							
 												for(i=0;i<6;i++)
 												{
 														passport_array[i] = passport_num[passport_new[i] - 0x31];
+#ifdef printf_debug													
+														printf("%d ",passport_array[i]);
+#endif													
 												}	
 				//								view::DisplayMem::getInstance().GetPassportFromString((u8*)passport_new,passport_num,passport_array);								
 												Update_Passport(passport_array);//更新FLASH中密码的值
@@ -888,7 +891,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										passport_array[i] = passport_num[passport_new[i] - 0x31];
 								}														
 								Get_Passport(passport_old);
-								if(Utils::MemoryCompare(passport_old,passport_array,6))
+								if(Utils::PassportMemoryCompare(passport_old,passport_array,6))
 								{
 										Commands command( CMD_VERIFY_OK, serialId);//告知上位机密码验证通过
 										command.AppendU16(function_code);
@@ -933,7 +936,12 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								view::DisplayMem::getInstance().clearAll();
 								view::DisplayMem::getInstance().drawString(0,0,"PassPort:");
 								value = view::DisplayMem::getInstance().GetPassportArray(passport_num); //开机显示随机9宫格密码
-								
+#ifdef printf_debug
+								printf("******  Passport \r\n");
+								for(int m = 0;m<9;m++)
+										printf("%d ",passport_num[m]);
+								printf("\r\n");
+#endif														
 								if(value)
 								{
 										Commands command( CMD_SHOW_OK, serialId);

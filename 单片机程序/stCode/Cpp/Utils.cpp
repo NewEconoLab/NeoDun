@@ -137,6 +137,18 @@ bool Utils::MemoryCompare(void* left, void* right, int size)
 		return true;
 }
 
+bool Utils::PassportMemoryCompare(u32 *left, u32 *right, int size) 
+{
+		for(int i = 0 ; i < size ; i ++)
+		{
+				if( left[i]  != right[i] )
+				{
+						return false;
+				}
+		}
+		return true;
+}
+
 void Utils::HexToNum(u8 *src,int len, char *dec)
 {
 		for(int i=0;i<len;i++)
