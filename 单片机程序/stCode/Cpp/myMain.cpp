@@ -72,11 +72,6 @@ void my_main()
 
 		Disp.drawString(0,0,"PassPort:");
 		Disp.GetPassportArray(passport_num); //开机显示随机9宫格密码
-
-//		printf("******  Passport \r\n");
-//		for(int m = 0;m<9;m++)
-//				printf("%d ",passport_num[m]);
-//		printf("\r\n");
 	
 //		//这两句作为调试		
 //		Disp.drawString(92,20,"NeoDun",view::FONT_12X24);

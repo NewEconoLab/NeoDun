@@ -3,8 +3,6 @@
 
 #include "stm32f4xx.h"
 
-//#define Printf
-
 typedef struct
 {
     int type;

@@ -31,6 +31,7 @@
 
 #define CMD_GET_PRIKEY							0x0206		//获取安全信息
 #define CMD_RETURN_MESSAGE					0x02a4
+#define CMD_GET_PRIKEY_FAILED				0x02e0
 
 #define CMD_QUERY_ADDRESS						0x0201		//查询设备地址情况
 #define CMD_RETURN_ADDRESS					0x02a0		//返回一条地址
@@ -38,7 +39,7 @@
 
 #define CMD_SIGN_DATA								0x020a		//数据签名
 #define CMD_SIGN_OK									0x02a8
-#define CMD_SIGN_FAILED							0x02e0
+#define CMD_SIGN_FAILED							0x02e3
 
 #define CMD_SET_PASSPORT						0x020b		//设置密码
 #define CMD_SET_OK									0x02c3
@@ -61,8 +62,8 @@
 #define CMD_GET_INFO_FAILED					0x02d2
 
 #define CMD_SHOW_PASSPORT						0x021c		//上位机发起密码验证，告诉下位机显示密码界面
-#define CMD_SHOW_OK									0x02e1
-#define CMD_SHOW_FAILED							0x02e2									
+#define CMD_SHOW_OK									0x02d5
+#define CMD_SHOW_FAILED							0x02e2
 
 //#define CMD_CLEAR_ALL_CACHE					0x0200		//清除所有缓存数据
 //#define CMD_TRANSMIT_BLOCK_DATA			0x0201		//传输一块数据

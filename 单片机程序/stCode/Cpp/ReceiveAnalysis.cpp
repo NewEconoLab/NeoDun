@@ -548,7 +548,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														else if((Key_Flag.Sign_Key_left_Flag)||(Key_Flag.Sign_Key_right_Flag))//拒绝
 														{
 																Key_Flag.Sign_Key_Flag = 0;
-																Commands command( CMD_SIGN_FAILED, serialId);
+																Commands command( CMD_GET_PRIKEY_FAILED, serialId);
 																command.SendToPc();
 																break;								
 														}
@@ -577,31 +577,31 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												u16 addressType = Utils::ReadU16(data + 4);							  							
 												u32 dataId0 = Utils::ReadU32(data +46);
 												u8 privateKey[32];
-		#ifdef printf_debug								
+#ifdef printf_debug								
 												printf("sign data\r\n");
 												printf("addressType = 0x%04x\r\n",addressType);	
 												printf("dataId0 = %d\r\n",dataId0);
-		#endif							
+#endif							
 												if(addressType == ADDR_XiaoYi)
 												{									
 														u8 * content = data+6;
 														int tempLen = 0;
-		#ifdef printf_debug									
+#ifdef printf_debug									
 														//Utils::PrintArray(content,25);
-		#endif										
+#endif										
 														Alg_Base58Encode(content , 25 ,temp,&tempLen );
 														count = Get_Count_Num();
 														address_flash = Get_Flash_Address(temp,count);						
 												}
 												memset(privateKey,0,32);
 												STMFLASH_Read(address_flash+40,(u32 *)privateKey,8);
-		#ifdef printf_debug									
+#ifdef printf_debug									
 		//										printf("privateKey:\r\n");
 		//										Utils::PrintArray(privateKey,32);
-		#endif																													
+#endif																													
 												SIGN_Out_Para Sign;
 												memset(&Sign,0,sizeof(Sign));
-												int result = Alg_ShowSignData(this->dataSave,this->dataLen,&Sign);//?????
+												int result = Alg_ShowSignData(this->dataSave,this->dataLen,&Sign);
 												if(result == 1)
 												{
 														Commands command( CMD_SIGN_FAILED, serialId);
@@ -669,13 +669,11 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														else
 																view::DisplayMem::getInstance().drawString(count_bit,0,"NEO");
 														count_bit = count_bit + 28;//3*8 + 4											
-														
-														//给
-														view::DisplayMem::getInstance().drawHZString(count_bit,0,24,24);
-														//显示地址
-														view::DisplayMem::getInstance().drawString(0,16,Sign.address[i],view::FONT_6X12);
-		//												//确认发送？
-		//												view::DisplayMem::getInstance().drawHZString(0,32,4,8);												
+#ifdef printf_debug															
+														printf("address:%s\r\n",Sign.address[i]);
+#endif														
+														view::DisplayMem::getInstance().drawHZString(count_bit,0,24,24);//给
+														view::DisplayMem::getInstance().drawString(0,16,Sign.address[i],view::FONT_6X12);//显示地址											
 														//取消  确定  取消
 														view::DisplayMem::getInstance().drawHZString(36,48,9,10);
 														view::DisplayMem::getInstance().drawHZString(124,48,4,5);	
@@ -706,10 +704,10 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																Alg_ECDSASignData(this->dataSave,this->dataLen,resultsign,&len,privateKey);														
 																//组合成最终的数据，长度1字节+公钥33字节+签名结果64字节
 																PrivateKey prkey(privateKey);													
-		#ifdef printf_debug									
+#ifdef printf_debug									
 																printf("privateKey:\r\n");
 																Utils::PrintArray(prkey.getData(),32);
-		#endif															
+#endif															
 																PublicKey pubK = prkey.GetPublicKey(true);
 																uint8_t pubKEY[33]; 
 																memmove(pubKEY,pubK.getData(),33);
@@ -726,18 +724,18 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																memmove(this->dataSave + DATA_PACK_SIZE, resultsignRecord + DATA_PACK_SIZE,98-DATA_PACK_SIZE);
 																
 																Utils::Sha256(resultsign, 64, hash_sign, 32);														
-		#ifdef printf_debug														
+#ifdef printf_debug														
 																printf("hash\r\n");
 																Utils::PrintArray(hash_all,32);																												
 																Utils::PrintArray(hash_sign,32);
 																printf("*********************************\r\n");
 																Utils::PrintArray(resultsignRecord,98);
-		#endif															
+#endif															
 																this->reqSerial = Utils::RandomInteger();
 																Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,98,hash_all,32);
-		#ifdef HID_Delay														
+#ifdef HID_Delay														
 																HAL_Delay(delay_hid);
-		#endif														
+#endif														
 																Commands::getInstance().SendHidFrame(CMD_SIGN_OK,serialId_sign_data,98,hash_all,32);																												
 																view::DisplayMem::getInstance().clearAll();//清屏
 																view::DisplayMem::getInstance().drawString(92,20,"NeoDun",view::FONT_12X24);
