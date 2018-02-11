@@ -279,9 +279,6 @@ namespace driver_win
         private void Init()
         {
             //初始化各种委托     ps：验证密码的委托在方法里动态赋值
-            driverCtr.addAddressEventHandlerCallBack += AddAddressCallBack;
-            driverCtr.deleteAddressEventHandlerCallBack += DeleteAddressCallBack;
-            driverCtr.backUpAddressEventHandlerCallBack += BackUpPrivateKeyCallBack;
             driverCtr.getAddresslistEventHandlerCallBack += GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack += LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack += GetSingerInfoCallBack;
@@ -302,9 +299,6 @@ namespace driver_win
         private void UInit()
         {
             //解绑各种委托
-            driverCtr.addAddressEventHandlerCallBack -= AddAddressCallBack;
-            driverCtr.deleteAddressEventHandlerCallBack -= DeleteAddressCallBack;
-            driverCtr.backUpAddressEventHandlerCallBack -= BackUpPrivateKeyCallBack;
             driverCtr.getAddresslistEventHandlerCallBack -= GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack -= LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack -= GetSingerInfoCallBack;
@@ -432,12 +426,14 @@ namespace driver_win
         }
         private void AddAddress()
         {
+            driverCtr.addAddressEventHandlerCallBack += AddAddressCallBack;
             driverCtr.AddAddress(this.lb_address.Text, this.tx_privateKey.Text);
         }
         private void AddAddressCallBack(bool _suc)
         {
             Dispatcher.Invoke((Action) delegate()
             {
+                driverCtr.addAddressEventHandlerCallBack -= AddAddressCallBack;
                 if (!_suc)
                     ErrorMsgShow("已经拥有该地址或数据非法","通知");
                 //隐藏增加地址的页面
@@ -448,11 +444,13 @@ namespace driver_win
         //删除地址
         private void DeleteAddress()
         {
+            driverCtr.deleteAddressEventHandlerCallBack += DeleteAddressCallBack;
             driverCtr.DeleteAddress(selectAddress.type.ToString(), selectAddress.AddressText.ToString());
         }
         private void DeleteAddressCallBack(bool suc)
         {
             Dispatcher.Invoke((Action) delegate() {
+                driverCtr.deleteAddressEventHandlerCallBack -= DeleteAddressCallBack;
                 if (suc)
                     ErrorMsgShow("删除成功", "提示");
                 else
@@ -463,6 +461,7 @@ namespace driver_win
         //备份密钥
         private void BackUpPrivateKey()
         {
+            driverCtr.backUpAddressEventHandlerCallBack += BackUpPrivateKeyCallBack;
             if (selectAddress == null)
                 return;
             string str_addressType = selectAddress.type.ToString();
@@ -475,11 +474,12 @@ namespace driver_win
             driverCtr.BackUpAddress(str_addressType, str_addressText);
             selectAddress.AddressText=null;
         }
-        private void BackUpPrivateKeyCallBack(string _str)  //把从签名机要到的私钥备份到本地
+        private void BackUpPrivateKeyCallBack(bool suc,string _str)  //把从签名机要到的私钥备份到本地
         {
             Dispatcher.Invoke((Action)  delegate()
             {
-                if(string.IsNullOrEmpty(_str))
+                driverCtr.backUpAddressEventHandlerCallBack -= BackUpPrivateKeyCallBack;
+                if (!suc)
                     ErrorMsgShow("备份失败" + _str, "通知");
                 else
                     ErrorMsgShow("已经成功备份"+ _str, "通知");

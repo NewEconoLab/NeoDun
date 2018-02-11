@@ -298,13 +298,22 @@ namespace hhgate
             driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
             iOwinContext = null;
         }
-        private static void addressinfoCallBack(string _privateKey)
+        private static void addressinfoCallBack(bool suc,string _privateKey)
         {
             if (iOwinContext == null)
                 return;
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            json["prikey"] = new MyJson.JsonNode_ValueString(_privateKey);
+            if (suc)
+            {
+                json["tag"] = new MyJson.JsonNode_ValueNumber(0);
+                json["msg"] = new MyJson.JsonNode_ValueString("success");
+                json["prikey"] = new MyJson.JsonNode_ValueString(_privateKey);
+            }
+            else
+            {
+                json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
+                json["msg"] = new MyJson.JsonNode_ValueString("faild");
+            }
             iOwinContext.Response.WriteAsync(json.ToString());
             linking = false;
 

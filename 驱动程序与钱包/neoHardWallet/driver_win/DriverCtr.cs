@@ -504,7 +504,7 @@ namespace driver_win
         #region 查询地址
         public void GetAddressList()
         {
-            signer.InitAddressPool();
+            //signer.InitAddressPool();
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x02;
             msg.tag2 = 0x01;//查
@@ -593,7 +593,7 @@ namespace driver_win
             Array.Copy(hash_address, 0, signMsg.data, 6, hash_address.Length);
             signer.SendMessage(signMsg, true);
         }
-        public delegate void BackUpAddressEventHandlerCallBack(string _str);
+        public delegate void BackUpAddressEventHandlerCallBack(bool suc,string _str);
         public event BackUpAddressEventHandlerCallBack backUpAddressEventHandlerCallBack;
         public void BackUpAddressCallBack(bool suc ,string _privateKey)
         {
@@ -603,15 +603,13 @@ namespace driver_win
                 string address = NeoDun.SignTool.GetAddressFromPublicKey(NeoDun.SignTool.GetPublicKeyFromPrivateKey(NeoDun.SignTool.HexString2Bytes(_privateKey)));
                 confirmPasswordEventHandlerCallBack = null;
                 System.IO.File.WriteAllText(address + ".backup.sim.save.txt", wif);
-                backUpAddressEventHandlerCallBack(_privateKey);
-                GetAddressList();
+                backUpAddressEventHandlerCallBack(true,_privateKey);
             }
             else
             {
-                backUpAddressEventHandlerCallBack("");
-                GetAddressList();
+                backUpAddressEventHandlerCallBack(false,"");
             }
-
+            GetAddressList();
         }
         #endregion
 
@@ -704,6 +702,8 @@ namespace driver_win
         {
             if (signEventHandlerCallBack != null)
                 signEventHandlerCallBack(_outdata, hashstr, suc);
+
+            System.Threading.Thread.Sleep(100);
             GetAddressList();
         }
 

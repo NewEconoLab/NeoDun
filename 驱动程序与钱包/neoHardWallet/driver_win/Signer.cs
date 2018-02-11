@@ -333,8 +333,8 @@ namespace NeoDun
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe0)
                 {
-                    if (errorEventHandler != null)
-                        errorEventHandler("异常处理~~~钱包拒绝访问","警告");
+                    if (backUpAddressEventHandler != null)
+                        backUpAddressEventHandler(false,"");
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
