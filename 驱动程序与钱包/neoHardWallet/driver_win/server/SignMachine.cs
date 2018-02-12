@@ -195,6 +195,8 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
+
                     linking = false;
                     iOwinContext.Response.Write("timeout");
                     driver_win.DriverCtr.Ins.GetAddressList();
@@ -241,6 +243,8 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
+
                     linking = false;
                     iOwinContext.Response.Write("timeout");
                     driver_win.DriverCtr.Ins.GetAddressList();
@@ -288,6 +292,8 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
+
                     linking = false;
                     iOwinContext.Response.Write("timeout");
                     driver_win.DriverCtr.Ins.GetAddressList();
@@ -336,6 +342,8 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
+
                     linking = false;
                     iOwinContext.Response.Write("timeout");
                     driver_win.DriverCtr.Ins.GetAddressList();
@@ -400,11 +408,11 @@ namespace hhgate
             driver_win.DriverCtr.Ins.SetOrConfirmPassword(password);
             while (comfirming)
             {
-                int time = 0;
                 System.Threading.Thread.Sleep(100);
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
                     context.Response.Write("timeout");
                     comfirming = false;
                     driver_win.DriverCtr.Ins.GetAddressList();
