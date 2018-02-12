@@ -28,7 +28,7 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
-            if (linking)
+            if (linking && relativePath != "comfirmpassword")
             {
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
