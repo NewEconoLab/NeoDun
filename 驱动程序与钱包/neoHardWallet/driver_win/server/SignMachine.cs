@@ -403,9 +403,10 @@ namespace hhgate
                 int time = 0;
                 System.Threading.Thread.Sleep(100);
                 time += 100;
-                if (time > 30000)
+                if (time > timeoutTime)
                 {
                     context.Response.Write("timeout");
+                    comfirming = false;
                     driver_win.DriverCtr.Ins.GetAddressList();
                     break;
                 }
@@ -419,8 +420,11 @@ namespace hhgate
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["msg"] = new MyJson.JsonNode_ValueString("success");
-            iOwinContext_pw.Response.Write(json.ToString());
             comfirming = false;
+            iOwinContext_pw.Response.Write(json.ToString());
+            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
+            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
+            iOwinContext_pw = null;
         }
         //失败验证回掉
         private static void comfirmpasswordFaildCallBack()
