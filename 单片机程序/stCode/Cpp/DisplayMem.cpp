@@ -8,6 +8,8 @@
 #include "DisplayMem.h"
 #include <string.h>
 #include "OLED281/oled281.h"
+#include "main_define.h"
+
 //声明ASCII库
 extern unsigned char ASC5X8[];
 extern unsigned char ASC6X12[];
@@ -18,6 +20,8 @@ extern unsigned char  HZ12X12_S[];
 extern unsigned char  HZ16X16_S[];
 extern unsigned char  HZ24X24_S[];
 extern RNG_HandleTypeDef hrng;
+extern SIGN_KEY_FLAG Key_Flag;
+
 
 namespace view {
 
@@ -42,7 +46,8 @@ DisplayMem& DisplayMem::getInstance() {
 	return mem;
 }
 
-void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
+int DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
+	int value = 0;
 	switch (font) {
 	case FONT_5X8: {
 		int x1;
@@ -52,6 +57,7 @@ void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
 			x = 0;
 			x1 = x / 4;
 			y = y + 8;
+			value = 1;
 		}  //换行
 		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
 		Set_Row_Address(y, y + 7);
@@ -66,10 +72,12 @@ void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
 	case FONT_6X12: {
 		int x1 = x / 4;
 		int c = ch - 32;
+		printf("%d ",x1);	
 		if (x1 > 61) {
 			x = 0;
 			x1 = x / 4;
 			y = y + 12;
+			value = 1;
 		}  //换行
 		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
 		Set_Row_Address(y, y + 11);
@@ -88,6 +96,7 @@ void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
 			x = 0;
 			x1 = x / 4;
 			y = y + 16;
+			value = 1;
 		}  //换行
 		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
 		Set_Row_Address(y, y + 15);
@@ -106,6 +115,7 @@ void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
 			x = 0;
 			x1 = x / 4;
 			y = y + 24;
+			value = 1;
 		}  //换行
 		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 3); // 设置列坐标，shift为列偏移量由1322决定
 		Set_Row_Address(y, y + 23);
@@ -136,22 +146,32 @@ void DisplayMem::drawChar(int x, int y, char ch, FONT_t font, bool isReverse) {
 	}
 
 	}
+	return value;
 }
 
 void DisplayMem::clearArea(int x, int y, int width, int height) {
-	Fill_Block(0,x,(x+width-1)/4,y,y+height-1);
+	Fill_Block(0,x/4,(x+width-1)/4,y,y+height-1);
 }
 
 void DisplayMem::drawString(int x, int y, char* c) {
-	for (int i = 0; c[i] != '\0'; i++) {
-		this->drawChar(x, y, c[i], FONT_8X16, false);
+	for (int i = 0; c[i] != '\0'; i++) 
+	{
+		if(this->drawChar(x, y, c[i], FONT_8X16, false))
+		{	
+			x = 0;
+			y+=12;
+		}
 		x += 8;
 	}
 }
 
 void DisplayMem::drawString(int x, int y, char* c, FONT_t font) {
 	for (int i = 0; c[i] != '\0'; i++) {
-		this->drawChar(x, y, c[i], font, false);
+		if(this->drawChar(x, y, c[i], font, false))
+		{
+			y+=12;
+			x = 0;
+		}
 		switch (font) {
 		case FONT_5X8:
 			x += 8;
@@ -174,7 +194,11 @@ void DisplayMem::drawString(int x, int y, char* c, FONT_t font) {
 
 void DisplayMem::drawString(int x, int y, char* c, bool isReverse) {
 	for (int i = 0; c[i] != '\0'; i++) {
-		this->drawChar(x, y, c[i], FONT_8X16, isReverse);
+		if(this->drawChar(x, y, c[i], FONT_8X16, isReverse))
+		{
+			x = 0;
+			y+=12;
+		}	
 		x += 8;
 	}
 }
@@ -182,7 +206,11 @@ void DisplayMem::drawString(int x, int y, char* c, bool isReverse) {
 void DisplayMem::drawString(int x, int y, char* c, FONT_t font,
 		bool isReverse) {
 	for (int i = 0; c[i] != '\0'; i++) {
-		this->drawChar(x, y, c[i], font, isReverse);
+		if(this->drawChar(x, y, c[i], font, isReverse))
+		{
+				x = 0;
+				y+=12;
+		}
 		switch (font) {
 		case FONT_5X8:
 			x += 8;
@@ -604,6 +632,243 @@ void DisplayMem::GetPassportFromString(u8 *data,int *src,u32 *desc)
 		{
 				desc[i] = src[data[i]-49];
 		}
+}
+
+void DisplayMem::SetCode(void)
+{
+    unsigned char index = 0;
+    unsigned char Center_Flag = 0;
+    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+		
+		clearAll();
+    drawString(53,8,"Pin Code:");
+		drawChar(125,8,code_array[0],FONT_6X12,false);
+    drawString(133,8,"_");
+    drawString(141,8,"_");
+    drawString(149,8,"_");
+    drawString(157,8,"_");
+    drawString(165,8,"_");
+    drawString(173,8,"_");
+    drawString(181,8,"_");
+    drawString(30,40,"+");
+    drawString(120,40,"OK");
+    drawString(226,40,"-");
+
+		memset(&Key_Flag,0,sizeof(Key_Flag));
+		Key_Flag.Sign_Key_Flag = 1;//按键有效
+    while(1)
+    {
+        if(Key_Flag.Sign_Key_left_Flag)//左键按下
+        {
+						Key_Flag.Sign_Key_left_Flag = 0;
+						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+            if(Center_Flag != 0)
+                Center_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								drawChar(125+8*index,8,'9',FONT_6X12,false);
+                code_array[index] = '9';
+            }
+            else if(code_array[index] == '?')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]--;
+								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_right_Flag)//右键按下
+        {           
+						Key_Flag.Sign_Key_right_Flag = 0;
+						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+            if(Center_Flag != 0)
+                Center_Flag = 0;
+            if(code_array[index] == '9')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else if(code_array[index] == '?')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]++;
+								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_center_Flag)//中间建按下
+        {
+						Key_Flag.Sign_Key_center_Flag = 0;
+            Center_Flag++;
+            index++;
+            if(index < 4)
+            {
+                Center_Flag = 0;
+								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+            }
+            else
+            {
+								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+								drawChar(125+8*index,8,'?',FONT_6X12,false);
+            }
+        }
+        if((index>=4)&&(Center_Flag >= 2))
+        {
+            //将密码保存起来,
+
+					
+					
+					
+					
+						clearAll();
+						
+					
+					
+            break;
+        }
+    }
+		Key_Flag.Sign_Key_Flag = 0;//按键无效
+		memset(&Key_Flag,0,sizeof(Key_Flag));
+}
+
+/************************************************
+密码验证函数
+返回值： 0  密码错误
+				1  密码正确
+*************************************************/
+u8 DisplayMem::VerifyCode(void)
+{
+    unsigned char index = 0;
+    unsigned char Center_Flag = 0;
+    unsigned char code_old[8] = {'0','0','0','0','0','0','0','0'};//从存储的地方读出来
+    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+
+		clearAll();
+    drawString(53,8,"Pin Code:");
+		drawChar(125,8,code_array[0],FONT_6X12,false);
+    drawString(133,8,"_");
+    drawString(141,8,"_");
+    drawString(149,8,"_");
+    drawString(157,8,"_");
+    drawString(165,8,"_");
+    drawString(173,8,"_");
+    drawString(181,8,"_");
+    drawString(30,40,"+");
+    drawString(120,40,"OK");
+    drawString(226,40,"-");
+		
+		//读取出老的密码
+		
+		
+		
+		
+		
+		
+		memset(&Key_Flag,0,sizeof(Key_Flag));
+		Key_Flag.Sign_Key_Flag = 1;//按键有效
+    while(1)
+    {
+        if(Key_Flag.Sign_Key_left_Flag)//左键按下
+        {
+						Key_Flag.Sign_Key_left_Flag = 0;
+						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+            if(Center_Flag != 0)
+                Center_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								drawChar(125+8*index,8,'9',FONT_6X12,false);
+                code_array[index] = '9';
+            }
+            else if(code_array[index] == '?')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]--;
+								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_right_Flag)//右键按下
+        {
+						Key_Flag.Sign_Key_right_Flag = 0;
+						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+            if(Center_Flag != 0)
+                Center_Flag = 0;
+            if(code_array[index] == '9')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else if(code_array[index] == '?')
+            {
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]++;
+								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_center_Flag)//中间建按下
+        {
+						Key_Flag.Sign_Key_center_Flag = 0;
+						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+						drawChar(125+8*index,8,'*',FONT_6X12,false);
+            Center_Flag++;
+            index++;
+            if(index < 4)
+            {
+                Center_Flag = 0;
+								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+								drawChar(125+8*index,8,'0',FONT_6X12,false);
+            }
+            else
+            {
+								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+								drawChar(125+8*index,8,'?',FONT_6X12,false);
+            }
+        }
+        if((index>=4)&&(Center_Flag >= 2))
+        {
+            //清除所有显示
+						clearAll();
+					
+					
+
+            if(compareCharArray(code_old,code_array,index) == 1)//密码正确
+            {    
+								Key_Flag.Sign_Key_Flag = 0;//按键无效
+		            memset(&Key_Flag,0,sizeof(Key_Flag));	
+								return 1;							
+						}
+            else//密码错误
+						{
+								Key_Flag.Sign_Key_Flag = 0;//按键无效
+		            memset(&Key_Flag,0,sizeof(Key_Flag));									
+                return 0;
+						}
+        }
+    }	
+}
+
+u8 DisplayMem::compareCharArray(unsigned char *left,unsigned char *right,int len)
+{
+		for(int i=0;i<len;i++)
+		{
+				if(left[i] != right[i])
+						return 0;
+		}
+		return 1;
 }
 
 }

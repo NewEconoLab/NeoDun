@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\ATSHA204\Appatsha204;..\ATSHA204\Atsha204_hw;..\ATSHA204\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -412,6 +412,121 @@
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/system_stm32f4xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>APP</GroupName>
+          <Files>
+            <File>
+              <FileName>forPrintf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\forPrintf.c</FilePath>
+            </File>
+            <File>
+              <FileName>aw9136.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\aw9136.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\stmflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>iap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\iap.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>atsha204a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ATSHA204_HW</GroupName>
+          <Files>
+            <File>
+              <FileName>bitBang_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Atsha204_hw\bitBang_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hw_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Atsha204_hw\hw_config.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CryptoAuthlib</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\atca_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_basic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\basic\atca_basic.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_crypto_sw_sha2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.c</FilePath>
+            </File>
+            <File>
+              <FileName>sha2_routines.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\crypto\hashes\sha2_routines.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\host\atca_host.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ATSHA204iface</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_iface_stm32_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\iface\atca_iface_stm32_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_stm32_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\hal\hal_stm32_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_iface_stm32_swi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\iface\atca_iface_stm32_swi.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -590,46 +705,6 @@
               <FileName>stm32f4xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
-            </File>
-            <File>
-              <FileName>forPrintf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\forPrintf.c</FilePath>
-            </File>
-            <File>
-              <FileName>aw9136.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\aw9136.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\myiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\oled.c</FilePath>
-            </File>
-            <File>
-              <FileName>stmflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\stmflash.c</FilePath>
-            </File>
-            <File>
-              <FileName>iap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\iap.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\timer.c</FilePath>
             </File>
           </Files>
         </Group>

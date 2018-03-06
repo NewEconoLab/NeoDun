@@ -34,7 +34,7 @@ class DisplayMem {
 private:
 	DisplayMem();
 	DisplayMem(const DisplayMem & copy);
-	void drawChar(int x, int y , char c,FONT_t font,bool isReverse);
+	int drawChar(int x, int y , char c,FONT_t font,bool isReverse);
 	//add by hkh
 	void drawHZ(int x, int y, int num, FONT_HZ_t font, bool isReverse);
 public:
@@ -61,6 +61,11 @@ public:
 	int drawxNumber(int x, int y, long long num, int len,FONT_t font);
 	int GetPassportArray(int *data);
 	void GetPassportFromString(u8 *data,int *src,u32 *desc);
+	
+	//add by hkh 180228
+  void SetCode(void);
+	u8 VerifyCode(void);
+	u8 compareCharArray(unsigned char *left,unsigned char *right,int len);
 	
 };
 

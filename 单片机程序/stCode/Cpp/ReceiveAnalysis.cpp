@@ -608,6 +608,41 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														command.SendToPc();
 														break;										
 												}
+												if(Sign.type == 0x80)
+												{
+												}
+												else
+												{
+														view::DisplayMem::getInstance().clearAll();//清屏
+														view::DisplayMem::getInstance().drawString(92,20,"Undefined Transaction,continue?",view::FONT_6X12);
+														//取消  确定  取消
+														view::DisplayMem::getInstance().drawHZString(36,48,9,10);
+														view::DisplayMem::getInstance().drawHZString(124,48,4,5);	
+														view::DisplayMem::getInstance().drawHZString(208,48,9,10);		
+														//显示三角形
+														view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],5,7,48,60);//画三角形
+														view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],27,29,48,60);//画三角形
+														view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],48,50,48,60);//画三角形	
+														view::DisplayMem::getInstance().clearArea(0,60,256,1);//清除最后一行的白点
+													
+														Key_Flag.Sign_Key_Flag = 1;//按键有效
+														memset(&Key_Flag,0,sizeof(Key_Flag));
+														while(1)
+														{
+																if(Key_Flag.Sign_Key_center_Flag)//确定
+																{
+																		break;
+																}
+																else if(Key_Flag.Sign_Key_left_Flag&&Key_Flag.Sign_Key_right_Flag)//取消
+																{
+																		Commands command( CMD_SIGN_FAILED, serialId);
+																		command.SendToPc();
+																		break;
+																}
+														}
+														Key_Flag.Sign_Key_Flag = 0;//按键无效
+														memset(&Key_Flag,0,sizeof(Key_Flag));
+												}
 												
 												int status = 1;
 												for(i=0;i<Sign.countOutputs;i++)
@@ -619,7 +654,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 														}						
 												}
 												
-												if(status)//不存在这个地址
+												if((status)||(Sign.coin == 0xff))//不存在这个地址
 												{
 														Commands command( CMD_SIGN_FAILED, serialId);
 														command.SendToPc();
@@ -664,10 +699,11 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																count_dec = 8;
 														count_bit = 28 + (count_int + 8 -count_dec)*8 + 4; //28是前面占用的显示，+4是显示空隙，美观
 														
-														if(Sign.money[i]%100000000)												
-																view::DisplayMem::getInstance().drawString(count_bit,0,"GAS");												
-														else
-																view::DisplayMem::getInstance().drawString(count_bit,0,"NEO");
+														if(Sign.coin == 1)												
+																view::DisplayMem::getInstance().drawString(count_bit,0,"NEO");												
+														else if(Sign.coin == 0)
+																view::DisplayMem::getInstance().drawString(count_bit,0,"GAS");
+														
 														count_bit = count_bit + 28;//3*8 + 4											
 #ifdef printf_debug															
 														printf("address:%s\r\n",Sign.address[i]);
@@ -686,6 +722,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 												}									
 												
 												Key_Flag.Sign_Key_Flag = 1;//按键有效
+												memset(&Key_Flag,0,sizeof(Key_Flag));
 												while(1)
 												{		
 														if(Key_Flag.Sign_Key_center_Flag)//签名机按键按下同意按钮

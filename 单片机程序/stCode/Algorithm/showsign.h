@@ -7,11 +7,12 @@ typedef struct
 {
     int type;
     int version;
+		unsigned char coin;						 // 1 表示NEO， 0 表示GAS，0xff其它暂不识别
     int countAttributes;
     int countInputs;
     int countOutputs;
     char address[10][40];//每一行存储一个地址，10个地址
-		char assetid[10][65];
+		unsigned char assetid[10][32];
     long long money[10];
 }SIGN_Out_Para;
 
@@ -57,5 +58,7 @@ void ShowTransactionType(int type);
 
 int ReadByteLengthIndex(int fb);
 uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb);
+
+unsigned char GetAssetID(unsigned char *assetID);
 
 #endif /* __DASHU_H */

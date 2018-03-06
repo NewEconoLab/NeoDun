@@ -225,5 +225,7 @@ void Home_Key_press(void);
 
 void AW_LedReleaseTouch(void);
 void Center_button_init(void);
+void Key_Control(unsigned char value);
+void Motor_touch(int time);
 
 #endif

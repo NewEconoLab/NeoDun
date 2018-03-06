@@ -33,10 +33,14 @@
 				扇区4-5：  192KB		 APP程序 
 				扇区6-11： 768KB   私钥地址对
 ** 15、VID一致  PID不同，PID为22352时，表示这个是钱包
+			 VID表示供应商识别码，PID表示产品识别码
 ** 16、BootLoader问题，如果BootLoader停留的时间不够AW9136初始化，会导致程序进入AW9136的sleep模式，导致速度变慢
 				解决办法：只有进入升级界面的时候，才初始化AW9136，不然只初始化，中间按键有效
 ** 17、通过写入0x1111进寄存器（N_OFR1~3）以及定义宏CNT_INT来提高AW9136的初始化速度
 ** 18、增加触摸按键双击的识别N_TAPR1-2、N_TDTR、N_GIER寄存器的值,但是检测到双击操作时，单击也会被检测到
+** 19、去掉aw9136按键释放时的标志位改变
+** 20、增加密码的设置和验证
+** 21、增加加密芯片的驱动
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -46,9 +50,11 @@
 #include "iap.h"
 #include "timer.h"
 #include "stmflash.h"
+#include "atsha204a.h"
+#include "hw_config.h"
+#include "main_define.h"
 
-//#define test_for_debug
-
+#define Debug_Passport
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -58,37 +64,60 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-static void NEO_Test(void);
-static void Set_PinCode(void);
+static int NEO_Test(void);
 
+//HID接收缓冲设置
 #define HID_REC_LEN 110*1024
 u8 HID_RX_BUF[HID_REC_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.    
 u32 HID_RX_CNT = 0;
 
-extern volatile unsigned char left_key_flag;
-extern volatile unsigned char center_key_flag;
-extern volatile unsigned char right_key_flag;
-extern volatile unsigned char double_key_flag;
-extern volatile int time_counter;
-extern unsigned char wallet_status;
-volatile int cancel_flag = 0;
+//全局变量
+extern SIGN_KEY_FLAG Key_Flag;
+extern volatile int time_counter;								//定时器计数值
+extern unsigned char wallet_status;							//0表示新钱包，1表示旧钱包
+volatile unsigned char touch_motor_flag = 1;    //1表示开启触摸振动，0表示关闭振动
 
 int main(void)
 {
-		u32 oldcount=0;	//老的USB接收数据值	
-		u32 applenth=0;	//接收到的app代码长度
+		u32 oldcount=0;						//老的USB接收数据值	
+		u32 applenth=0;						//接收到的app代码长度
+	  int cancel_flag = 0;			//开机是否按下取消键	
+		Key_Control(0);						//清空按键标志位，开启按键有效
 	
-		//硬件初始化
-		HAL_Init();						//终端分组2
-		SystemClock_Config(); //系统时钟168MHz
-		MX_GPIO_Init();				//IO口初始化
-		Center_button_init();	//中间按钮初始化
-		MX_USART1_UART_Init();//打印信息串口
-		MX_USART2_UART_Init();//蓝牙串口
-		TIM3_Init(5000-1,8400-1);//500ms进入一次中断计数      
-		OLED_Init();					
+		HAL_Init();								//中断分组2
+		SystemClock_Config(); 		//系统时钟168MHz
+		MX_GPIO_Init();						//IO口初始化
+		Center_button_init();			//中间按钮初始化
+		OLED_Init();							//OLED初始化	
+#ifdef Debug_Print	
+		MX_USART1_UART_Init();		//打印信息串口
+#endif
+		Set_System();			
+		MX_USART2_UART_Init();		//蓝牙串口
+		TIM3_Init(5000-1,8400-1);	//500ms进入一次中断计数      
+		MX_USB_DEVICE_Init();			
+		AW9136_Init();
+
+		//读取加密芯片中的钱包标识
 		
-		//开机界面
+
+		if(wallet_status == 0)  	//新钱包，则进行产品测试	 		
+		{
+				if(NEO_Test())
+				{
+				//进行加密芯片的测试
+					
+				}
+				SetPassport();
+		}
+		else											//旧钱包，验证密码
+		{
+				while(VerifyPassport() == 0)
+				{
+				}		
+		}
+				
+		//开机界面				
 		Asc12_24( 20,10 ,"Welcome Use NeoDun");
 		Asc8_16(104,44,"Cancel");
 		
@@ -96,7 +125,7 @@ int main(void)
 		__HAL_RCC_TIM3_CLK_ENABLE();//开启定时器
 		while(time_counter < 4)		  //2s过后
 		{		
-				if(center_key_flag)
+				if(Key_Flag.Key_center_Flag)
 				{
 						cancel_flag = 1;
 						break;
@@ -111,25 +140,14 @@ int main(void)
 				iap_load_app(FLASH_APP1_ADDR);
 		}
 		cancel_flag = 0;
-		
-		//确认进入升级模式后，再初始化AW9136和USB	
-		MX_USB_DEVICE_Init();			
-		AW9136_Init();		
+				
+		//进行升级操作
 		Fill_RAM(0x00);//清屏
 		Asc8_16(48,10,"Firmware Update Mode");
 		Asc8_16(10,48,"updata");
 		Asc8_16(112,48,"load");
 		Asc8_16(206,48,"clear");
-
-#ifdef test_for_debug
-//		Get_StatusOfWallet();
-#endif
-		
-		//进入循环前，清除按键标志位
-		left_key_flag = 0;
-		center_key_flag = 0;
-		right_key_flag = 0;
-		
+		Key_Control(1);				//清空按键标志位，开启按键有效
 		while (1)
 		{
 				if(HID_RX_CNT)
@@ -138,28 +156,30 @@ int main(void)
 						{
 								applenth=HID_RX_CNT;
 								oldcount=0;
-								HID_RX_CNT=0;
+							  HID_RX_CNT=0;
+#ifdef Debug_Print							
 								printf("len of code:%dBytes\r\n",applenth);
+#endif							
 						}
 						else 
 								oldcount=HID_RX_CNT;			
 				}
 				HAL_Delay(50);
 				
-				if(left_key_flag)//更新固件
+				if(Key_Flag.Key_left_Flag)//更新固件
 				{
-						iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF,applenth);						
+						iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF,applenth);			
 						Fill_Block(0,0,64,29,45);//清除这一行
 						Asc8_16(76,29,"Update Finish");					
-						left_key_flag = 0;
+						Key_Flag.Key_left_Flag = 0;
 				}
-				else if(center_key_flag)//加载固件
+				else if(Key_Flag.Key_center_Flag)//加载固件
 				{
 //						Fill_RAM(0x00);
 						iap_load_app(FLASH_APP1_ADDR);
-						center_key_flag = 0;
+						Key_Flag.Key_center_Flag = 0;
 				}
-				else if(right_key_flag)//清除固件
+				else if(Key_Flag.Key_right_Flag)//清除固件
 				{
 						applenth=0;
 						memset(HID_RX_BUF,0,HID_REC_LEN);
@@ -168,45 +188,7 @@ int main(void)
 					
 						Fill_Block(0,0,64,29,45);//清除这一行
 						Asc8_16(80,29,"Clear Finish");
-						right_key_flag = 0;
-				}
-#ifdef test_for_debug				
-				if(double_key_flag)//生产测试功能
-				{
-						Fill_RAM(0x00);
-						Asc8_16( 52,4 ,"Enter NeoDun Test ?");
-						Asc8_16(24,44,"Cancel");
-						Asc8_16(124,44,"OK");
-						Asc8_16(184,44,"Cancel");
-						while(1)
-						{		
-								center_key_flag = 0;
-								right_key_flag = 0;
-								left_key_flag = 0;
-								
-								if(center_key_flag)
-								{
-										center_key_flag = 0;
-										double_key_flag = 0;
-										NEO_Test();
-										break;
-								}
-								else if((right_key_flag == 1)||(left_key_flag == 1))
-								{	
-										right_key_flag = 0;
-										left_key_flag = 0;
-										double_key_flag = 0;
-										Fill_RAM(0x00);
-										Asc12_24( 20,10 ,"Welcome Use NeoDun");
-										break;
-								}
-						}
-				}
-#endif				
-				if(wallet_status)//新钱包，设置PIN码
-				{
-						wallet_status = 0;
-						Set_PinCode();					
+						Key_Flag.Key_right_Flag = 0;
 				}
 		}
 }
@@ -374,70 +356,73 @@ void USB_DataReceiveHander(uint8_t *data,int len)
 		}	
 }
 
-static void NEO_Test(void)
+static int NEO_Test(void)
 {
 		int i=0;
+		int value = 0;
 		Fill_RAM(0x00);
-		Asc8_16( 84,4 ,"NeoDun Test");		
-		HAL_Delay(2000);
-		
-		for(i=0;i<5;i++)
-		{
-				Fill_RAM(0xFF);
-				HAL_Delay(1000);
-				Fill_RAM(0x00);
-				HAL_Delay(1000);
-		}
-/******************************************
-						NeoDun Test
-					Motor and Key Test
-		On						Exit					Off
-******************************************/		
-		Asc8_16( 84,4 ,"NeoDun Test");
-		Asc8_16( 56,24 ,"Motor and Key Test");
-		Asc8_16( 30,44 ,"On");
-		Asc8_16( 112,44 ,"Exit");
-		Asc8_16( 206,44 ,"Off");
-		center_key_flag = 0;
-		left_key_flag = 0;
-		right_key_flag = 0;
-		
-		while(!center_key_flag) //中间按键按下，退出
-		{
-				if(left_key_flag)
+		Asc8_16( 52,4 ,"Enter NeoDun Test ?");
+		Asc8_16(24,44,"Cancel");
+		Asc8_16(124,44,"OK");
+		Asc8_16(184,44,"Cancel");
+	
+		Key_Control(1);				//清空按键标志位，开启按键有效
+		while(1)
+		{														
+				if(Key_Flag.Key_center_Flag)
 				{
-						left_key_flag = 0;
-						HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-				}
-				else if(right_key_flag)
-				{
-						right_key_flag = 0;
-						HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
-				}
-		}
-		center_key_flag = 0;
-		Fill_RAM(0x00);
-		Asc12_24( 20,10 ,"Welcome Use NeoDun");
-}
+						touch_motor_flag = 0;
+						Key_Control(0);				//清空按键标志位，开启按键无效
 
-static void Set_PinCode(void)
-{
-/**************************************					
-							Pin:______  
-			-						OK					+
-**************************************/	
-		Fill_RAM(0x00);
-		Asc12_24(68,4,"Pin:______");
-		Asc12_24(37,36,"-");
-		Asc12_24(116,36,"OK");
-		Asc12_24(206,36,"+");
-	
-	
-	
-	
-	
-		Fill_RAM(0x00);
-		Asc12_24( 20,10 ,"Welcome Use NeoDun");	
+						Fill_RAM(0x00);
+						Asc8_16( 84,4 ,"NeoDun Test");		
+						HAL_Delay(2000);
+						
+						for(i=0;i<5;i++)
+						{
+								Fill_RAM(0xFF);
+								HAL_Delay(1000);
+								Fill_RAM(0x00);
+								HAL_Delay(1000);
+						}
+				/******************************************
+										NeoDun Test
+									Motor and Key Test
+						On						Exit					Off
+				******************************************/		
+						Asc8_16( 84,4 ,"NeoDun Test");
+						Asc8_16( 56,24 ,"Motor and Key Test");
+						Asc8_16( 30,44 ,"On");
+						Asc8_16( 112,44 ,"Exit");
+						Asc8_16( 206,44 ,"Off");
+						Key_Control(1);				//清空按键标志位，开启按键有效
+						
+						while(!Key_Flag.Key_center_Flag) //中间按键按下，退出
+						{
+								if(Key_Flag.Key_left_Flag)
+								{
+										Key_Flag.Key_left_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+								}
+								else if(Key_Flag.Key_right_Flag)
+								{
+										Key_Flag.Key_right_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
+								}
+						}
+						Key_Flag.Key_center_Flag = 0;				
+						touch_motor_flag = 1;
+						value = 1;
+						break;
+				}
+				else if((Key_Flag.Key_right_Flag == 1)||(Key_Flag.Key_left_Flag == 1))
+				{	
+						Key_Control(0);				//清空按键标志位，开启按键无效
+						value = 0;
+						break;
+				}
+		}
+		return value;
 }
 
 /**

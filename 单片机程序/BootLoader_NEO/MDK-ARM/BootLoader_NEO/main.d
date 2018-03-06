@@ -46,3 +46,8 @@ bootloader_neo\main.o: ../Inc/iap.h
 bootloader_neo\main.o: ../Inc/timer.h
 bootloader_neo\main.o: ../Inc/stmflash.h
 bootloader_neo\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+bootloader_neo\main.o: ..\ATSHA204\Appatsha204\atsha204a.h
+bootloader_neo\main.o: ..\ATSHA204\lib\atca_bool.h
+bootloader_neo\main.o: ..\ATSHA204\Atsha204_hw\hw_config.h
+bootloader_neo\main.o: ..\ATSHA204\Atsha204_hw\bitBand.h
+bootloader_neo\main.o: ../Inc/main_define.h

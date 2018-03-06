@@ -1,0 +1,10 @@
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\iface\atca_iface_stm32_swi.c
+bootloader_neo\atca_iface_stm32_swi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\atca_iface.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\atca_command.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\atca_status.h
+bootloader_neo\atca_iface_stm32_swi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\atca_bool.h
+bootloader_neo\atca_iface_stm32_swi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\lib\hal/hal_timer.h
+bootloader_neo\atca_iface_stm32_swi.o: ..\ATSHA204\Atsha204_hw\SWI_Atsha204a.h

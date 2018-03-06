@@ -607,352 +607,32 @@ uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb)
 		return value;
 }
 
-
-//  用来测试的解释签名数据
-//	char src[2048] = "80000002235fc72a3372fa601d39017685c3a77ebb24f1369a16e80f218f5ff76880fb3800005d1ab60715d73e806cca1449fc089520211360ea526450803345e8987ad35e76010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c60008b585a170000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6070222f1817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";
-//	char src[2048] = "800000010c8fa242aaf7461f802bf0d6e0fc8694e3daed2d66de4dc70fe017012d075350010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6080969800000000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c607098df2817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";	
-/******************************************************************
-*	函数名：	showsign
-*	函数说明：解释签名函数
-* 输入参数：src是用来测试的字符串                
-* 输出参数：0表示解释成功，1表示解释出错
-*******************************************************************/	
-//int showsign(char* src)
-//{
-//		int i,j,index=0,index_type=0,length=0,fb=0;
-//		//不同的交易类型定义的数组和变量
-//		uint64_t Nonce=0;//MinerTransaction
-//		char Claims[68]; //ClaimTransaction			PrevHash:0-63,PrevIndex:64-67
-//		char PublicKey[128];//EnrollmentTransaction
-//		//RegisterTransaction
-//		int AssetType;
-//		char* NameR;
-//		uint64_t Amount;
-//		int Precision;
-//		char Owner[66];
-//		char Admin[40];
-//		//PublishTransaction
-//		char Code[6];
-//		int NeedStorage;
-//		char* NameP;
-//		char* CodeVersion;
-//		char* Author;
-//		char* Email;
-//		char* Description;
-//		//InvocationTransaction
-//		char* Script;
-//		int64_t Gas;
-//		//通用的数据结构，数组和变量定义
-//		int type,Version,countAttributes,countInputs,countOutputs;		
-//		char Input[64];
-//		char Output[64];	
-//		char buff_money[16];		
-//		char address_data[42] = "17";
-//		char result_address[50] = "";
-//		int len_address=0;
-//		int len = strlen(src);
-//	
-//		printf("src:%s\r\n",src);
-//		printf("len: %d byte\r\n",len/2);
-//			
-//		//交易类型
-//		type = Ascii2Dec(src[0])*16+Ascii2Dec(src[1]);
-//		ShowTransactionType(type);
-//		//Version
-//		Version = Ascii2Dec(src[2])*16+Ascii2Dec(src[3]);
-//		printf("Version:%d\r\n",Version);
-//	
-//		//不同交易类型的数据结构不一样，额外数据需要处理
-//		switch (type)
-//		{
-//				case 0x00://MinerTransaction
-//				{
-//						if(Version == 0)
-//						{
-//								Nonce = Ascii2Dec(src[4])*pow(16,0)+Ascii2Dec(src[5])*pow(16,1)+Ascii2Dec(src[6])*pow(16,2)+Ascii2Dec(src[7])*pow(16,3)+
-//												Ascii2Dec(src[8])*pow(16,4)+Ascii2Dec(src[9])*pow(16,5)+Ascii2Dec(src[10])*pow(16,6)+Ascii2Dec(src[11])*pow(16,7);
-//								printf("Nonce:%lld\r\n",Nonce);
-//								index_type = 8;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x01://IssueTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}
-//						break;
-//				}
-//				case 0x02://ClaimTransaction
-//				{			
-//						if(Version == 0)
-//						{
-//								for(i=0;i<68;i++)
-//										Claims[i] = src[4+i];
-//								printf("Claims:%s\r\n",Claims);
-//								if(strlen(Claims) == 0)
-//										return 1;
-//								index_type = 68;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x20://EnrollmentTransaction
-//				{						
-//						if(Version == 0)
-//						{
-//								for(i=0;i<128;i++)
-//										PublicKey[i] = src[4+i];
-//								printf("PublicKey:%s\r\n",PublicKey);
-//								index_type = 128;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x40://RegisterTransaction
-//				{
-//						if(Version == 0)
-//						{
-//								AssetType = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
-//								printf("AssetType:%d\r\n",AssetType);
-//								index_type += 2;							
-//								//Name:
-//								fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//								length = ReadByteLength(src,6+index_type,1024,fb);
-//								if(length == 0)	return 1;						
-//								index_type += 2 + ReadByteLengthIndex(fb);
-//								NameR = &src[4+index_type];		
-//								printf("Name:");						
-//								for(i=0;i<length*2;i++)
-//										printf("%c",*(NameR+i));
-//								printf("\r\n");
-//								index_type += length*2;									
-//								//Amount														
-//								Amount = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
-//												 Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
-//												 Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,6)+Ascii2Dec(src[index_type+14])*pow(16,6)+Ascii2Dec(src[index_type+15])*pow(16,4)+
-//												 Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
-//								printf("Amount:%lld\r\n",Amount);
-//								index_type += 16;
-//								//Precision
-//								Precision = Ascii2Dec(src[index_type+4])*16+Ascii2Dec(src[index_type+5]);
-//								printf("Precision:%d\r\n",Precision);								
-//								index_type += 2;
-//								//Owner
-//								for(i=0;i<66;i++)
-//										Owner[i] = src[i+index_type+4];
-//								index_type += 66;
-//								printf("Owner:%s\r\n",Owner);
-//								//Admin
-//								for(i=0;i<40;i++)	
-//										Admin[i] = src[i+index_type+4];					
-//								printf("Admin:%s\r\n",Admin);
-//								index_type += 40;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x80://ContractTransaction  最常见的合约交易	 没有自己的独特处理			
-//				{
-//						if(Version != 0)
-//						{
-//								return 1;
-//						}
-//						break;
-//				}					
-//				case 0xd0://PublishTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}
-//						for(i=0;i<6;i++)
-//								Code[i] = src[4+i];
-//						printf("Code:%s\r\n",Code);
-//						if(Version == 1)
-//						{
-//								NeedStorage = Ascii2Dec(src[10])*16 + Ascii2Dec(src[11]);
-//						}
-//						else 
-//						{
-//								NeedStorage = 0;
-//						}
-//						printf("NeedStorage:%d\r\n",NeedStorage);
-//						index_type += 8;
-//						//NameP:
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						NameP = &src[4+index_type];		
-//						printf("Name:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(NameP+i));
-//						printf("\r\n");
-//						index_type += length*2;						
-//						//CodeVersion
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						CodeVersion = &src[4+index_type];						
-//						printf("CodeVersion:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(CodeVersion+i));
-//						printf("\r\n");
-//						index_type += length*2;										
-//						//Author
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Author = &src[4+index_type];						
-//						printf("Author:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Author+i));
-//						printf("\r\n");
-//						index_type += length*2;	
-//						//Email
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Email = &src[4+index_type];						
-//						printf("Email:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Email+i));
-//						printf("\r\n");
-//						index_type += length*2;																			
-//						//Description
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,65536,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Description = &src[4+index_type];						
-//						printf("Description:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Description+i));
-//						printf("\r\n");
-//						index_type += length*2;																	
-//						break;
-//				}
-//				case 0xd1://InvocationTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}						
-//						fb = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
-//						length = ReadByteLength(src,6,65536,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Script = &src[4+index_type];						
-//						printf("Script:");
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Script+i));
-//						printf("\r\n");
-//						index_type += length*2;
-//						if(Version == 1)
-//						{
-//								Gas = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
-//											Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
-//											Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,9)+Ascii2Dec(src[index_type+14])*pow(16,5)+Ascii2Dec(src[index_type+15])*pow(16,4)+
-//											Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
-//								printf("Gas:%lld\r\n",Gas);	
-//								index_type += 8;	
-//								if(Gas < 0) return 1;															
-//						}
-//						else
-//						{
-//							Gas = 0;// Fixed.Zero 表示为0
-//						}						
-//						break;
-//				}
-//				default:
-//						printf("Type Error!!!");
-//						break;
-//		}		
-//			
-//		//countAttributes
-//		countAttributes = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);		
-//		printf("countAttributes:%d\r\n",countAttributes);
-
-//		//countInputs
-//		countInputs = Ascii2Dec(src[6+index_type])*16+Ascii2Dec(src[7+index_type]);
-//		printf("countInputs:%d\r\n",countInputs);
-//		index = 8+index_type;
-//		for(i=0;i<countInputs;i++)
-//		{
-//				for(j=0;j<64;j++)
-//				{
-//						Input[j]=src[index+j+68*i];
-//				}
-//				//反向
-//				ReverseString(Input);
-//				printf("input%d:%s\r\n",i,Input);
-//				printf("index:%d\r\n",Ascii2Dec(src[index+j+68*i])*16+Ascii2Dec(src[index+j+1+68*i])+Ascii2Dec(src[index+j+2+68*i])*16*16*16+Ascii2Dec(src[index+j+3+68*i])*16*16);				
-//				memset(Input,0,64);//清空数组
-//		}
-//		index += 68*countInputs;
-//		
-//		//countOutputs	
-//		countOutputs = Ascii2Dec(src[index])*16+Ascii2Dec(src[index+1]);
-//		printf("countOutputs:%d\r\n",countOutputs);		
-//		index += 2;
-//		
-//		for(i=0;i<countOutputs;i++)
-//		{
-//				for(j=0;j<64;j++)
-//				{
-//						Output[j]=src[index+j+120*i];
-//				}			
-//				//反向
-//				ReverseString(Output);
-//				printf("Output%d:%s\r\n",i,Output);
-//				memset(Output,0,64);//清空数组				
-//				
-//				//计算money
-//				for(j=0;j<16;j++)
-//				{
-//						buff_money[j] = src[index+64+120*i+j];
-//				}
-//				printf("money%d = %.4f\r\n",i,CountMoney(buff_money));
-//								
-//				//计算地址
-//				for(j=0;j<40;j++)
-//				{
-//						address_data[2+j] = src[index+80+120*i+j];
-//				}
-//				Base58_Encode(address_data,21,result_address,&len_address);
-//				printf("address = %s\r\n",result_address);
-//		}		
-//		index += 120*countOutputs;
-//		
-//		if(index == len)
-//		{
-//				printf("Success!!!\r\n");
-//				return 0;
-//		}	
-//		else
-//		{
-//				printf("Error!!!\r\n");
-//				return 1;
-//		}
-//}
+unsigned char GetAssetID(unsigned char *assetID)
+{
+		unsigned char gas[32] = {0x60,0x2c,0x79,0x71,0x8b,0x16,0xe4,0x42,0xde,0x58,0x77,0x8e,0x14,0x8d,0x0b,0x10,
+														 0x84,0xe3,0xb2,0xdf,0xfd,0x5d,0xe6,0xb7,0xb1,0x6c,0xee,0x79,0x69,0x28,0x2d,0xe7};
+		unsigned char neo[32] = {0xc5,0x6f,0x33,0xfc,0x6e,0xcf,0xcd,0x0c,0x22,0x5c,0x4a,0xb3,0x56,0xfe,0xe5,0x93,
+														 0x90,0xaf,0x85,0x60,0xbe,0x0e,0x93,0x0f,0xae,0xbe,0x74,0xa6,0xda,0xff,0x7c,0x9b};
+		int i;
+		
+		for(i=0;i<32;i++)
+		{
+				if(assetID[i] != gas[i])
+						break;
+		}
+		if(i == 32)
+				return 0;
+		
+		for(i=0;i<32;i++)
+		{
+				if(assetID[i] != neo[i])
+						break;
+		}											 
+		if(i == 32)
+				return 1;	
+		else
+				return 0xff;
+}
 
 /******************************************************************
 *	函数名：	Alg_ShowSignData
@@ -967,8 +647,6 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		//通用的数据结构，数组和变量定义
 		int type,Version,countAttributes,countInputs,countOutputs;		
 		uint8_t Input[32];
-		uint8_t Output[32];
-		char Output_char[64] = "";
 		uint8_t buff_money[8];		
 		uint8_t address_data[21] = {0x17};
 		char result_address[50] = "";
@@ -1323,19 +1001,11 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		
 		for(i=0;i<countOutputs;i++)
 		{
+				//记录assetID
 				for(j=0;j<32;j++)
-						Output[31-j]=dataIn[index+j+60*i];		
-				HexToString(Output,32,Output_char);
-				memmove(SIGN_Out->assetid[i],Output_char,64);
-				SIGN_Out->assetid[i][64] = 0;
-#ifdef	Printf				
-				printf("Output%d:",i);
-				for(j=0;j<32;j++)
-						printf("%x",Output[j]);
-#endif			
-				memset(Output,0,32);//清空数组
-				memset(Output_char,0,64);
-				
+						SIGN_Out->assetid[i][31-j] = dataIn[index+j+60*i];
+				//判断assetID
+				SIGN_Out->coin = GetAssetID(SIGN_Out->assetid[i]);
 				//计算money
 				for(j=0;j<8;j++)
 				{
@@ -1373,4 +1043,351 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				return 1;
 		}
 }
+
+
+//  用来测试的解释签名数据
+//	char src[2048] = "80000002235fc72a3372fa601d39017685c3a77ebb24f1369a16e80f218f5ff76880fb3800005d1ab60715d73e806cca1449fc089520211360ea526450803345e8987ad35e76010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c60008b585a170000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6070222f1817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";
+//	char src[2048] = "800000010c8fa242aaf7461f802bf0d6e0fc8694e3daed2d66de4dc70fe017012d075350010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6080969800000000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c607098df2817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";	
+/******************************************************************
+*	函数名：	showsign
+*	函数说明：解释签名函数
+* 输入参数：src是用来测试的字符串                
+* 输出参数：0表示解释成功，1表示解释出错
+*******************************************************************/	
+//int showsign(char* src)
+//{
+//		int i,j,index=0,index_type=0,length=0,fb=0;
+//		//不同的交易类型定义的数组和变量
+//		uint64_t Nonce=0;//MinerTransaction
+//		char Claims[68]; //ClaimTransaction			PrevHash:0-63,PrevIndex:64-67
+//		char PublicKey[128];//EnrollmentTransaction
+//		//RegisterTransaction
+//		int AssetType;
+//		char* NameR;
+//		uint64_t Amount;
+//		int Precision;
+//		char Owner[66];
+//		char Admin[40];
+//		//PublishTransaction
+//		char Code[6];
+//		int NeedStorage;
+//		char* NameP;
+//		char* CodeVersion;
+//		char* Author;
+//		char* Email;
+//		char* Description;
+//		//InvocationTransaction
+//		char* Script;
+//		int64_t Gas;
+//		//通用的数据结构，数组和变量定义
+//		int type,Version,countAttributes,countInputs,countOutputs;		
+//		char Input[64];
+//		char Output[64];	
+//		char buff_money[16];		
+//		char address_data[42] = "17";
+//		char result_address[50] = "";
+//		int len_address=0;
+//		int len = strlen(src);
+//	
+//		printf("src:%s\r\n",src);
+//		printf("len: %d byte\r\n",len/2);
+//			
+//		//交易类型
+//		type = Ascii2Dec(src[0])*16+Ascii2Dec(src[1]);
+//		ShowTransactionType(type);
+//		//Version
+//		Version = Ascii2Dec(src[2])*16+Ascii2Dec(src[3]);
+//		printf("Version:%d\r\n",Version);
+//	
+//		//不同交易类型的数据结构不一样，额外数据需要处理
+//		switch (type)
+//		{
+//				case 0x00://MinerTransaction
+//				{
+//						if(Version == 0)
+//						{
+//								Nonce = Ascii2Dec(src[4])*pow(16,0)+Ascii2Dec(src[5])*pow(16,1)+Ascii2Dec(src[6])*pow(16,2)+Ascii2Dec(src[7])*pow(16,3)+
+//												Ascii2Dec(src[8])*pow(16,4)+Ascii2Dec(src[9])*pow(16,5)+Ascii2Dec(src[10])*pow(16,6)+Ascii2Dec(src[11])*pow(16,7);
+//								printf("Nonce:%lld\r\n",Nonce);
+//								index_type = 8;
+//								break;
+//						}
+//						else
+//						{
+//								return 1;
+//						}
+//				}
+//				case 0x01://IssueTransaction
+//				{
+//						if(Version > 1)
+//						{
+//								return 1;
+//						}
+//						break;
+//				}
+//				case 0x02://ClaimTransaction
+//				{			
+//						if(Version == 0)
+//						{
+//								for(i=0;i<68;i++)
+//										Claims[i] = src[4+i];
+//								printf("Claims:%s\r\n",Claims);
+//								if(strlen(Claims) == 0)
+//										return 1;
+//								index_type = 68;
+//								break;
+//						}
+//						else
+//						{
+//								return 1;
+//						}
+//				}
+//				case 0x20://EnrollmentTransaction
+//				{						
+//						if(Version == 0)
+//						{
+//								for(i=0;i<128;i++)
+//										PublicKey[i] = src[4+i];
+//								printf("PublicKey:%s\r\n",PublicKey);
+//								index_type = 128;
+//								break;
+//						}
+//						else
+//						{
+//								return 1;
+//						}
+//				}
+//				case 0x40://RegisterTransaction
+//				{
+//						if(Version == 0)
+//						{
+//								AssetType = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
+//								printf("AssetType:%d\r\n",AssetType);
+//								index_type += 2;							
+//								//Name:
+//								fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//								length = ReadByteLength(src,6+index_type,1024,fb);
+//								if(length == 0)	return 1;						
+//								index_type += 2 + ReadByteLengthIndex(fb);
+//								NameR = &src[4+index_type];		
+//								printf("Name:");						
+//								for(i=0;i<length*2;i++)
+//										printf("%c",*(NameR+i));
+//								printf("\r\n");
+//								index_type += length*2;									
+//								//Amount														
+//								Amount = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
+//												 Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
+//												 Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,6)+Ascii2Dec(src[index_type+14])*pow(16,6)+Ascii2Dec(src[index_type+15])*pow(16,4)+
+//												 Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
+//								printf("Amount:%lld\r\n",Amount);
+//								index_type += 16;
+//								//Precision
+//								Precision = Ascii2Dec(src[index_type+4])*16+Ascii2Dec(src[index_type+5]);
+//								printf("Precision:%d\r\n",Precision);								
+//								index_type += 2;
+//								//Owner
+//								for(i=0;i<66;i++)
+//										Owner[i] = src[i+index_type+4];
+//								index_type += 66;
+//								printf("Owner:%s\r\n",Owner);
+//								//Admin
+//								for(i=0;i<40;i++)	
+//										Admin[i] = src[i+index_type+4];					
+//								printf("Admin:%s\r\n",Admin);
+//								index_type += 40;
+//								break;
+//						}
+//						else
+//						{
+//								return 1;
+//						}
+//				}
+//				case 0x80://ContractTransaction  最常见的合约交易	 没有自己的独特处理			
+//				{
+//						if(Version != 0)
+//						{
+//								return 1;
+//						}
+//						break;
+//				}					
+//				case 0xd0://PublishTransaction
+//				{
+//						if(Version > 1)
+//						{
+//								return 1;
+//						}
+//						for(i=0;i<6;i++)
+//								Code[i] = src[4+i];
+//						printf("Code:%s\r\n",Code);
+//						if(Version == 1)
+//						{
+//								NeedStorage = Ascii2Dec(src[10])*16 + Ascii2Dec(src[11]);
+//						}
+//						else 
+//						{
+//								NeedStorage = 0;
+//						}
+//						printf("NeedStorage:%d\r\n",NeedStorage);
+//						index_type += 8;
+//						//NameP:
+//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//						length = ReadByteLength(src,6+index_type,252,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						NameP = &src[4+index_type];		
+//						printf("Name:");						
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(NameP+i));
+//						printf("\r\n");
+//						index_type += length*2;						
+//						//CodeVersion
+//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//						length = ReadByteLength(src,6+index_type,252,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						CodeVersion = &src[4+index_type];						
+//						printf("CodeVersion:");						
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(CodeVersion+i));
+//						printf("\r\n");
+//						index_type += length*2;										
+//						//Author
+//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//						length = ReadByteLength(src,6+index_type,252,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						Author = &src[4+index_type];						
+//						printf("Author:");						
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(Author+i));
+//						printf("\r\n");
+//						index_type += length*2;	
+//						//Email
+//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//						length = ReadByteLength(src,6+index_type,252,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						Email = &src[4+index_type];						
+//						printf("Email:");						
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(Email+i));
+//						printf("\r\n");
+//						index_type += length*2;																			
+//						//Description
+//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
+//						length = ReadByteLength(src,6+index_type,65536,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						Description = &src[4+index_type];						
+//						printf("Description:");						
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(Description+i));
+//						printf("\r\n");
+//						index_type += length*2;																	
+//						break;
+//				}
+//				case 0xd1://InvocationTransaction
+//				{
+//						if(Version > 1)
+//						{
+//								return 1;
+//						}						
+//						fb = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
+//						length = ReadByteLength(src,6,65536,fb);
+//						if(length == 0)	return 1;						
+//						index_type += 2 + ReadByteLengthIndex(fb);
+//						Script = &src[4+index_type];						
+//						printf("Script:");
+//						for(i=0;i<length*2;i++)
+//								printf("%c",*(Script+i));
+//						printf("\r\n");
+//						index_type += length*2;
+//						if(Version == 1)
+//						{
+//								Gas = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
+//											Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
+//											Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,9)+Ascii2Dec(src[index_type+14])*pow(16,5)+Ascii2Dec(src[index_type+15])*pow(16,4)+
+//											Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
+//								printf("Gas:%lld\r\n",Gas);	
+//								index_type += 8;	
+//								if(Gas < 0) return 1;															
+//						}
+//						else
+//						{
+//							Gas = 0;// Fixed.Zero 表示为0
+//						}						
+//						break;
+//				}
+//				default:
+//						printf("Type Error!!!");
+//						break;
+//		}		
+//			
+//		//countAttributes
+//		countAttributes = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);		
+//		printf("countAttributes:%d\r\n",countAttributes);
+
+//		//countInputs
+//		countInputs = Ascii2Dec(src[6+index_type])*16+Ascii2Dec(src[7+index_type]);
+//		printf("countInputs:%d\r\n",countInputs);
+//		index = 8+index_type;
+//		for(i=0;i<countInputs;i++)
+//		{
+//				for(j=0;j<64;j++)
+//				{
+//						Input[j]=src[index+j+68*i];
+//				}
+//				//反向
+//				ReverseString(Input);
+//				printf("input%d:%s\r\n",i,Input);
+//				printf("index:%d\r\n",Ascii2Dec(src[index+j+68*i])*16+Ascii2Dec(src[index+j+1+68*i])+Ascii2Dec(src[index+j+2+68*i])*16*16*16+Ascii2Dec(src[index+j+3+68*i])*16*16);				
+//				memset(Input,0,64);//清空数组
+//		}
+//		index += 68*countInputs;
+//		
+//		//countOutputs	
+//		countOutputs = Ascii2Dec(src[index])*16+Ascii2Dec(src[index+1]);
+//		printf("countOutputs:%d\r\n",countOutputs);		
+//		index += 2;
+//		
+//		for(i=0;i<countOutputs;i++)
+//		{
+//				for(j=0;j<64;j++)
+//				{
+//						Output[j]=src[index+j+120*i];
+//				}			
+//				//反向
+//				ReverseString(Output);
+//				printf("Output%d:%s\r\n",i,Output);
+//				memset(Output,0,64);//清空数组				
+//				
+//				//计算money
+//				for(j=0;j<16;j++)
+//				{
+//						buff_money[j] = src[index+64+120*i+j];
+//				}
+//				printf("money%d = %.4f\r\n",i,CountMoney(buff_money));
+//								
+//				//计算地址
+//				for(j=0;j<40;j++)
+//				{
+//						address_data[2+j] = src[index+80+120*i+j];
+//				}
+//				Base58_Encode(address_data,21,result_address,&len_address);
+//				printf("address = %s\r\n",result_address);
+//		}		
+//		index += 120*countOutputs;
+//		
+//		if(index == len)
+//		{
+//				printf("Success!!!\r\n");
+//				return 0;
+//		}	
+//		else
+//		{
+//				printf("Error!!!\r\n");
+//				return 1;
+//		}
+//}
 
