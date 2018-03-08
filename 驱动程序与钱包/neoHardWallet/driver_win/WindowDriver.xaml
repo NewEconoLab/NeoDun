@@ -3,7 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="" Height="503.649"  Width="734.099" Activated="Window_Activated" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid Margin="10,10,0,0">
-        <Button Content="模拟钱包" HorizontalAlignment="Left" Margin="577,10,-431,0" VerticalAlignment="Top" Width="75" Click="CreateSimHardware"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="713*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="模拟钱包" HorizontalAlignment="Left" Margin="577,10,0,0" VerticalAlignment="Top" Width="75" Click="CreateSimHardware"/>
         <Label Name="isLink" Content="设备未连接" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  VerticalAlignment="Top" Height="56" HorizontalAlignment="Left"/>
         <Button Name="btn_relink" Background="White" BorderThickness="0"  HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="40" Click="Relink_click">
             <Button.Content>
@@ -12,7 +16,7 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-        <Grid HorizontalAlignment="Left" Height="49" Margin="0,61,-182,-54" VerticalAlignment="Top" Width="420">
+        <Grid HorizontalAlignment="Left" Height="49" Margin="0,61,0,0" VerticalAlignment="Top" Width="420">
             <Button Name="btn_showaddpage" HorizontalAlignment="Left" VerticalAlignment="Top" Width="84" Height="49" Margin="0,0,0,0" Click="ShowAddPage_click">
                 <Button.Content>
                     <StackPanel>
@@ -50,7 +54,7 @@
             </Button>
         </Grid>
         <Label Name="label_unlink" Visibility="Collapsed" Content="未连接到设备,请检查USB是否插好或蓝牙是否连接正常" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="Gray" Height="315" Margin="5,130,0,0" VerticalAlignment="Top" Width="694"/>
-        <GroupBox Name="listBox" Visibility="Collapsed" Header="" HorizontalAlignment="Left" Height="351" Margin="0,115,0,0" VerticalAlignment="Top" Width="704">
+        <GroupBox Name="listBox" Visibility="Collapsed" Header="" HorizontalAlignment="Left" Height="351" Margin="0,115,0,-1.6" VerticalAlignment="Top" Width="704">
             <Grid Margin="0,0,0,0" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55*"/>
@@ -91,7 +95,7 @@
                 <Button x:Name="btn_addAddress" Margin="29,81,39,10" Content="新增地址" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" BorderThickness="1" RenderTransformOrigin="-7.095,5.066" Grid.ColumnSpan="2" Grid.Row="2" Click="AddAddress_click"/>
             </Grid>
         </GroupBox>
-        <GroupBox Name="settingBox" Visibility="Collapsed" Margin="150,110,150,50" Background="White" Header="设置页面" FontSize="15">
+        <GroupBox Name="settingBox" Visibility="Collapsed" Margin="150,110,144.966,50.4" Background="White" Header="设置页面" FontSize="15">
             <Grid Margin="0">
                 <Button Margin="370,-10,-5,250" Background="White" Content="×" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="HideSettingPage_click"/>
                 <Grid Margin="50,0,50,0">
@@ -162,7 +166,7 @@
                 </ListBox>
             </Grid>
         </GroupBox>
-        <Grid Name="msgBox" Margin="200,150,200,150" Visibility="Collapsed" Background="White">
+        <Grid Name="msgBox" Margin="200,150,194.966,150.4" Visibility="Collapsed" Background="White">
             <Button Name="msgBox_cancel" Content="×" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="275,0,0,120" Background="White" BorderThickness="1" Click="HideMessagePage_click"/>
             <Label Name="msgBox_label" Content="" FontSize="20" VerticalContentAlignment="Center" BorderThickness="1" BorderBrush="Black" HorizontalContentAlignment="Center"/>
         </Grid>

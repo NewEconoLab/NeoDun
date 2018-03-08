@@ -1,0 +1,12 @@
+﻿<loacl:GWindow x:Class="WpfApp1.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:loacl="clr-namespace:WpfWin"
+	xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+	Title="MainWindow" Height="350" Width="525" AreaText="MainWindow" ShowInTaskbar="False" AreaVisibility="True"  AreaIcon="Image/clock.ico" Icon="Image/clock.ico">
+    <loacl:GWindow.AreaMenuItems>
+        <forms:MenuItem Text="Open" DefaultItem="True" />
+        <forms:MenuItem Text="Exit" />
+    </loacl:GWindow.AreaMenuItems>
+    <Grid/>
+</loacl:GWindow>

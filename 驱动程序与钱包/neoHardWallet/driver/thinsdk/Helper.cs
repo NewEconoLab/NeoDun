@@ -226,7 +226,8 @@ namespace NEO.AllianceOfThinWallet.Cryptography
             //            }))
             //#endif
             {
-                return ecdsa.SignData(message, System.Security.Cryptography.HashAlgorithmName.SHA256);
+                return null;
+              //return ecdsa.SignData(message, System.Security.Cryptography.HashAlgorithmName.SHA256);
             }
         }
 

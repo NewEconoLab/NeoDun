@@ -25,12 +25,76 @@ namespace driver_win
         //缓存住的密码 
         string str_password = "";
         string str_password2 = "";
+
+        private System.Windows.Forms.NotifyIcon notifyIcon;
         public WindowDriver()
         {
             InitializeComponent();
+
+            DriverS.Init();
+            Init();
+            InitPage();
+            signer.Start(this);
+
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon();
+            this.notifyIcon.Icon = new System.Drawing.Icon(@"Neodun.ico");
+            this.notifyIcon.Visible = true;
+            //打开菜单项
+            System.Windows.Forms.MenuItem open = new System.Windows.Forms.MenuItem("Open");
+            open.Click += new EventHandler(Show);
+            //退出菜单项
+            System.Windows.Forms.MenuItem exit = new System.Windows.Forms.MenuItem("Exit");
+            exit.Click += new EventHandler(Close);
+            //关联托盘控件
+            System.Windows.Forms.MenuItem[] childen = new System.Windows.Forms.MenuItem[] { open, exit };
+            notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu(childen);
+
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler((o, e) =>
+            {
+                if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
+            });
+            Hide();
+        }
+        private void Show(object sender, EventArgs e)
+        {
+            this.Activate();
+            this.Visibility = System.Windows.Visibility.Visible;
+            this.ShowInTaskbar = true;
         }
 
+        private void Hide(object sender, EventArgs e)
+        {
+            this.ShowInTaskbar = false;
+            this.Visibility = System.Windows.Visibility.Hidden;
+        }
 
+        private void Close(object sender, EventArgs e)
+        {
+            UInit();
+            signer.Stop();
+            Environment.Exit(0);
+            //System.Windows.Application.Current.Shutdown();
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+          //  DriverS.Init();
+          // Init();
+          //  InitPage();
+          //  signer.Start(this);
+
+
+            //检测钱包有没有断开连接
+        }
 
         #region 所有的页面点击事件
         //显示增加地址的页面
@@ -256,25 +320,7 @@ namespace driver_win
         void IWatcher.OnSend(Message send, bool needBack)
         {
         }
-        private void Window_Activated(object sender, EventArgs e)
-        {
 
-        }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            UInit();
-            signer.Stop();
-        }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            DriverS.Init();
-            Init();
-            InitPage();
-            signer.Start(this);
-
-
-            //检测钱包有没有断开连接
-        }
 
         private void Init()
         {
@@ -289,6 +335,7 @@ namespace driver_win
             driverCtr.privateKey2AddressEventHandlerCallBack += PrivateKey2AddressCallBack;
             driverCtr.setSetingInfoEventHandlerCallBack += SetSettingConfigCallBack;
             driverCtr.errorEventHandlerCallBack += ErrorMsgShow;
+            driverCtr.showBalloonTipEventHandlerCallBack += ShowBalloonTip;
 
             hhgate.CustomServer.BeginServer();
 
@@ -310,12 +357,20 @@ namespace driver_win
             driverCtr.privateKey2AddressEventHandlerCallBack -= PrivateKey2AddressCallBack;
             driverCtr.setSetingInfoEventHandlerCallBack -= SetSettingConfigCallBack;
             driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;
+            driverCtr.showBalloonTipEventHandlerCallBack -= ShowBalloonTip;
         }
 
         private void ClearCache()
         {
             this.addresslist.Items.Clear();
             str_password = "";
+        }
+
+        //气泡框的显示
+        private void ShowBalloonTip(string content)
+        {
+            System.Windows.Forms.ToolTipIcon type = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.ShowBalloonTip(1000, "通知", content, type);
         }
 
         //锁住密码页面的按键
@@ -336,6 +391,7 @@ namespace driver_win
         }
         private void LinkSingerCallBack(string _label, Visibility _isShow,bool _islink)
         {
+            this.notifyIcon.Text = _label;
             this.isLink.Content = _label;
             this.btn_relink.Visibility = _isShow;
             if (!_islink)

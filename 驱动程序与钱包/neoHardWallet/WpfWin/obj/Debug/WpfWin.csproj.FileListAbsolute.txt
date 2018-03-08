@@ -1,0 +1,16 @@
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\bin\Debug\WpfWin.exe.config
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\bin\Debug\WpfWin.exe
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\bin\Debug\WpfWin.pdb
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.csprojResolveAssemblyReference.cache
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\MainWindow.g.cs
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\App.g.cs
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\GeneratedInternalTypeHelper.g.cs
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin_MarkupCompile.cache
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin_MarkupCompile.lref
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\MainWindow.baml
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.g.resources
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.Properties.Resources.resources
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.csproj.GenerateResource.Cache
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.csproj.CoreCompileInputs.cache
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.exe
+F:\NeoDun\驱动程序与钱包\neoHardWallet\WpfWin\obj\Debug\WpfWin.pdb

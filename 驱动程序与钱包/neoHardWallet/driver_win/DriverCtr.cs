@@ -96,7 +96,8 @@ namespace driver_win
             timer.Interval = TimeSpan.FromSeconds(1.0);
             timer.Tick += new EventHandler(async (_s, _e) => {
                 _time--;
-                if (_count <= 0)
+                //if (_count <= 0)
+                if(false)
                 {
                     _islinking = false;
                     //显示未连接 
@@ -121,18 +122,23 @@ namespace driver_win
                         _time = time;
                         //timer.Stop();
                         //timer = null;
-                        LinkCallBack("连接成功",System.Windows.Visibility.Collapsed,true);
 
 
                         //只在第一次连接的时候    连接成功后去请求签名机的状态
                         if (!_islinking)
                         {
+                            LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
+                            ShowBalloonTipCallBack("NeoDun已经连接");
                             GetSingerInfo();
                         }
                     }
                     else
                     {
-                        _islinking = false;
+                        if (_islinking)
+                        {
+                            ShowBalloonTipCallBack("NeoDun已经拔出");
+                            _islinking = false;
+                        }
                         LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed,false);
                         await Task.Delay(1000);
                     }
@@ -146,6 +152,14 @@ namespace driver_win
         {
             if(linkSingerEventHandlerCallBack != null)
                 linkSingerEventHandlerCallBack(str, visibility, _islink);
+        }
+
+        public delegate void ShowBalloonTipEventHandlerCallBack(string str);
+        public event ShowBalloonTipEventHandlerCallBack showBalloonTipEventHandlerCallBack;
+        public void ShowBalloonTipCallBack(string str)
+        {
+            if(showBalloonTipEventHandlerCallBack != null)
+                showBalloonTipEventHandlerCallBack(str);
         }
         #endregion
 

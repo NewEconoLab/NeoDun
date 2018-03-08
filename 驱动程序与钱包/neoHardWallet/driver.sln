@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "driver", "driver\driver.csproj", "{C2B382F5-68F3-42BF-AE64-3EF8F8BD7E83}"
 EndProject
@@ -66,5 +66,8 @@ Global
 		{43EBD82A-EE38-493A-B1B7-B3172279F0E1} = {45B2B19A-0FFE-4075-B22E-7AF35615D455}
 		{6E5E4DA5-5AD9-47F3-94C1-DFE50FD1F445} = {45B2B19A-0FFE-4075-B22E-7AF35615D455}
 		{7F0974F3-C948-447F-A170-3133CDE4A1A7} = {789E0AEC-4E7E-413E-8915-A2B524252B50}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1200770E-59F1-4917-98E5-2F60B186C15C}
 	EndGlobalSection
 EndGlobal
