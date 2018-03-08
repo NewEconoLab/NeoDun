@@ -1,0 +1,9 @@
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.c
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.h
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\crypto\atca_crypto_sw.h
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\atca_status.h
+bootloader_neo\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\atca_bool.h
+bootloader_neo\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+bootloader_neo\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+bootloader_neo\atca_crypto_sw_sha2.o: ..\ATSHA204\lib\crypto\hashes/sha2_routines.h

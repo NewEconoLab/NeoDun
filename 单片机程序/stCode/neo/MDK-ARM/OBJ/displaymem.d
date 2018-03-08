@@ -37,3 +37,4 @@
 .\obj\displaymem.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd.h
 .\obj\displaymem.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\displaymem.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
+.\obj\displaymem.o: ..\..\Cpp\main_define.h

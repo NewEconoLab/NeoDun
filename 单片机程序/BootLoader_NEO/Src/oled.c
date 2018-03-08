@@ -4,6 +4,7 @@
 //********************************************************************************
 //接口定义参照oled.h文件
 #include "oled.h"
+#include <string.h>
 #include "stdlib.h"
 //定义ASCII库
 #include "Asc5x8.h" 	   //ascii 5*8字库
@@ -12,7 +13,10 @@
 #include "Asc12x24.h" 	 //ascii 12*24字库
 //自定义汉字库
 #include "HZ12X12_S.h" 	 //12*12宋体自定义汉字库
+#include "main_define.h"
+#include "aw9136.h"
 
+extern SIGN_KEY_FLAG Key_Flag;
 
 //向SSD1325写入一个字节。
 //dat:要写入的数据/命令
@@ -456,9 +460,9 @@ unsigned char i,j,k,l,b1,c1;
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //  Show Regular Pattern (Partial or Full Screen)
 //
-//    a: Column Address of Start
+//    a: Column Address of Start  列
 //    b: Column Address of End (Total Columns Devided by 4)
-//    c: Row Address of Start
+//    c: Row Address of Start  行
 //    d: Row Address of End
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 void Fill_Block(unsigned char Data, unsigned char a, unsigned char b, unsigned char c, unsigned char d)
@@ -662,23 +666,25 @@ void Asc6_12(unsigned char x,unsigned char y,unsigned char ch[])
 {
   unsigned char x1,c=0, i=0,j=0;      
   while (ch[i]!='\0')
-  {    
+  { 
     x1=x/4;
-	c =ch[i]-32;
+		c =ch[i]-32;	
     if(x1>61)
-	   {x=0;
-	   x1=x/4;
-	   y=y+12;}  //换行																	
+	  {
+			 x=0;
+			 x1=x/4;
+			 y=y+12; //换行
+		} 																	
     Set_Column_Address(Shift+x1,Shift+x1+1); // 设置列坐标，shift为列偏移量由1322决定 
-	Set_Row_Address(y,y+11); 
-	Set_Write_RAM();	 //	写显存    
+		Set_Row_Address(y,y+11); 
+		Set_Write_RAM();	 //	写显存    
   	
 		for(j=0;j<12;j++)
-	 		  {
-				 Con_4_byte(ASC6X12[c*12+j]);	//数据转换
-			   }
-	 i++;
-	 x=x+8;	 //字间距，8为最小
+	 	{
+			Con_4_byte(ASC6X12[c*12+j]);	//数据转换
+		}
+	  i++;
+	  x=x+8;	 //字间距，8为最小
   }
 }
 //==============================================================
@@ -778,6 +784,11 @@ void Grayscale()
 		Fill_Block(0x00,0x3C,Max_Column,0x00,Max_Row);
 }
 
+void clearArea(unsigned char x,unsigned char y,unsigned char width,unsigned char height)
+{
+		Fill_Block(0,x/4,(x+width-1)/4,y,y+height-1);
+}
+
 void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse)
 {
 		int x1,data,c,j;
@@ -873,7 +884,418 @@ void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigne
 
 }
 
+//void SetPassport(void)
+//{
+//    unsigned char index = 0;
+//    unsigned char Center_Flag = 0;
+//    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+//		unsigned char temp = 0;
 
+//		Fill_RAM(0x00);//清屏
+//    Asc6_12(53,8,"Pin Code:");
+//		temp = code_array[0];
+//		Asc6_12(125,8,&temp);
+//    Asc6_12(133,8,"_");
+//    Asc6_12(141,8,"_");
+//    Asc6_12(149,8,"_");
+//    Asc6_12(157,8,"_");
+//    Asc6_12(165,8,"_");
+//    Asc6_12(173,8,"_");
+//    Asc6_12(181,8,"_");
+//    Asc6_12(30,40,"+");
+//    Asc6_12(120,40,"OK");
+//    Asc6_12(226,40,"-");
+
+//		Key_Control(1);//清空按键标志位，开启按键有效
+//    while(1)
+//    {
+//        if(Key_Flag.Key_left_Flag)//左键按下
+//        {
+//						Key_Flag.Key_left_Flag = 0;
+//						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//            if(Center_Flag != 0)
+//                Center_Flag = 0;
+//            if(code_array[index] == '0')
+//            {
+//								Asc6_12(125+8*index,8,"9");
+//                code_array[index] = '9';
+//            }
+//            else if(code_array[index] == '?')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else
+//            {
+//                code_array[index]--;
+//								temp = code_array[index];
+//								Asc6_12(125+8*index,8,&temp);
+//            }
+//        }
+//        if(Key_Flag.Key_right_Flag)//右键按下
+//        {
+//						Key_Flag.Key_right_Flag = 0;
+//						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//            if(Center_Flag != 0)
+//                Center_Flag = 0;
+//            if(code_array[index] == '9')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else if(code_array[index] == '?')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else
+//            {
+//                code_array[index]++;
+//								temp = code_array[index];
+//								Asc6_12(125+8*index,8,&temp);
+//            }
+//        }
+//        if(Key_Flag.Key_center_Flag)//中间键按下
+//        {
+//						Key_Flag.Key_center_Flag = 0;
+//            Center_Flag++;
+//            index++;
+//            if(index < 4)
+//            {
+//                Center_Flag = 0;
+//								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//								Asc6_12(125+8*index,8,"0");
+//            }
+//            else
+//            {
+//								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//								Asc6_12(125+8*index,8,"?");
+//            }
+//        }
+//        if((index>=4)&&(Center_Flag >= 2))
+//        {
+//            //将密码保存起来,
+
+//					
+//					
+//					
+//					
+//						Fill_RAM(0x00);//清除所有显示
+//						
+//					
+//					
+//            break;
+//        }
+//    }
+//		Key_Control(0);//清空按键标志位，开启按键无效
+//}
+
+//u8 VerifyPassport(void)
+//{
+//    unsigned char index = 0;
+//    unsigned char Center_Flag = 0;
+//    unsigned char code_old[8] = {'0','0','0','0','0','0','0','0'};//从存储的地方读出来
+//    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+//		unsigned char temp = 0;
+//		
+//		Fill_RAM(0x00);//清屏
+//    Asc6_12(53,8,"Pin Code:");
+//		temp = code_array[0];
+//		Asc6_12(125,8,&temp);
+//    Asc6_12(133,8,"_");
+//    Asc6_12(141,8,"_");
+//    Asc6_12(149,8,"_");
+//    Asc6_12(157,8,"_");
+//    Asc6_12(165,8,"_");
+//    Asc6_12(173,8,"_");
+//    Asc6_12(181,8,"_");
+//    Asc6_12(30,40,"+");
+//    Asc6_12(120,40,"OK");
+//    Asc6_12(226,40,"-");
+//		
+//		//读取出老的密码
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		Key_Control(1);//清空按键标志位，开启按键有效
+//    while(1)
+//    {
+//        if(Key_Flag.Key_left_Flag)//左键按下
+//        {
+//						Key_Flag.Key_left_Flag = 0;
+//						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//            if(Center_Flag != 0)
+//                Center_Flag = 0;
+//            if(code_array[index] == '0')
+//            {
+//								Asc6_12(125+8*index,8,"9");
+//                code_array[index] = '9';
+//            }
+//            else if(code_array[index] == '?')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else
+//            {
+//                code_array[index]--;
+//								temp = code_array[index];
+//								Asc6_12(125+8*index,8,&temp);
+//            }
+//        }
+//        if(Key_Flag.Key_right_Flag)//右键按下
+//        {
+//						Key_Flag.Key_right_Flag = 0;
+//						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//            if(Center_Flag != 0)
+//                Center_Flag = 0;
+//            if(code_array[index] == '9')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else if(code_array[index] == '?')
+//            {
+//								Asc6_12(125+8*index,8,"0");
+//                code_array[index] = '0';
+//            }
+//            else
+//            {
+//                code_array[index]++;
+//								temp = code_array[index];
+//								Asc6_12(125+8*index,8,&temp);
+//            }
+//        }
+//        if(Key_Flag.Key_center_Flag)//中间建按下
+//        {
+//						Key_Flag.Key_center_Flag = 0;
+//						clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//						Asc6_12(125+8*index,8,"*");
+//            Center_Flag++;
+//            index++;
+//            if(index < 4)
+//            {
+//                Center_Flag = 0;
+//								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//								Asc6_12(125+8*index,8,"0");
+//            }
+//            else
+//            {
+//								clearArea(125+8*index,8,6,12);//清空这个位置的显示
+//								Asc6_12(125+8*index,8,"?");
+//            }
+//        }
+//        if((index>=4)&&(Center_Flag >= 2))
+//        {
+//						Fill_RAM(0x00);//清除所有显示
+//					
+//					
+
+//            if(compareCharArray(code_old,code_array,index) == 1)//密码正确
+//            {    
+//								Key_Control(0);//清空按键标志位，开启按键无效	
+//								return 1;							
+//						}
+//            else//密码错误
+//						{
+//								Key_Control(0);//清空按键标志位，开启按键无效								
+//                return 0;
+//						}
+//        }
+//    }	
+//}
+
+/***************************************************************
+		以下的密码设置和验证函数都是固定长度为6位的密码
+		上面注释掉的是4-8位的密码相关函数
+***************************************************************/
+void SetPassport(void)
+{
+    unsigned char index = 0;
+    unsigned char code_array[6] = {'5','5','5','5','5','5'};
+		unsigned char temp[2] = {'\0','\0'};
+
+		Fill_RAM(0x00);//清屏
+    Asc6_12(52,8,"Pin Code:");
+		temp[0] = code_array[0];
+		Asc6_12(124,8,temp);
+    Asc6_12(132,8,"_");
+    Asc6_12(140,8,"_");
+    Asc6_12(148,8,"_");
+    Asc6_12(156,8,"_");
+    Asc6_12(164,8,"_");
+    Asc6_12(30,40,"+");
+    Asc6_12(120,40,"OK");
+    Asc6_12(226,40,"-");
+
+		Key_Control(1);//清空按键标志位，开启按键有效
+		while(index < 6)
+    {
+        if(Key_Flag.Key_left_Flag)//左键按下
+        {
+						Key_Flag.Key_left_Flag = 0;
+            if(code_array[index] == '9')
+            {
+								Asc6_12(124+8*index,8,"0");
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]++;
+								temp[0] = code_array[index];
+								Asc6_12(124+8*index,8,temp);
+            }
+        }
+        if(Key_Flag.Key_right_Flag)//右键按下
+        {
+						Key_Flag.Key_right_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								Asc6_12(124+8*index,8,"9");
+                code_array[index] = '9';
+            }
+            else
+            {
+                code_array[index]--;
+								temp[0] = code_array[index];
+								Asc6_12(124+8*index,8,temp);
+            }
+        }
+        if(Key_Flag.Key_center_Flag)//中间键按下
+        {
+						Key_Flag.Key_center_Flag = 0;
+            index++;
+            if(index == 6)
+            {
+								//将密码保存起来,
+
+							
+							
+							
+							
+							
+							
+								Asc6_12(180,8,"OK");
+								HAL_Delay(1000);
+								Fill_RAM(0x00);//清除所有显示							
+								break;							
+            }
+            else
+            {
+								clearArea(124+8*index,8,8,12);//清空这个位置的显示
+								Asc6_12(124+8*index,8,"5");
+            }
+        }
+    }
+		Key_Control(0);//清空按键标志位，开启按键无效
+}
+
+u8 VerifyPassport(void)
+{
+    unsigned char index = 0;
+    unsigned char code_old[6] = {'5','5','5','5','5','5'};//从存储的地方读出来
+    unsigned char code_array[6] = {'5','5','5','5','5','5'};
+		unsigned char temp[2] = {'\0','\0'};
+		
+		Fill_RAM(0x00);//清屏
+    Asc6_12(52,8,"Pin Code:");
+		temp[0] = code_array[0];
+		Asc6_12(124,8,temp);
+    Asc6_12(132,8,"_");
+    Asc6_12(140,8,"_");
+    Asc6_12(148,8,"_");
+    Asc6_12(156,8,"_");
+    Asc6_12(164,8,"_");
+    Asc6_12(30,40,"+");
+    Asc6_12(120,40,"OK");
+    Asc6_12(226,40,"-");
+		
+		//读取出老的密码
+		
+		
+		
+		
+		
+		
+		
+		Key_Control(1);//清空按键标志位，开启按键有效
+    while(1)
+    {
+        if(Key_Flag.Key_left_Flag)//左键按下
+        {
+						Key_Flag.Key_left_Flag = 0;
+            if(code_array[index] == '9')
+            {
+								Asc6_12(124+8*index,8,"0");
+                code_array[index] = '0';
+            }
+            else
+            {
+                code_array[index]++;
+								temp[0] = code_array[index];
+								Asc6_12(124+8*index,8,temp);
+            }
+        }
+        if(Key_Flag.Key_right_Flag)//右键按下
+        {
+						Key_Flag.Key_right_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								Asc6_12(124+8*index,8,"9");
+                code_array[index] = '9';
+            }
+            else
+            {
+                code_array[index]--;
+								temp[0] = code_array[index];
+								Asc6_12(124+8*index,8,temp);
+            }
+        }
+        if(Key_Flag.Key_center_Flag)//中间建按下
+        {
+						Key_Flag.Key_center_Flag = 0;
+						clearArea(124+8*index,8,6,12);//清空这个位置的显示
+						Asc6_12(124+8*index,8,"*");
+            index++;
+            if(index == 6)
+            {
+								if(compareCharArray(code_old,code_array,index) == 1)//密码正确
+								{    
+										Key_Control(0);//清空按键标志位，开启按键无效	
+										return 1;							
+								}
+								else//密码错误
+								{
+										Key_Control(0);//清空按键标志位，开启按键无效
+										Asc6_12(180,8,"ERROR");
+										HAL_Delay(1000);
+										Fill_RAM(0x00);//清除所有显示
+										return 0;
+								}
+            }
+            else
+            {
+								clearArea(124+8*index,8,6,12);//清空这个位置的显示
+								Asc6_12(124+8*index,8,"5");
+            }
+        }
+    }	
+}
+
+u8 compareCharArray(unsigned char *left,unsigned char *right,int len)
+{
+		int i;
+		for(i=0;i<len;i++)
+		{
+				if(left[i] != right[i])
+						return 0;
+		}
+		return 1;
+}
 
 
 

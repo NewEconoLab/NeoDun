@@ -1,5 +1,7 @@
 #include "aw9136.h"
 #include "myiic.h"
+#include "main_define.h"
+#include <string.h>
 
 /**********************************************************
  Auto Calibration
@@ -11,10 +13,8 @@
 #define CNT_INT				1			//重复进入多少次中断，实际校准的宏，现定为1次
 
 volatile unsigned char aw9136_key_flag = 0;
-volatile unsigned char left_key_flag = 0;
-volatile unsigned char center_key_flag = 0;
-volatile unsigned char right_key_flag = 0;
-volatile unsigned char double_key_flag = 0;
+extern volatile unsigned char touch_motor_flag;           //1表示正在进行测试
+#define  MOTOR_TIME  80
 
 unsigned char cali_flag = 0;
 unsigned char cali_num = 0;
@@ -26,6 +26,7 @@ long Ini_sum[6];
 
 #endif
 
+SIGN_KEY_FLAG Key_Flag;
 /**********************************************************
  Touch process variable
 **********************************************************/
@@ -87,7 +88,7 @@ void Center_button_init(void)
     HAL_GPIO_Init(GPIOA,&GPIO_Initure);		
 	
     //中断线0-PA0
-    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为3
+    HAL_NVIC_SetPriority(EXTI0_IRQn,2,1);   //抢占优先级为2，子优先级为1
     HAL_NVIC_EnableIRQ(EXTI0_IRQn);         //使能中断线2 
 
 		aw9136_key_flag = 1;
@@ -128,7 +129,9 @@ void AW9136_Init(void)
 		HAL_Delay(5);
 		
 		value1 = I2C_read_reg(0x00);	
+#ifdef Debug_Print		
 		printf("AW9136 chip ID:0x%4x\r\n",value1);
+#endif		
 		AW_NormalMode();
 			
 #ifdef AW_AUTO_CALI
@@ -138,7 +141,9 @@ void AW9136_Init(void)
 #endif		
 
 		value2 = I2C_read_reg(0x01);	
+#ifdef Debug_Print		
 		printf("AW9136 GCR:0x%4x\r\n",value2);	
+#endif
 		AW9136_LED_ON();
 }
 
@@ -159,13 +164,14 @@ void EXTI2_IRQHandler(void)
 **********************************************************/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    HAL_Delay(100);      //消抖
+//    HAL_Delay(100);      //消抖
+		
 		switch (GPIO_Pin)
 		{
 			case GPIO_PIN_2:
 					AW9136_eint_work();
 					break;
-			case GPIO_PIN_0:
+			case GPIO_PIN_0:				
 					Home_Key_press();
 					break;
 			default:
@@ -632,76 +638,102 @@ void AW9136_eint_work(void)
 
 void AW_left_press(void)
 {
+#ifdef Debug_Print		
 		printf("AW9136 left press \n");
+#endif	
 }
 
 void AW_left_release(void)
 {
+#ifdef Debug_Print		
 		printf("AW9136 left release\n");
+#endif	
 }
 
 void AW_center_press(void)
 {		
-		if(aw9136_key_flag)
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
 		{
+#ifdef Debug_Print				
 				printf("AW9136 right press \n");
-				right_key_flag = 1;
+#endif			
+				Key_Flag.Key_right_Flag = 1;
 		}
+		if(touch_motor_flag)
+				Motor_touch(MOTOR_TIME);
 }
 
 void AW_center_release(void)
 {
-		if(aw9136_key_flag)
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
 		{
+#ifdef Debug_Print				
 				printf("AW9136 right release \n");
-				right_key_flag = 1;
+#endif			
+//				Key_Flag.Key_right_Flag = 1;
 		}
 }
 
 void AW_right_press(void)
 {
-		if(aw9136_key_flag)
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
 		{
+#ifdef Debug_Print				
 				printf("AW9136 left press \n");
-				left_key_flag = 1;
+#endif			
+				Key_Flag.Key_left_Flag = 1;
 		}
+		if(touch_motor_flag)
+				Motor_touch(MOTOR_TIME);
 }
 		
 void AW_right_release(void)
 {
-		if(aw9136_key_flag)
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
 		{
+#ifdef Debug_Print				
 				printf("AW9136 left release \n");
-				left_key_flag = 1;
+#endif			
+//				Key_Flag.Key_left_Flag = 1;
 		}
 }
 
 void AW_double(void)
 {
-		if(aw9136_key_flag)			
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)			
 		{		
+#ifdef Debug_Print				
 				printf("AW9136 center double click \n");
-				double_key_flag = 1;
+#endif			
+				Key_Flag.Key_double_Flag = 1;
 		}
 }
 
 void AW_right_slip(void)
 {
+#ifdef Debug_Print		
 		printf("AW9136 right slip \n");
+#endif
 }
 
 void AW_left_slip(void)
 {
+#ifdef Debug_Print		
 		printf("AW9136 left slip \n");
+#endif	
 }
 
 void Home_Key_press(void)
 {	
-		if(aw9136_key_flag)			
+		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)			
 		{		
+#ifdef Debug_Print			
 				printf("中间按键按下！！！\n");
-				center_key_flag = 1;
+#endif			
+				Key_Flag.Key_center_Flag = 1;
 		}
+		if(touch_motor_flag)
+				Motor_touch(MOTOR_TIME);
 }
 
 /*********************************
@@ -718,7 +750,28 @@ void AW_LedReleaseTouch(void)
 	I2C_write_reg(GCR,0x0003);			// GCR
 }
 
+/*********************************
+value:
+	0		关闭按键实际功能
+	1		打开按键实际功能
+*********************************/
+void Key_Control(unsigned char value)
+{
+		memset(&Key_Flag,0,sizeof(Key_Flag));	
+		if(value == 1)
+		{
+				Key_Flag.Key_Control_Flag = 1;
+		}
+		else
+		{
+				Key_Flag.Key_Control_Flag = 0;
+		}
+}	
 
-
-
+void Motor_touch(int time)
+{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+		HAL_Delay(time);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);	
+}
 

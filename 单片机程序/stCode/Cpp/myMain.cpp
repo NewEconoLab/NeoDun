@@ -29,6 +29,7 @@
 			保存安全设置			重复						不保存
 			重置密码					重复						不保存
 ** 8、整理工程，修改CUSTOM_HID_EPIN_SIZE和CUSTOM_HID_EPOUT_SIZE的值
+** 9、修复底层OLED显示，参数传递出错的BUG，导致换行显示出问题
 ********************************************************************************************************/
 #include "stm32f4xx_hal.h"
 #include "Hal.h"
@@ -70,8 +71,14 @@ void my_main()
 		Update_PowerOn_Count();							 //开机检验计数值
 		Update_PowerOn_SetFlag(&Set_Flag);	 //开机更新设置标识
 
-		Disp.drawString(0,0,"PassPort:");
-		Disp.GetPassportArray(passport_num); //开机显示随机9宫格密码
+//		Disp.drawString(0,0,"PassPort:");
+//		Disp.GetPassportArray(passport_num); //开机显示随机9宫格密码
+	
+	
+//		Disp.SetCode();
+//		HAL_Delay(3000);
+//		Disp.VerifyCode();
+	
 	
 //		//这两句作为调试		
 //		Disp.drawString(92,20,"NeoDun",view::FONT_12X24);

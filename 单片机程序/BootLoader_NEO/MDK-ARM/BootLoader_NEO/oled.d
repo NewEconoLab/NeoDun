@@ -37,8 +37,11 @@ bootloader_neo\oled.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 bootloader_neo\oled.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 bootloader_neo\oled.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 bootloader_neo\oled.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+bootloader_neo\oled.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 bootloader_neo\oled.o: ../Inc/Asc5x8.h
 bootloader_neo\oled.o: ../Inc/Asc6x12.h
 bootloader_neo\oled.o: ../Inc/Asc8x16.h
 bootloader_neo\oled.o: ../Inc/Asc12x24.h
 bootloader_neo\oled.o: ../Inc/HZ12X12_S.h
+bootloader_neo\oled.o: ../Inc/main_define.h
+bootloader_neo\oled.o: ../Inc/aw9136.h

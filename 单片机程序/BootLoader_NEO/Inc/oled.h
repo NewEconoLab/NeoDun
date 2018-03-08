@@ -73,7 +73,12 @@ void HZ12_12( unsigned char x, unsigned char y, unsigned char num);
 void Show_HZ12_12(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2);
 
 
+void clearArea(unsigned char x,unsigned char y,unsigned char width,unsigned char height);
 void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse);
+void SetPassport(void);
+u8 VerifyPassport(void);
+u8 compareCharArray(unsigned char *left,unsigned char *right,int len);
+
 
 #endif  
 	 

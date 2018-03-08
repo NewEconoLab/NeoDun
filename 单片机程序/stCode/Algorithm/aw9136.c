@@ -631,7 +631,7 @@ void AW_center_press(void)
 {		
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
-#ifdef Printf_Debug	
+#ifdef printf_debug	
 				printf("AW9136 right press \n");
 #endif			
 				Key_Flag.Sign_Key_right_Flag = 1;
@@ -642,7 +642,7 @@ void AW_center_release(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))	
 		{
-#ifdef Printf_Debug				
+#ifdef printf_debug				
 				printf("AW9136 right release \n");
 #endif			
 				Key_Flag.Sign_Key_right_Flag = 1;
@@ -653,7 +653,7 @@ void AW_right_press(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
-#ifdef Printf_Debug				
+#ifdef printf_debug				
 				printf("AW9136 left press \n");
 #endif
 				Key_Flag.Sign_Key_left_Flag = 1;
@@ -664,7 +664,7 @@ void AW_right_release(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))	
 		{
-#ifdef Printf_Debug	
+#ifdef printf_debug	
 				printf("AW9136 left release \n");
 #endif			
 				Key_Flag.Sign_Key_left_Flag = 1;
@@ -690,7 +690,7 @@ void Home_Key_press(void)
 {
 		if((aw9136_init_flag)&&(Key_Flag.Sign_Key_Flag))
 		{
-#ifdef Printf_Debug				
+#ifdef printf_debug				
 				printf("中间按键按下！！！\n");
 #endif			
 				Key_Flag.Sign_Key_center_Flag = 1;

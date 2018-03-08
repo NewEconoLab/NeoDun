@@ -28,7 +28,7 @@ namespace hhgate
                 context.Response.Write(json.ToString());
                 return;
             }
-            if (linking)
+            if (linking && relativePath != "comfirmpassword")
             {
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
@@ -339,6 +339,8 @@ namespace hhgate
                 time += 100;
                 if (time > timeoutTime)
                 {
+                    time = 0;
+
                     linking = false;
                     time = 0;
                     iOwinContext.Response.Write("timeout");
@@ -404,12 +406,13 @@ namespace hhgate
             driver_win.DriverCtr.Ins.SetOrConfirmPassword(password);
             while (comfirming)
             {
-                int time = 0;
                 System.Threading.Thread.Sleep(100);
                 time += 100;
-                if (time > 30000)
+                if (time > timeoutTime)
                 {
+                    time = 0;
                     context.Response.Write("timeout");
+                    comfirming = false;
                     driver_win.DriverCtr.Ins.GetAddressList();
                     break;
                 }
@@ -423,8 +426,11 @@ namespace hhgate
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["msg"] = new MyJson.JsonNode_ValueString("success");
-            iOwinContext_pw.Response.Write(json.ToString());
             comfirming = false;
+            iOwinContext_pw.Response.Write(json.ToString());
+            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
+            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
+            iOwinContext_pw = null;
         }
         //失败验证回掉
         private static void comfirmpasswordFaildCallBack()

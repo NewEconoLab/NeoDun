@@ -1,6 +1,6 @@
 #include "stmflash.h"
 
-unsigned char wallet_status = 0;//1表示新钱包，0表示旧钱包
+unsigned char wallet_status = 0;//0表示新钱包，1表示旧钱包
 
 //读取指定地址的半字(16位数据) 
 //faddr:读地址 
@@ -150,7 +150,6 @@ void STMFLASH_Erase_Sectors(uint32_t sector)
 		
 		if(FlashStatus != HAL_OK)
 		{
-				printf("Erase Flash Sector Error !\r\n");
 		}
 }
 

@@ -37,3 +37,5 @@ bootloader_neo\aw9136.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 bootloader_neo\aw9136.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 bootloader_neo\aw9136.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 bootloader_neo\aw9136.o: ../Inc/myiic.h
+bootloader_neo\aw9136.o: ../Inc/main_define.h
+bootloader_neo\aw9136.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
