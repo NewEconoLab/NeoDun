@@ -45,3 +45,4 @@ bootloader_neo\oled.o: ../Inc/Asc12x24.h
 bootloader_neo\oled.o: ../Inc/HZ12X12_S.h
 bootloader_neo\oled.o: ../Inc/main_define.h
 bootloader_neo\oled.o: ../Inc/aw9136.h
+bootloader_neo\oled.o: ../Inc/app_interface.h

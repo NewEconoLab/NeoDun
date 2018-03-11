@@ -51,3 +51,5 @@ bootloader_neo\main.o: ..\ATSHA204\lib\atca_bool.h
 bootloader_neo\main.o: ..\ATSHA204\Atsha204_hw\hw_config.h
 bootloader_neo\main.o: ..\ATSHA204\Atsha204_hw\bitBand.h
 bootloader_neo\main.o: ../Inc/main_define.h
+bootloader_neo\main.o: ../Inc/app_interface.h
+bootloader_neo\main.o: ../Inc/test_jpg.h

@@ -1,0 +1,9 @@
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.c
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.h
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\crypto\atca_crypto_sw.h
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\atca_status.h
+.\obj\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\atca_bool.h
+.\obj\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\atca_crypto_sw_sha2.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\obj\atca_crypto_sw_sha2.o: ..\..\ATSHA204\lib\crypto\hashes/sha2_routines.h

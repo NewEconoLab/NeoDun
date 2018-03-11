@@ -1,42 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "cryptoauthlib.h"
-
 #include "host\atca_host.h"
 
-//#ifdef _WINDOWS
-//#include "F:\RSN-1601\_Software\Atsha204aBurner2013 - macSample\ATsha204aBurner\tools.h"
-//#define DISPLAY_DEBUG_INFO(displayMsg, bAlert)  displayGeneralMsg(displayMsg, bAlert)
-//#else
-#define DISPLAY_DEBUG_INFO(displayMsg, bAlert)//输出调试信息，用户可自行定义
-//#endif
-
-void display_total_info(bool bAlert, ATCA_STATUS status, const char *info, const uint8_t *data, uint8_t length)
-{
-	static char displayMsg[512];
-	int i;
-	char cell[16];
-
-	sprintf(displayMsg, "atca_status=%02x ", (uint8_t)status);
-
-	//info信息
-	if (info != NULL)
-		strcat(displayMsg, info);
-
-	//数组
-	if ((data != NULL) && (length != 0))
-	{
-		for (i = 0; i < length; i++)
-		{
-			sprintf(cell, "%02x ", data[i]);
-			strcat(displayMsg, cell);
-		}
-	}
-
-	//最终显示字符串
-	DISPLAY_DEBUG_INFO(displayMsg, bAlert);
-}
 
 static bool test_assert_data_is_locked(void)
 {
@@ -44,12 +10,10 @@ static bool test_assert_data_is_locked(void)
 	ATCA_STATUS status = atcab_is_locked(LOCK_ZONE_DATA, &is_locked);
 	if (status != ATCA_SUCCESS)
 	{
-		display_total_info(true, status, "数据区检查锁定失败，退出......", NULL, 0);
 		return false;
 	}
 	if (!is_locked)
 	{
-		DISPLAY_DEBUG_INFO("数据区须锁定方可继续......", true);
 		return false;
 	}
 	return true;
@@ -61,12 +25,10 @@ static bool test_assert_config_is_locked(void)
 	ATCA_STATUS status = atcab_is_locked(LOCK_ZONE_CONFIG, &is_locked);
 	if (status != ATCA_SUCCESS)
 	{
-		display_total_info(true, status, "配置区检查锁定失败，退出......", NULL, 0);
 		return false;
 	}
 	if (!is_locked)
 	{
-		DISPLAY_DEBUG_INFO("配置区须锁定方可继续......", true);
 		return false;
 	}
 	return true;
@@ -80,15 +42,10 @@ bool ATSHA_check_lock_config_zone(bool *isLocked)
 	status = atcab_is_locked(LOCK_ZONE_CONFIG, isLocked);
 	if (status == ATCA_SUCCESS)
 	{
-		if ((*isLocked) == false)
-			display_total_info(false, status, "配置区未锁定.", NULL, 0);
-		else
-			display_total_info(false, status, "配置区已锁定.", NULL, 0);
 		ret = true;
 	}
 	else
 	{
-		display_total_info(true, status, "配置区锁定状态检查失败.", NULL, 0);
 		ret = false;
 	}
 
@@ -103,15 +60,10 @@ bool  ATSHA_check_lock_data_zone(bool *isLocked)
 	status = atcab_is_locked(LOCK_ZONE_DATA, isLocked);
 	if (status == ATCA_SUCCESS)
 	{
-		if (!(*isLocked))
-			display_total_info(false, status, "数据区未锁定.", NULL, 0);
-		else
-			display_total_info(false, status, "数据区已锁定.", NULL, 0);
 		ret = true;
 	}
 	else
 	{
-		display_total_info(true, status, "数据区锁定状态检查失败.", NULL, 0);
 		ret = false;
 	}
 
@@ -132,7 +84,6 @@ bool ATSHA_read_rev_number(uint8_t rev_number[4])
 	}
 	else
 	{
-			printf("status:%d\r\n",status);
 		  ret = false;
 	}
 
@@ -148,12 +99,10 @@ bool ATSHA_read_serial_number(uint8_t serial_number[9])
 	status = atcab_read_serial_number(serial_number);
 	if (status == ATCA_SUCCESS)
 	{
-		display_total_info(false, status, "sn=", serial_number, 9);
 		ret = true;
 	}
 	else
 	{
-		display_total_info(true, status, "读序列号失败.", NULL, 0);
 		ret = false;
 	}
 
@@ -169,12 +118,10 @@ bool ATSHA_get_random(uint8_t randomnum[32])
 	status = atcab_random(randomnum);
 	if (status == ATCA_SUCCESS)
 	{
-		display_total_info(false, status, "rand=", randomnum, 32);
 		ret = true;
 	}
 	else
 	{
-		display_total_info(true, status, "取随机数失败.", NULL, 0);
 		ret = false;
 	}
 
@@ -203,7 +150,6 @@ bool ATSHA_mac_key_challenge(uint8_t key_id, uint8_t key[32])
 		status = atcab_read_serial_number(sn);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "read_serial_number失败.", NULL, 0);
 			ret = false;
 			break;
 		}
@@ -212,13 +158,8 @@ bool ATSHA_mac_key_challenge(uint8_t key_id, uint8_t key[32])
 		status = atcab_random(challenge);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "取随机数失败.", NULL, 0);
 			ret = false;
 			break;
-		}
-		else
-		{
-			display_total_info(false, status, "challenge  =", challenge, 32);
 		}
 
 		// Setup MAC command
@@ -232,43 +173,30 @@ bool ATSHA_mac_key_challenge(uint8_t key_id, uint8_t key[32])
 		mac_params.response = host_response;
 		mac_params.temp_key = &temp_key;
 
-		display_total_info(false, ATCA_SUCCESS, "key_id  =", (uint8_t*)&(mac_params.key_id), 2);
-
 		// Run MAC command
 		status = atcab_mac(mac_params.mode, mac_params.key_id, mac_params.challenge, client_response);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "mac命令失败.", NULL, 0);
 			ret = false;
 			break;
-		}
-		else
-		{
-			display_total_info(false, status, "mac命令响应client_response=", client_response, 32);
 		}
 
 		// Calculate expected MAC
 		status = atcah_mac(&mac_params);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "主机计算host_response失败.", NULL, 0);
 			ret = false;
 			break;
 		}
-		else
-		{
-			display_total_info(false, status, "host_response  =", host_response, 32);
-		}
+
 		//TEST_ASSERT_EQUAL_MEMORY(host_response, client_response, sizeof(host_response));
 		if (memcmp(host_response, client_response, sizeof(host_response)) != 0)
 		{
-			display_total_info(true, status, "host_response<->client_response对比不正确.", NULL, 0);
 			ret = false;
 			break;
 		}
 		else
 		{
-			display_total_info(false, status, "结果正确.", NULL, 0);
 			ret = true;
 		}
 		
@@ -300,7 +228,6 @@ bool ATSHA_mac_key_tempkey(uint8_t key_id, uint8_t key[32])
 		status = atcab_read_serial_number(sn);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "read_serial_number失败.", NULL, 0);
 			ret = false;
 			break;
 		}
@@ -318,7 +245,6 @@ bool ATSHA_mac_key_tempkey(uint8_t key_id, uint8_t key[32])
 		status = atcab_nonce_base(nonce_params.mode, nonce_params.num_in, rand_out);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "nonce命令失败.", NULL, 0);
 			ret = false;
 			break;
 		}
@@ -327,13 +253,8 @@ bool ATSHA_mac_key_tempkey(uint8_t key_id, uint8_t key[32])
 		status = atcah_nonce(&nonce_params);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "主机计算temp_key失败.", NULL, 0);
 			ret = false;
 			break;
-		}
-		else
-		{
-			display_total_info(false, status, "主机计算temp_key  =", temp_key.value, 32);
 		}
 
 		// Setup MAC command
@@ -347,13 +268,10 @@ bool ATSHA_mac_key_tempkey(uint8_t key_id, uint8_t key[32])
 		mac_params.response = host_response;
 		mac_params.temp_key = &temp_key;
 
-		display_total_info(false, ATCA_SUCCESS, "key_id  =", (uint8_t*)&(mac_params.key_id), 2);
-
 		// Run MAC command
 		status = atcab_mac(mac_params.mode, mac_params.key_id, mac_params.challenge, client_response);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "mac命令失败.", NULL, 0);
 			ret = false;
 			break;
 		}
@@ -362,25 +280,18 @@ bool ATSHA_mac_key_tempkey(uint8_t key_id, uint8_t key[32])
 		status = atcah_mac(&mac_params);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "主机计算host_response失败.", NULL, 0);
 			ret = false;
 			break;
 		}
-		else
-		{
-			display_total_info(false, status, "host_response  =", host_response, 32);
-			display_total_info(false, status, "client_response=", client_response, 32);
-		}
+
 		//TEST_ASSERT_EQUAL_MEMORY(host_response, client_response, sizeof(host_response));
 		if (memcmp(host_response, client_response, sizeof(host_response)) != 0)
 		{
-			display_total_info(true, status, "host_response<->client_response对比不正确.", NULL, 0);
 			ret = false;
 			break;
 		}
 		else
 		{
-			display_total_info(false, status, "结果正确.", NULL, 0);
 			ret = true;
 		}
 	} while (0);
@@ -396,25 +307,18 @@ bool ATSHA_sleepDown(void)
 		status = atwake();
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "wake命令失败.", NULL, 0);
 			ret = false;
 			break;
 		}
 		status = atsleep();
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "sleep命令失败.", NULL, 0);
 			ret = false;
 			break;
 		}
 
 		ret = true;
 	} while (0);
-
-	if (status == ATCA_SUCCESS)
-	{
-		display_total_info(false, status, "wake-sleep测试成功.", NULL, 0);
-	}
 
 	return ret;
 }
@@ -438,12 +342,10 @@ bool ATSHA_write_data_slot(uint8_t slot, uint8_t offset, const uint8_t *data, ui
 		status = atcab_write_zone(ATCA_ZONE_DATA, slot, 0, offset, data, len);//数据区未锁定之前只能32字节写
 		if (status != ATCA_SUCCESS)                                           //锁定后可根据配置，写或禁止写(4,32字节)	                                                 
 		{
-			display_total_info(true, status, "数据槽写入失败. slot=", &slot, 1);
 			ret = false;
 		}
 		else
 		{
-			display_total_info(false, status, "数据槽写入成功. slot=", &slot, 1);
 			ret = true;
 		}
 	} while (0);
@@ -466,12 +368,10 @@ bool ATSHA_read_data_slot(uint8_t slot, uint8_t slot_data[32])
 		status = atcab_read_zone(ATCA_ZONE_DATA, slot, 0, 0, slot_data, ATCA_BLOCK_SIZE);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "数据槽读取失败. slot=", &slot, 1);
 			ret = false;
 		}
 		else
 		{
-			display_total_info(false, status, "数据槽读取成功. slot=", &slot, 1);
 			ret = true;
 		}
 	} while (0);
@@ -500,14 +400,11 @@ bool ATSHA_read_encrypted(uint16_t key_id, uint8_t *data, const uint16_t enckeyi
 		status = atcab_read_enc(key_id, 0, data, key_15, enckeyid);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "加密读失败.", NULL, 0);
 			ret = false;
 			break;
 		}
 		else
 		{
-			display_total_info(false, status, "加密读Slot ", (uint8_t*)&(key_id), 2);
-			display_total_info(false, status, "加密读结果  =", data, 32);
 			ret = true;
 		}
 
@@ -534,14 +431,11 @@ bool ATSHA_write_encrypted(uint16_t key_id, const uint8_t *data, const uint16_t 
 		status = atcab_write_enc(key_id, 0, data, key_15, enckeyid);
 		if (status != ATCA_SUCCESS)
 		{
-			display_total_info(true, status, "加密写失败.", NULL, 0);
 			ret = false;
 			break;
 		}
 		else
 		{
-			display_total_info(false, status, "加密写Slot ", (uint8_t*)&(key_id), 2);
-			display_total_info(false, status, "加密写结果  =", data, 32);
 			ret = true;
 		}
 

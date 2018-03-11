@@ -52,3 +52,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //				printf("定时器时间到！！\r\n");
     }
 }
+
+void Start_TIM(void)
+{
+		__HAL_RCC_TIM3_CLK_ENABLE();//开启定时器
+		time_counter = 0;
+}
+
+void Stop_TIM(void)
+{
+		__HAL_RCC_TIM3_CLK_DISABLE();
+		time_counter = 0;
+}
+
+int Get_TIM(void)
+{
+		return time_counter;
+}
+
+

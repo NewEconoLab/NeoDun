@@ -7,7 +7,7 @@
 ** Created By: 		 hkh
 ** Created date:   2017-11-14
 ** Version: 
-** Descriptions: BootLoader NEODUN
+** Descriptions: NEODUN BootLoader 
 **	
 ** 1、APP程序从扇区4开始存储，大小为80多KB，前面扇区0-3，总共64KB，留给BootLoader程序
 ** 2、APP程序存储在扇区4和扇区5，这两个扇区的大小为64+128KB
@@ -41,6 +41,13 @@
 ** 19、去掉aw9136按键释放时的标志位改变
 ** 20、增加密码的设置和验证
 ** 21、增加加密芯片的驱动
+** 22、重新调整存储分配，FLASH中只存储程序代码，加密芯片来存储用户私钥和地址，以及程序中的变量
+			 加密芯片存储规划 0-15 一共16个槽，每个槽为32字节，分配如下：
+						0-4   存储用户私钥
+						5     存储重要的标识和PIN码（4字节PIN码+4字节BootLoader标识+其它）  
+						6-14  存储其它程序标量
+						15    存储该芯片进行加密读写时要用的私钥
+** 23、更改BootLoader主逻辑,以及界面的显示						
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -53,8 +60,8 @@
 #include "atsha204a.h"
 #include "hw_config.h"
 #include "main_define.h"
-
-#define Debug_Passport
+#include "app_interface.h"
+#include "test_jpg.h"
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -64,7 +71,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-static int NEO_Test(void);
+int NEO_Test(void);
 
 //HID接收缓冲设置
 #define HID_REC_LEN 110*1024
@@ -73,123 +80,243 @@ u32 HID_RX_CNT = 0;
 
 //全局变量
 extern SIGN_KEY_FLAG Key_Flag;
-extern volatile int time_counter;								//定时器计数值
-extern unsigned char wallet_status;							//0表示新钱包，1表示旧钱包
+BOOT_FLAG BootFlag;
 volatile unsigned char touch_motor_flag = 1;    //1表示开启触摸振动，0表示关闭振动
 
 int main(void)
 {
 		u32 oldcount=0;						//老的USB接收数据值	
 		u32 applenth=0;						//接收到的app代码长度
-	  int cancel_flag = 0;			//开机是否按下取消键	
-		Key_Control(0);						//清空按键标志位，开启按键有效
+		u8 HID_begin = 1;
+		u8 HID_end = 0;
+		u8 error_code = 0;
+		memset(&BootFlag,0,sizeof(BootFlag));
+		memset(&Key_Flag,0,sizeof(Key_Flag));//清空按键标志位，开启按键有效
 	
 		HAL_Init();								//中断分组2
 		SystemClock_Config(); 		//系统时钟168MHz
 		MX_GPIO_Init();						//IO口初始化
 		Center_button_init();			//中间按钮初始化
 		OLED_Init();							//OLED初始化	
+		Show_Pattern(&gImage_logo[0],26,37,8,56);//开机logo
+		clearArea(104,56,48,1);	
 #ifdef Debug_Print	
 		MX_USART1_UART_Init();		//打印信息串口
 #endif
 		Set_System();			
 		MX_USART2_UART_Init();		//蓝牙串口
 		TIM3_Init(5000-1,8400-1);	//500ms进入一次中断计数      
-		MX_USB_DEVICE_Init();			
-		AW9136_Init();
-
-		//读取加密芯片中的钱包标识
-		
-
-		if(wallet_status == 0)  	//新钱包，则进行产品测试	 		
+		MX_USB_DEVICE_Init();			//USB初始化
+		AW9136_Init();	
+		if(ReadAT204Flag(&BootFlag)==0)
 		{
-				if(NEO_Test())
+				Asc8_16(60,24,"ATSHA204 ERROR!!!");
+				HAL_Delay(10000);
+				return 0;
+		}	
+			
+//		HAL_Delay(200);									//加延时给按键芯片足够的时间来完成初始化		
+		
+		if(Have_App() == 0)       			//不存在APP程序
+		{
+				Fill_RAM(0x00);							//清屏
+				Show_HZ12_12(80,7,0,0,5);		//没有安装程序
+				Show_HZ12_12(80,26,0,6,9);	//是否进行
+				Show_HZ12_12(144,26,0,2,3); //安装
+				Show_HZ12_12(35,45,0,7,7);	//否
+				Show_HZ12_12(120,45,0,6,6); //是
+				Show_HZ12_12(205,45,0,7,7); //否
+				Key_Control(1);							//清空按键标志位，开启按键有效
+				while(1)
 				{
-				//进行加密芯片的测试
+						if(Key_Flag.Key_center_Flag)
+						{	
+								Key_Flag.Key_center_Flag = 0;
+								BootFlag.update = 1;
+								break;
+						}
+						if(Key_Flag.Key_left_Flag||Key_Flag.Key_right_Flag)
+						{
+								NEO_Test();
+								Fill_RAM(0x00);
+								return 0;
+						}		
+				}
+		}
+		
+		if(BootFlag.update)//需要升级
+		{
+				Fill_RAM(0x00);								//清屏
+				if(BootFlag.language == 0)
+						Show_HZ12_12(96,26,0,10,13);	//等待更新
+				else
+				{
+				
+					
 					
 				}
-				SetPassport();
+				applenth=0;
+				memset(HID_RX_BUF,0,HID_REC_LEN);
+				STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
+				STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
+				while(1)
+				{
+						if(HID_RX_CNT)
+						{
+								if(oldcount==HID_RX_CNT)//新周期内,没有收到任何数据,认为本次数据接收完成.
+								{
+										applenth=HID_RX_CNT;
+										oldcount=0;
+										HID_RX_CNT=0;
+										HID_end = 1;
+		#ifdef Debug_Print							
+										printf("len of code:%dBytes\r\n",applenth);
+		#endif							
+								}
+								else 
+										oldcount=HID_RX_CNT;
+								if(HID_begin)
+								{
+										HID_begin = 0;
+										Fill_RAM(0x00);
+										Show_Pattern(&gImage_wait[0],30,33,24,40);
+										clearArea(120,40,16,1);
+								}
+						}
+						HAL_Delay(50);
+						
+						if(HID_end)
+						{
+								iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF,applenth);
+								iap_load_app(FLASH_APP1_ADDR);
+						}
+				}
 		}
-		else											//旧钱包，验证密码
+		
+		if(BootFlag.new_wallet) //新钱包
+		{
+				Fill_RAM(0x00);
+				if(BootFlag.language == 0)
+				{
+						Show_HZ12_12(16,16,0,14,16);//检测为
+						Show_HZ12_12(64,16,0,13,13);//新
+						Show_HZ12_12(80,16,0,17,26);//钱包，请设置您的密码
+				}
+				else
+				{
+				
+				
+				}
+				Show_Pattern(&gImage_triangle_down[0],30,32,45,57);
+				clearArea(120,57,12,1);
+				Key_Control(1);							//清空按键标志位，开启按键有效
+				while(Key_Flag.Key_center_Flag == 0);
+				Key_Flag.Key_center_Flag = 0;
+				while(1)
+				{
+						if(SetPassport())
+						{
+								if(VerifyPassport())
+								{
+										ChangeWallet();
+										break;		
+								}
+						}
+				}
+				Fill_RAM(0x00);
+				if(BootFlag.language == 0)
+				{
+						//第一行显示
+						Show_HZ12_12(80,7,0,25,26);//密码	
+						Show_HZ12_12(112,7,0,21,22);//设置
+						Show_HZ12_12(144,7,0,27,28);//完成
+						//第二行显示
+						Show_HZ12_12(8,26,0,20,20);//请
+						Show_HZ12_12(24,26,0,29,30);//牢记
+						Show_HZ12_12(56,26,0,25,26);//密码
+						Show_HZ12_12(88,26,0,19,19);//，
+						Show_HZ12_12(104,26,0,31,35);//丢失将导致
+						Show_HZ12_12(184,26,0,17,18);//钱包
+						Show_HZ12_12(216,26,0,36,36);//重
+						Show_HZ12_12(232,26,0,22,22);//置
+				}
+				else
+				{				
+				
+				}
+				Show_Pattern(&gImage_triangle_down[0],30,32,45,57);
+				clearArea(120,57,12,1);
+				Key_Control(1);							//清空按键标志位，开启按键有效
+				while(Key_Flag.Key_center_Flag == 0);
+				Key_Flag.Key_center_Flag = 0;
+				iap_load_app(FLASH_APP1_ADDR);
+		}
+		else//旧钱包，验证密码
 		{
 				while(VerifyPassport() == 0)
 				{
-				}		
-		}
-				
-		//开机界面				
-		Asc12_24( 20,10 ,"Welcome Use NeoDun");
-		Asc8_16(104,44,"Cancel");
-		
-		//开启2s定时，这段时间来检测按键
-		__HAL_RCC_TIM3_CLK_ENABLE();//开启定时器
-		while(time_counter < 4)		  //2s过后
-		{		
-				if(Key_Flag.Key_center_Flag)
-				{
-						cancel_flag = 1;
-						break;
+						error_code++;
+						if(error_code >= 5)
+						{							
+								if(BootFlag.language == 0)
+								{
+										//第一行显示
+										Show_HZ12_12(84,7,0,25,26);//密码
+										Show_HZ12_12(116,7,0,37,38);//错误
+										Asc6_12(148,8,"5");
+										Show_HZ12_12(160,7,0,39,39);//次								
+										//第二行显示
+										Show_HZ12_12(80,26,0,17,18);//钱包	
+										Show_HZ12_12(112,26,0,40,41);//已被
+										Show_HZ12_12(144,26,0,36,36);//重
+										Show_HZ12_12(160,26,0,22,22);//置
+								}
+								else
+								{
+								
+								}
+								Show_Pattern(&gImage_triangle_down[0],30,32,45,57);
+								clearArea(120,57,12,1);
+								EmptyWallet();
+								while(Key_Flag.Key_center_Flag == 0);
+								Key_Flag.Key_center_Flag = 0;
+								Fill_RAM(0x00);
+								if(BootFlag.language == 0)
+								{
+										//第一行显示
+										Show_HZ12_12(16,7,0,20,20);//请
+										Show_HZ12_12(32,7,0,36,36);//重
+										Show_HZ12_12(48,7,0,54,54);//启
+										Show_HZ12_12(64,7,0,21,22);//设置
+										Show_HZ12_12(96,7,0,25,26);//密码
+										Show_HZ12_12(128,7,0,42,42);//后
+										Show_HZ12_12(144,7,0,34,34);//导
+										Show_HZ12_12(160,7,0,43,43);//入
+										Show_HZ12_12(178,7,0,44,47);//备份文件	
+										//第二行显示
+										Show_HZ12_12(16,26,0,48,51);//需要帮助
+										Show_HZ12_12(80,26,0,20,20);//请
+										Show_HZ12_12(96,26,0,52,53);//登陆
+										Asc6_12(128,26,"www.neodun.com");
+								}
+								else
+								{
+								
+								}
+								Show_Pattern(&gImage_triangle_down[0],30,32,45,57);
+								clearArea(120,57,12,1);
+								while(Key_Flag.Key_center_Flag == 0);
+								Key_Flag.Key_center_Flag = 0;
+								Fill_RAM(0x00);
+								EmptyWallet();
+								return 0;
+						}
 				}
-		}
-		__HAL_RCC_TIM3_CLK_DISABLE();
-		time_counter = 0;
-		
-		//没有检测到按键按下，直接跳转到APP程序
-		if(cancel_flag == 0)
-		{				
 				iap_load_app(FLASH_APP1_ADDR);
 		}
-		cancel_flag = 0;
-				
-		//进行升级操作
-		Fill_RAM(0x00);//清屏
-		Asc8_16(48,10,"Firmware Update Mode");
-		Asc8_16(10,48,"updata");
-		Asc8_16(112,48,"load");
-		Asc8_16(206,48,"clear");
-		Key_Control(1);				//清空按键标志位，开启按键有效
+		
 		while (1)
 		{
-				if(HID_RX_CNT)
-				{
-						if(oldcount==HID_RX_CNT)//新周期内,没有收到任何数据,认为本次数据接收完成.
-						{
-								applenth=HID_RX_CNT;
-								oldcount=0;
-							  HID_RX_CNT=0;
-#ifdef Debug_Print							
-								printf("len of code:%dBytes\r\n",applenth);
-#endif							
-						}
-						else 
-								oldcount=HID_RX_CNT;			
-				}
-				HAL_Delay(50);
-				
-				if(Key_Flag.Key_left_Flag)//更新固件
-				{
-						iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF,applenth);			
-						Fill_Block(0,0,64,29,45);//清除这一行
-						Asc8_16(76,29,"Update Finish");					
-						Key_Flag.Key_left_Flag = 0;
-				}
-				else if(Key_Flag.Key_center_Flag)//加载固件
-				{
-//						Fill_RAM(0x00);
-						iap_load_app(FLASH_APP1_ADDR);
-						Key_Flag.Key_center_Flag = 0;
-				}
-				else if(Key_Flag.Key_right_Flag)//清除固件
-				{
-						applenth=0;
-						memset(HID_RX_BUF,0,HID_REC_LEN);
-						STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
-						STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
-					
-						Fill_Block(0,0,64,29,45);//清除这一行
-						Asc8_16(80,29,"Clear Finish");
-						Key_Flag.Key_right_Flag = 0;
-				}
 		}
 }
 
@@ -356,7 +483,7 @@ void USB_DataReceiveHander(uint8_t *data,int len)
 		}	
 }
 
-static int NEO_Test(void)
+int NEO_Test(void)
 {
 		int i=0;
 		int value = 0;

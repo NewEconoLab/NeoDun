@@ -1,6 +1,7 @@
 #include "aw9136.h"
 #include "myiic.h"
 #include "main_define.h"
+#include <string.h>
 
 /**********************************************************
  Auto Calibration
@@ -11,7 +12,10 @@
 #define CALI_RAW_MAX	3000
 
 extern SIGN_KEY_FLAG Key_Flag;
-int aw9136_init_flag = 0;
+volatile int aw9136_init_flag = 0;
+#define  MOTOR_TIME  80
+
+
 unsigned char cali_flag = 0;
 unsigned char cali_num = 0;
 unsigned char cali_cnt = 0;
@@ -636,6 +640,7 @@ void AW_center_press(void)
 #endif			
 				Key_Flag.Sign_Key_right_Flag = 1;
 		}
+		Motor_touch(MOTOR_TIME);
 	}		
 
 void AW_center_release(void)
@@ -645,7 +650,7 @@ void AW_center_release(void)
 #ifdef printf_debug				
 				printf("AW9136 right release \n");
 #endif			
-				Key_Flag.Sign_Key_right_Flag = 1;
+//				Key_Flag.Sign_Key_right_Flag = 1;
 		}
 }
 
@@ -657,7 +662,8 @@ void AW_right_press(void)
 				printf("AW9136 left press \n");
 #endif
 				Key_Flag.Sign_Key_left_Flag = 1;
-		}	
+		}
+		Motor_touch(MOTOR_TIME);
 }
 
 void AW_right_release(void)
@@ -667,7 +673,7 @@ void AW_right_release(void)
 #ifdef printf_debug	
 				printf("AW9136 left release \n");
 #endif			
-				Key_Flag.Sign_Key_left_Flag = 1;
+//				Key_Flag.Sign_Key_left_Flag = 1;
 		}
 	}
 		
@@ -695,6 +701,7 @@ void Home_Key_press(void)
 #endif			
 				Key_Flag.Sign_Key_center_Flag = 1;
 		}
+		Motor_touch(MOTOR_TIME);
 }
 
 /*********************************
@@ -711,7 +718,31 @@ void AW_LedReleaseTouch(void)
 	I2C_write_reg(GCR,0x0003);			// GCR
 }
 
+/*********************************
+value:
+	0		关闭按键实际功能，关灯
+	1		打开按键实际功能，开灯
+*********************************/
+void Key_Control(unsigned char value)
+{
+		memset(&Key_Flag,0,sizeof(Key_Flag));	
+		if(value == 1)
+		{
+				AW9136_LED_ON();					
+				Key_Flag.Sign_Key_Flag = 1;
+		}
+		else
+		{
+				AW9136_LED_OFF();
+				Key_Flag.Sign_Key_Flag = 0;
+		}
+}	
 
-
+void Motor_touch(int time)
+{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+		HAL_Delay(time);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);	
+}
 
 

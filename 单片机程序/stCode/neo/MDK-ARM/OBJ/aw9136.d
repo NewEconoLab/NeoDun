@@ -30,9 +30,12 @@
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rng.h
+.\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h
+.\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 .\obj\aw9136.o: ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 .\obj\aw9136.o: ..\..\Algorithm\myiic.h
 .\obj\aw9136.o: ..\..\Cpp\main_define.h
+.\obj\aw9136.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

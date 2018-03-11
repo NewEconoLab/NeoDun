@@ -486,83 +486,83 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 								}
 								case CMD_GET_PRIKEY://0x0206  获取地址安全信息
 								{		
-										if(passport_flag_bek)
-										{
-												int serialId_getprikey = Utils::ReadU16(data + 2);
-												u16 addressType = Utils::ReadU16(data+8);
-#ifdef printf_debug							
-												printf("Get security message\r\n");
-												printf("addressType = 0x%04x\r\n",addressType);
-#endif									
-/*********************************************************************************************************************
-		获取安全信息时的显示页面：
-															是否同意获取安全信息？												
-												
-												取消          确认          取消		
-*********************************************************************************************************************/										
-												view::DisplayMem::getInstance().clearAll();//清屏
-												//显示界面		是否同意获取安全信息？										
-												view::DisplayMem::getInstance().drawHZString(62,18,11,21);
-												view::DisplayMem::getInstance().drawHZString(36,48,9,10);
-												view::DisplayMem::getInstance().drawHZString(124,48,4,5);	
-												view::DisplayMem::getInstance().drawHZString(208,48,9,10);		
-												
-												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],5,7,48,60);//画三角形
-												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],27,29,48,60);//画三角形
-												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],48,50,48,60);//画三角形	
-												view::DisplayMem::getInstance().clearArea(0,60,256,1);//清除最后一行的白点																		
-												
-												Key_Flag.Sign_Key_Flag = 1;//按键有效
-												while(1)
-												{
-														if(Key_Flag.Sign_Key_center_Flag)//同意
-														{
-																Key_Flag.Sign_Key_Flag = 0;
-																u8 *content = data+10;
-																char temp[40] = "";
-																int tempLen = 0;
-																u8 hash[33];
-																int i=0;
-																u8 hash1[33]={32};
-#ifdef printf_debug									
-																//Utils::PrintArray(content,25);
-#endif										
-																Alg_Base58Encode(content , 25 ,temp,&tempLen );
-																u32 count = Get_Count_Num();
-																u32 address_flash = Get_Flash_Address(temp,count);
-																u8 privateKey[32];
-																memset(privateKey,0,32);
-																STMFLASH_Read(address_flash+40,(u32 *)privateKey,8);
-																for(i=1;i<33;i++)
-																		hash1[i] = privateKey[i-1];
-																Utils::Sha256(hash1, 33, hash, 32);														
-																memmove(this->dataSave, hash1,33);														
-																this->reqSerial = Utils::RandomInteger();
-																Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,33,hash,32);																	
-#ifdef HID_Delay															
-																HAL_Delay(delay_hid);
-#endif	
-																Commands::getInstance().SendHidFrame(CMD_RETURN_MESSAGE,serialId_getprikey,32,hash,32);
-																break;
-														}
-														else if((Key_Flag.Sign_Key_left_Flag)||(Key_Flag.Sign_Key_right_Flag))//拒绝
-														{
-																Key_Flag.Sign_Key_Flag = 0;
-																Commands command( CMD_GET_PRIKEY_FAILED, serialId);
-																command.SendToPc();
-																break;								
-														}
-												}
-												Key_Flag.Sign_Key_Flag = 0;
-												memset(&Key_Flag,0,sizeof(Key_Flag));
-												view::DisplayMem::getInstance().clearAll();//清屏
-												view::DisplayMem::getInstance().drawString(92,20,"NeoDun",view::FONT_12X24);	
-												if(Set_Flag.Backup_Address_Flag)
-														passport_flag_bek = 0;
-												else
-														passport_flag_bek = 1;
-												break;
-										}
+//										if(passport_flag_bek)
+//										{
+//												int serialId_getprikey = Utils::ReadU16(data + 2);
+//												u16 addressType = Utils::ReadU16(data+8);
+//#ifdef printf_debug							
+//												printf("Get security message\r\n");
+//												printf("addressType = 0x%04x\r\n",addressType);
+//#endif									
+///*********************************************************************************************************************
+//		获取安全信息时的显示页面：
+//															是否同意获取安全信息？												
+//												
+//												取消          确认          取消		
+//*********************************************************************************************************************/										
+//												view::DisplayMem::getInstance().clearAll();//清屏
+//												//显示界面		是否同意获取安全信息？										
+//												view::DisplayMem::getInstance().drawHZString(62,18,11,21);
+//												view::DisplayMem::getInstance().drawHZString(36,48,9,10);
+//												view::DisplayMem::getInstance().drawHZString(124,48,4,5);	
+//												view::DisplayMem::getInstance().drawHZString(208,48,9,10);		
+//												
+//												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],5,7,48,60);//画三角形
+//												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],27,29,48,60);//画三角形
+//												view::DisplayMem::getInstance().drawPicture(&gImage_triangle[0],48,50,48,60);//画三角形	
+//												view::DisplayMem::getInstance().clearArea(0,60,256,1);//清除最后一行的白点																		
+//												
+//												Key_Flag.Sign_Key_Flag = 1;//按键有效
+//												while(1)
+//												{
+//														if(Key_Flag.Sign_Key_center_Flag)//同意
+//														{
+//																Key_Flag.Sign_Key_Flag = 0;
+//																u8 *content = data+10;
+//																char temp[40] = "";
+//																int tempLen = 0;
+//																u8 hash[33];
+//																int i=0;
+//																u8 hash1[33]={32};
+//#ifdef printf_debug									
+//																//Utils::PrintArray(content,25);
+//#endif										
+//																Alg_Base58Encode(content , 25 ,temp,&tempLen );
+//																u32 count = Get_Count_Num();
+//																u32 address_flash = Get_Flash_Address(temp,count);
+//																u8 privateKey[32];
+//																memset(privateKey,0,32);
+//																STMFLASH_Read(address_flash+40,(u32 *)privateKey,8);
+//																for(i=1;i<33;i++)
+//																		hash1[i] = privateKey[i-1];
+//																Utils::Sha256(hash1, 33, hash, 32);														
+//																memmove(this->dataSave, hash1,33);														
+//																this->reqSerial = Utils::RandomInteger();
+//																Commands::getInstance().SendHidFrame(CMD_NOTIFY_DATA,this->reqSerial,33,hash,32);																	
+//#ifdef HID_Delay															
+//																HAL_Delay(delay_hid);
+//#endif	
+//																Commands::getInstance().SendHidFrame(CMD_RETURN_MESSAGE,serialId_getprikey,32,hash,32);
+//																break;
+//														}
+//														else if((Key_Flag.Sign_Key_left_Flag)||(Key_Flag.Sign_Key_right_Flag))//拒绝
+//														{
+//																Key_Flag.Sign_Key_Flag = 0;
+//																Commands command( CMD_GET_PRIKEY_FAILED, serialId);
+//																command.SendToPc();
+//																break;								
+//														}
+//												}
+//												Key_Flag.Sign_Key_Flag = 0;
+//												memset(&Key_Flag,0,sizeof(Key_Flag));
+//												view::DisplayMem::getInstance().clearAll();//清屏
+//												view::DisplayMem::getInstance().drawString(92,20,"NeoDun",view::FONT_12X24);	
+//												if(Set_Flag.Backup_Address_Flag)
+//														passport_flag_bek = 0;
+//												else
+//														passport_flag_bek = 1;
+//												break;
+//										}
 								}
 								case CMD_SIGN_DATA ://0x020a  签名
 								{
@@ -637,7 +637,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 																{
 																		Commands command( CMD_SIGN_FAILED, serialId);
 																		command.SendToPc();
-																		break;
+																		return;
 																}
 														}
 														Key_Flag.Sign_Key_Flag = 0;//按键无效
@@ -816,7 +816,7 @@ void ReceiveAnalysis::PackDataFromPcCallback(u8 data[], int len)
 										}
 										break;
 								}							
-								default:			
+								default:
 								break;
 						}
 				}

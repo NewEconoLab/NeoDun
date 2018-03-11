@@ -547,7 +547,7 @@ void AW_NormalMode_Proc(void)
 						{
 								I2C_write_reg(GCR,N_GCR);	 // enable chip
 						}
-						AW_LedReleaseTouch();//add by hkh  在等待cali_flag为0后，再开启按键和LED关联
+//						AW_LedReleaseTouch();//add by hkh  在等待cali_flag为0后，再开启按键和LED关联
 						aw9136_key_flag = 1;
 				}
 				return ;
@@ -752,18 +752,20 @@ void AW_LedReleaseTouch(void)
 
 /*********************************
 value:
-	0		关闭按键实际功能
-	1		打开按键实际功能
+	0		关闭按键实际功能，关灯
+	1		打开按键实际功能，开灯
 *********************************/
 void Key_Control(unsigned char value)
 {
 		memset(&Key_Flag,0,sizeof(Key_Flag));	
 		if(value == 1)
 		{
+				AW9136_LED_ON();					
 				Key_Flag.Key_Control_Flag = 1;
 		}
 		else
 		{
+				AW9136_LED_OFF();
 				Key_Flag.Key_Control_Flag = 0;
 		}
 }	

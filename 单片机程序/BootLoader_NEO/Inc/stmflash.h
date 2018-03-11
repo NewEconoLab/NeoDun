@@ -37,7 +37,8 @@ void STMFLASH_Read(uint32_t ReadAddr,uint32_t *pBuffer,uint32_t NumToRead);   		
 void STMFLASH_Erase_Sectors(uint32_t sector);		
 	 
 void STMFLASH_WriteWord(uint32_t faddr,uint32_t value);	 
-void Get_StatusOfWallet(void);
+
+uint8_t Have_App(void);	 
 	 
 #ifdef __cplusplus
  }

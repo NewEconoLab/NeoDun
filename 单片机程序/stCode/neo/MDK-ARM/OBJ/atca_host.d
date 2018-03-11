@@ -1,0 +1,16 @@
+.\obj\atca_host.o: ..\..\ATSHA204\lib\host\atca_host.c
+.\obj\atca_host.o: ..\..\ATSHA204\lib\host\atca_host.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\cryptoauthlib.h
+.\obj\atca_host.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\obj\atca_host.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\atca_iface.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\atca_command.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\atca_status.h
+.\obj\atca_host.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\atca_bool.h
+.\obj\atca_host.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\hal/hal_timer.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\basic/atca_basic.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\cryptoauthlib.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\crypto/atca_crypto_sw_sha2.h
+.\obj\atca_host.o: ..\..\ATSHA204\lib\crypto/atca_crypto_sw.h
