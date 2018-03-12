@@ -63,7 +63,7 @@ public:
 	void GetPassportFromString(u8 *data,int *src,u32 *desc);
 	
 	//add by hkh 180228
-  void SetCode(void);
+  u8 SetCode(void);
 	u8 VerifyCode(void);
 	u8 compareCharArray(unsigned char *left,unsigned char *right,int len);
 	

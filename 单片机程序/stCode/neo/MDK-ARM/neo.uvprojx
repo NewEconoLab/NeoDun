@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\Cpp;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm</IncludePath>
+              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\Cpp;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm;..\..\ATSHA204\Appatsha204;..\..\ATSHA204\Atsha204_hw;..\..\ATSHA204\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -583,6 +583,16 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_iwdg.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -726,16 +736,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Led281</GroupName>
-          <Files>
-            <File>
-              <FileName>oled281.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Cpp\OLED281\oled281.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Algorithm</GroupName>
           <Files>
             <File>
@@ -768,6 +768,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Algorithm\showsign.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>App</GroupName>
+          <Files>
             <File>
               <FileName>stmflash.c</FileName>
               <FileType>1</FileType>
@@ -782,6 +787,91 @@
               <FileName>myiic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Algorithm\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled281.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Cpp\OLED281\oled281.c</FilePath>
+            </File>
+            <File>
+              <FileName>atsha204a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Algorithm\app_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Algorithm\timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ATSHA204_HW</GroupName>
+          <Files>
+            <File>
+              <FileName>bitBang_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\Atsha204_hw\bitBang_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hw_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\Atsha204_hw\hw_config.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CryptoAuthlib</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\atca_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_basic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\basic\atca_basic.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_crypto_sw_sha2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.c</FilePath>
+            </File>
+            <File>
+              <FileName>sha2_routines.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\crypto\hashes\sha2_routines.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\host\atca_host.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ATSHA204iface</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_iface_stm32_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\iface\atca_iface_stm32_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_stm32_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\hal\hal_stm32_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_iface_stm32_swi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\lib\iface\atca_iface_stm32_swi.c</FilePath>
             </File>
           </Files>
         </Group>

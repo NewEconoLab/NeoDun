@@ -9,6 +9,9 @@
 #include <string.h>
 #include "OLED281/oled281.h"
 #include "main_define.h"
+#include "aw9136.h"
+#include "app_interface.h"
+#include "timer.h"
 
 //声明ASCII库
 extern unsigned char ASC5X8[];
@@ -634,108 +637,87 @@ void DisplayMem::GetPassportFromString(u8 *data,int *src,u32 *desc)
 		}
 }
 
-void DisplayMem::SetCode(void)
+/************************************************
+设置密码函数
+返回值： 0  失败
+				1  成功
+*************************************************/
+u8 DisplayMem::SetCode(void)
 {
     unsigned char index = 0;
-    unsigned char Center_Flag = 0;
-    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+    unsigned char code_array[8] = {'5','5','5','5','5','5','0','0'};
 		
 		clearAll();
-    drawString(53,8,"Pin Code:");
-		drawChar(125,8,code_array[0],FONT_6X12,false);
-    drawString(133,8,"_");
-    drawString(141,8,"_");
-    drawString(149,8,"_");
-    drawString(157,8,"_");
-    drawString(165,8,"_");
-    drawString(173,8,"_");
-    drawString(181,8,"_");
+    drawString(52,8,"Pin Code:");
+		drawChar(124,8,code_array[0],FONT_6X12,false);
+    drawString(132,8,"_");
+    drawString(140,8,"_");
+    drawString(148,8,"_");
+    drawString(156,8,"_");
+    drawString(164,8,"_");
     drawString(30,40,"+");
     drawString(120,40,"OK");
     drawString(226,40,"-");
 
-		memset(&Key_Flag,0,sizeof(Key_Flag));
-		Key_Flag.Sign_Key_Flag = 1;//按键有效
-    while(1)
+		Key_Control(1);
+    while(index < 6)
     {
         if(Key_Flag.Sign_Key_left_Flag)//左键按下
         {
 						Key_Flag.Sign_Key_left_Flag = 0;
-						clearArea(125+8*index,8,6,12);//清空这个位置的显示
-            if(Center_Flag != 0)
-                Center_Flag = 0;
-            if(code_array[index] == '0')
-            {
-								drawChar(125+8*index,8,'9',FONT_6X12,false);
-                code_array[index] = '9';
-            }
-            else if(code_array[index] == '?')
-            {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
-                code_array[index] = '0';
-            }
-            else
-            {
-                code_array[index]--;
-								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
-            }
-        }
-        if(Key_Flag.Sign_Key_right_Flag)//右键按下
-        {           
-						Key_Flag.Sign_Key_right_Flag = 0;
-						clearArea(125+8*index,8,6,12);//清空这个位置的显示
-            if(Center_Flag != 0)
-                Center_Flag = 0;
             if(code_array[index] == '9')
             {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
-                code_array[index] = '0';
-            }
-            else if(code_array[index] == '?')
-            {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
+								drawChar(124+8*index,8,'0',FONT_6X12,false);
                 code_array[index] = '0';
             }
             else
             {
                 code_array[index]++;
-								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+								drawChar(124+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_right_Flag)//右键按下
+        {           
+						Key_Flag.Sign_Key_right_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								drawChar(124+8*index,8,'9',FONT_6X12,false);
+                code_array[index] = '9';
+            }
+            else
+            {
+                code_array[index]--;
+								drawChar(124+8*index,8,code_array[index],FONT_6X12,false);
             }
         }
         if(Key_Flag.Sign_Key_center_Flag)//中间建按下
         {
 						Key_Flag.Sign_Key_center_Flag = 0;
-            Center_Flag++;
             index++;
-            if(index < 4)
+            if(index == 6)
             {
-                Center_Flag = 0;
-								clearArea(125+8*index,8,6,12);//清空这个位置的显示
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
+								if(WritePinCode(code_array) == 0)//将密码保存起来
+								{
+										Fill_RAM(0x00);				//清屏
+										drawString(80,26,"Set Pin ERROR!!!");
+										HAL_Delay(3000);			
+										return 0;							//密码保存出错
+								}
+							
+								drawString(180,8,"OK");
+								HAL_Delay(1000);
+								Fill_RAM(0x00);//清除所有显示							
+								break;
             }
             else
             {
-								clearArea(125+8*index,8,6,12);//清空这个位置的显示
-								drawChar(125+8*index,8,'?',FONT_6X12,false);
+								clearArea(125+8*index,8,8,12);//清空这个位置的显示
+								drawChar(125+8*index,8,'5',FONT_6X12,false);
             }
         }
-        if((index>=4)&&(Center_Flag >= 2))
-        {
-            //将密码保存起来,
-
-					
-					
-					
-					
-						clearAll();
-						
-					
-					
-            break;
-        }
     }
-		Key_Flag.Sign_Key_Flag = 0;//按键无效
-		memset(&Key_Flag,0,sizeof(Key_Flag));
+		Key_Control(0);//清空按键标志位，开启按键无效
+		return 1;
 }
 
 /************************************************
@@ -746,119 +728,95 @@ void DisplayMem::SetCode(void)
 u8 DisplayMem::VerifyCode(void)
 {
     unsigned char index = 0;
-    unsigned char Center_Flag = 0;
-    unsigned char code_old[8] = {'0','0','0','0','0','0','0','0'};//从存储的地方读出来
-    unsigned char code_array[8] = {'0','0','0','0','0','0','0','0'};
+    unsigned char code_old[8] = {'5','5','5','5','5','5','0','0'};//从存储的地方读出来
+    unsigned char code_array[6] = {'5','5','5','5','5','5'};
 
-		clearAll();
-    drawString(53,8,"Pin Code:");
-		drawChar(125,8,code_array[0],FONT_6X12,false);
-    drawString(133,8,"_");
-    drawString(141,8,"_");
-    drawString(149,8,"_");
-    drawString(157,8,"_");
-    drawString(165,8,"_");
-    drawString(173,8,"_");
-    drawString(181,8,"_");
+		clearAll();//清屏
+		if(ReadPinCode(code_old) == 0)//读取出老的密码
+		{
+				drawString(77,26,"ATSHA204 ERROR!!!");
+				HAL_Delay(3000);
+				Fill_RAM(0x00);//清屏
+				return 0;
+		}		
+		
+    drawString(52,8,"Pin Code:");
+		drawChar(124,8,code_array[0],FONT_6X12,false);
+    drawString(132,8,"_");
+    drawString(140,8,"_");
+    drawString(148,8,"_");
+    drawString(156,8,"_");
+    drawString(164,8,"_");
     drawString(30,40,"+");
     drawString(120,40,"OK");
     drawString(226,40,"-");
 		
-		//读取出老的密码
-		
-		
-		
-		
-		
-		
-		memset(&Key_Flag,0,sizeof(Key_Flag));
-		Key_Flag.Sign_Key_Flag = 1;//按键有效
+		Key_Control(1);//清空按键标志位，开启按键有效
     while(1)
     {
         if(Key_Flag.Sign_Key_left_Flag)//左键按下
         {
 						Key_Flag.Sign_Key_left_Flag = 0;
-						clearArea(125+8*index,8,6,12);//清空这个位置的显示
-            if(Center_Flag != 0)
-                Center_Flag = 0;
-            if(code_array[index] == '0')
-            {
-								drawChar(125+8*index,8,'9',FONT_6X12,false);
-                code_array[index] = '9';
-            }
-            else if(code_array[index] == '?')
-            {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
-                code_array[index] = '0';
-            }
-            else
-            {
-                code_array[index]--;
-								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
-            }
-        }
-        if(Key_Flag.Sign_Key_right_Flag)//右键按下
-        {
-						Key_Flag.Sign_Key_right_Flag = 0;
-						clearArea(125+8*index,8,6,12);//清空这个位置的显示
-            if(Center_Flag != 0)
-                Center_Flag = 0;
             if(code_array[index] == '9')
             {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
-                code_array[index] = '0';
-            }
-            else if(code_array[index] == '?')
-            {
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
+								drawChar(124+8*index,8,'0',FONT_6X12,false);
                 code_array[index] = '0';
             }
             else
             {
                 code_array[index]++;
-								drawChar(125+8*index,8,code_array[index],FONT_6X12,false);
+								drawChar(124+8*index,8,code_array[index],FONT_6X12,false);
+            }
+        }
+        if(Key_Flag.Sign_Key_right_Flag)//右键按下
+        {
+						Key_Flag.Sign_Key_right_Flag = 0;
+            if(code_array[index] == '0')
+            {
+								drawChar(124+8*index,8,'9',FONT_6X12,false);
+                code_array[index] = '9';
+            }
+            else
+            {
+                code_array[index]--;
+								drawChar(124+8*index,8,code_array[index],FONT_6X12,false);
             }
         }
         if(Key_Flag.Sign_Key_center_Flag)//中间建按下
         {
 						Key_Flag.Sign_Key_center_Flag = 0;
-						clearArea(125+8*index,8,6,12);//清空这个位置的显示
-						drawChar(125+8*index,8,'*',FONT_6X12,false);
-            Center_Flag++;
+						clearArea(124+8*index,8,6,12);//清空这个位置的显示
+						drawChar(124+8*index,8,'*',FONT_6X12,false);
             index++;
-            if(index < 4)
+            if(index == 6)
             {
-                Center_Flag = 0;
-								clearArea(125+8*index,8,6,12);//清空这个位置的显示
-								drawChar(125+8*index,8,'0',FONT_6X12,false);
+								if(compareCharArray(code_old,code_array,index) == 1)//密码正确
+								{    
+										Key_Control(0);//清空按键标志位，开启按键无效
+										Fill_RAM(0x00);//清除所有显示
+										return 1;							
+								}
+								else//密码错误
+								{
+										Key_Control(0);//清空按键标志位，开启按键无效
+										drawString(180,8,"ERROR");
+										HAL_Delay(1000);
+										Fill_RAM(0x00);//清除所有显示
+										return 0;
+								}
             }
             else
             {
-								clearArea(125+8*index,8,6,12);//清空这个位置的显示
-								drawChar(125+8*index,8,'?',FONT_6X12,false);
+								clearArea(124+8*index,8,6,12);//清空这个位置的显示
+								drawChar(124+8*index,8,'5',FONT_6X12,false);
             }
         }
-        if((index>=4)&&(Center_Flag >= 2))
-        {
-            //清除所有显示
-						clearAll();
-					
-					
-
-            if(compareCharArray(code_old,code_array,index) == 1)//密码正确
-            {    
-								Key_Flag.Sign_Key_Flag = 0;//按键无效
-		            memset(&Key_Flag,0,sizeof(Key_Flag));	
-								return 1;							
-						}
-            else//密码错误
-						{
-								Key_Flag.Sign_Key_Flag = 0;//按键无效
-		            memset(&Key_Flag,0,sizeof(Key_Flag));									
-                return 0;
-						}
-        }
-    }	
+				if((Get_TIM())%2 == 0)
+				{		
+						char temp = 30 - Get_TIM()/2 + 0x30;
+						drawChar(124+8*index,8,temp,FONT_6X12,false);				
+				}
+    }
 }
 
 u8 DisplayMem::compareCharArray(unsigned char *left,unsigned char *right,int len)

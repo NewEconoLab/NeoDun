@@ -463,6 +463,11 @@
               <FileType>1</FileType>
               <FilePath>..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
             </File>
+            <File>
+              <FileName>app_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\app_interface.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

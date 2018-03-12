@@ -9,6 +9,7 @@
 "bootloader_neo\sys.o"
 "bootloader_neo\timer.o"
 "bootloader_neo\atsha204a.o"
+"bootloader_neo\app_interface.o"
 "bootloader_neo\bitbang_i2c.o"
 "bootloader_neo\hw_config.o"
 "bootloader_neo\atca_command.o"
