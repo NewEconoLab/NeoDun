@@ -167,6 +167,7 @@ namespace hhgate
 
         private static int timeoutTime = 30000;
         private static int time = 0;
+        private static int time2 = 0;
 
         private static bool linking = false;
         private static bool comfirming = false;
@@ -217,6 +218,7 @@ namespace hhgate
                 json["msg"] = new MyJson.JsonNode_ValueString("failed");
             }
             linking = false;
+            time = 0;
             iOwinContext.Response.Write(json.ToString());
             driver_win.DriverCtr.Ins.addAddressEventHandlerCallBack -= addAddressCallBack;
             iOwinContext = null;
@@ -265,6 +267,7 @@ namespace hhgate
                 json["msg"] = new MyJson.JsonNode_ValueString("failed");
             }
             linking = false;
+            time = 0;
             iOwinContext.Response.WriteAsync(json.ToString());
             driver_win.DriverCtr.Ins.deleteAddressEventHandlerCallBack -= delAddressCallBack;
             iOwinContext = null;
@@ -314,6 +317,7 @@ namespace hhgate
                 json["msg"] = new MyJson.JsonNode_ValueString("faild");
             }
             linking = false;
+            time = 0;
             iOwinContext.Response.WriteAsync(json.ToString());
 
             driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
@@ -375,6 +379,8 @@ namespace hhgate
                 json["msg"] = new MyJson.JsonNode_ValueString("faild");
             }
             linking = false;
+            time = 0;
+            Console.WriteLine(json.ToString());
             iOwinContext.Response.Write(json.ToString());
 
             driver_win.DriverCtr.Ins.signEventHandlerCallBack -= signCallBack;
@@ -407,10 +413,10 @@ namespace hhgate
             while (comfirming)
             {
                 System.Threading.Thread.Sleep(100);
-                time += 100;
-                if (time > timeoutTime)
+                time2 += 100;
+                if (time2 > timeoutTime)
                 {
-                    time = 0;
+                    time2 = 0;
                     context.Response.Write("timeout");
                     comfirming = false;
                     driver_win.DriverCtr.Ins.GetAddressList();
@@ -427,6 +433,7 @@ namespace hhgate
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["msg"] = new MyJson.JsonNode_ValueString("success");
             comfirming = false;
+            time2 = 0;
             iOwinContext_pw.Response.Write(json.ToString());
             driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
             driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
@@ -441,6 +448,7 @@ namespace hhgate
             json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             json["msg"] = new MyJson.JsonNode_ValueString("faild");
             comfirming = false;
+            time2 = 0;
             iOwinContext_pw.Response.Write(json.ToString());
             driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
             driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
