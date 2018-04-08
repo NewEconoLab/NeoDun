@@ -146,32 +146,6 @@ namespace driver_win
             selectAddress.AddressText = item.AddressText;
             selectAddress.type = item.type;
         }
-        //点选密码
-        private void PasswordListButtonClick(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-
-            //将点击的按钮对应成数字 a对应1
-            int i = (int)button.Name[0] - 96;
-            str_password += i.ToString();
-            //str_password2 += " * ";
-            str_password2 += i.ToString();
-            this.pwLabel.Content = str_password2;
-            if (str_password.Length < 6)
-            {
-                return;
-            }
-            driverCtr.SetOrConfirmPassword(str_password);
-            LockPwPage();
-            //清空缓存住的选择的密码
-            str_password = "";
-            str_password2 = "";
-        }
-        //点击备份
-        private void Backup_click(object sender, RoutedEventArgs e)
-        {
-            BackUpPrivateKey();
-        }
         //删除地址
         private void DeleteAddress_click(object sender, RoutedEventArgs e)
         {
@@ -191,11 +165,6 @@ namespace driver_win
         private void HideMessagePage_click(object sender, RoutedEventArgs e)
         {
             HideMessagePage();
-        }
-        //重置密码
-        private void ResetPassword_click(object sender, RoutedEventArgs e)
-        {
-            RestPassword();
         }
 
         #endregion
@@ -218,7 +187,6 @@ namespace driver_win
             this.label_unlink.Visibility = Visibility.Collapsed;
             this.listBox.Visibility = Visibility.Collapsed;
             this.addBox.Visibility = Visibility.Collapsed;
-            this.pwBox.Visibility = Visibility.Collapsed;
             this.msgBox.Visibility = Visibility.Collapsed;
             this.settingBox.Visibility = Visibility.Collapsed;
         }
@@ -244,20 +212,7 @@ namespace driver_win
         {
             this.btn_relink.Visibility = Visibility.Collapsed;
         }
-        //显示输入密码页面
-        private void ShowPwPage()
-        {
-            HideAllPage();
-            UnLockPwPage();
-            UnActiveButton();
-            this.pwBox.Visibility = Visibility.Visible;
-        }
-        //关闭输入密码页面
-        private void HidePwPage()
-        {
-            ActiveButton();
-            this.pwBox.Visibility = Visibility.Collapsed;
-        }
+
         //显示未连接页面
         private void ShowUnliklabel()
         {
@@ -299,7 +254,6 @@ namespace driver_win
         private void ActiveButton()
         {
             this.btn_showaddpage.IsEnabled = true;
-            this.btn_backup.IsEnabled = true;
             this.btn_deleteaddress.IsEnabled = true;
             this.btn_showsettingpage.IsEnabled = true;
         }
@@ -307,7 +261,6 @@ namespace driver_win
         private void UnActiveButton()
         {
             this.btn_showaddpage.IsEnabled = false;
-            this.btn_backup.IsEnabled = false;
             this.btn_deleteaddress.IsEnabled = false;
             this.btn_showsettingpage.IsEnabled = false;
         }
@@ -328,10 +281,6 @@ namespace driver_win
             driverCtr.getAddresslistEventHandlerCallBack += GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack += LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack += GetSingerInfoCallBack;
-            driverCtr.isNeedConfirmPasswordEventHandlerCallBack += NeedConfirmPassword;
-            driverCtr.confirmResetPasswordEventHandlerCallBack += NeedConfirmPassword;
-            driverCtr.setPasswordEventHandlerCallBack += NeedConfirmPassword;
-            driverCtr.confirmPasswordfaildEventHandlerCallBack += ConfirmPasswordCallBack;
             driverCtr.privateKey2AddressEventHandlerCallBack += PrivateKey2AddressCallBack;
             driverCtr.setSetingInfoEventHandlerCallBack += SetSettingConfigCallBack;
             driverCtr.errorEventHandlerCallBack += ErrorMsgShow;
@@ -349,10 +298,6 @@ namespace driver_win
             driverCtr.getAddresslistEventHandlerCallBack -= GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack -= LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack -= GetSingerInfoCallBack;
-            driverCtr.isNeedConfirmPasswordEventHandlerCallBack -= NeedConfirmPassword;
-            driverCtr.confirmResetPasswordEventHandlerCallBack -= NeedConfirmPassword;
-            driverCtr.setPasswordEventHandlerCallBack -= NeedConfirmPassword;
-            driverCtr.confirmPasswordfaildEventHandlerCallBack -= ConfirmPasswordCallBack;
             driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;
             driverCtr.privateKey2AddressEventHandlerCallBack -= PrivateKey2AddressCallBack;
             driverCtr.setSetingInfoEventHandlerCallBack -= SetSettingConfigCallBack;
@@ -373,17 +318,6 @@ namespace driver_win
             this.notifyIcon.ShowBalloonTip(1000, "通知", content, type);
         }
 
-        //锁住密码页面的按键
-        private void LockPwPage()
-        {
-            this.passwordList.IsEnabled = false;
-        }
-        //解锁密码页面的按键
-        private void UnLockPwPage()
-        {
-            this.passwordList.IsEnabled = true;
-        }
-
         //连接签名机
         private void LinkSinger()
         {
@@ -402,12 +336,9 @@ namespace driver_win
         }
 
         //获取签名机配置回掉
-        private void GetSingerInfoCallBack(string _str, MyJson.JsonNode_Object myjson)
+        private void GetSingerInfoCallBack( MyJson.JsonNode_Object myjson)
         {
             Dispatcher.Invoke((Action)delegate () {
-                //this.pwLabel.Content = _str;
-                //显示密码验证的页面
-                //ShowPwPage();
                 this.c3.IsChecked = myjson["新增地址时是否要密码验证"] as MyJson.JsonNode_ValueNumber;
                 this.c4.IsChecked = myjson["删除地址是否要密码验证"] as MyJson.JsonNode_ValueNumber;
                 this.c5.IsChecked = myjson["备份地址是否要密码验证"] as MyJson.JsonNode_ValueNumber;
@@ -428,33 +359,12 @@ namespace driver_win
                 ErrorMsgShow("设置成功", "提示");
             });
         }
-        //需要密码验证
-        private void NeedConfirmPassword(string _str)
-        {
-            Dispatcher.Invoke((Action) delegate() {
-                this.pwLabel.Content = _str;
-                //显示密码验证的页面
-                ShowPwPage();
-            });
-        }
-
-        //需要密码验证
-        private void ConfirmPasswordCallBack()
-        {
-            Dispatcher.Invoke((Action)delegate () {
-                this.pwLabel.Content = "请输入密码";
-                //显示密码验证的页面
-                ShowPwPage();
-                ErrorMsgShow("密码错误", "提示");
-            });
-        }
 
         //获取地址的结果  （暂没有主动点击获取地址的功能，现在都是自动获取）
         private void GetAddressCallBack()
         {
             Dispatcher.Invoke((Action) delegate()
             {
-                HidePwPage();
                 ShowAddressPage();
                 this.addresslist.Items.Clear();
                 foreach (var add in signer.addressPool.addresses)
@@ -512,46 +422,6 @@ namespace driver_win
                 else
                     ErrorMsgShow("删除失败", "提示");
             });
-        }
-
-        //备份密钥
-        private void BackUpPrivateKey()
-        {
-            driverCtr.backUpAddressEventHandlerCallBack += BackUpPrivateKeyCallBack;
-            if (selectAddress == null)
-                return;
-            string str_addressType = selectAddress.type.ToString();
-            string str_addressText = selectAddress.AddressText;
-            if (string.IsNullOrEmpty(str_addressType) || string.IsNullOrEmpty(str_addressText))
-            {
-                ErrorMsgShow("请选择要备份的地址", "错误");
-                return;
-            }
-            driverCtr.BackUpAddress(str_addressType, str_addressText);
-            selectAddress.AddressText=null;
-        }
-        private void BackUpPrivateKeyCallBack(bool suc,string _str)  //把从签名机要到的私钥备份到本地
-        {
-            Dispatcher.Invoke((Action)  delegate()
-            {
-                driverCtr.backUpAddressEventHandlerCallBack -= BackUpPrivateKeyCallBack;
-                if (!suc)
-                    ErrorMsgShow("备份失败" + _str, "通知");
-                else
-                    ErrorMsgShow("已经成功备份"+ _str, "通知");
-            });
-        }
-
-
-        
-        //修改密码
-        private void RestPassword()
-        {
-            driverCtr.ResetPassword();
-        }
-        private void RestPasswordCallBack()
-        {
-            
         }
 
         private void ErrorMsgShow(string msg ,string header)

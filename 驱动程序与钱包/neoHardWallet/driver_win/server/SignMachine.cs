@@ -96,24 +96,11 @@ namespace hhgate
                 delAddress(context, formdata);
                 return;
             }
-            else if (relativePath == "addressinfo")
-            {
-                linking = true;
-                addressinfo(context, formdata);
-                return;
-            }
-            else if (relativePath == "comfirmpassword")
-            {
-                comfirming = true;
-                comfirmpassword(context, formdata);
-                return;
-            }
             else
             {
                 MyJson.JsonNode_Object jsonr = new MyJson.JsonNode_Object();
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(-1000);
                 jsonr["msg"] = new MyJson.JsonNode_ValueString("unknown cmd.");
-                //await context.Response.WriteAsync(jsonr.ToString());
             }
 
             return;
@@ -273,58 +260,6 @@ namespace hhgate
             iOwinContext = null;
         }
 
-        //获取私钥
-        private static void addressinfo(IOwinContext context, FormData formdata)
-        {
-            if (formdata.mapParams.ContainsKey("addresstext") == false)
-            {
-                context.Response.Write("need param , addresstext");
-                return;
-            }
-            string addressType = formdata.mapParams.ContainsKey("privatetype") ? formdata.mapParams["privatetype"] : "Neo";
-            string addressText = formdata.mapParams["addresstext"];
-
-            iOwinContext = context;
-            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack += addressinfoCallBack;
-            driver_win.DriverCtr.Ins.BackUpAddress(addressType, addressText);
-            while (linking)
-            {
-                System.Threading.Thread.Sleep(100);
-                time += 100;
-                if (time > timeoutTime)
-                {
-                    time = 0;
-                    linking = false;
-                    iOwinContext.Response.Write("timeout");
-                    driver_win.DriverCtr.Ins.GetAddressList();
-                }
-            }
-        }
-        private static void addressinfoCallBack(bool suc,string _privateKey)
-        {
-            if (iOwinContext == null)
-                return;
-            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            if (suc)
-            {
-                json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                json["msg"] = new MyJson.JsonNode_ValueString("success");
-                json["prikey"] = new MyJson.JsonNode_ValueString(_privateKey);
-            }
-            else
-            {
-                json["tag"] = new MyJson.JsonNode_ValueNumber(-1);
-                json["msg"] = new MyJson.JsonNode_ValueString("faild");
-            }
-            linking = false;
-            time = 0;
-            iOwinContext.Response.WriteAsync(json.ToString());
-
-            driver_win.DriverCtr.Ins.backUpAddressEventHandlerCallBack -= addressinfoCallBack;
-            iOwinContext = null;
-        }
-
-
         //签名
         private static void sign(IOwinContext context, FormData formdata)
         {
@@ -387,73 +322,6 @@ namespace hhgate
             iOwinContext = null;
         }
 
-
-        //验证密码
-        private static void comfirmpassword(IOwinContext context, FormData formdata)
-        {
-            if (formdata.mapParams.ContainsKey("password") == false)
-            {
-                context.Response.Write("need param，password");
-                return;
-            }
-
-            string password = formdata.mapParams["password"];
-
-            //判断密码是否是6位并且全部是数字
-            if (password.Length == 6 && !Regex.IsMatch(password, @"^\d*$"))
-            {
-                context.Response.Write("need six length and number password");
-                return;
-            }
-
-            iOwinContext_pw = context;
-            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 += comfirmpasswordCallBack;
-            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 += comfirmpasswordFaildCallBack;
-            driver_win.DriverCtr.Ins.SetOrConfirmPassword(password);
-            while (comfirming)
-            {
-                System.Threading.Thread.Sleep(100);
-                time2 += 100;
-                if (time2 > timeoutTime)
-                {
-                    time2 = 0;
-                    context.Response.Write("timeout");
-                    comfirming = false;
-                    driver_win.DriverCtr.Ins.GetAddressList();
-                    break;
-                }
-            }
-        }
-        //成功验证回掉
-        private static void comfirmpasswordCallBack()
-        {
-            if (iOwinContext_pw == null)
-                return;
-            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            json["msg"] = new MyJson.JsonNode_ValueString("success");
-            comfirming = false;
-            time2 = 0;
-            iOwinContext_pw.Response.Write(json.ToString());
-            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
-            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
-            iOwinContext_pw = null;
-        }
-        //失败验证回掉
-        private static void comfirmpasswordFaildCallBack()
-        {
-            if (iOwinContext == null)
-                return;
-            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            json["msg"] = new MyJson.JsonNode_ValueString("faild");
-            comfirming = false;
-            time2 = 0;
-            iOwinContext_pw.Response.Write(json.ToString());
-            driver_win.DriverCtr.Ins.confirmPasswordEventHandlerCallBack2 -= comfirmpasswordCallBack;
-            driver_win.DriverCtr.Ins.confirmPasswordfaildEventHandlerCallBack2 -= comfirmpasswordFaildCallBack;
-            iOwinContext_pw = null;
-        }
     }
 
 
