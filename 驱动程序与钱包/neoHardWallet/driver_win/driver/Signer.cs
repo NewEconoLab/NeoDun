@@ -346,12 +346,12 @@ namespace NeoDun
                     if(setPasswordEventHandler!=null)
                         setPasswordEventHandler();
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc5)//密码验证成功
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xc5)//密钥验证合规
                 {
                     if(confirmPasswordEventHandler!=null)
                         confirmPasswordEventHandler(true);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc6)//密码验证失败
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xc6)//密钥验证不合规
                 {
                     if(confirmPasswordEventHandler!=null)
                         confirmPasswordEventHandler(false);

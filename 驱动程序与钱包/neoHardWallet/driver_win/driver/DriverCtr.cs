@@ -57,6 +57,7 @@ namespace driver_win
             signer.signEventHandler += ConfirmSignCallBack;
             signer.setSettingInfoEventHandler += SetSettingInfoCallBack;
             signer.errorEventHandler += ErrorCallBack;
+            signer.confirmPasswordEventHandler += SendSecretCallBack;
         }
 
         private void UInit()
@@ -425,6 +426,41 @@ namespace driver_win
             getAddresslistEventHandlerCallBack();
         }
         #endregion
+
+        #region 发送加密密钥
+        public void SendSecret()
+        {
+            byte[] secret = new byte[32];
+            for (int i = 0; i < 32; i++)
+            {
+                secret[i] = (byte)i;
+            }
+
+            NeoDun.Message signMsg = new NeoDun.Message();
+            signMsg.tag1 = 0x02;
+            signMsg.tag2 = 0x0c;
+            signMsg.msgid = NeoDun.SignTool.RandomShort();
+            signMsg.writeUInt16(0, (UInt16)secret.Length);//neo tag
+            Array.Copy(secret, 0, signMsg.data, 2, secret.Length);
+            signer.SendMessage(signMsg, true);
+        }
+
+        public delegate void SendSecretEventHandlerCallBack();
+        public event SendSecretEventHandlerCallBack sendSecretEventHandlerCallBack;
+        public void SendSecretCallBack(bool _bool)
+        {
+            if (_bool)
+                UpdateApp();
+            else
+            {
+                if (sendSecretEventHandlerCallBack != null)
+                    sendSecretEventHandlerCallBack();
+            }
+
+        }
+        #endregion
+
+
 
         #region 安装更新app
         public async void UpdateApp()
