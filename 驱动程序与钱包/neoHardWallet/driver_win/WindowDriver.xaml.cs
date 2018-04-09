@@ -353,6 +353,7 @@ namespace driver_win
             bool[] _bools = { (bool)this.c1.IsChecked , (bool)this.c2.IsChecked , (bool)this.c3.IsChecked,
             (bool)this.c4.IsChecked,(bool)this.c5.IsChecked,(bool)this.c6.IsChecked};
             driverCtr.SetSettingInfo(_bools);
+
         }
 
         private void SetSettingConfigCallBack()
@@ -428,7 +429,7 @@ namespace driver_win
 
         private void UpdateApp()
         {
-            driverCtr.UpdateApp();
+            driverCtr.SendSecret();
         }
 
 

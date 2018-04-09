@@ -24,10 +24,7 @@ namespace driver_win
 
         private static Signer signer = Signer.Ins;
 
-        private System.Windows.Threading.DispatcherTimer timer;
-
-        private byte[] bytes = new byte[2];
-
+        private bool[] bools = new bool[6];
 
         private MyJson.JsonNode_Object isFirstConfirm = new MyJson.JsonNode_Object();
 
@@ -72,63 +69,39 @@ namespace driver_win
 
         }
 
-
-
-
         #region 连接签名机
         bool _islinking = false;
         public void LinkSinger(int count = 5,int time=5)
         {
             int _count = count;
             int _time = time;
-            timer = new System.Windows.Threading.DispatcherTimer();
+            System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1.0);
             timer.Tick += new EventHandler(async (_s, _e) => {
                 _time--;
-                //if (_count <= 0)
-                if(false)
+                if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
                 {
-                    _islinking = false;
-                    //显示未连接 
-                    timer.Stop();
-                    timer = null;
-                    LinkCallBack("未连接",System.Windows.Visibility.Visible,false);
-                }
-                else if (_time < 0)
-                {
-                    _islinking = false;
-                    //显示重连失败
-                    _count--;
                     _time = time;
-                    LinkCallBack("连接失败", System.Windows.Visibility.Collapsed,false);
-                    await Task.Delay(2000);
+                    _islinking = true;
+                    //只在第一次连接的时候    连接成功后去请求签名机的状态
+                    if (!_islinking && "hid" == signer.CheckDevice())
+                    {
+                        LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
+                        ShowBalloonTipCallBack("NeoDun已经连接");
+                        GetSingerInfo();
+                    }
                 }
                 else
                 {
-                    //显示重连中
-                    if (signer.CheckDevice() > 0)//有签名机连接了
+                    if (_islinking)
                     {
-                        _time = time;
-
-                        //只在第一次连接的时候    连接成功后去请求签名机的状态
-                        if (!_islinking)
-                        {
-                            LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
-                            ShowBalloonTipCallBack("NeoDun已经连接");
-                            GetSingerInfo();
-                        }
+                        ShowBalloonTipCallBack("NeoDun已经拔出");
+                        _islinking = false;
                     }
-                    else
-                    {
-                        if (_islinking)
-                        {
-                            ShowBalloonTipCallBack("NeoDun已经拔出");
-                            _islinking = false;
-                        }
-                        LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed,false);
-                        await Task.Delay(1000);
-                    }
+                    LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed, false);
+                    _time = _time <= 0 ? time : _time;
                 }
+                await Task.Delay(1000);
             });
             timer.Start();
         }
@@ -175,7 +148,7 @@ namespace driver_win
         }
 
         #endregion
-        private bool[] bools = new bool[6];
+
         #region 上报签名机驱动的新设置
         public void SetSettingInfo(bool[] _bools)
         {
@@ -459,8 +432,6 @@ namespace driver_win
 
         }
         #endregion
-
-
 
         #region 安装更新app
         public async void UpdateApp()

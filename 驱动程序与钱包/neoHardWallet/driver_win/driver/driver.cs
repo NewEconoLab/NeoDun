@@ -23,6 +23,7 @@ class DriverS
     {
         drivers = new System.Collections.Concurrent.ConcurrentBag<IDriver>();
         drivers.Add(new USBHIDDriver());
+        drivers.Add(new BootloaderHidDriver());
         simdriver = new SIMDriver();
         drivers.Add(simdriver);
 

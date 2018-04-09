@@ -426,20 +426,21 @@ namespace NeoDun
             DriverS.StopRead();
             DriverS.Stop();
         }
+
         /// <summary>
         /// 返回激活的设备的总数
         /// </summary>
         /// <returns></returns>
-        public int CheckDevice()//检查设备
+        public string CheckDevice()//检查设备
         {
             var driver = DriverS.getActive();
             if (driver == null)
             {
-                return 0;
+                return string.Empty;
             }
             int count = driver.GetCount();
-
-            return count;
+            string driverTag = count > 0 ? driver.Tag() : string.Empty;
+            return driverTag;
         }
         /// <summary>
         /// 返回激活设备的tag

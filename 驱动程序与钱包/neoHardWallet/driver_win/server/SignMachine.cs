@@ -46,10 +46,10 @@ namespace hhgate
                 var signer = NeoDun.Signer.Ins;
                 MyJson.JsonNode_Object jsonr = new MyJson.JsonNode_Object();
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                int dc = signer.CheckDevice();
-                jsonr["count"] = new MyJson.JsonNode_ValueNumber(dc);
+                string dc = signer.CheckDevice();
+                jsonr["count"] = new MyJson.JsonNode_ValueString(dc);
 
-                if (dc > 0)
+                if (!string.IsNullOrEmpty(dc))
                 {
                     jsonr["type"] = new MyJson.JsonNode_ValueString(signer.CheckDeviceTag());
                 }
@@ -66,8 +66,8 @@ namespace hhgate
                 jsonr["tag"] = new MyJson.JsonNode_ValueNumber(0);
                 MyJson.JsonNode_Array adds = new MyJson.JsonNode_Array();
                 jsonr["addresses"] = adds;
-                int dc = signer.CheckDevice();
-                if (dc > 0)
+                string dc = signer.CheckDevice();
+                if (!string.IsNullOrEmpty(dc))
                 {
                     foreach (var add in signer.addressPool.addresses)
                     {

@@ -103,6 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="driver\BootloaderHidDriver.cs" />
     <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="protocol\datatable.cs" />
     <Compile Include="protocol\error.cs" />
     <Compile Include="protocol\message.cs" />
+    <Compile Include="protocol\personalinfo.cs" />
     <Compile Include="protocol\signtool.cs" />
     <Compile Include="server\Cmd.cs" />
     <Compile Include="server\FormData.cs" />
@@ -213,6 +215,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="res\more.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dialogs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
