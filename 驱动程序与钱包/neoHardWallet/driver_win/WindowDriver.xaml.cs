@@ -428,7 +428,7 @@ namespace driver_win
 
         private void UpdateApp()
         {
-            driverCtr.UpdateApp();
+            driverCtr.SendSecret();
         }
 
 
