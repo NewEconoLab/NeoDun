@@ -446,5 +446,115 @@ namespace NeoDun
             Remark15 = 0xff
         }
 
+
+        /// <summary>
+        ///  AES 加密
+        /// </summary>
+        /// <param name="str">明文（待加密）</param>
+        /// <param name="key">密文</param>
+        /// <returns></returns>
+        public static byte[] AesEncrypt(byte[] str, byte[] key)
+        {
+            byte[] toEncryptArray = str;
+
+            System.Security.Cryptography.RijndaelManaged rm = new System.Security.Cryptography.RijndaelManaged
+            {
+                Key = key.Take(32).ToArray(),
+                Mode = System.Security.Cryptography.CipherMode.ECB,
+                Padding = System.Security.Cryptography.PaddingMode.Zeros
+            };
+            
+            System.Security.Cryptography.ICryptoTransform cTransform = rm.CreateEncryptor();
+            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+            return resultArray;
+        }
+        /// <summary>
+        ///  AES 解密
+        /// </summary>
+        /// <param name="str">明文（待解密）</param>
+        /// <param name="key">密文</param>
+        /// <returns></returns>
+        public static byte[] AesDecrypt(byte[] str, byte[] key)
+        {
+            byte[] toEncryptArray = str;
+
+            System.Security.Cryptography.RijndaelManaged rm = new System.Security.Cryptography.RijndaelManaged
+            {
+                Key = key.Take(32).ToArray(),
+                Mode = System.Security.Cryptography.CipherMode.ECB,
+                Padding = System.Security.Cryptography.PaddingMode.Zeros
+            };
+            var sss = rm.Key;
+            System.Security.Cryptography.ICryptoTransform cTransform = rm.CreateDecryptor();
+            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+            return resultArray;
+        }
+
+        public static byte[] EccEncrypt(byte[] message, string key)
+        {
+            // 公钥,私钥
+            byte[] publicKeyBytes, privateKeyBytes;
+
+            CngKey cngKey;
+            // 打开密钥
+            if (CngKey.Exists(key))
+            {
+                cngKey = CngKey.Open(key);
+                //cngKey.Delete();
+            }
+            // 生成密钥
+            else
+            {
+                CngKeyCreationParameters creationParameters = new CngKeyCreationParameters();
+                // 允许以明文的形式导出私钥
+                creationParameters.ExportPolicy = CngExportPolicies.AllowPlaintextExport;
+                // 使用 ECDsaP256,ECDsaP384,ECDsaP521 签名长度分别是 64 Bytes, 96 Bytes, 132 Bytes。
+                cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, key, creationParameters);
+            }
+
+            // 导出公钥
+            publicKeyBytes = cngKey.Export(CngKeyBlobFormat.EccPublicBlob);
+            // 导出私钥
+            privateKeyBytes = cngKey.Export(CngKeyBlobFormat.EccPrivateBlob);
+            // 签名
+            byte[] signature = SignData(message, key);
+            // 验证签名
+            bool verified = VerifyData(message, signature, publicKeyBytes);
+
+            return signature;
+        }
+
+        /// <summary>
+        /// 使用私钥签名
+        /// </summary>
+        public static byte[] SignData(byte[] data, string keyName)
+        {
+            // 打开密钥
+            CngKey cngKey = CngKey.Open(keyName);
+            // 签名
+            ECDsaCng ecdsa = new ECDsaCng(cngKey);
+            byte[] signature = ecdsa.SignData(data);
+            ecdsa.Clear();
+            cngKey.Dispose();
+            return signature;
+        }
+
+        /// <summary>
+        /// 使用公钥验证签名
+        /// </summary>
+        public static bool VerifyData(byte[] data, byte[] signature, byte[] publicKey)
+        {
+            bool verified = false;
+            // 导入公钥
+            CngKey cngKey = CngKey.Import(publicKey, CngKeyBlobFormat.EccPublicBlob);
+            // 验证签名
+            ECDsaCng ecdsa = new ECDsaCng(cngKey);
+            verified = ecdsa.VerifyData(data, signature);
+            ecdsa.Clear();
+            cngKey.Dispose();
+            return verified;
+        }
     }
 }

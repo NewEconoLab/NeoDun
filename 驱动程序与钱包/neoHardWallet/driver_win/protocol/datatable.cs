@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace NeoDun
 {
@@ -84,6 +84,18 @@ namespace NeoDun
                 else
                     continue;
                     //data[seek] = 0;
+            }
+        }
+
+        public async Task<uint> GetRemoteid()
+        {
+            while (true)
+            {
+                await Task.Delay(10);
+                if (this.dataidRemote > 0 && this.Check())
+                {
+                    return this.dataidRemote;
+                }
             }
         }
     }

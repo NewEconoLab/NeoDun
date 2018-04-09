@@ -103,7 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DriverCtr.cs" />
+    <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
     <Compile Include="protocol\address.cs" />
@@ -117,7 +117,7 @@
     <Compile Include="server\Server.cs" />
     <Compile Include="server\SignMachine.cs" />
     <Compile Include="server\StaticFile.cs" />
-    <Compile Include="Signer.cs" />
+    <Compile Include="driver\Signer.cs" />
     <Compile Include="driver\UsbHidDriver.cs" />
     <Compile Include="WindowDriver.xaml.cs">
       <DependentUpon>WindowDriver.xaml</DependentUpon>
@@ -157,7 +157,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="driver_win_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -194,7 +193,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="neolog.png" />
+    <Resource Include="res\neolog.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="res\developer.png" />

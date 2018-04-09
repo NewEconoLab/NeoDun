@@ -91,9 +91,6 @@ namespace driver_win
           // Init();
           //  InitPage();
           //  signer.Start(this);
-
-
-            //检测钱包有没有断开连接
         }
 
         #region 所有的页面点击事件
@@ -115,6 +112,11 @@ namespace driver_win
         private void ShowSettingPage_click(object sender, RoutedEventArgs e)
         {
             ShowSettingPage();
+        }
+        //更新app
+        private void UpdateApp_click(object sender, RoutedEventArgs e)
+        {
+            UpdateApp();
         }
         //隐藏设置页面
         private void HideSettingPage_click(object sender, RoutedEventArgs e)
@@ -424,6 +426,12 @@ namespace driver_win
             });
         }
 
+        private void UpdateApp()
+        {
+            driverCtr.UpdateApp();
+        }
+
+
         private void ErrorMsgShow(string msg ,string header)
         {
             MessageBox.Show(msg, header);
@@ -443,6 +451,7 @@ namespace driver_win
             hard.Show();
             await Task.Delay(2000);
         }
+
 
     }
 }

@@ -45,6 +45,13 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
+            <Button Name="update" HorizontalAlignment="Left" Width="84" Margin="320,0,0,0" Click="UpdateApp_click" Height="49" VerticalAlignment="Bottom">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Stretch="Fill" Source="res/backup.png" RenderTransformOrigin="1.665,0.492" Height="46" Width="81"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </Grid>
         <Label Name="label_unlink" Visibility="Collapsed" Content="未连接到设备,请检查USB是否插好或蓝牙是否连接正常" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="Gray" Height="315" Margin="5,130,0,0" VerticalAlignment="Top" Width="694"/>
         <GroupBox Name="listBox" Visibility="Collapsed" Header="" HorizontalAlignment="Left" Height="351" Margin="0,115,0,-1.6" VerticalAlignment="Top" Width="704">

@@ -441,29 +441,37 @@ namespace driver_win
                 }
                 this.SendMsg(msg);
             }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//设置钱包密码
+            if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//发送app包
             {
-                byte passwordlen = (byte)recv.readUInt16(0);
-                byte[] bytes_password = new byte[passwordlen];
-                Array.Copy(recv.data, 4, bytes_password, 0, passwordlen);
-                string str_password = personalinfo.GetString(bytes_password);
-                string realpassword = "";
-                this.Dispatcher.Invoke((Action)delegate () {
-                    //将传过来的伪密码转换成实际密码
-                    for (int i = 0; i < str_password.Length; i++)
-                    {
-                        var items = this.password.Items;
-                        var item = items.GetItemAt(int.Parse(str_password[i].ToString()) - 1) as ListViewItem;
-                        realpassword += item.Content;
-                    }
-                });
-                personalinfo.SetPassword(realpassword);
+                byte[] secret = new byte[32];
+                for (int i = 0; i < 32; i++)
+                {
+                    secret[i] = (byte)i;
+                }
+                UInt32 data0id = recv.readUInt32(42);
+                var str_hash = NeoDun.SignTool.Bytes2HexString(recv.data, 0, 32);
+                var _data = dataTable.getBlockByDataId(data0id);
+                var aes_data = SignTool.AesDecrypt(_data.data, secret);
+                byte[] hash = NeoDun.SignTool.ComputeSHA256(aes_data, 0, aes_data.Length);
+                var str_hash2 = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+                //验证一下是不是包hash一样
+                if (str_hash2 == str_hash)
+                {
+                    NeoDun.Message msg = new NeoDun.Message();
+                    msg.tag1 = 0x02;
+                    msg.tag2 = 0xc3;
+                    msg.msgid = recv.msgid;
+                    this.SendMsg(msg);
+                }
+                else
+                {
+                    NeoDun.Message msg = new NeoDun.Message();
+                    msg.tag1 = 0x02;
+                    msg.tag2 = 0xc4;
+                    msg.msgid = recv.msgid;
+                    this.SendMsg(msg);
+                }
 
-                NeoDun.Message msg = new NeoDun.Message();
-                msg.tag1 = 0x02;
-                msg.tag2 = 0xc3;
-                msg.msgid = recv.msgid;
-                this.SendMsg(msg);
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x0c)//验证钱包密码
             {
@@ -495,26 +503,6 @@ namespace driver_win
                 }
                 msg.msgid = recv.msgid;
                 this.SendMsg(msg);
-            }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x0d)//检查钱包是不是新钱包(废弃)
-            {
-                if (string.IsNullOrEmpty(personalinfo.password))
-                {//新钱包
-                    NeoDun.Message msg = new NeoDun.Message();
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xb5;
-                    msg.msgid = recv.msgid;
-                    this.SendMsg(msg);
-                }
-                else
-                {
-                    NeoDun.Message msg = new NeoDun.Message();
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xb6;
-                    msg.msgid = recv.msgid;
-                    this.SendMsg(msg);
-                }
-
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x1b)
             {
