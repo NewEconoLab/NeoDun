@@ -429,7 +429,7 @@ namespace driver_win
 
         private void UpdateApp()
         {
-            driverCtr.SendSecret();
+            driverCtr.UpdateApp();
         }
 
 
