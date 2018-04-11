@@ -443,19 +443,20 @@ namespace driver_win
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//发送app包
             {
-                byte[] secret = new byte[32];
-                for (int i = 0; i < 32; i++)
-                {
-                    secret[i] = (byte)i;
-                }
                 UInt32 data0id = recv.readUInt32(42);
                 var str_hash = NeoDun.SignTool.Bytes2HexString(recv.data, 0, 32);
-                var _data = dataTable.getBlockByDataId(data0id);
-                var aes_data = SignTool.AesDecrypt(_data.data, secret);
-                byte[] hash = NeoDun.SignTool.ComputeSHA256(aes_data, 0, aes_data.Length);
-                var str_hash2 = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+                var _data = dataTable.getBlockByDataId(data0id).data;
+                //data的第一个字节是加密hash的长度
+                var length = _data[0];
+                var data_ecc = _data.Skip(1).Take(length).ToArray();
+                var data = _data.Skip(length+1).ToArray();
+
+                byte[] hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+
+                var pubkey = SignTool.DecodeBase58("22J9pZ1JEBrDxs8r99WkPQmYN5Z2XcBPhhSKBXENuWyYtLyZus47uD3GzVYf4ZNGnzg5g6D6P4zABvo4jB3QfacJQ56JdpNHhs3");
+                var _bool = NeoDun.SignTool.VerifyData(hash, data_ecc, pubkey);
                 //验证一下是不是包hash一样
-                if (str_hash2 == str_hash)
+                if (_bool)
                 {
                     NeoDun.Message msg = new NeoDun.Message();
                     msg.tag1 = 0x02;

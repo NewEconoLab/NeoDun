@@ -54,7 +54,6 @@ namespace driver_win
             signer.signEventHandler += ConfirmSignCallBack;
             signer.setSettingInfoEventHandler += SetSettingInfoCallBack;
             signer.errorEventHandler += ErrorCallBack;
-            signer.confirmPasswordEventHandler += SendSecretCallBack;
         }
 
         private void UInit()
@@ -71,21 +70,17 @@ namespace driver_win
 
         #region 连接签名机
         bool _islinking = false;
-        public void LinkSinger(int count = 5,int time=5)
+        public void LinkSinger()
         {
-            int _count = count;
-            int _time = time;
             System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1.0);
             timer.Tick += new EventHandler(async (_s, _e) => {
-                _time--;
                 if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
                 {
-                    _time = time;
-                    _islinking = true;
                     //只在第一次连接的时候    连接成功后去请求签名机的状态
                     if (!_islinking && "hid" == signer.CheckDevice())
                     {
+                        _islinking = true;
                         LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
                         ShowBalloonTipCallBack("NeoDun已经连接");
                         GetSingerInfo();
@@ -98,8 +93,7 @@ namespace driver_win
                         ShowBalloonTipCallBack("NeoDun已经拔出");
                         _islinking = false;
                     }
-                    LinkCallBack("连接中……（" + _time + "s）", System.Windows.Visibility.Collapsed, false);
-                    _time = _time <= 0 ? time : _time;
+                    LinkCallBack("连接中……", System.Windows.Visibility.Collapsed, false);
                 }
                 await Task.Delay(1000);
             });
@@ -400,41 +394,8 @@ namespace driver_win
         }
         #endregion
 
-        #region 发送加密密钥
-        public void SendSecret()
-        {
-            byte[] secret = new byte[32];
-            for (int i = 0; i < 32; i++)
-            {
-                secret[i] = (byte)i;
-            }
-
-            NeoDun.Message signMsg = new NeoDun.Message();
-            signMsg.tag1 = 0x02;
-            signMsg.tag2 = 0x0c;
-            signMsg.msgid = NeoDun.SignTool.RandomShort();
-            signMsg.writeUInt16(0, (UInt16)secret.Length);//neo tag
-            Array.Copy(secret, 0, signMsg.data, 2, secret.Length);
-            signer.SendMessage(signMsg, true);
-        }
-
-        public delegate void SendSecretEventHandlerCallBack();
-        public event SendSecretEventHandlerCallBack sendSecretEventHandlerCallBack;
-        public void SendSecretCallBack(bool _bool)
-        {
-            if (_bool)
-                UpdateApp();
-            else
-            {
-                if (sendSecretEventHandlerCallBack != null)
-                    sendSecretEventHandlerCallBack();
-            }
-
-        }
-        #endregion
-
         #region 安装更新app
-        public async void UpdateApp()
+        public async void UpdateApp2()
         {
             byte[] secret = new byte[32];
             for (int i = 0; i < 32; i++)
@@ -482,6 +443,60 @@ namespace driver_win
                 }
             }
             catch(Exception e)
+            {
+                privateKey2AddressEventHandlerCallBack("", "", e.ToString());
+            }
+        }
+
+
+        public async void UpdateApp()
+        {
+            try
+            {
+                string wif = "L2EHemxzCYKxhH81QVwPDwUT5Bd8yBgbPt7GnUFpGuttiiYroRFi";  //"JceDDbDThUsUMbxbAdjtvvqfqM1ziwFUp4eyH6NKU4JMave1rBg9BDy3yvA2bWvDEaNt9vHSHMQUeDDhDFhEA9DuTq3kqFbMgcwgQRmqZ54FhRgp92k5TLhsWBAQUL18MAfHcWq98gYWDg"
+                Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+                dialog.Filter = "安装文件|*.bin";
+                if (dialog.ShowDialog() == true)
+                {
+                    //未加密的数据包
+                    byte[] data = System.IO.File.ReadAllBytes(dialog.FileName);
+                    //对未加密的数据包hash以方便下位机验证
+                    byte[] hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+
+                    //经过ecc加密之后的hash
+                    byte[] data_ecc = SignTool.EccEncrypt(hash, wif);
+
+
+                    //拼装新数据包
+                    byte[] dataHead = new byte[] { (byte)data_ecc.Length };
+                    data = dataHead.Concat(data_ecc).Concat(data).ToArray();
+                    hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+                    string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length); ;
+
+
+                    NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
+                    block.data = data;
+                    signer.SendDataBlock(block);
+
+                    var __block = signer.dataTable.getBlockBySha256(str_hash);
+                    uint remoteid = await __block.GetRemoteid();
+                    __block.dataidRemote = 0;
+
+                    NeoDun.Message signMsg = new NeoDun.Message();
+                    signMsg.tag1 = 0x02;
+                    signMsg.tag2 = 0x0b;
+                    signMsg.msgid = NeoDun.SignTool.RandomShort();
+                    Array.Copy(hash, 0, signMsg.data, 0, hash.Length);
+                    //这个dataid 要上一个block 传送完毕了才知道
+                    signMsg.writeUInt32(42, remoteid);
+                    signer.SendMessage(signMsg, true);
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception e)
             {
                 privateKey2AddressEventHandlerCallBack("", "", e.ToString());
             }
