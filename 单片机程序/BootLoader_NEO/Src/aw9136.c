@@ -13,7 +13,7 @@
 #define CNT_INT				1			//重复进入多少次中断，实际校准的宏，现定为1次
 
 volatile unsigned char aw9136_key_flag = 0;
-extern volatile unsigned char touch_motor_flag;           //1表示正在进行测试
+volatile unsigned char touch_motor_flag = 1;           //1表示正在进行测试
 #define  MOTOR_TIME  80
 
 unsigned char cali_flag = 0;

@@ -245,7 +245,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\ATSHA204\Appatsha204;..\ATSHA204\Atsha204_hw;..\ATSHA204\lib</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\ATSHA204\Appatsha204;..\ATSHA204\Atsha204_hw;..\ATSHA204\lib;..\STM32_Cryptographic_Library\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -467,6 +467,21 @@
               <FileName>app_interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\app_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sha256.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Src\Sha256.lib</FilePath>
+            </File>
+            <File>
+              <FileName>app_ecdsa.c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\app_ecdsa.c.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -670,6 +685,11 @@
               <FileName>stm32f4xx_hal_rng.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rng.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_crc.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -79,6 +79,8 @@ u8 SetPassport(void);
 u8 VerifyPassport(void);
 u8 compareCharArray(unsigned char *left,unsigned char *right,int len);
 
+u8 NEO_Test(void);
+
 #endif  
 	 
 

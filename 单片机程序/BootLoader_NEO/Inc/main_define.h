@@ -6,6 +6,9 @@
 
 #define Debug_Print
 
+#define RECV_BIN_FILE_LEN		100*1024
+#define Page_Per_Size				50
+#define MAX_Page_Index			RECV_BIN_FILE_LEN/Page_Per_Size
 
 typedef struct
 {
@@ -24,6 +27,18 @@ typedef struct
 		unsigned char	language;					//1表示英文，0表示中文
 }BOOT_FLAG;
 
+
+typedef struct 
+{
+		unsigned int size;
+		unsigned int packIndex;
+		unsigned char hash_tran[32];
+		unsigned short int reqSerial;
+		unsigned short int notifySerial;
+		
+		unsigned char signature[64];
+		unsigned char hash_actual[32];
+}BIN_FILE_INFO;
 
 
 #endif

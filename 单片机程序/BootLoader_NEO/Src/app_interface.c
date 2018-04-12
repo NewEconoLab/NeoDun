@@ -2,6 +2,8 @@
 #include <string.h>
 #include "atsha204a.h"
 
+#define SLOT_FLAG		14
+#define SLOT_SECRET	15
 
 /***************************************************
 输出：     pin指向一个unsigned char型容量为8的数组
@@ -69,20 +71,21 @@ unsigned char WritePinCode(unsigned char pin[8])
 *****************	**********************************/
 unsigned char ReadAT204Flag(BOOT_FLAG *flag)
 {
-		unsigned char pin_read[32];
-		memset(flag,0,4);
-		memset(pin_read,0,32);
-
-		//读取第5个加密槽的数据
-		if(ATSHA_read_encrypted(5,pin_read,15) == 0)
+		unsigned char slot_data[32];
+	
+		memset(slot_data,0,32);
+		if(ATSHA_read_data_slot(SLOT_FLAG,slot_data) == 0)//读取第14个槽的数据
 				return 0;
 	
-		if((pin_read[31] == 0x88)&&(pin_read[30] == 0x88)&&(pin_read[29] == 0x88)&&(pin_read[28] == 0x88))
+		if(ATSHA_read_data_slot(SLOT_SECRET,slot_data) == 1)//第15个槽，设置为不可读写，如果读取成功，则未先对加密芯片处理，出错
+				return 0;
+		
+		if((slot_data[31] == 0x88)&&(slot_data[30] == 0x88)&&(slot_data[29] == 0x88)&&(slot_data[28] == 0x88))
 				flag->new_wallet = 0;
 		else
 				flag->new_wallet = 1;
 		
-		if(flag->new_wallet == 1)
+		if(flag->new_wallet)
 		{
 				flag->update = 0;
 				flag->language = 0;
@@ -90,8 +93,8 @@ unsigned char ReadAT204Flag(BOOT_FLAG *flag)
 		}
 		else
 		{
-				flag->update = pin_read[5];
-				flag->language = pin_read[6];
+				flag->update = slot_data[1];
+				flag->language = slot_data[2];
 		}
 		
 		return 1;		
@@ -105,19 +108,15 @@ void EmptyWallet(void)
 {
 		unsigned char array_write1[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 																			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-		unsigned char array_write2[32] = {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+		unsigned char array_write2[32] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 																			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-		unsigned char i;	
+		unsigned char i = 0;
 			
-		for(i=0;i<5;i++)
-		{
-				ATSHA_write_encrypted(i,array_write1,15);
-		}																		
-		ATSHA_write_encrypted(5,array_write2,15);
-		for(i=6;i<16;i++)
+		for(i=3;i<14;i++)
 		{
 				ATSHA_write_data_slot(i,0,array_write1,32);
-		}
+		}																		
+		ATSHA_write_data_slot(SLOT_FLAG,0,array_write2,32);
 }
 
 /***************************************************
@@ -135,5 +134,6 @@ void ChangeWallet(void)
 				pin_read[i] = 0x88;
 		ATSHA_write_encrypted(5,pin_read,15);
 }
+
 
 
