@@ -20,6 +20,7 @@
 extern unsigned char gImage_triangle_down[72];
 extern unsigned char gImage_emptypin[72];
 extern unsigned char gImage_fullpin[72];
+extern volatile unsigned char touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
 extern SIGN_KEY_FLAG Key_Flag;
 extern BOOT_FLAG BootFlag;
 //向SSD1325写入一个字节。
@@ -106,8 +107,8 @@ void OLED_Init(void)
 	OLED_WR_Byte(0xA0,OLED_DATA); // Enable External VSL
 	OLED_WR_Byte(0xF8,OLED_DATA); // Enhance Low Gray Scale Display Quality
 
-    OLED_WR_Byte(0xC1,OLED_CMD); //  Set Contrast Current 
-	OLED_WR_Byte(0xEF,OLED_DATA); //  Default => 0x7F
+  OLED_WR_Byte(0xC1,OLED_CMD); //  Set Contrast Current 
+	OLED_WR_Byte(0x7F,OLED_DATA); //  Default => 0x7F
 
     OLED_WR_Byte(0xC7,OLED_CMD); //  Master Contrast Current Control 
 	OLED_WR_Byte(Brightness,OLED_DATA); //  Default => 0x0f (Maximum)
@@ -1132,7 +1133,7 @@ u8 SetPassport(void)
 		}
 		else
 		{
-		
+				Asc8_16(100,7,"Set PIN");
 		}
 		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
 		Show_Pattern(&gImage_emptypin[0],21,23,26,38);
@@ -1234,7 +1235,7 @@ u8 VerifyPassport(void)
 		}
 		else
 		{
-		
+				Asc8_16(84,7,"Confirm PIN");
 		}
 		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
 		Show_Pattern(&gImage_emptypin[0],21,23,26,38);
@@ -1303,11 +1304,11 @@ u8 VerifyPassport(void)
 												Show_HZ12_12(84,7,0,25,26);//密码
 												Show_HZ12_12(116,7,0,37,38);//错误
 												temp[0] = Pin_error + 0x30;
-												Asc6_12(148,8,temp);
+												Asc8_16(148,7,temp);
 												Show_HZ12_12(160,7,0,39,39);//次
 												//第二行显示
 												Show_HZ12_12(60,26,0,37,38);//错误
-												Asc6_12(92,27,"5");
+												Asc8_16(92,26,"5");
 												Show_HZ12_12(104,26,0,39,39);//次
 												Show_HZ12_12(120,26,0,33,33);//将
 												Show_HZ12_12(136,26,0,36,36);//重
@@ -1316,7 +1317,13 @@ u8 VerifyPassport(void)
 										}
 										else
 										{
-										
+												Asc8_16(52,7,"Incorrect PIN (");
+												temp[0] = Pin_error + 0x30;
+												Asc8_16(172,7,temp);
+												Asc8_16(180,7,"/5)");
+												temp[0] = 5 - Pin_error + 0x30;
+												Asc8_16(68,26,temp);
+												Asc8_16(76,26," try(ies) left");
 										}
 										Show_Pattern(&gImage_triangle_down[0],30,32,45,57);
 										clearArea(120,57,12,1);
@@ -1345,7 +1352,75 @@ u8 compareCharArray(unsigned char *left,unsigned char *right,int len)
 		return 1;
 }
 
+u8 NEO_Test(void)
+{
+		int i=0;
+		int value = 0;
+		Fill_RAM(0x00);
+		Asc8_16( 52,4 ,"Enter NeoDun Test ?");
+		Asc8_16(24,44,"Cancel");
+		Asc8_16(124,44,"OK");
+		Asc8_16(184,44,"Cancel");
+	
+		while(1)
+		{														
+				if(Key_Flag.Key_center_Flag)
+				{
+						touch_motor_flag = 0;
+						Key_Control(0);				//清空按键标志位，开启按键无效
 
-
-
+						Fill_RAM(0x00);
+						Asc8_16( 84,4 ,"NeoDun Test");		
+						HAL_Delay(2000);
+						
+						for(i=0;i<5;i++)
+						{
+								Fill_RAM(0xFF);
+								HAL_Delay(1000);
+								Fill_RAM(0x00);
+								HAL_Delay(1000);
+						}
+				/******************************************
+										NeoDun Test
+									Motor and Key Test
+						On						Exit					Off
+				******************************************/		
+						Asc8_16( 84,4 ,"NeoDun Test");
+						Asc8_16( 56,24 ,"Motor and Key Test");
+						Asc8_16( 30,44 ,"On");
+						Asc8_16( 112,44 ,"Exit");
+						Asc8_16( 206,44 ,"Off");
+						Key_Control(1);				//清空按键标志位，开启按键有效
+						
+						while(1) 
+						{
+								if(Key_Flag.Key_left_Flag)
+								{
+										Key_Flag.Key_left_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+								}
+								if(Key_Flag.Key_right_Flag)
+								{
+										Key_Flag.Key_right_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
+								}
+								if(Key_Flag.Key_center_Flag)//中间按键按下，退出
+								{
+										Key_Flag.Key_center_Flag = 0;
+										break;
+								}
+						}
+						touch_motor_flag = 1;
+						value = 1;						
+						break;
+				}
+				else if((Key_Flag.Key_right_Flag == 1)||(Key_Flag.Key_left_Flag == 1))
+				{							
+						value = 0;
+						break;
+				}
+		}
+		Fill_RAM(0x00);
+		return value;
+}
 

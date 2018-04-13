@@ -22,6 +22,7 @@ bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 bootloader_neo\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -53,3 +54,9 @@ bootloader_neo\main.o: ..\ATSHA204\Atsha204_hw\bitBand.h
 bootloader_neo\main.o: ../Inc/main_define.h
 bootloader_neo\main.o: ../Inc/app_interface.h
 bootloader_neo\main.o: ../Inc/test_jpg.h
+bootloader_neo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc/usbd_customhid.h
+bootloader_neo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
+bootloader_neo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
+bootloader_neo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
+bootloader_neo\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+bootloader_neo\main.o: ../Inc/app_command.h

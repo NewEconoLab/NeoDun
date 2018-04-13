@@ -35,62 +35,11 @@ uint16_t STMFLASH_GetFlashSector(uint32_t addr)
 //WriteAddr:起始地址(此地址必须为4的倍数!!)
 //pBuffer:数据指针
 //NumToWrite:字(32位)数(就是要写入的32位数据的个数.) 
-//void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)	
-//{ 
-//	FLASH_EraseInitTypeDef FlashEraseInit;	
-//  HAL_StatusTypeDef FlashStatus = HAL_OK;
-//	uint32_t SectorError=0;	
-//	uint32_t addrx=0;
-//	uint32_t endaddr=0;	
-//  if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//非法地址
-//	
-//	HAL_FLASH_Unlock();									//解锁 
-//	addrx=WriteAddr;				//写入的起始地址
-//	endaddr=WriteAddr+NumToWrite*4;	//写入的结束地址
-//	
-//	if(addrx<0X1FFF0000)			//只有主存储区,才需要执行擦除操作!!
-//	{
-//		while(addrx<endaddr)		//扫清一切障碍.(对非FFFFFFFF的地方,先擦除)
-//		{
-//			if(STMFLASH_ReadWord(addrx)!=0XFFFFFFFF)//有非0XFFFFFFFF的地方,要擦除这个扇区
-//			{   
-//				FlashEraseInit.TypeErase=FLASH_TYPEERASE_SECTORS;       //擦除类型，扇区擦除 
-//				FlashEraseInit.Sector=STMFLASH_GetFlashSector(addrx);   //要擦除的扇区
-//				FlashEraseInit.NbSectors=1;                             //一次只擦除一个扇区
-//				FlashEraseInit.VoltageRange=FLASH_VOLTAGE_RANGE_3;      //电压范围，VCC=2.7~3.6V之间!!
-//				if(HAL_FLASHEx_Erase(&FlashEraseInit,&SectorError)!=HAL_OK) 
-//				{
-//					break;//发生错误了	
-//				}
-//			}else addrx+=4;
-//			FLASH_WaitForLastOperation(FLASH_WAITETIME);                //等待上次操作完成			
-//		} 
-//	}
-//	if(FlashStatus==HAL_OK)
-//	{
-//		while(WriteAddr<endaddr)//写数据
-//		{
-//			if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,WriteAddr,*pBuffer)!=HAL_OK)//写入数据
-//			{ 
-//				break;	//写入异常
-//			}
-//			WriteAddr+=4;
-//			pBuffer++;
-//		} 
-//	}
-//	HAL_FLASH_Lock();           //上锁
-//} 
-
-void STMFLASH_WriteWord(uint32_t faddr,uint32_t value)
-{
-		HAL_FLASH_Unlock();					//解锁
-		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,faddr,value);
-		HAL_FLASH_Lock();           //上锁
-}
-
-
 void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)	
 { 
+	FLASH_EraseInitTypeDef FlashEraseInit;	
+  HAL_StatusTypeDef FlashStatus = HAL_OK;
+	uint32_t SectorError=0;	
 	uint32_t addrx=0;
 	uint32_t endaddr=0;	
   if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//非法地址
@@ -99,7 +48,25 @@ void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)
 	addrx=WriteAddr;				//写入的起始地址
 	endaddr=WriteAddr+NumToWrite*4;	//写入的结束地址
 	
-	if(addrx<0X1FFF0000)
+	if(addrx<0X1FFF0000)			//只有主存储区,才需要执行擦除操作!!
+	{
+		while(addrx<endaddr)		//扫清一切障碍.(对非FFFFFFFF的地方,先擦除)
+		{
+			if(STMFLASH_ReadWord(addrx)!=0XFFFFFFFF)//有非0XFFFFFFFF的地方,要擦除这个扇区
+			{   
+				FlashEraseInit.TypeErase=FLASH_TYPEERASE_SECTORS;       //擦除类型，扇区擦除 
+				FlashEraseInit.Sector=STMFLASH_GetFlashSector(addrx);   //要擦除的扇区
+				FlashEraseInit.NbSectors=1;                             //一次只擦除一个扇区
+				FlashEraseInit.VoltageRange=FLASH_VOLTAGE_RANGE_3;      //电压范围，VCC=2.7~3.6V之间!!
+				if(HAL_FLASHEx_Erase(&FlashEraseInit,&SectorError)!=HAL_OK) 
+				{
+					break;//发生错误了	
+				}
+			}else addrx+=4;
+			FLASH_WaitForLastOperation(FLASH_WAITETIME);                //等待上次操作完成			
+		} 
+	}
+	if(FlashStatus==HAL_OK)
 	{
 		while(WriteAddr<endaddr)//写数据
 		{
@@ -113,6 +80,39 @@ void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)
 	}
 	HAL_FLASH_Lock();           //上锁
 } 
+
+void STMFLASH_WriteWord(uint32_t faddr,uint32_t value)
+{
+		HAL_FLASH_Unlock();					//解锁
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,faddr,value);
+		HAL_FLASH_Lock();           //上锁
+}
+
+
+//void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite)	
+//{ 
+//	uint32_t addrx=0;
+//	uint32_t endaddr=0;	
+//  if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//非法地址
+//	
+//	HAL_FLASH_Unlock();									//解锁 
+//	addrx=WriteAddr;				//写入的起始地址
+//	endaddr=WriteAddr+NumToWrite*4;	//写入的结束地址
+//	
+//	if(addrx<0X1FFF0000)
+//	{
+//		while(WriteAddr<endaddr)//写数据
+//		{
+//			if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,WriteAddr,*pBuffer)!=HAL_OK)//写入数据
+//			{ 
+//				break;	//写入异常
+//			}
+//			WriteAddr+=4;
+//			pBuffer++;
+//		} 
+//	}
+//	HAL_FLASH_Lock();           //上锁
+//} 
 
 //从指定地址开始读出指定长度的数据
 //ReadAddr:起始地址

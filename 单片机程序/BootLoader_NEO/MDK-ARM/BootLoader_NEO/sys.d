@@ -23,6 +23,7 @@ bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 bootloader_neo\sys.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
