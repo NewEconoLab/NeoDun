@@ -12,7 +12,7 @@ class USBHIDDriver : IDriver
     }
 
     const UInt16 vid = 0x0483;
-    const UInt16 pid = 0x572b;
+    const UInt16 pid = 0x5750;
     static HidSharp.HidDeviceLoader loader = new HidSharp.HidDeviceLoader();
 
 

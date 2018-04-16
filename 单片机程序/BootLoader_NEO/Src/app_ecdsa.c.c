@@ -49,7 +49,7 @@ const uint8_t P_256_Gy[] =
     0x40, 0x68, 0x37, 0xBF, 0x51, 0xF5
   };
 
-uint8_t Alg_ECDSASignVerify(uint8_t *public_key,uint8_t *signature,uint8_t *input_msg)
+uint8_t Alg_ECDSASignVerify(uint8_t *public_key,BIN_FILE_INFO *file,uint8_t *input_msg)
 {	
 		int32_t error_sta = 0;
 	  EC_Para EC;
@@ -66,10 +66,10 @@ uint8_t Alg_ECDSASignVerify(uint8_t *public_key,uint8_t *signature,uint8_t *inpu
 		pub_key.pub_x = public_key;
 		pub_key.pub_y = public_key + 32;
 
-		sign.sign_rSize = 32;
-		sign.sign_sSize = 32;
-		sign.sign_r = signature;
-		sign.sign_s = signature + 32;
+		sign.sign_rSize = file->Len_sign/2;
+		sign.sign_sSize = file->Len_sign/2;
+		sign.sign_r = file->signature;
+		sign.sign_s = file->signature + file->Len_sign/2;
 	
 		inputMsg.inputMsg_size = 32;
 		inputMsg.input_msg = input_msg;

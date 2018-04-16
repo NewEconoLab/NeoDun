@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "crypto.h"
+#include "main_define.h"
 
 #define   CONCAT(A, B)               (A ## B)
 #define   _HASH_INIT(e)              CONCAT(e, _Init)
@@ -121,7 +122,7 @@ typedef struct
 	int32_t inputMsg_size;
 }InputMsg_Para;
 
-uint8_t Alg_ECDSASignVerify(uint8_t *public_key,uint8_t *signature,uint8_t *input_msg);
+uint8_t Alg_ECDSASignVerify(uint8_t *public_key,BIN_FILE_INFO *file,uint8_t *input_msg);
 
 void	EC_paraTestInit(EC_Para *ec, Pub_Key_Para *pub_key, Sign_Para *sign, 
 	                    InputMsg_Para *inputMsg, Digest_Para *digest);

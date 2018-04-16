@@ -203,8 +203,9 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								SHA256_Data(HID_RX_BUF,bin_file.size,datasharesult,32);
 								if(CommpareArray(datasharesult,bin_file.hash_tran,32))
 								{
-										memmove(bin_file.signature,HID_RX_BUF+1,64);												//得到hash的签名
-										SHA256_Data(HID_RX_BUF+65,bin_file.size-65,bin_file.hash_actual,32);//得到实际的hash
+										bin_file.Len_sign = HID_RX_BUF[0];
+										memmove(bin_file.signature,HID_RX_BUF+1,bin_file.Len_sign);														 									//得到hash的签名
+										SHA256_Data(HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign - 1,bin_file.hash_actual,32);//得到实际的hash
 										Hid_Recv_01a3_Rp(1,datasharesult);
 								}
 								else
@@ -218,11 +219,11 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 						case 0x020b:
 						{
 								SerialID = data[2] | (data[3] << 8);								
-								if(Alg_ECDSASignVerify(public_key,bin_file.signature,bin_file.hash_actual))//ECDSA签名认证成功
+								if(Alg_ECDSASignVerify(public_key,&bin_file,bin_file.hash_actual))//ECDSA签名认证成功
 								{
 										STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
 										STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
-										iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+65,bin_file.size-65);
+										iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign-1);
 										Hid_Recv_020b_Rp(1,SerialID);
 										HAL_Delay(500);
 										Deal_USB_ERROR();//重新配置下USB

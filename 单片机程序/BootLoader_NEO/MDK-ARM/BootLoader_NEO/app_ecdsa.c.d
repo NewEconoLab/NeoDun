@@ -94,4 +94,5 @@ bootloader_neo\app_ecdsa.c.o: ..\STM32_Cryptographic_Library\inc\RSA/rsa_low_lev
 bootloader_neo\app_ecdsa.c.o: ..\STM32_Cryptographic_Library\inc\ECC/ecc.h
 bootloader_neo\app_ecdsa.c.o: ..\STM32_Cryptographic_Library\inc\ECC/../MATH/math.h
 bootloader_neo\app_ecdsa.c.o: ..\STM32_Cryptographic_Library\inc\MATH/math.h
+bootloader_neo\app_ecdsa.c.o: ../Inc/main_define.h
 bootloader_neo\app_ecdsa.c.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

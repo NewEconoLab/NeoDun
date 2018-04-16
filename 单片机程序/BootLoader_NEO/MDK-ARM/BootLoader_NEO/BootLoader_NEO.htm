@@ -3,9 +3,9 @@
 <title>Static Call Graph - [BootLoader_NEO\BootLoader_NEO.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BootLoader_NEO\BootLoader_NEO.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Thu Apr 12 22:51:29 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun Apr 15 18:41:03 2018
 <BR><P>
-<H3>Maximum Stack Usage =        996 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        988 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
 <P>
@@ -756,7 +756,7 @@ Global Symbols
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModularAddBig
 </UL>
 
-<P><STRONG><a name="[ad]"></a>Alg_ECDSASignVerify</STRONG> (Thumb, 92 bytes, Stack size 120 bytes, app_ecdsa.c.o(i.Alg_ECDSASignVerify))
+<P><STRONG><a name="[ad]"></a>Alg_ECDSASignVerify</STRONG> (Thumb, 116 bytes, Stack size 120 bytes, app_ecdsa.c.o(i.Alg_ECDSASignVerify))
 <BR><BR>[Stack]<UL><LI>Max Depth = 892<LI>Call Chain = Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Crypto_DeInit
@@ -1680,8 +1680,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[147]"></a>Hid_Data_Analysis</STRONG> (Thumb, 368 bytes, Stack size 72 bytes, app_command.o(i.Hid_Data_Analysis))
-<BR><BR>[Stack]<UL><LI>Max Depth = 964<LI>Call Chain = Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
+<P><STRONG><a name="[147]"></a>Hid_Data_Analysis</STRONG> (Thumb, 386 bytes, Stack size 64 bytes, app_command.o(i.Hid_Data_Analysis))
+<BR><BR>[Stack]<UL><LI>Max Depth = 956<LI>Call Chain = Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Fill_RAM
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
@@ -3235,7 +3235,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[6d]"></a>main</STRONG> (Thumb, 624 bytes, Stack size 32 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 996<LI>Call Chain = main &rArr; Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
+<BR><BR>[Stack]<UL><LI>Max Depth = 988<LI>Call Chain = main &rArr; Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clearArea
 <LI><a href="#[179]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Show_Pattern

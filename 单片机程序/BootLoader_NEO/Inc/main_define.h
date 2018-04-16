@@ -37,6 +37,7 @@ typedef struct
 		unsigned short int notifySerial;
 		
 		unsigned char signature[64];
+		unsigned char Len_sign;
 		unsigned char hash_actual[32];
 }BIN_FILE_INFO;
 
