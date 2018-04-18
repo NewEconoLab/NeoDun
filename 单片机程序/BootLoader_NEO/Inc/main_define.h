@@ -9,6 +9,7 @@
 #define RECV_BIN_FILE_LEN		100*1024
 #define Page_Per_Size				50
 #define MAX_Page_Index			RECV_BIN_FILE_LEN/Page_Per_Size
+#define PACK_INDEX_SIZE			((RECV_BIN_FILE_LEN-1)/50 + 1)
 
 typedef struct
 {
@@ -30,15 +31,15 @@ typedef struct
 
 typedef struct 
 {
-		unsigned int size;
-		unsigned int packIndex;
-		unsigned char hash_tran[32];
-		unsigned short int reqSerial;
-		unsigned short int notifySerial;
+		unsigned int 				size;
+		unsigned int 				packIndex;
+		unsigned char 			hash_tran[32];
+		unsigned short int 	reqSerial;
+		unsigned short int 	notifySerial;
 		
-		unsigned char signature[64];
-		unsigned char Len_sign;
-		unsigned char hash_actual[32];
+		unsigned char 			signature[64];
+		unsigned char 			Len_sign;
+		unsigned char 			hash_actual[32];
 }BIN_FILE_INFO;
 
 

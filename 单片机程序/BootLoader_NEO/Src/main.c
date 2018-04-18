@@ -126,7 +126,7 @@ int main(void)
 								MX_USB_DEVICE_Init();			//USB初始化							
 								if(NEO_Test())
 								{
-										Key_Control(0);	
+										Key_Control(0);
 										Asc8_16(88,10,"Test OK !!");
 										Asc8_16(20,36,"Next ,Please Check USB Port");
 										HAL_Delay(30000);
@@ -169,9 +169,11 @@ int main(void)
 								clearArea(120,40,16,1);
 						}
 						if(update_flag_failed)//一旦检测到更新失败，则退出程序
-						{		
+						{
 								Fill_RAM(0x00);
-								return 0;
+								//system restart
+								__set_FAULTMASK(1);
+								NVIC_SystemReset();
 						}
 				}
 		}

@@ -6,6 +6,7 @@
 
 void Hid_Data_Analysis(uint8_t data[],int len);
 
+uint8_t isAllPackGot(void);
 uint16_t Get_Serial_ID(void);
 void USBHIDSend(uint8_t *data,int len);
 uint32_t command_crc32(uint32_t crc, uint8_t* buff, int len);

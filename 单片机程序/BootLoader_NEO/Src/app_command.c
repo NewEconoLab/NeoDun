@@ -8,13 +8,13 @@
 #include "oled.h"
 
 //Global variable
-extern uint8_t HID_RX_BUF[110*1024] __attribute__ ((at(0X20003000)));
+extern uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));
 extern USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t Show_Wait_Pic = 0;
 static const uint32_t  POLYNOMIAL = 0xEDB88320;
 static uint8_t have_table = 0;
 static uint32_t table[256];
-static uint8_t public_key[64] = 
+static uint8_t public_key[64] =
 {
 		220,114,233,198,133,184, 81,202,202, 10, 23,234, 25,144, 45,196,
 		 80, 41,188,166, 57,158,131,237,241,  7,175, 52, 57,203,166, 48,
@@ -23,6 +23,16 @@ static uint8_t public_key[64] =
 };
 BIN_FILE_INFO bin_file;
 volatile uint8_t update_flag_failed = 0;
+enum{
+		BIN_FILE_TOO_BIG = 0,
+		PAGE_SERIAL_ID_FAILED = 1,
+		BIN_FILE_HASH_ERROR = 2,
+		ECDSA_SIGNATURE_ERROR = 3,
+		PAGE_RECV_ERROR = 4,
+		PAGE_INDEX_ID_ERROR = 5
+};
+static uint16_t PageIndex = 0;
+static uint8_t packIndexRecord[PACK_INDEX_SIZE];
 
 void Deal_USB_ERROR(void)
 {
@@ -35,10 +45,33 @@ void Deal_USB_ERROR(void)
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);		
 }
 
-void Update_Error_Deal(void)
+void Update_Error_Deal(u8 error)
 {
 		Fill_RAM(0x00);
-		Asc8_16(68,24,"Update Error !!");
+		switch (error)
+		{
+				case BIN_FILE_TOO_BIG:
+						Asc8_16(52,24,"Update Error 401!!!");
+				break;
+				case PAGE_SERIAL_ID_FAILED:
+						Asc8_16(52,24,"Update Error 402!!!");
+				break;
+				case BIN_FILE_HASH_ERROR:
+						Asc8_16(52,24,"Update Error 403!!!");
+				break;
+				case ECDSA_SIGNATURE_ERROR:
+						Asc8_16(52,24,"Update Error 404!!!");
+				break;
+				case PAGE_RECV_ERROR:
+						Asc8_16(52,24,"Update Error 405!!!");
+				break;
+				case PAGE_INDEX_ID_ERROR:
+						Asc8_16(52,24,"Update Error 406!!!");
+				break;
+				default:
+						Asc8_16(52,24,"Update Error 400!!!");
+				break;
+		}
 		HAL_Delay(5000);
 		update_flag_failed = 1;
 }
@@ -75,7 +108,7 @@ void Hid_Recv_0101_Rp(uint8_t status)
 				data_rp[5] = 0;
 				data_rp[6] = bin_file.packIndex & 0xff;
 				data_rp[7] = (bin_file.packIndex >> 8) & 0xff;
-				memmove(data_rp+8,bin_file.hash_tran,32);
+				memcpy(data_rp+8,bin_file.hash_tran,32);
 				Show_Wait_Pic = 1;
 		}
 		else
@@ -157,9 +190,9 @@ void Hid_Recv_020c_Rp(uint8_t status,uint16_t serialID)
 void Hid_Data_Analysis(uint8_t data[],int len)
 {
 		int cmd = 0;
-		uint16_t SerialID = 0;
-		uint16_t PageIndex = 0;
-		uint8_t datasharesult[32];
+		uint16_t 	SerialID = 0;
+		uint8_t 	datasharesult[32];
+		uint16_t 	Pc_pageIndex = 0;
 	
 		if(command_verifycrc(data,len))
 		{
@@ -171,6 +204,9 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								bin_file.notifySerial = data[2] | (data[3] << 8);
 								bin_file.size = data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24);
 								printf("bin file size:%d\n",bin_file.size);
+								//将统计接收包的信息清空
+								PageIndex = 0;
+								memset(packIndexRecord,0,PACK_INDEX_SIZE);
 								memmove(bin_file.hash_tran,data+8,32);
 								if(bin_file.size < RECV_BIN_FILE_LEN)
 								{
@@ -179,40 +215,55 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								else
 								{
 										Hid_Recv_0101_Rp(0);
-										Update_Error_Deal();										
+										Update_Error_Deal(BIN_FILE_TOO_BIG);										
 								}
 						}
 						break;
 						case 0x01a2:
 						{
-								PageIndex = data[4] | (data[5] << 8);
-								if(PageIndex > MAX_Page_Index)
-										printf("error PageIndex\n");
+								Pc_pageIndex = data[4] | (data[5] << 8);
+								if(Pc_pageIndex > MAX_Page_Index)
+										Update_Error_Deal(PAGE_INDEX_ID_ERROR);
 								SerialID = data[2] | (data[3] << 8);
 								if(SerialID == bin_file.reqSerial)
-										memmove(HID_RX_BUF + PageIndex * 50,data+6,50);
+								{
+										memmove(HID_RX_BUF + PageIndex * Page_Per_Size,data+6,Page_Per_Size);
+										packIndexRecord[PageIndex] = 1;
+										PageIndex++;
+								}
 								else
 								{
 										printf("error SerialID\n");
-										Update_Error_Deal();
+										Update_Error_Deal(PAGE_SERIAL_ID_FAILED);
 								}
 						}
 						break;
 						case 0x01a3:
 						{
 								SHA256_Data(HID_RX_BUF,bin_file.size,datasharesult,32);
-								if(CommpareArray(datasharesult,bin_file.hash_tran,32))
+								if(isAllPackGot())
 								{
-										bin_file.Len_sign = HID_RX_BUF[0];
-										memmove(bin_file.signature,HID_RX_BUF+1,bin_file.Len_sign);														 									//得到hash的签名
-										SHA256_Data(HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign - 1,bin_file.hash_actual,32);//得到实际的hash
-										Hid_Recv_01a3_Rp(1,datasharesult);
+										if(CommpareArray(datasharesult,bin_file.hash_tran,32))
+										{
+												bin_file.Len_sign = HID_RX_BUF[0];
+												memcpy(bin_file.signature,HID_RX_BUF+1,bin_file.Len_sign);														 									//得到hash的签名
+												SHA256_Data(HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign - 1,bin_file.hash_actual,32);//得到实际的hash
+												Hid_Recv_01a3_Rp(1,datasharesult);
+										}
+										else
+										{
+												memset(&HID_RX_BUF,0,sizeof(HID_RX_BUF));
+												Hid_Recv_01a3_Rp(0,datasharesult);
+												HAL_Delay(500);
+												Update_Error_Deal(BIN_FILE_HASH_ERROR);
+										}
 								}
 								else
 								{
 										memset(&HID_RX_BUF,0,sizeof(HID_RX_BUF));
 										Hid_Recv_01a3_Rp(0,datasharesult);
-										Update_Error_Deal();
+										HAL_Delay(500);
+										Update_Error_Deal(PAGE_RECV_ERROR);
 								}
 						}
 						break;
@@ -234,7 +285,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								{
 										memset(&HID_RX_BUF,0,sizeof(HID_RX_BUF));
 										Hid_Recv_020b_Rp(0,SerialID);
-										Update_Error_Deal();								
+										Update_Error_Deal(ECDSA_SIGNATURE_ERROR);						
 								}
 						}
 						break;
@@ -247,6 +298,36 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 		{
 				printf("Crc Error!!!\n");
 		}		
+}
+
+uint8_t isAllPackGot(void)
+{
+		uint16_t i;
+		uint8_t value = 1;
+		uint8_t index = 0;
+		uint16_t err_array[20];	
+		
+		memset(err_array,0,20);
+		for(i=0;i<bin_file.packIndex;i++)
+		{
+				if(!packIndexRecord[i])
+				{
+						err_array[index++] = i;
+						value = 0;
+				}
+		}
+		
+		if(value == 0)
+		{
+				printf("err packid:");
+				for(i=0;i<20;i++)
+				{
+						if(err_array[i])
+								printf(" %d",err_array[i]);
+				}
+				printf("\n");
+		}
+		return value;
 }
 
 uint16_t Get_Serial_ID(void)
