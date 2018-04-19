@@ -1,6 +1,6 @@
 /*------------------------------------------------File Info---------------------------------------------
 ** File Name: main.c
-** Last modified Date:  2018-04-12
+** Last modified Date:  2018-04-19
 ** Last Version: 
 ** Descriptions: 
 **------------------------------------------------------------------------------------------------------
@@ -9,20 +9,20 @@
 ** Version: 
 ** Descriptions: NEODUN BootLoader 
 **	
-** 1、APP程序从扇区4开始存储，大小为80多KB，前面扇区0-3，总共64KB，留给BootLoader程序
+** 1、APP程序从扇区4开始存储，前面扇区0-3，总共64KB，留给BootLoader程序
 ** 2、APP程序存储在扇区4和扇区5，这两个扇区的大小为64+128KB
 ** 3、HID的速度改善，修改Polling Interval（轮询间隔）
 ** 4、AW9136的灵敏度由寄存器THR2-THR4设置
 ** 5、修改N_THR2、N_THR3、N_THR4值，可更改按键S1-S3的灵敏度  默认值为0x2328  现改为0x0808
 ** 6、插入USB开机出现异常，修改BootLoader主流程，只有进入升级状态，才枚举USBHID设备，调整主流程
-** 7、VID一致  PID不同，PID为22352时，表示这个是钱包
-			 VID表示供应商识别码，PID表示产品识别码
+** 7、VID一致  PID不同，PID为22352时，表示这个是钱包;VID表示供应商识别码，PID表示产品识别码
 ** 8、BootLoader问题，如果BootLoader停留的时间不够AW9136初始化，会导致程序进入AW9136的sleep模式，导致速度变慢
 				解决办法：只有进入升级界面的时候，才初始化AW9136，不然只初始化，中间按键有效
 ** 9、通过写入0x1111进寄存器（N_OFR1~3）以及定义宏CNT_INT来提高AW9136的初始化速度
 ** 10、增加触摸按键双击的识别N_TAPR1-2、N_TDTR、N_GIER寄存器的值,但是检测到双击操作时，单击也会被检测到
 ** 11、亮度调整在OLED的0xC1处修改，可调范围：0-0xff
 ** 12、注意USB的主从控制引脚，导致USB设备一直有效
+** 13、代码重构
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -45,6 +45,8 @@ UART_HandleTypeDef huart2;
 RNG_HandleTypeDef hrng;
 CRC_HandleTypeDef hcrc;
 
+static void DATA_Init(void);
+static void BSP_Init(void);
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CRC_Init(void);
@@ -53,43 +55,26 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 
 /***************************************** Global **************************************************/
-extern BIN_FILE_INFO bin_file;
+extern BIN_FILE_INFO Bin_File;
 extern SIGN_KEY_FLAG Key_Flag;
-extern uint8_t Show_Wait_Pic;
-extern volatile uint8_t update_flag_failed;
-BOOT_FLAG BootFlag;
-
+BOOT_SYS_FLAG BootFlag;
 //HID接收缓冲设置
-u8 HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.    
-u32 HID_RX_CNT = 0;
+uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.
 //HID数据处理变量
-u8 HID_PAGE_RECV[64];
-u8 HID_RECV_LEN = 0;
-u8 hid_recv_flag = 0;
+volatile uint8_t 	HID_PAGE_RECV[64];
+volatile int 			HID_RECV_LEN = 0;
+volatile uint8_t 	hid_recv_flag = 0;
 /***************************************************************************************************/
 
 int main(void)
 {
-		memset(&BootFlag,0,sizeof(BootFlag));
-		memset(&Key_Flag,0,sizeof(Key_Flag));//清空按键标志位，开启按键有效
-		memset(&bin_file,0,sizeof(BIN_FILE_INFO));
-	
-		HAL_Init();								//中断分组2
-		SystemClock_Config(); 		//系统时钟168MHz
-		MX_GPIO_Init();						//IO口初始化
-		MX_CRC_Init();
-		MX_RNG_Init();	
-		Center_button_init();			//中间按钮初始化
-		OLED_Init();							//OLED初始化	
-		Show_Pattern(&gImage_logo[0],26,37,8,56);//开机logo
-		clearArea(104,56,48,1);
-#ifdef Debug_Print
-		MX_USART1_UART_Init();		//打印信息串口
-#endif
-		Set_System();
-		MX_USART2_UART_Init();		//蓝牙串口
-		TIM3_Init(5000-1,8400-1);	//500ms进入一次中断计数
-		AW9136_Init();
+		//数据初始化
+		DATA_Init();
+		
+		//硬件初始化
+		BSP_Init();
+		
+		//加密芯片判断
 		if(ReadAT204Flag(&BootFlag)==0)
 		{
 				Fill_RAM(0x00);
@@ -97,8 +82,11 @@ int main(void)
 				HAL_Delay(10000);
 				return 0;
 		}
-		HAL_Delay(500);									//加延时给按键芯片足够的时间来完成初始化
+
+		//加延时给按键芯片足够的时间来完成初始化
+		HAL_Delay(500);
 		
+		//调试和升级选择
 		if(Have_App() == 0)       			//不存在APP程序
 		{
 				Fill_RAM(0x00);							//清屏
@@ -143,10 +131,13 @@ int main(void)
 				}
 		}		
 		
+		//升级处理
+#ifdef Debug_Print
 		printf("Update Flag:%d\n",BootFlag.update);
+#endif
 		if(BootFlag.update)//需要升级
 		{
-				Fill_RAM(0x00);										//清屏
+				Fill_RAM(0x00);
 				if(BootFlag.language == 0)
 						Show_HZ12_12(96,26,0,10,13);	//等待更新
 				else
@@ -156,22 +147,14 @@ int main(void)
 				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);
 				while(1)
 				{
-						if(hid_recv_flag == 1)
+						if(hid_recv_flag)			//接收数据则处理
 						{
+								Hid_Data_Analysis((uint8_t *)HID_PAGE_RECV,HID_RECV_LEN);
 								hid_recv_flag = 0;
-								Hid_Data_Analysis(HID_PAGE_RECV,HID_RECV_LEN);
 						}
-						if(Show_Wait_Pic)
-						{
-								Show_Wait_Pic = 0;
-								Fill_RAM(0x00);
-								Show_Pattern(&gImage_wait[0],30,33,24,40);
-								clearArea(120,40,16,1);
-						}
-						if(update_flag_failed)//一旦检测到更新失败，则退出程序
+						if(BootFlag.update_flag_failed)//一旦检测到更新失败，则退出程序
 						{
 								Fill_RAM(0x00);
-								//system restart
 								__set_FAULTMASK(1);
 								NVIC_SystemReset();
 						}
@@ -181,10 +164,32 @@ int main(void)
 		//大厅app已安装，且不需要升级，则直接进入大厅app
 		iap_load_app(FLASH_APP1_ADDR);
 		
-		while (1)
-		{
-				
-		}
+		return 0;
+}
+
+static void DATA_Init(void)
+{
+		memset(&BootFlag,0,sizeof(BOOT_SYS_FLAG));
+		memset(&Key_Flag,0,sizeof(SIGN_KEY_FLAG));//清空按键标志位，开启按键有效
+		memset(&Bin_File,0,sizeof(BIN_FILE_INFO));
+}
+
+static void BSP_Init(void)
+{
+		HAL_Init();								//中断分组2
+		SystemClock_Config(); 		//系统时钟168MHz
+		MX_GPIO_Init();						//IO口初始化
+		MX_CRC_Init();						//CRC校验
+		MX_RNG_Init();						//RNG随机数
+		Center_button_init();			//中间按钮初始化
+		OLED_Init();							//OLED初始化	
+		Show_Pattern(&gImage_logo[0],26,37,8,56);//开机logo
+		clearArea(104,56,48,1);
+		MX_USART1_UART_Init();		//打印信息串口
+		ATSHA204_Init();
+		MX_USART2_UART_Init();		//蓝牙串口
+		TIM3_Init(5000-1,8400-1);	//500ms进入一次中断计数
+		AW9136_Init();						//触摸按键
 }
 
 /** System Clock Configuration
@@ -371,11 +376,9 @@ void MX_RNG_Init(void)
 void USB_DataReceiveHander(uint8_t *data,int len)
 {
 		HID_RECV_LEN = len;
+		memmove((uint8_t *)HID_PAGE_RECV,data,len);
 		hid_recv_flag = 1;
-		memmove(HID_PAGE_RECV,data,len);
 }
-
-
 
 /**
   * @brief  This function is executed in case of error occurrence.

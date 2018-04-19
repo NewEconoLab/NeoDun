@@ -1,6 +1,6 @@
 #include "timer.h"
 
-volatile int time_counter = 0;
+static volatile uint32_t time_counter = 0;
 TIM_HandleTypeDef TIM3_Handler;      //定时器句柄 
 
 //通用定时器3中断初始化
@@ -49,7 +49,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim==(&TIM3_Handler))
     {
 				time_counter++;
-//				printf("定时器时间到！！\r\n");
     }
 }
 

@@ -22,7 +22,7 @@
 #define  Set_Chip_Power(OnOff)  {PBout(14) = (1^OnOff);}//1为ON，0为OFF ----不建议对芯片电源进行高速开关操作
 
 
-void Set_System(void);
+void ATSHA204_Init(void);
 	
 #endif  /*__HW_CONFIG_H*/
 

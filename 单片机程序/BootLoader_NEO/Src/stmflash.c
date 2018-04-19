@@ -151,13 +151,7 @@ void STMFLASH_Erase_Sectors(uint32_t sector)
 		}
 }
 
-uint8_t Have_App(void)
-{
-		if(STMFLASH_ReadWord(0x08010000) == 0XFFFFFFFF)//²»´æÔÚAPP³ÌÐò
-				return 0;
-		else
-				return 1;
-}
+
 
 
 

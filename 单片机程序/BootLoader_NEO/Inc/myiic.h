@@ -26,18 +26,18 @@
 //void IIC1_Init(void);                		              
 //void IIC1_Start(void);								//发送IIC开始信号
 //void IIC1_Stop(void);	  						  //发送IIC停止信号
-//void IIC1_Send_Byte(u8 txd);					//IIC发送一个字节
-//u8 IIC1_Read_Byte(unsigned char ack); //IIC读取一个字节
-//u8 IIC1_Wait_Ack(void); 							//IIC等待ACK信号
+//void IIC1_Send_Byte(uint8_t txd);					//IIC发送一个字节
+//uint8_t IIC1_Read_Byte(uint8_t ack); //IIC读取一个字节
+//uint8_t IIC1_Wait_Ack(void); 							//IIC等待ACK信号
 //void IIC1_Ack(void);									//IIC发送ACK信号
 //void IIC1_NAck(void);								  //IIC不发送ACK信号
 
 void IIC2_Init(void); 
 void IIC2_Start(void);								//发送IIC开始信号
 void IIC2_Stop(void);	  						  //发送IIC停止信号
-void IIC2_Send_Byte(u8 txd);					//IIC发送一个字节
-u8 IIC2_Read_Byte(unsigned char ack); //IIC读取一个字节
-u8 IIC2_Wait_Ack(void); 							//IIC等待ACK信号
+void IIC2_Send_Byte(uint8_t txd);					//IIC发送一个字节
+uint8_t IIC2_Read_Byte(uint8_t ack); //IIC读取一个字节
+uint8_t IIC2_Wait_Ack(void); 							//IIC等待ACK信号
 void IIC2_Ack(void);									//IIC发送ACK信号
 void IIC2_NAck(void);								  //IIC不发送ACK信号
 

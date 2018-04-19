@@ -8,9 +8,12 @@
 #include "oled.h"
 
 //Global variable
+BIN_FILE_INFO Bin_File;
+extern BOOT_SYS_FLAG BootFlag;
 extern uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));
 extern USBD_HandleTypeDef hUsbDeviceFS;
-uint8_t Show_Wait_Pic = 0;
+extern unsigned char gImage_wait[128];
+//Local variable
 static const uint32_t  POLYNOMIAL = 0xEDB88320;
 static uint8_t have_table = 0;
 static uint32_t table[256];
@@ -21,18 +24,8 @@ static uint8_t public_key[64] =
 		 77,129,140,102, 91, 55,100, 75, 22,199,102,163,254, 39,208,  8,
 		242,115,116, 26,250, 72,  8,254, 61,123,213,224,137,112,238, 69	
 };
-BIN_FILE_INFO bin_file;
-volatile uint8_t update_flag_failed = 0;
-enum{
-		BIN_FILE_TOO_BIG = 0,
-		PAGE_SERIAL_ID_FAILED = 1,
-		BIN_FILE_HASH_ERROR = 2,
-		ECDSA_SIGNATURE_ERROR = 3,
-		PAGE_RECV_ERROR = 4,
-		PAGE_INDEX_ID_ERROR = 5
-};
 static uint16_t PageIndex = 0;
-static uint8_t packIndexRecord[PACK_INDEX_SIZE];
+static uint8_t 	packIndexRecord[PACK_INDEX_SIZE];
 
 void Deal_USB_ERROR(void)
 {
@@ -45,21 +38,21 @@ void Deal_USB_ERROR(void)
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);		
 }
 
-void Update_Error_Deal(u8 error)
+void Update_Error_Deal(uint8_t error)
 {
 		Fill_RAM(0x00);
 		switch (error)
 		{
-				case BIN_FILE_TOO_BIG:
+				case PAGE_TOO_BIG_ERROR:
 						Asc8_16(52,24,"Update Error 401!!!");
 				break;
-				case PAGE_SERIAL_ID_FAILED:
+				case PAGE_SERIALID_ERROR:
 						Asc8_16(52,24,"Update Error 402!!!");
 				break;
-				case BIN_FILE_HASH_ERROR:
+				case PAGE_HASH_ERROR:
 						Asc8_16(52,24,"Update Error 403!!!");
 				break;
-				case ECDSA_SIGNATURE_ERROR:
+				case PAGE_SIGNATURE_ERROR:
 						Asc8_16(52,24,"Update Error 404!!!");
 				break;
 				case PAGE_RECV_ERROR:
@@ -73,10 +66,10 @@ void Update_Error_Deal(u8 error)
 				break;
 		}
 		HAL_Delay(5000);
-		update_flag_failed = 1;
+		BootFlag.update_flag_failed = 1;
 }
 
-uint8_t CommpareArray(uint8_t *left,uint8_t *right, int size)
+static uint8_t CommpareArray(uint8_t *left,uint8_t *right, int size)
 {
 		for(int i = 0 ; i < size ; i ++)
 		{
@@ -95,21 +88,24 @@ void Hid_Recv_0101_Rp(uint8_t status)
 		memset(data_rp,0,64);
 		
 		data_rp[0] = 0x01;
-		bin_file.reqSerial = Get_Serial_ID();
-		data_rp[2] = bin_file.reqSerial & 0xff;
-		data_rp[3] = (bin_file.reqSerial >> 8) & 0xff;
+		Bin_File.reqSerial = Get_Serial_ID();
+		data_rp[2] = Bin_File.reqSerial & 0xff;
+		data_rp[3] = (Bin_File.reqSerial >> 8) & 0xff;
 	
-		bin_file.packIndex = (bin_file.size + 50 - 1)/50;
+		Bin_File.packIndex = (Bin_File.size + 50 - 1)/50;
 		
 		if(status)
 		{
 				data_rp[1] = 0x10;
 				data_rp[4] = 0;
 				data_rp[5] = 0;
-				data_rp[6] = bin_file.packIndex & 0xff;
-				data_rp[7] = (bin_file.packIndex >> 8) & 0xff;
-				memcpy(data_rp+8,bin_file.hash_tran,32);
-				Show_Wait_Pic = 1;
+				data_rp[6] = Bin_File.packIndex & 0xff;
+				data_rp[7] = (Bin_File.packIndex >> 8) & 0xff;
+				memcpy(data_rp+8,Bin_File.hash_tran,32);
+				//显示等待图标
+				Fill_RAM(0x00);
+				Show_Pattern(&gImage_wait[0],30,33,24,40);
+				clearArea(120,40,16,1);
 		}
 		else
 				data_rp[1] = 0xe0;
@@ -131,13 +127,13 @@ void Hid_Recv_01a3_Rp(uint8_t status,uint8_t *hash)
 		  data_rp[1] = 0x11;
 		else
 			data_rp[1] = 0x12;	
-		data_rp[2] = bin_file.notifySerial & 0xff;
-		data_rp[3] = (bin_file.notifySerial >> 8) & 0xff;	
+		data_rp[2] = Bin_File.notifySerial & 0xff;
+		data_rp[3] = (Bin_File.notifySerial >> 8) & 0xff;	
 	
 		data_rp[4] = 0;
 		data_rp[5] = 0;
-		data_rp[6] = bin_file.packIndex & 0xff;
-		data_rp[7] = (bin_file.packIndex >> 8) & 0xff;		
+		data_rp[6] = Bin_File.packIndex & 0xff;
+		data_rp[7] = (Bin_File.packIndex >> 8) & 0xff;		
 		
 		memmove(data_rp+8,hash,32);
 		
@@ -201,21 +197,23 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 				{
 						case 0x0101:
 						{
-								bin_file.notifySerial = data[2] | (data[3] << 8);
-								bin_file.size = data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24);
-								printf("bin file size:%d\n",bin_file.size);
+								Bin_File.notifySerial = data[2] | (data[3] << 8);
+								Bin_File.size = data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24);
+#ifdef Debug_Print								
+								printf("bin file size:%d\n",Bin_File.size);
+#endif							
 								//将统计接收包的信息清空
 								PageIndex = 0;
 								memset(packIndexRecord,0,PACK_INDEX_SIZE);
-								memmove(bin_file.hash_tran,data+8,32);
-								if(bin_file.size < RECV_BIN_FILE_LEN)
+								memmove(Bin_File.hash_tran,data+8,32);
+								if(Bin_File.size < RECV_BIN_FILE_LEN)
 								{
 										Hid_Recv_0101_Rp(1);
 								}
 								else
 								{
 										Hid_Recv_0101_Rp(0);
-										Update_Error_Deal(BIN_FILE_TOO_BIG);										
+										Update_Error_Deal(PAGE_TOO_BIG_ERROR);										
 								}
 						}
 						break;
@@ -225,7 +223,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								if(Pc_pageIndex > MAX_Page_Index)
 										Update_Error_Deal(PAGE_INDEX_ID_ERROR);
 								SerialID = data[2] | (data[3] << 8);
-								if(SerialID == bin_file.reqSerial)
+								if(SerialID == Bin_File.reqSerial)
 								{
 										memmove(HID_RX_BUF + PageIndex * Page_Per_Size,data+6,Page_Per_Size);
 										packIndexRecord[PageIndex] = 1;
@@ -233,21 +231,23 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								}
 								else
 								{
+#ifdef Debug_Print										
 										printf("error SerialID\n");
-										Update_Error_Deal(PAGE_SERIAL_ID_FAILED);
+#endif
+										Update_Error_Deal(PAGE_SERIALID_ERROR);
 								}
 						}
 						break;
 						case 0x01a3:
 						{
-								SHA256_Data(HID_RX_BUF,bin_file.size,datasharesult,32);
+								SHA256_Data(HID_RX_BUF,Bin_File.size,datasharesult,32);
 								if(isAllPackGot())
 								{
-										if(CommpareArray(datasharesult,bin_file.hash_tran,32))
+										if(CommpareArray(datasharesult,Bin_File.hash_tran,32))
 										{
-												bin_file.Len_sign = HID_RX_BUF[0];
-												memcpy(bin_file.signature,HID_RX_BUF+1,bin_file.Len_sign);														 									//得到hash的签名
-												SHA256_Data(HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign - 1,bin_file.hash_actual,32);//得到实际的hash
+												Bin_File.Len_sign = HID_RX_BUF[0];
+												memcpy(Bin_File.signature,HID_RX_BUF+1,Bin_File.Len_sign);														 									//得到hash的签名
+												SHA256_Data(HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign - 1,Bin_File.hash_actual,32);//得到实际的hash
 												Hid_Recv_01a3_Rp(1,datasharesult);
 										}
 										else
@@ -255,7 +255,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 												memset(&HID_RX_BUF,0,sizeof(HID_RX_BUF));
 												Hid_Recv_01a3_Rp(0,datasharesult);
 												HAL_Delay(500);
-												Update_Error_Deal(BIN_FILE_HASH_ERROR);
+												Update_Error_Deal(PAGE_HASH_ERROR);
 										}
 								}
 								else
@@ -270,11 +270,11 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 						case 0x020b:
 						{
 								SerialID = data[2] | (data[3] << 8);								
-								if(Alg_ECDSASignVerify(public_key,&bin_file,bin_file.hash_actual))//ECDSA签名认证成功
+								if(Alg_ECDSASignVerify(public_key,&Bin_File,Bin_File.hash_actual))//ECDSA签名认证成功
 								{
 										STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
 										STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
-										iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+bin_file.Len_sign+1,bin_file.size-bin_file.Len_sign-1);
+										iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
 										Hid_Recv_020b_Rp(1,SerialID);
 										HAL_Delay(500);
 										Deal_USB_ERROR();//重新配置下USB
@@ -285,18 +285,22 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								{
 										memset(&HID_RX_BUF,0,sizeof(HID_RX_BUF));
 										Hid_Recv_020b_Rp(0,SerialID);
-										Update_Error_Deal(ECDSA_SIGNATURE_ERROR);						
+										Update_Error_Deal(PAGE_SIGNATURE_ERROR);						
 								}
 						}
 						break;
 						default:
+#ifdef Debug_Print								
 								printf("Unknow Cmd\n");
+#endif
 						break;
 				}
 		}
 		else
 		{
+#ifdef Debug_Print				
 				printf("Crc Error!!!\n");
+#endif
 		}		
 }
 
@@ -308,7 +312,7 @@ uint8_t isAllPackGot(void)
 		uint16_t err_array[20];	
 		
 		memset(err_array,0,20);
-		for(i=0;i<bin_file.packIndex;i++)
+		for(i=0;i<Bin_File.packIndex;i++)
 		{
 				if(!packIndexRecord[i])
 				{
@@ -319,6 +323,7 @@ uint8_t isAllPackGot(void)
 		
 		if(value == 0)
 		{
+#ifdef Debug_Print				
 				printf("err packid:");
 				for(i=0;i<20;i++)
 				{
@@ -326,6 +331,7 @@ uint8_t isAllPackGot(void)
 								printf(" %d",err_array[i]);
 				}
 				printf("\n");
+#endif				
 		}
 		return value;
 }
@@ -397,19 +403,25 @@ void SHA256_Data(uint8_t* input, uint32_t inLen, uint8_t* outPut, uint32_t outLe
 		retval = SHA256_Init(&context_st);
 		if (retval != HASH_SUCCESS) 
 		{
+#ifdef Debug_Print				
 				printf("256init failed\r\n");
+#endif			
 		}
 
 		retval = SHA256_Append(&context_st, input   , inLen);
 		if (retval != HASH_SUCCESS) 
 		{
+#ifdef Debug_Print				
 				printf("256 apd failed\r\n");
+#endif
 		}
 
 		retval = SHA256_Finish(&context_st, outPut, &outSize);
 		if (retval != HASH_SUCCESS) 
 		{
+#ifdef Debug_Print			
 				printf("256 fnsh failed\r\n");
+#endif
 		}
 }
 

@@ -196,8 +196,8 @@
 #define     WDATA    	 	0x7f
 
 
-u16 I2C_read_reg(u8 ReadAddr);
-void I2C_write_reg(u8 WriteAddr,u16 DataToWrite);
+uint16_t I2C_read_reg(uint8_t ReadAddr);
+void I2C_write_reg(uint8_t WriteAddr,uint16_t DataToWrite);
 
 void AW9136_Init(void);
 void AW9136_pwron(void);
@@ -228,6 +228,6 @@ void Home_Key_press(void);
 void AW_LedReleaseTouch(void);
 void Center_button_init(void);
 void Key_Control(unsigned char value);
-void Motor_touch(int time);
+static void Motor_touch(int time);
 
 #endif

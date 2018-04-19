@@ -43,7 +43,7 @@
 #define OLED_CMD  0	//写命令
 #define OLED_DATA 1	//写数据
 //OLED控制用函数
-void OLED_WR_Byte(u8 dat,u8 cmd);
+void OLED_WR_Byte(uint8_t dat,uint8_t cmd);
 void OLED_Init(void);
 void Set_Column_Address(unsigned char a, unsigned char b);
 void Set_Row_Address(unsigned char a, unsigned char b);
@@ -71,13 +71,9 @@ void Asc12_24(unsigned char x,unsigned char y,unsigned char ch[]);
  //以下汉字程序
 void HZ12_12( unsigned char x, unsigned char y, unsigned char num);
 void Show_HZ12_12(unsigned char  x,unsigned char  y, unsigned char  d,unsigned char num1,unsigned char num2);
-
-
 void clearArea(unsigned char x,unsigned char y,unsigned char width,unsigned char height);
-void Show_num(unsigned char x,unsigned char y,int num,unsigned char font,unsigned char isReverse);
-u8 compareCharArray(unsigned char *left,unsigned char *right,int len);
 
-u8 NEO_Test(void);
+
 
 #endif  
 	 

@@ -245,7 +245,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -419,51 +419,6 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>forPrintf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\forPrintf.c</FilePath>
-            </File>
-            <File>
-              <FileName>aw9136.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\aw9136.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\myiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\oled.c</FilePath>
-            </File>
-            <File>
-              <FileName>stmflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\stmflash.c</FilePath>
-            </File>
-            <File>
-              <FileName>iap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\iap.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>atsha204a.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
-            </File>
-            <File>
               <FileName>app_interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_interface.c</FilePath>
@@ -472,11 +427,6 @@
               <FileName>app_command.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>Sha256.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Src\Sha256.lib</FilePath>
             </File>
             <File>
               <FileName>app_ecdsa.c.c</FileName>
@@ -547,6 +497,56 @@
               <FileName>atca_iface_stm32_swi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ATSHA204\lib\iface\atca_iface_stm32_swi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>BSP</GroupName>
+          <Files>
+            <File>
+              <FileName>atsha204a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+            </File>
+            <File>
+              <FileName>aw9136.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\aw9136.c</FilePath>
+            </File>
+            <File>
+              <FileName>iap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\iap.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\stmflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sha256.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Src\Sha256.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -730,6 +730,11 @@
               <FileName>stm32f4xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>forPrintf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\forPrintf.c</FilePath>
             </File>
           </Files>
         </Group>

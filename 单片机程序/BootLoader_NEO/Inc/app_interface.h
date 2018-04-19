@@ -3,12 +3,10 @@
 
 #include "main_define.h"
 
-unsigned char ReadPinCode(unsigned char *pin);
-unsigned char WritePinCode(unsigned char *pin);
-unsigned char ReadAT204Flag(BOOT_FLAG *flag);
+uint8_t ReadAT204Flag(BOOT_SYS_FLAG *flag);
 void EmptyWallet(void);
-void ChangeWallet(void);
-
+uint8_t Have_App(void);	 
+uint8_t NEO_Test(void);
 
 
 #endif

@@ -1,64 +1,16 @@
 #include "app_interface.h"
 #include <string.h>
 #include "atsha204a.h"
+#include "stmflash.h"
+#include "aw9136.h"
+#include "oled.h"
 
 #define SLOT_FLAG		14
 #define SLOT_SECRET	15
 
-/***************************************************
-输出：     pin指向一个unsigned char型容量为8的数组
-					存储为：0x12,0x34,0x56,0x78  输出：1,2,3,4,5,6,7,8   
-返回值：		1  成功
-					0  失败
-*****************	**********************************/
-unsigned char ReadPinCode(unsigned char pin[8])
-{
-		unsigned char value = 0;
-    unsigned char pin_read[32];
-    unsigned char i;
-    memset(pin,0,8);
-		memset(pin_read,0,32);
-		
-		//读取第5个加密槽的数据
-		value = ATSHA_read_encrypted(5,pin_read,15);  
-		
-		//第五个槽的前四个数据存储Pin码
-    for(i=0;i<4;i++)
-    {
-        pin[2*i]   = ((pin_read[i]>>4)&0x0F) + 0x30;
-        pin[2*i+1] = (pin_read[i]&0x0F) + 0x30;
-    }
-		return value;
-}
-/***************************************************
-输入：     pin指向一个unsigned char型容量为8的数组
-					例：1,2,3,4,5,6,7,8   存储为：0x12,0x34,0x56,0x78
-返回值：		1  成功
-					0  失败
-*****************	**********************************/
-unsigned char WritePinCode(unsigned char pin[8])
-{
-		unsigned char value = 0;
-    unsigned char pin_read[32];
-    unsigned char i;
-		memset(pin_read,0,32);
-	
-		//读取第5个加密槽的数据
-		if(ATSHA_read_encrypted(5,pin_read,15) == 0)
-		{
-				return 0;
-		}
-	
-		for(i=0;i<4;i++)
-		{
-				pin_read[i] = (pin[2*i] - 0x30)*16+(pin[2*i+1] - 0x30); 				
-		}
-		
-		//再把重组后的Pin重新写入加密芯片
-		value = ATSHA_write_encrypted(5,pin_read,15);
-		
-		return value;
-}
+extern SIGN_KEY_FLAG Key_Flag;
+extern volatile uint8_t touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
+
 /***************************************************
 加密芯片第4-7字节存标识如下：
 		第4个标识为：新钱包标识
@@ -69,9 +21,9 @@ unsigned char WritePinCode(unsigned char pin[8])
 返回值：		1  成功
 					0  失败
 *****************	**********************************/
-unsigned char ReadAT204Flag(BOOT_FLAG *flag)
+uint8_t ReadAT204Flag(BOOT_SYS_FLAG *flag)
 {
-		unsigned char slot_data[32];
+		uint8_t slot_data[32];
 	
 		memset(slot_data,0,32);
 		if(ATSHA_read_data_slot(SLOT_FLAG,slot_data) == 0)//读取第14个槽的数据
@@ -106,11 +58,11 @@ unsigned char ReadAT204Flag(BOOT_FLAG *flag)
 *****************	**********************************/
 void EmptyWallet(void)
 {
-		unsigned char array_write1[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		uint8_t array_write1[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 																			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-		unsigned char array_write2[32] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		uint8_t array_write2[32] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 																			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-		unsigned char i = 0;
+		uint8_t i = 0;
 			
 		for(i=3;i<14;i++)
 		{
@@ -119,21 +71,83 @@ void EmptyWallet(void)
 		ATSHA_write_data_slot(SLOT_FLAG,0,array_write2,32);
 }
 
-/***************************************************
-功能：
-		将此钱包改为旧钱包
-*****************	**********************************/
-void ChangeWallet(void)
+uint8_t Have_App(void)
 {
-		unsigned char pin_read[32];
-		unsigned char i;
-		memset(pin_read,0,32);
-		ATSHA_read_encrypted(5,pin_read,15);
-		pin_read[4] = 0;
-		for(i=28;i<32;i++)
-				pin_read[i] = 0x88;
-		ATSHA_write_encrypted(5,pin_read,15);
+		if(STMFLASH_ReadWord(0x08010000) == 0XFFFFFFFF)//不存在APP程序
+				return 0;
+		else
+				return 1;
 }
 
+uint8_t NEO_Test(void)
+{
+		int i=0;
+		int value = 0;
+		Fill_RAM(0x00);
+		Asc8_16( 52,4 ,"Enter NeoDun Test ?");
+		Asc8_16(24,44,"Cancel");
+		Asc8_16(124,44,"OK");
+		Asc8_16(184,44,"Cancel");
+	
+		while(1)
+		{														
+				if(Key_Flag.Key_center_Flag)
+				{
+						touch_motor_flag = 0;
+						Key_Control(0);				//清空按键标志位，开启按键无效
 
+						Fill_RAM(0x00);
+						Asc8_16( 84,4 ,"NeoDun Test");		
+						HAL_Delay(2000);
+						
+						for(i=0;i<5;i++)
+						{
+								Fill_RAM(0xFF);
+								HAL_Delay(1000);
+								Fill_RAM(0x00);
+								HAL_Delay(1000);
+						}
+				/******************************************
+										NeoDun Test
+									Motor and Key Test
+						On						Exit					Off
+				******************************************/		
+						Asc8_16( 84,4 ,"NeoDun Test");
+						Asc8_16( 56,24 ,"Motor and Key Test");
+						Asc8_16( 30,44 ,"On");
+						Asc8_16( 112,44 ,"Exit");
+						Asc8_16( 206,44 ,"Off");
+						Key_Control(1);				//清空按键标志位，开启按键有效
+						
+						while(1) 
+						{
+								if(Key_Flag.Key_left_Flag)
+								{
+										Key_Flag.Key_left_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+								}
+								if(Key_Flag.Key_right_Flag)
+								{
+										Key_Flag.Key_right_Flag = 0;
+										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
+								}
+								if(Key_Flag.Key_center_Flag)//中间按键按下，退出
+								{
+										Key_Flag.Key_center_Flag = 0;
+										break;
+								}
+						}
+						touch_motor_flag = 1;
+						value = 1;						
+						break;
+				}
+				else if((Key_Flag.Key_right_Flag == 1)||(Key_Flag.Key_left_Flag == 1))
+				{							
+						value = 0;
+						break;
+				}
+		}
+		Fill_RAM(0x00);
+		return value;
+}
 

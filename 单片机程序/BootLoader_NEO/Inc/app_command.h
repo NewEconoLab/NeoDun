@@ -5,7 +5,6 @@
 #include "main_define.h"
 
 void Hid_Data_Analysis(uint8_t data[],int len);
-
 uint8_t isAllPackGot(void);
 uint16_t Get_Serial_ID(void);
 void USBHIDSend(uint8_t *data,int len);

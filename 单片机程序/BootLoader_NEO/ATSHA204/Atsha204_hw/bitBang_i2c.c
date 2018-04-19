@@ -181,7 +181,6 @@ ATCA_STATUS ATSHA_IRcvNBytes(uchar *s,uchar no)
     Ack_I2c(0);    //发送正应答
     
     count = s[0];
-//		printf("count:%d\r\n",count);
     if ( (count < 4) || (count > no) ) //字节数不匹配
     {			
         Stop_I2c();

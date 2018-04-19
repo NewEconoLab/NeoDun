@@ -12,36 +12,33 @@
 #define CALI_RAW_MAX	3000
 #define CNT_INT				1			//重复进入多少次中断，实际校准的宏，现定为1次
 
-volatile unsigned char aw9136_key_flag = 0;
-volatile unsigned char touch_motor_flag = 1;           //1表示正在进行测试
-#define  MOTOR_TIME  80
-
-unsigned char cali_flag = 0;
-unsigned char cali_num = 0;
-unsigned char cali_cnt = 0;
-unsigned char cali_used = 0;
-unsigned char old_cali_dir[6];	//	0: no cali		1: ofr pos cali		2: ofr neg cali
-unsigned int  old_ofr_cfg[6];
-long Ini_sum[6];
-
+static uint8_t 		cali_flag = 0;
+static uint8_t 		cali_num = 0;
+static uint8_t 		cali_cnt = 0;
+static uint8_t 		cali_used = 0;
+static uint8_t 		old_cali_dir[6];	//	0: no cali		1: ofr pos cali		2: ofr neg cali
+static uint32_t  	old_ofr_cfg[6];
+static long Ini_sum[6];
 #endif
 
 SIGN_KEY_FLAG Key_Flag;
+volatile uint8_t touch_motor_flag = 1;           //1表示正在进行测试
+
 /**********************************************************
  Touch process variable
 **********************************************************/
 //static unsigned char suspend_flag = 0 ; //0: normal; 1: sleep
 static int debug_level=0;
 static int WorkMode = 1 ; //1: sleep, 2: normal
-
+static volatile uint8_t aw9136_key_flag = 0;
 /**********************************************************
 //在指定地址读出一个数据
 //ReadAddr:开始读数的地址  
 //返回值  :读到的数据
 **********************************************************/
-u16 I2C_read_reg(u8 ReadAddr)
+uint16_t I2C_read_reg(uint8_t ReadAddr)
 {				  
-	u16 temp=0;		  	    																 
+	uint16_t temp=0;		  	    																 
   IIC2_Start();  
 	IIC2_Send_Byte(0X58);	   			//发送写命令
 	IIC2_Wait_Ack();
@@ -61,7 +58,7 @@ u16 I2C_read_reg(u8 ReadAddr)
 //WriteAddr  :写入数据的目的地址    
 //DataToWrite:要写入的数据
 **********************************************************/
-void I2C_write_reg(u8 WriteAddr,u16 DataToWrite)
+void I2C_write_reg(uint8_t WriteAddr,uint16_t DataToWrite)
 {				   	  	    																 
   IIC2_Start();  
 	IIC2_Send_Byte(0X58);	    					//发送写命令
@@ -101,8 +98,8 @@ void Center_button_init(void)
 **********************************************************/
 void AW9136_Init(void)
 {
-		u16 value1 = 0;
-		u16 value2 = 0;
+		uint16_t value1 = 0;
+		uint16_t value2 = 0;
     GPIO_InitTypeDef GPIO_Initure;
  
     __HAL_RCC_GPIOC_CLK_ENABLE();   //使能GPIOC时钟	
@@ -547,7 +544,6 @@ void AW_NormalMode_Proc(void)
 						{
 								I2C_write_reg(GCR,N_GCR);	 // enable chip
 						}
-//						AW_LedReleaseTouch();//add by hkh  在等待cali_flag为0后，再开启按键和LED关联
 						aw9136_key_flag = 1;
 				}
 				return ;
@@ -770,7 +766,7 @@ void Key_Control(unsigned char value)
 		}
 }	
 
-void Motor_touch(int time)
+static void Motor_touch(int time)
 {
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
 		HAL_Delay(time);

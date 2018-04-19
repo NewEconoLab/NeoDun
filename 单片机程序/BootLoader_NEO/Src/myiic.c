@@ -1,13 +1,6 @@
 #include "myiic.h"
 
-//void delay_us(int value)
-//{
-//		int t = 7;
-//		for(;value>0;value--)
-//				for(;t>0;t--);
-//}
-
-void delay_us(int dwTime)
+static void delay_us(int dwTime)
 {
     uint32_t dwCurCounter=0;                                //当前时间计数值
     uint32_t dwPreTickVal=SysTick->VAL;                     //上一次SYSTICK计数值
@@ -74,9 +67,9 @@ void delay_us(int dwTime)
 ////等待应答信号到来
 ////返回值：1，接收应答失败
 ////        0，接收应答成功
-//u8 IIC1_Wait_Ack(void)
+//uint8_t IIC1_Wait_Ack(void)
 //{
-//		u8 ucErrTime=0;
+//		uint8_t ucErrTime=0;
 //		SDA1_IN();      //SDA设置为输入  
 //		IIC1_SDA=1;delay_us(1);	   
 //		IIC1_SCL=1;delay_us(1);	 
@@ -118,9 +111,9 @@ void delay_us(int dwTime)
 ////返回从机有无应答
 ////1，有应答
 ////0，无应答			  
-//void IIC1_Send_Byte(u8 txd)
+//void IIC1_Send_Byte(uint8_t txd)
 //{                        
-//    u8 t;   
+//    uint8_t t;   
 //		SDA1_OUT(); 	    
 //    IIC1_SCL=0;//拉低时钟开始数据传输
 //    for(t=0;t<8;t++)
@@ -135,7 +128,7 @@ void delay_us(int dwTime)
 //    }	 
 //} 	    
 ////读1个字节，ack=1时，发送ACK，ack=0，发送nACK   
-//u8 IIC1_Read_Byte(unsigned char ack)
+//uint8_t IIC1_Read_Byte(uint8_t ack)
 //{
 //		unsigned char i,receive=0;
 //		SDA1_IN();//SDA设置为输入
@@ -197,9 +190,9 @@ void IIC2_Stop(void)
 //等待应答信号到来
 //返回值：1，接收应答失败
 //        0，接收应答成功
-u8 IIC2_Wait_Ack(void)
+uint8_t IIC2_Wait_Ack(void)
 {
-		u8 ucErrTime=0;
+		uint8_t ucErrTime=0;
 		SDA2_IN();      //SDA设置为输入  
 		IIC2_SDA=1;delay_us(1);	   
 		IIC2_SCL=1;delay_us(1);	 
@@ -241,9 +234,9 @@ void IIC2_NAck(void)
 //返回从机有无应答
 //1，有应答
 //0，无应答			  
-void IIC2_Send_Byte(u8 txd)
+void IIC2_Send_Byte(uint8_t txd)
 {                        
-    u8 t;   
+    uint8_t t;   
 		SDA2_OUT(); 	    
     IIC2_SCL=0;//拉低时钟开始数据传输
     for(t=0;t<8;t++)
@@ -258,7 +251,7 @@ void IIC2_Send_Byte(u8 txd)
     }	 
 } 	    
 //读1个字节，ack=1时，发送ACK，ack=0，发送nACK   
-u8 IIC2_Read_Byte(unsigned char ack)
+uint8_t IIC2_Read_Byte(uint8_t ack)
 {
 		unsigned char i,receive=0;
 		SDA2_IN();//SDA设置为输入
