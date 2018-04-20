@@ -73,7 +73,7 @@ int main(void)
 		
 		//硬件初始化
 		BSP_Init();
-		
+	
 		//加密芯片判断
 		if(ReadAT204Flag(&BootFlag)==0)
 		{
@@ -144,6 +144,7 @@ int main(void)
 				{
 						Asc8_16(100,24,"Waiting");
 				}
+				MX_USB_DEVICE_Init();							//USB初始化
 				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);
 				while(1)
 				{

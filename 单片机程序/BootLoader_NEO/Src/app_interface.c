@@ -12,24 +12,37 @@ extern SIGN_KEY_FLAG Key_Flag;
 extern volatile uint8_t touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
 
 /***************************************************
-加密芯片第4-7字节存标识如下：
-		第4个标识为：新钱包标识
-		第5个标识为：升级标识
-		第6个标识为：中英文切换
-		第7个标识为：
+X14系统标识存储如下：
+		0-7：系统标识
+				unsigned char	new_wallet; 			//1表示新钱包，0表示旧钱包
+				unsigned char	update;						//1表示需要升级，0表示不需要升级
+				unsigned char	language;					//1表示英文，0表示中文
+				unsigned char count;						//地址数量
+	 8-15：空
+	16-21：设置标识
+				unsigned char Auto_Show_Flag;								//连接钱包后自动弹出驱动界面
+				unsigned char Auto_Update_Flag;							//开机时自动检查更新
+				unsigned char Add_Address_Flag;							//新增地址
+				unsigned char Del_Address_Flag;							//删除地址
+				unsigned char Backup_Address_Flag;				  //备份地址
+				unsigned char Backup_Address_Encrypt_Flag; 	//备份钱包时进行加密标识			
+	24-27：空
+	28-31:新旧钱包标识
+
 输出：     flag为指向一个unsigned char型容量为4的数组
 返回值：		1  成功
 					0  失败
 *****************	**********************************/
+
 uint8_t ReadAT204Flag(BOOT_SYS_FLAG *flag)
 {
 		uint8_t slot_data[32];
 	
+		if(ATSHA_read_data_slot(SLOT_SECRET,slot_data) == 1)//第15个槽，设置为不可读写，如果读取成功，则未先对加密芯片处理，出错
+				return 0;	
+	
 		memset(slot_data,0,32);
 		if(ATSHA_read_data_slot(SLOT_FLAG,slot_data) == 0)//读取第14个槽的数据
-				return 0;
-	
-		if(ATSHA_read_data_slot(SLOT_SECRET,slot_data) == 1)//第15个槽，设置为不可读写，如果读取成功，则未先对加密芯片处理，出错
 				return 0;
 		
 		if((slot_data[31] == 0x88)&&(slot_data[30] == 0x88)&&(slot_data[29] == 0x88)&&(slot_data[28] == 0x88))
@@ -71,6 +84,10 @@ void EmptyWallet(void)
 		ATSHA_write_data_slot(SLOT_FLAG,0,array_write2,32);
 }
 
+/***************************************************
+功能：
+		是否存在APP判断
+*****************	**********************************/
 uint8_t Have_App(void)
 {
 		if(STMFLASH_ReadWord(0x08010000) == 0XFFFFFFFF)//不存在APP程序
@@ -79,6 +96,10 @@ uint8_t Have_App(void)
 				return 1;
 }
 
+/***************************************************
+功能：
+		NEO出厂测试
+*****************	**********************************/
 uint8_t NEO_Test(void)
 {
 		int i=0;
@@ -149,5 +170,19 @@ uint8_t NEO_Test(void)
 		}
 		Fill_RAM(0x00);
 		return value;
+}
+
+/***************************************************
+功能：
+		系统更新测试
+*****************	**********************************/
+void SYS_TEST(void)
+{
+		uint8_t array_write[32] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+																			0,0,0,0,0,0,0,0,0,0,0,0,0x88,0x88,0x88,0x88};
+
+		STMFLASH_WriteWord(0x08010000,1);
+		ATSHA_write_data_slot(14,0,array_write,32);
+
 }
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BootLoader_NEO\BootLoader_NEO.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BootLoader_NEO\BootLoader_NEO.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Fri Apr 20 00:22:56 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Fri Apr 20 20:34:33 2018
 <BR><P>
 <H3>Maximum Stack Usage =        996 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -555,13 +555,13 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_NormalMode
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_pwron
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_LED_ON
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC2_Init
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Init
 </UL>
@@ -586,9 +586,9 @@ Global Symbols
 <P><STRONG><a name="[93]"></a>AW9136_eint_work</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, aw9136.o(i.AW9136_eint_work))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = AW9136_eint_work &rArr; AW_NormalMode_Proc &rArr; AW91xx_Auto_Cali &rArr; I2C_read_reg &rArr; IIC2_Read_Byte &rArr; IIC2_NAck &rArr; delay_us
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_SleepMode_Proc
+<BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_SleepMode_Proc
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_NormalMode_Proc
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
@@ -623,14 +623,14 @@ Global Symbols
 <P><STRONG><a name="[95]"></a>AW_NormalMode_Proc</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, aw9136.o(i.AW_NormalMode_Proc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = AW_NormalMode_Proc &rArr; AW91xx_Auto_Cali &rArr; I2C_read_reg &rArr; IIC2_Read_Byte &rArr; IIC2_NAck &rArr; delay_us
 </UL>
-<BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
-<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_right_release
+<BR>[Calls]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_right_release
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_right_press
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_double
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_center_release
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_center_press
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW91xx_Auto_Cali
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_eint_work
 </UL>
@@ -638,10 +638,10 @@ Global Symbols
 <P><STRONG><a name="[94]"></a>AW_SleepMode_Proc</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, aw9136.o(i.AW_SleepMode_Proc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = AW_SleepMode_Proc &rArr; AW91xx_Auto_Cali &rArr; I2C_read_reg &rArr; IIC2_Read_Byte &rArr; IIC2_NAck &rArr; delay_us
 </UL>
-<BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
-<LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_double
+<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_double
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW91xx_Auto_Cali
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_eint_work
 </UL>
@@ -726,8 +726,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = Center_button_init &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
 </UL>
 <BR>[Called By]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Init
 </UL>
@@ -1062,12 +1062,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Update_Error_Deal
 <LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Hid_Data_Analysis
 <LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NEO_Test
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_pwron
 <LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_Init
 <LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_touch
 <LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atca_delay_ms
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OLED_Init
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
 <LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SetCurrentMode
 <LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevDisconnect
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_DevConnect
@@ -1111,8 +1111,8 @@ Global Symbols
 <P><STRONG><a name="[ef]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, aw9136.o(i.HAL_GPIO_EXTI_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; AW9136_eint_work &rArr; AW_NormalMode_Proc &rArr; AW91xx_Auto_Cali &rArr; I2C_read_reg &rArr; IIC2_Read_Byte &rArr; IIC2_NAck &rArr; delay_us
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Home_Key_press
-<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_eint_work
+<BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW9136_eint_work
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Home_Key_press
 </UL>
 <BR>[Called By]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_IRQHandler
 </UL>
@@ -1368,8 +1368,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_PCD_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
 </UL>
 <BR>[Called By]<UL><LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_Init
 </UL>
@@ -1528,8 +1528,8 @@ Global Symbols
 <P><STRONG><a name="[13a]"></a>HAL_TIM_Base_MspInit</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, timer.o(i.HAL_TIM_Base_MspInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
-<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
+<BR>[Calls]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_EnableIRQ
 </UL>
 <BR>[Called By]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Init
 </UL>
@@ -1774,9 +1774,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
 </UL>
-<BR>[Called By]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
+<BR>[Called By]<UL><LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC2_Wait_Ack
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_write_reg
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_read_reg
-<LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IIC2_Wait_Ack
 </UL>
 
 <P><STRONG><a name="[15a]"></a>IIC2_Wait_Ack</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, myiic.o(i.IIC2_Wait_Ack))
@@ -1823,10 +1823,10 @@ Global Symbols
 <P><STRONG><a name="[161]"></a>MX_USB_DEVICE_Init</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, usb_device.o(i.MX_USB_DEVICE_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = MX_USB_DEVICE_Init &rArr; USBD_Init &rArr; USBD_LL_Init &rArr; HAL_PCD_Init &rArr; HAL_PCD_MspInit &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_Init
-<LI><a href="#[164]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CUSTOM_HID_RegisterInterface
+<BR>[Calls]<UL><LI><a href="#[164]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CUSTOM_HID_RegisterInterface
 <LI><a href="#[165]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_Start
 <LI><a href="#[163]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_RegisterClass
+<LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -2539,12 +2539,12 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_EP_Receive
 </UL>
-<BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_DataInStage
-<LI><a href="#[188]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlReceiveStatus
+<BR>[Called By]<UL><LI><a href="#[188]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlReceiveStatus
 <LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueRx
 <LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlPrepareRx
 <LI><a href="#[0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CUSTOM_HID_Init
 <LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CUSTOM_HID_DataOut
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_DataInStage
 </UL>
 
 <P><STRONG><a name="[129]"></a>USBD_LL_Reset</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, usbd_core.o(i.USBD_LL_Reset))
@@ -3123,7 +3123,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Hid_Data_Analysis
 </UL>
 
-<P><STRONG><a name="[6d]"></a>main</STRONG> (Thumb, 444 bytes, Stack size 32 bytes, main.o(i.main))
+<P><STRONG><a name="[6d]"></a>main</STRONG> (Thumb, 448 bytes, Stack size 32 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 996<LI>Call Chain = main &rArr; Hid_Data_Analysis &rArr; Alg_ECDSASignVerify &rArr; ECCSignVerify &rArr; ECDSAverify &rArr; NAF_Binary_PointMul &rArr; MontyJacProjAddPoints &rArr; MontyJacProjDoublePoint &rArr; ModularFastMul2 &rArr; SubBig &rArr; Add_Moduli_Big &rArr; CopyBig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;iap_load_app
@@ -3211,9 +3211,9 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Home_Key_press
-<LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_right_press
+<BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_right_press
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AW_center_press
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Home_Key_press
 </UL>
 
 <P><STRONG><a name="[15e]"></a>delay_us</STRONG> (Thumb, 54 bytes, Stack size 24 bytes, myiic.o(i.delay_us))
@@ -3289,10 +3289,10 @@ Local Symbols
 <P><STRONG><a name="[197]"></a>USBD_SetConfig</STRONG> (Thumb, 110 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = USBD_SetConfig &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[198]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ClrClassConfig
-<LI><a href="#[189]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+<BR>[Calls]<UL><LI><a href="#[189]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
 <LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
 <LI><a href="#[199]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetClassConfig
+<LI><a href="#[198]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ClrClassConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
 </UL>
