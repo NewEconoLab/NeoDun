@@ -78,7 +78,7 @@ namespace driver_win
                 if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
                 {
                     //只在第一次连接的时候    连接成功后去请求签名机的状态
-                    if (!_islinking && "hid" == signer.CheckDevice())
+                    if (!_islinking && "bootloader" != signer.CheckDevice())
                     {
                         _islinking = true;
                         LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
@@ -395,65 +395,12 @@ namespace driver_win
         #endregion
 
         #region 安装更新app
-        public async void UpdateApp2()
-        {
-            byte[] secret = new byte[32];
-            for (int i = 0; i < 32; i++)
-            {
-                secret[i] = (byte)i;
-            }
-            try
-            {
-                Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-                dialog.Filter = "安装文件|*.bin";
-                if (dialog.ShowDialog() == true)
-                {
-                    //未加密的数据包
-                    byte[] data = System.IO.File.ReadAllBytes(dialog.FileName);
-                    //对未加密的数据包hash以方便下位机验证
-                    byte[] hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
-
-                    //经过aes加密之后的数据包
-                    byte[] data_aes = SignTool.AesEncrypt(secret, secret);
-                    string str_hash_aes2 = NeoDun.SignTool.Bytes2HexString(data_aes, 0, data_aes.Length);
-
-                    byte[] hash_aes = NeoDun.SignTool.ComputeSHA256(data_aes, 0, data_aes.Length);
-                    string str_hash_aes = NeoDun.SignTool.Bytes2HexString(hash_aes, 0, hash_aes.Length);
-
-                    NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash_aes, (UInt32)data_aes.Length, NeoDun.DataBlockFrom.FromDriver);
-                    block.data = data_aes;
-                    signer.SendDataBlock(block);
-
-                    var __block = signer.dataTable.getBlockBySha256(str_hash_aes);
-                    uint remoteid = await __block.GetRemoteid();
-                    __block.dataidRemote = 0;
-
-                    NeoDun.Message signMsg = new NeoDun.Message();
-                    signMsg.tag1 = 0x02;
-                    signMsg.tag2 = 0x0b;
-                    signMsg.msgid = NeoDun.SignTool.RandomShort();
-                    Array.Copy(hash, 0, signMsg.data, 0, hash.Length);
-                    //这个dataid 要上一个block 传送完毕了才知道
-                    signMsg.writeUInt32(42, remoteid);
-                    signer.SendMessage(signMsg, true);
-                }
-                else
-                {
-
-                }
-            }
-            catch(Exception e)
-            {
-                privateKey2AddressEventHandlerCallBack("", "", e.ToString());
-            }
-        }
-
 
         public async void UpdateApp()
         {
             try
             {
-                string wif = "L2EHemxzCYKxhH81QVwPDwUT5Bd8yBgbPt7GnUFpGuttiiYroRFi";  //"JceDDbDThUsUMbxbAdjtvvqfqM1ziwFUp4eyH6NKU4JMave1rBg9BDy3yvA2bWvDEaNt9vHSHMQUeDDhDFhEA9DuTq3kqFbMgcwgQRmqZ54FhRgp92k5TLhsWBAQUL18MAfHcWq98gYWDg"
+                string wif = "L2EHemxzCYKxhH81QVwPDwUT5Bd8yBgbPt7GnUFpGuttiiYroRFi"; //"JceDDbDThUsUMbxbAdjtvvqfqM1ziwFUp4eyH6NKU4JMave1rBg9BDy3yvA2bWvDEaNt9vHSHMQUeDDhDFhEA9DuTq3kqFbMgcwgQRmqZ54FhRgp92k5TLhsWBAQUL18MAfHcWq98gYWDg"
                 Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
                 dialog.Filter = "安装文件|*.bin";
                 if (dialog.ShowDialog() == true)
