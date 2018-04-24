@@ -2,7 +2,7 @@
 #include <string.h> 
 
 //∑÷≈‰¥Ê¥¢ø’º‰
-static uint8_t preallocated_buffer[ECC_STORE_SPACE];
+static uint8_t preallocated_buffer[ECC_STORE_SPACE]   __attribute__((at(0x10001000)));
 static uint8_t digest_malloc[128];
 static uint8_t pub_x_malloc[50];
 static uint8_t pub_y_malloc[50];

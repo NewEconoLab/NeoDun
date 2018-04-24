@@ -21,9 +21,6 @@ static uint32_t  	old_ofr_cfg[6];
 static long Ini_sum[6];
 #endif
 
-SIGN_KEY_FLAG Key_Flag;
-volatile uint8_t touch_motor_flag = 1;           //1表示正在进行测试
-
 /**********************************************************
  Touch process variable
 **********************************************************/

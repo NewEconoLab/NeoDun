@@ -5,12 +5,6 @@
 #include "aw9136.h"
 #include "oled.h"
 
-#define SLOT_FLAG		14
-#define SLOT_SECRET	15
-
-extern SIGN_KEY_FLAG Key_Flag;
-extern volatile uint8_t touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
-
 /***************************************************
 X14系统标识存储如下：
 		0-7：系统标识
@@ -111,7 +105,7 @@ uint8_t NEO_Test(void)
 		Asc8_16(184,44,"Cancel");
 	
 		while(1)
-		{														
+		{
 				if(Key_Flag.Key_center_Flag)
 				{
 						touch_motor_flag = 0;

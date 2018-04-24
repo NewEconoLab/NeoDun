@@ -6,12 +6,13 @@
 
 
 //#define Debug_Print
-#define RECV_BIN_FILE_LEN		100*1024
+#define RECV_BIN_FILE_LEN		115*1024
 #define Page_Per_Size				50
 #define MAX_Page_Index			RECV_BIN_FILE_LEN/Page_Per_Size
 #define PACK_INDEX_SIZE			((RECV_BIN_FILE_LEN-1)/50 + 1)
 #define MOTOR_TIME  				80
-
+#define SLOT_FLAG						14
+#define SLOT_SECRET					15
 
 typedef struct
 {
@@ -56,6 +57,14 @@ enum
 		PAGE_INDEX_ID_ERROR 		= 6
 };
 
+
+extern BIN_FILE_INFO Bin_File;
+extern SIGN_KEY_FLAG Key_Flag;
+extern BOOT_SYS_FLAG BootFlag;
+extern uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20001000)));
+extern volatile uint8_t touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
+
+void DATA_Init(void);
 
 #endif
 
