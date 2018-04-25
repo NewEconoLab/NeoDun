@@ -1,0 +1,10 @@
+﻿<Window x:Class="driver_win.dialogs.MainDialogue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="NEODUN驱动程序 v0.1" Height="503.649"  Width="734.099" Activated="Window_Activated" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid Background="#FF3E61C9">
+        <Image Grid.Row="0"  Source="./driver_win/res/NEllogo.png" Margin="569,424,0,0" Width="160" Height="52" />
+        <Image Grid.Row="0"  Source="./driver_win/res/Group.png" Margin="210,94,210,209" />
+        <TextBlock Text="123123123131" HorizontalAlignment="Left" Margin="314,272,0,185" VerticalAlignment="Center" Foreground="White" FontSize="15"/>
+    </Grid>
+</Window>

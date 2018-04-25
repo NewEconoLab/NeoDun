@@ -66,7 +66,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -103,6 +103,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="dialogs\MainDialogue.xaml.cs">
+      <DependentUpon>MainDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
     <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
@@ -132,6 +135,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="dialogs\MainDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowDriver.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
@@ -158,6 +165,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -217,7 +225,20 @@
     <Resource Include="res\more.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="dialogs\" />
+    <Resource Include="res\Group.png" />
+    <Resource Include="res\NELlogo.png" />
+    <Resource Include="res\NEO.png" />
+    <Resource Include="res\neodun反白logo.png" />
+    <Resource Include="res\以太坊.png" />
+    <Resource Include="res\删除.png" />
+    <Resource Include="res\固件.png" />
+    <Resource Include="res\复制.png" />
+    <Resource Include="res\比特币.png" />
+    <Resource Include="res\浏览器.png" />
+    <Resource Include="res\私钥.png" />
+    <Resource Include="res\linkDevice.png" />
+    <Resource Include="res\设置.png" />
+    <Resource Include="res\钱包.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -53,7 +53,7 @@ namespace driver_win
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
             });
-            Hide();
+            //Hide();
         }
         private void Show(object sender, EventArgs e)
         {
