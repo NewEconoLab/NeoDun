@@ -62,7 +62,7 @@ extern  void my_main(void);
 int main(void)
 {
 #ifndef  printf_debug
-		SCB->VTOR = FLASH_BASE | 0x10000;//设置偏移量
+		SCB->VTOR = FLASH_BASE | 0x20000;//设置偏移量
 #endif
 		HAL_Init();//设置中断优先级，中断分组2
 		SystemClock_Config();

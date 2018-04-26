@@ -7,10 +7,6 @@
 #include "app_ecdsa.h"
 #include "oled.h"
 
-//Global variable
-BIN_FILE_INFO Bin_File;
-extern BOOT_SYS_FLAG BootFlag;
-extern uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern unsigned char gImage_wait[128];
 //Local variable
@@ -24,6 +20,15 @@ static uint8_t public_key[64] =
 		151, 60,140,173, 71, 95, 23,215,148,128, 60,202,162, 27,205,214,
 		207,161, 33,103,143, 62,232, 68,114, 49, 10,111, 24,242,187,216
 };
+
+//static uint8_t public_key[64] =
+//{
+//		220,114,233,198,133,184, 81,202,202, 10, 23,234, 25,144, 45,196,
+//		 80, 41,188,166, 57,158,131,237,241,  7,175, 52, 57,203,166, 48,
+//		 77,129,140,102, 91, 55,100, 75, 22,199,102,163,254, 39,208,  8,
+//		242,115,116, 26,250, 72,  8,254, 61,123,213,224,137,112,238, 69
+//};
+
 static uint16_t PageIndex = 0;
 static uint8_t 	packIndexRecord[PACK_INDEX_SIZE];
 
@@ -189,6 +194,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 		uint16_t 	SerialID = 0;
 		uint8_t 	datasharesult[32];
 		uint16_t 	Pc_pageIndex = 0;
+		uint8_t		Type_File = 0;
 	
 		if(command_verifycrc(data,len))
 		{
@@ -269,17 +275,42 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 						break;
 						case 0x020b:
 						{
-								SerialID = data[2] | (data[3] << 8);								
+								SerialID = data[2] | (data[3] << 8);
+								Type_File = data[44];
 								if(Alg_ECDSASignVerify(public_key,&Bin_File,Bin_File.hash_actual))//ECDSA签名认证成功
 								{
-										STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
-										STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
-										iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+										switch (Type_File)
+										{
+												case 0:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
+														iap_write_appbin(FLASH_APP0_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+												case 1:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_6);
+														iap_write_appbin(FLASH_APP1_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+												case 2:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_7);
+														iap_write_appbin(FLASH_APP2_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+												case 3:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_8);
+														iap_write_appbin(FLASH_APP3_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+												case 4:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_9);
+														iap_write_appbin(FLASH_APP4_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+												case 5:
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_10);
+														iap_write_appbin(FLASH_APP5_ADDR,HID_RX_BUF+Bin_File.Len_sign+1,Bin_File.size-Bin_File.Len_sign-1);
+												break;
+										}
 										Hid_Recv_020b_Rp(1,SerialID);
 										HAL_Delay(500);
 										Deal_USB_ERROR();//重新配置下USB
 										Fill_RAM(0x00);
-										iap_load_app(FLASH_APP1_ADDR);								
+										iap_load_app(FLASH_APP0_ADDR);
 								}
 								else//ECDSA签名认证失败
 								{

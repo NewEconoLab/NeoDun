@@ -71,8 +71,8 @@ void my_main()
 		Update_PowerOn_Count();							 //开机检验计数值
 		Update_PowerOn_SetFlag(&Set_Flag);	 //开机更新设置标识
 
-//		Disp.drawString(0,0,"PassPort:");
-//		Disp.GetPassportArray(passport_num); //开机显示随机9宫格密码
+		Disp.drawString(0,0,"PassPort:");
+		Disp.GetPassportArray(passport_num); //开机显示随机9宫格密码
 	
 	
 //		Disp.SetCode();

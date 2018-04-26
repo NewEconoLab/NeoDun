@@ -433,6 +433,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\app_ecdsa.c.c</FilePath>
             </File>
+            <File>
+              <FileName>main_define.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\main_define.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

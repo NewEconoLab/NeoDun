@@ -45,7 +45,6 @@ UART_HandleTypeDef huart2;
 RNG_HandleTypeDef hrng;
 CRC_HandleTypeDef hcrc;
 
-static void DATA_Init(void);
 static void BSP_Init(void);
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -54,17 +53,10 @@ static void MX_RNG_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 
-/***************************************** Global **************************************************/
-extern BIN_FILE_INFO Bin_File;
-extern SIGN_KEY_FLAG Key_Flag;
-BOOT_SYS_FLAG BootFlag;
-//HID接收缓冲设置
-uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20003000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000.
 //HID数据处理变量
-volatile uint8_t 	HID_PAGE_RECV[64];
-volatile int 			HID_RECV_LEN = 0;
-volatile uint8_t 	hid_recv_flag = 0;
-/***************************************************************************************************/
+static volatile uint8_t 	HID_PAGE_RECV[64];
+static volatile int 			HID_RECV_LEN = 0;
+static volatile uint8_t 	hid_recv_flag = 0;
 
 int main(void)
 {
@@ -84,7 +76,7 @@ int main(void)
 		}
 
 		//加延时给按键芯片足够的时间来完成初始化
-		HAL_Delay(500);
+		//HAL_Delay(500);
 		
 		//调试和升级选择
 		if(Have_App() == 0)       			//不存在APP程序
@@ -163,16 +155,9 @@ int main(void)
 		}
 		
 		//大厅app已安装，且不需要升级，则直接进入大厅app
-		iap_load_app(FLASH_APP1_ADDR);
+		iap_load_app(FLASH_APP0_ADDR);
 		
 		return 0;
-}
-
-static void DATA_Init(void)
-{
-		memset(&BootFlag,0,sizeof(BOOT_SYS_FLAG));
-		memset(&Key_Flag,0,sizeof(SIGN_KEY_FLAG));//清空按键标志位，开启按键有效
-		memset(&Bin_File,0,sizeof(BIN_FILE_INFO));
 }
 
 static void BSP_Init(void)
