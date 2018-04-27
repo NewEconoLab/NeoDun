@@ -94,15 +94,28 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="vikoControl">
+      <HintPath>..\vikoControl\bin\Debug\vikoControl.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="dialogs\AddressListDialogue.xaml.cs">
+      <DependentUpon>AddressListDialogue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="dialogs\ImportWalletDialogue.xaml.cs">
+      <DependentUpon>ImportWalletDialogue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="dialogs\ImportWifDialogue.xaml.cs">
+      <DependentUpon>ImportWifDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\MainDialogue.xaml.cs">
       <DependentUpon>MainDialogue.xaml</DependentUpon>
     </Compile>
@@ -124,6 +137,9 @@
     <Compile Include="server\StaticFile.cs" />
     <Compile Include="driver\Signer.cs" />
     <Compile Include="driver\UsbHidDriver.cs" />
+    <Compile Include="myControl\Mybutton1.xaml.cs">
+      <DependentUpon>Mybutton1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowDriver.xaml.cs">
       <DependentUpon>WindowDriver.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -135,7 +151,23 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="dialogs\AddressListDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\ImportWalletDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\ImportWifDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="dialogs\MainDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="myControl\Mybutton1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,9 +251,6 @@
     <Resource Include="res\delete.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="res\setting.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="res\more.png" />
   </ItemGroup>
   <ItemGroup>
@@ -234,11 +263,19 @@
     <Resource Include="res\固件.png" />
     <Resource Include="res\复制.png" />
     <Resource Include="res\比特币.png" />
-    <Resource Include="res\浏览器.png" />
-    <Resource Include="res\私钥.png" />
     <Resource Include="res\linkDevice.png" />
-    <Resource Include="res\设置.png" />
-    <Resource Include="res\钱包.png" />
+    <Resource Include="res\setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\state.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\explorer.png" />
+    <Resource Include="res\privatekey.png" />
+    <Resource Include="res\wallet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\？.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

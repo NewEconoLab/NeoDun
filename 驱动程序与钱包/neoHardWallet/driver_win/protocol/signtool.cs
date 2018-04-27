@@ -511,13 +511,21 @@ namespace NeoDun
                 // 允许以明文的形式导出私钥
                 creationParameters.ExportPolicy = CngExportPolicies.AllowPlaintextExport;
                 // 使用 ECDsaP256,ECDsaP384,ECDsaP521 签名长度分别是 64 Bytes, 96 Bytes, 132 Bytes。
-                cngKey = CngKey.Create(CngAlgorithm.ECDsaP256, key, creationParameters);
+                cngKey = CngKey.Create(CngAlgorithm.ECDiffieHellmanP256, key, creationParameters);
             }
 
             // 导出公钥
+            Console.WriteLine();
             publicKeyBytes = cngKey.Export(CngKeyBlobFormat.EccPublicBlob);
+            foreach (byte b in publicKeyBytes)
+            {
+                Console.Write(b);
+                Console.Write(" ");
+            }
+            Console.WriteLine();
             // 导出私钥
             privateKeyBytes = cngKey.Export(CngKeyBlobFormat.EccPrivateBlob);
+
             // 签名
             byte[] signature = SignData(message, key);
             // 验证签名

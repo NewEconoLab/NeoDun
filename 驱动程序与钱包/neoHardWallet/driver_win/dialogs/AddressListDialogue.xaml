@@ -1,0 +1,37 @@
+﻿<Window x:Class="driver_win.dialogs.AddressListDialogue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:driver_win.dialogs"
+        mc:Ignorable="d"
+        WindowStyle="None" Height="462" Width="628" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Grid Background="Transparent">
+        <Border BorderThickness="5" BorderBrush="#2F3A66"  CornerRadius="10,10,10,10">
+            <Grid>
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="4" Direction="270" ShadowDepth="2"/>
+                </Grid.Effect>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#2F3A66" Offset="0"/>
+                        <GradientStop Color="#232C55" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Button Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" Grid.Row="0" BorderBrush="{x:Null}" Margin="596,10,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/？.png"/>
+                    </Button.Background>
+                </Button>
+                <Label Content="地址管理" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
+                <Label Content="序号" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Label Content="别名" Width="48" Height="15" Margin="72,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Label Content="地址" Width="48" Height="15" Margin="330,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Image Grid.Row="0"  Source="/driver_win;component/res/？.png" Margin="101,83,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"/>
+                <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
+                <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="  为地址设一个别名，以便更好的&#13;管理您的地址。（长度不超过7个&#13;字母）" Margin="113,48,310,339"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+</Window>
