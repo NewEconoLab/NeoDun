@@ -36,6 +36,8 @@ extern "C" {
 	bool ATSHA_read_encrypted(uint16_t key_id, uint8_t *data, const uint16_t enckeyid);
 	bool ATSHA_write_encrypted(uint16_t key_id, const uint8_t *data, const uint16_t enckeyid);
 
+	bool ATSHA_mac(uint8_t key_id,uint8_t datain[32],uint8_t dataout[32]);
+
 #ifdef __cplusplus
 }
 #endif

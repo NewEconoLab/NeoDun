@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 
-void Base58_Encode(uint8_t *buff,int lenin,char *result,int *lenout);
+uint8_t Base58_Encode(uint8_t *buff,int lenin,char *result,int *lenout);
 
     
 #endif

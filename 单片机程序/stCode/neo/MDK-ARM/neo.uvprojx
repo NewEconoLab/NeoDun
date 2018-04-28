@@ -245,7 +245,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -309,8 +309,8 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8020000</StartAddress>
-                <Size>0xe0000</Size>
+                <StartAddress>0x8000000</StartAddress>
+                <Size>0x100000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\Cpp;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm;..\..\ATSHA204\Appatsha204;..\..\ATSHA204\Atsha204_hw;..\..\ATSHA204\lib</IncludePath>
+              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm;..\..\ATSHA204\Appatsha204;..\..\ATSHA204\Atsha204_hw;..\..\ATSHA204\lib;..\..\Hardware;..\..\APP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -471,7 +471,7 @@
             <File>
               <FileName>forPrintf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Cpp\forPrintf.c</FilePath>
+              <FilePath>..\Src\forPrintf.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -579,11 +579,6 @@
               <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rng.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_hal_iwdg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_iwdg.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f4xx_hal_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</FilePath>
@@ -606,142 +601,22 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Cpp</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>2</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>0</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>0</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls>--cpp</MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
-          <Files>
-            <File>
-              <FileName>OLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Cpp\OLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>DisplayMem.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\DisplayMem.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Hal.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\Hal.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>irq_handler.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\irq_handler.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>myMain.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\myMain.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Commands.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\Commands.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>ReceiveAnalysis.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\ReceiveAnalysis.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Utils.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\Utils.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Sha256.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\Cpp\Sha256.lib</FilePath>
-            </File>
-            <File>
-              <FileName>PrivateKey.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\PrivateKey.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>PublicKey.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\PublicKey.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>FingerPrintPacket.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\fingerPrint\FingerPrintPacket.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>FingerUtil.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\Cpp\fingerPrint\FingerUtil.cpp</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Algorithm</GroupName>
           <Files>
             <File>
               <FileName>Algorithm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Algorithm\Algorithm.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Algorithm\app_aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_des.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Algorithm\app_des.c</FilePath>
             </File>
             <File>
               <FileName>bignum.c</FileName>
@@ -774,54 +649,49 @@
           <GroupName>App</GroupName>
           <Files>
             <File>
-              <FileName>stmflash.c</FileName>
+              <FileName>app_command.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Algorithm\stmflash.c</FilePath>
+              <FilePath>..\..\APP\app_command.c</FilePath>
             </File>
             <File>
-              <FileName>aw9136.c</FileName>
+              <FileName>app_hal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Algorithm\aw9136.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Algorithm\myiic.c</FilePath>
-            </File>
-            <File>
-              <FileName>oled281.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Cpp\OLED281\oled281.c</FilePath>
-            </File>
-            <File>
-              <FileName>atsha204a.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+              <FilePath>..\..\APP\app_hal.c</FilePath>
             </File>
             <File>
               <FileName>app_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Algorithm\app_interface.c</FilePath>
+              <FilePath>..\..\APP\app_interface.c</FilePath>
             </File>
             <File>
-              <FileName>timer.c</FileName>
+              <FileName>app_oled.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Algorithm\timer.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>ATSHA204_HW</GroupName>
-          <Files>
-            <File>
-              <FileName>bitBang_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ATSHA204\Atsha204_hw\bitBang_i2c.c</FilePath>
+              <FilePath>..\..\APP\app_oled.c</FilePath>
             </File>
             <File>
-              <FileName>hw_config.c</FileName>
+              <FileName>app_utils.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ATSHA204\Atsha204_hw\hw_config.c</FilePath>
+              <FilePath>..\..\APP\app_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>main_define.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\APP\main_define.c</FilePath>
+            </File>
+            <File>
+              <FileName>myMain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\APP\myMain.c</FilePath>
+            </File>
+            <File>
+              <FileName>OledMenu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\APP\OledMenu.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sha256.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\APP\Sha256.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -872,6 +742,41 @@
               <FileName>atca_iface_stm32_swi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ATSHA204\lib\iface\atca_iface_stm32_swi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bitBang_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\Atsha204_hw\bitBang_i2c.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>BSP</GroupName>
+          <Files>
+            <File>
+              <FileName>atsha204a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+            </File>
+            <File>
+              <FileName>aw9136.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Hardware\aw9136.c</FilePath>
+            </File>
+            <File>
+              <FileName>myiic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Hardware\myiic.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled281.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Hardware\OLED281\oled281.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Hardware\timer.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -7,12 +7,12 @@ typedef struct
 {
     int type;
     int version;
-		unsigned char coin;						 // 1 表示NEO， 0 表示GAS，0xff其它暂不识别
+		uint8_t coin;						 // 1 表示NEO， 0 表示GAS，0xff其它暂不识别
     int countAttributes;
     int countInputs;
     int countOutputs;
     char address[10][40];//每一行存储一个地址，10个地址
-		unsigned char assetid[10][32];
+		uint8_t assetid[10][32];
     long long money[10];
 }SIGN_Out_Para;
 
@@ -32,33 +32,17 @@ typedef struct
 		int64_t Gas;					//InvocationTransaction	
 }SIGN_Out_Data;
 
-int GetIndexFromBuff(char *buff,char ch);
-int Ascii2Dec(char ch);
-void ReverseArray(char *buf);
-int bigdiv(char *diva,int lena,char *divb,int lenb);
-void DecTOAddress(char *str);
-
-void strlwr(char *buff);
-void strupr(char *buff);
-void HexToDec(char *src,char *result);
-
-void Div(char s1[],char s2[]);
-void convert2to16(char s2[],char s16[]);
-void DecToHex(char *str,char *result);
-
-void Convert2address(char *buff);
 
 
-void HexToString(uint8_t *src,int len,char *desc);
-void StringToHex(char *src,int len,uint8_t *desc);
-
-void ReverseString(char *buf);
-void ShowTransactionType(int type);
-
-
-int ReadByteLengthIndex(int fb);
-uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb);
-
-unsigned char GetAssetID(unsigned char *assetID);
+int 		GetIndexFromBuff(char *buff,char ch);
+int 		bigdiv(char *diva, int lena, char *divb, int lenb, char *shang_div,int* index_div);
+uint8_t DecTOAddress(char *str,int len_of_str);
+void 		mystrlwr(char *buff);
+void 		mystrupr(char *buff,int len);
+uint8_t HexToDec(char *src, int Lenin, char *result, int *Lenout);
+void 		DecToHex(char *str,char *result);
+void 		HexToString(uint8_t *src,int len,char *desc);
+void 		StringToHex(char *src,int len,uint8_t *desc);
+void 		ReverseString(char *buf);
 
 #endif /* __DASHU_H */

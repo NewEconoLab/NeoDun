@@ -34,14 +34,19 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include "myMain.h"
 #include "usb_device.h"
 #include "usbd_customhid.h"
 #include "main_define.h"
+#include "atsha204a.h"
+#include "bitBang_I2c.h"
+#include "OLED281/oled281.h"
+#include "aw9136.h"
+#include "timer.h"
 
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
 RNG_HandleTypeDef hrng;
-IWDG_HandleTypeDef hiwdg;
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart1;
@@ -51,8 +56,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CRC_Init(void);
 static void MX_RNG_Init(void);
-static void MX_IWDG_Init(void);
-void IWDG_Feed(void);
 static void MX_UART4_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
@@ -61,23 +64,26 @@ extern  void my_main(void);
 
 int main(void)
 {
-#ifndef  printf_debug
-		SCB->VTOR = FLASH_BASE | 0x20000;//设置偏移量
-#endif
+//#ifndef  printf_debug
+//		SCB->VTOR = FLASH_BASE | 0x10000;//设置偏移量
+//#endif
 		HAL_Init();//设置中断优先级，中断分组2
 		SystemClock_Config();
 		MX_GPIO_Init();
 		MX_CRC_Init();
 		MX_RNG_Init();
-//  MX_IWDG_Init();	
 		MX_UART4_Init();			//指纹
 		MX_USART2_UART_Init();//蓝牙
 		MX_USART1_UART_Init();//打印
 		MX_USB_DEVICE_Init();
+		ATSHA_I2c_Init();
+		OLED281_Init();
+		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
+		AW9136_Init();
 
 		while (1)
 		{
-			my_main();
+				my_main();
 		}
 }
 
@@ -85,14 +91,10 @@ int main(void)
 */
 void SystemClock_Config(void)
 {
-
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
-
   __PWR_CLK_ENABLE();
-
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -102,15 +104,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
-
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1
-                              |RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
-
 }
 
 /* CRC init function */
@@ -129,26 +128,6 @@ void MX_RNG_Init(void)
   hrng.Instance = RNG;
   HAL_RNG_Init(&hrng);
 
-}
-
-/* IWDG init function */
-//独立看门狗的时钟为32KHz
-//时钟选取32分频，装载值为1000,1s需喂狗一次
-//看门狗的时钟并不精准
-static void MX_IWDG_Init(void)
-{
-
-  hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
-  hiwdg.Init.Reload = 999;
-  HAL_IWDG_Init(&hiwdg);
-	
-}
-
-//喂狗函数
-void IWDG_Feed(void)
-{   
-    HAL_IWDG_Refresh(&hiwdg); 	
 }
 
 /* UART4 init function */
@@ -170,7 +149,6 @@ void MX_UART4_Init(void)
 /* USART2 init function */
 void MX_USART2_UART_Init(void)
 {
-
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 38400;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -180,7 +158,6 @@ void MX_USART2_UART_Init(void)
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   HAL_UART_Init(&huart2);
-
 }
 
 /* USART3 init function */
@@ -277,6 +254,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	
+	//USB插入检测
+	GPIO_InitStruct.Pin=GPIO_PIN_9;      
+	GPIO_InitStruct.Mode=GPIO_MODE_INPUT;      
+	GPIO_InitStruct.Pull=GPIO_PULLDOWN;        
+	GPIO_InitStruct.Speed=GPIO_SPEED_HIGH;
+	HAL_GPIO_Init(GPIOA,&GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 4 */

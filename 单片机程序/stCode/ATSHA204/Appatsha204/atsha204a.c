@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "cryptoauthlib.h"
-
 #include "host\atca_host.h"
 
 static bool test_assert_data_is_locked(void)
@@ -445,3 +443,63 @@ bool ATSHA_write_encrypted(uint16_t key_id, const uint8_t *data, const uint16_t 
 
 	return ret;
 }
+
+/******************************************************************
+*	函数名：	  ATSHA_mac
+*	函数说明： 计算摘要
+* 输入参数： key_id	 要参与计算的数据存储在加密芯片中的槽ID
+						datain	 输入数组
+* 输出参数：
+						dataout  输出摘要
+			成功返回 1   
+			失败返回	0
+*******************************************************************/	
+bool ATSHA_mac(uint8_t key_id,uint8_t datain[32],uint8_t dataout[32])
+{
+		bool ret = true;
+		ATCA_STATUS status = ATCA_GEN_FAIL;
+		uint8_t sn[9];
+		atca_temp_key_t temp_key;
+		atca_mac_in_out_t mac_params;
+
+		do
+		{
+				if (!test_assert_data_is_locked())
+				{
+						ret = false;
+						break;
+				}
+				
+				// Read serial number for host-side MAC calculations
+				status = atcab_read_serial_number(sn);
+				if (status != ATCA_SUCCESS)
+				{
+						ret = false;
+						break;
+				}
+
+				// Setup MAC command
+				memset(&temp_key, 0, sizeof(temp_key));
+				mac_params.mode = MAC_MODE_CHALLENGE | MAC_MODE_INCLUDE_SN; // Block 1 is a key, block 2 is a challenge
+				mac_params.key_id = key_id;
+				mac_params.challenge = datain;
+				mac_params.key = NULL;
+				mac_params.otp = NULL;
+				mac_params.sn = sn;
+				mac_params.response = NULL;
+				mac_params.temp_key = &temp_key;
+
+				// Run MAC command
+				status = atcab_mac(mac_params.mode, mac_params.key_id, mac_params.challenge, dataout);
+				if (status != ATCA_SUCCESS)
+				{
+						ret = false;
+						break;
+				}
+				
+		}while (0);
+
+		return ret;
+}
+
+
