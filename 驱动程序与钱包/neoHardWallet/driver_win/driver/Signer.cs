@@ -118,6 +118,21 @@ namespace NeoDun
               });
             t.Start();
         }
+        public void Start()// deleUserHandleRecv _userHandleRecv, deleUserHandleSend _userHandleSend)
+        {
+            DriverS.StartRead((rx_data) =>
+            {
+                Message m = new Message();
+                m.FromData(rx_data);
+                OnMsg(m);
+            });
+            System.Threading.Thread t = new System.Threading.Thread(() =>
+            {
+                bExit = false;
+                StartSendQueue();
+            });
+            t.Start();
+        }
         //消息发送线程
         void StartSendQueue()
         {

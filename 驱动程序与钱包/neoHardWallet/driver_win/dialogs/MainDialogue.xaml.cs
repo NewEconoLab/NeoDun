@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,14 @@ namespace driver_win.dialogs
     public partial class MainDialogue : Window
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
-
+        public DriverControl driverControl;
         public MainDialogue()
         {
+
             InitializeComponent();
+            DriverS.Init();
+            driverControl = new DriverControl();
+
 
             this.notifyIcon = new System.Windows.Forms.NotifyIcon();
             this.notifyIcon.Icon = new System.Drawing.Icon(@"Neodun.ico");
@@ -42,7 +47,16 @@ namespace driver_win.dialogs
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
             });
+            CreateSimHardware();
+        }
 
+        //模拟插入钱包
+        WindowSimHardware hard = new WindowSimHardware();
+        private async void CreateSimHardware()
+        {
+            DriverS.simdriver.bActive = true;
+            hard.Show();
+            await Task.Delay(2000);
         }
 
         private void Show(object sender, EventArgs e)
@@ -82,7 +96,7 @@ namespace driver_win.dialogs
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
         {
-            AddressListDialogue addressListDialogue = new AddressListDialogue();
+            AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
             addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             addressListDialogue.Owner = this;
             addressListDialogue.ShowDialog();
@@ -107,6 +121,11 @@ namespace driver_win.dialogs
             importWalletDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importWalletDialogue.Owner = this;
             importWalletDialogue.ShowDialog();
+        }
+
+        private void Window_ShowWebWallet(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://wallet.nel.group/");
         }
     }
 }

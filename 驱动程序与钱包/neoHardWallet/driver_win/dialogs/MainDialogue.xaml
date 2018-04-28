@@ -9,14 +9,14 @@
                 <Image Grid.Row="0"  Source="/driver_win;component/res/neodun反白logo.png" Width="160" Height="52" />
             </Grid>
             <Label Content="Neodun 驱动程序 v0.1" Margin="170,0,0,0" FontSize="14px" VerticalContentAlignment="Center" Foreground="White" Height="60"/>
-            <Button Grid.Row="0" BorderBrush="{x:Null}" Margin="912,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
+            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="912,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
                 <Button.Background>
-                    <ImageBrush ImageSource="/driver_win;component/res/？.png"/>
+                    <ImageBrush ImageSource="/driver_win;component/res/minimise.png" Stretch="None"/>
                 </Button.Background>
             </Button>
-            <Button Grid.Row="0" BorderBrush="{x:Null}" Margin="945,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Hide">
+            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="945,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Hide">
                 <Button.Background>
-                    <ImageBrush ImageSource="/driver_win;component/res/？.png"/>
+                    <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                 </Button.Background>
             </Button>
         </Grid>
@@ -29,7 +29,7 @@
             </Grid.Background>
             <Grid x:Name="nelLogo" Visibility="Visible">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/NELlogo.png" Margin="873,536,0,0" Width="77" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                <Label Content="技术支持" Width="48" Height="18" Margin="815,542,102,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
+                <Label Content="技术支持" IsEnabled="False" Width="48" Height="18" Margin="815,542,102,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
             </Grid>
             <Grid x:Name="linking" Visibility="Hidden">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/Group.png"  Width="400" Height="197" Margin="300,167" VerticalAlignment="Top"/>
@@ -63,7 +63,7 @@
                                 </StackPanel>
                             </Button.Content>
                         </Button>
-                        <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="nelExplorer" Click="Window_Activated" Margin="36,328,0,0">
+                        <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="nelExplorer" Click="Window_ShowWebWallet" Margin="36,328,0,0">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Source="/driver_win;component/res/explorer.png" Width="20" Height="20" />
@@ -75,7 +75,7 @@
                 </GroupBox>
                 <GroupBox x:Name="managePackage" Visibility="Visible" BorderThickness="0" Margin="0,0,280,0">
                     <Grid Background="#00000000">
-                        <Label Content="固件和插件管理" Width="88" Height="18" Margin="100,109,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Content="固件和插件管理" IsEnabled="False" Width="88" Height="18" Margin="100,109,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
                         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="52" Width="622" Margin="79,90,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,0,0" Panel.ZIndex="10">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="1" Direction="270" BlurRadius="1"/>
@@ -86,19 +86,19 @@
                                 <DropShadowEffect Direction="270" BlurRadius="8" ShadowDepth="2"/>
                             </Border.Effect>
                         </Border>
-                        <Label Content="固件" Width="50" Height="26" Margin="110,160,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Content="固件" IsEnabled="False" Width="50" Height="26" Margin="110,160,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
                         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="50" Margin="110,160,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
-                        <Label Content="插件" Width="50" Height="26" Margin="110,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Content="插件" IsEnabled="False" Width="50" Height="26" Margin="110,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
                         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="50" Margin="110,277,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
                         <Image Source="/driver_win;component/res/固件.png" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="110,211" Width="20" Height="26" />
-                        <Label Content="固件(V0.2)" Width="67" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                         <GridSplitter HorizontalAlignment="Left" Height="1" Margin="110,256,0,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                         <Button Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="安装" Margin="606,204,0,0" Click="Click_install_gujian" />
                         <ListBox Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
-                            <ListBoxItem Height="88" Width="612">
+                            <ListBoxItem Style="{StaticResource ResourceKey=MyWpfListBoxItem}" Height="88" Width="612">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/driver_win;component/res/固件.png" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="26"/>
-                                    <Label Content="固件(V0.2)" Width="67" Height="21" Margin="-7,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
+                                    <Label Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="-7,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                                     <GridSplitter HorizontalAlignment="Left" Height="1" Margin="-95,65,-5,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                                     <Button Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="安装" Margin="-70,10,0,0" Click="Click_install_gujian" />
                                 </StackPanel>

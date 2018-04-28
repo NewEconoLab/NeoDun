@@ -19,10 +19,16 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class AddressListDialogue : Window
     {
-        public AddressListDialogue()
+        private DriverControl driverControl;
+        public AddressListDialogue(DriverControl _driverControl)
         {
             InitializeComponent();
+            driverControl = _driverControl;
+
+            GetAddressList();
+
         }
+
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
@@ -42,5 +48,14 @@ namespace driver_win.dialogs
         {
             this.Close();
         }
+        //获取下位机地址数据
+        private async void GetAddressList()
+        {
+            var address = await driverControl.GetAddressList();
+
+            var firstItem =  this.listbox.Items[0] as ListBoxItem;
+            var label = firstItem.FindName("address") as Label;
+        }
+
     }
 }

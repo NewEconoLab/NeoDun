@@ -9,19 +9,8 @@ using static hhgate.SignMachine;
 
 namespace driver_win
 {
-    public class DriverCtr: NeoDun.IWatcher
+    public class DriverControl : NeoDun.IWatcher
     {
-
-        private static DriverCtr ins;
-        public static DriverCtr Ins
-        {
-            get
-            {
-                if (ins == null)
-                    ins = new DriverCtr();
-                return ins;
-            }
-        }
 
         private static Signer signer = Signer.Ins;
 
@@ -32,16 +21,15 @@ namespace driver_win
         private MyJson.JsonNode_Object isFirstConfirm = new MyJson.JsonNode_Object();
 
         private MyJson.JsonNode_Object json_setting = new MyJson.JsonNode_Object();
-        private DriverCtr()
+        public DriverControl()
         {
+            signer.Start();
             Init();
         }
-
         public void OnRecv(Message recv, Message src)
         {
             throw new NotImplementedException();
         }
-
         public void OnSend(Message send, bool needBack)
         {
             throw new NotImplementedException();
@@ -102,11 +90,11 @@ namespace driver_win
             });
             timer.Start();
         }
-        public delegate void LinkSingerEventHandlerCallBack(string str ,System.Windows.Visibility visibility,bool _islink);
+        public delegate void LinkSingerEventHandlerCallBack(string str, System.Windows.Visibility visibility, bool _islink);
         public event LinkSingerEventHandlerCallBack linkSingerEventHandlerCallBack;
-        public void LinkCallBack(string str, System.Windows.Visibility visibility,bool _islink)
+        public void LinkCallBack(string str, System.Windows.Visibility visibility, bool _islink)
         {
-            if(linkSingerEventHandlerCallBack != null)
+            if (linkSingerEventHandlerCallBack != null)
                 linkSingerEventHandlerCallBack(str, visibility, _islink);
         }
 
@@ -114,7 +102,7 @@ namespace driver_win
         public event ShowBalloonTipEventHandlerCallBack showBalloonTipEventHandlerCallBack;
         public void ShowBalloonTipCallBack(string str)
         {
-            if(showBalloonTipEventHandlerCallBack != null)
+            if (showBalloonTipEventHandlerCallBack != null)
                 showBalloonTipEventHandlerCallBack(str);
         }
         #endregion
@@ -186,7 +174,7 @@ namespace driver_win
         #endregion
 
         #region 增加地址
-        public delegate void PrivateKey2AddressEventHandlerCallBack(string privateKey,string address,string err);
+        public delegate void PrivateKey2AddressEventHandlerCallBack(string privateKey, string address, string err);
         public event PrivateKey2AddressEventHandlerCallBack privateKey2AddressEventHandlerCallBack;
         public void PrivateKey2Address_FromText(string _wif)
         {
@@ -199,7 +187,7 @@ namespace driver_win
             }
             catch
             {
-                privateKey2AddressEventHandlerCallBack("", "","请输入有效的地址");
+                privateKey2AddressEventHandlerCallBack("", "", "请输入有效的地址");
             }
         }
         public void PrivateKey2Address_FromBackup()
@@ -229,7 +217,7 @@ namespace driver_win
         }
 
 
-        public async void AddAddress(string _address,string _privateKey)
+        public async void AddAddress(string _address, string _privateKey)
         {
             if (string.IsNullOrEmpty(_address) || string.IsNullOrEmpty(_privateKey))
                 return;
@@ -239,7 +227,7 @@ namespace driver_win
             {
                 if (add.AddressText == _address)
                 {
-                    ErrorCallBack("地址重复","通知");
+                    ErrorCallBack("地址重复", "通知");
                     return;
 
                 }
@@ -301,7 +289,7 @@ namespace driver_win
             signer.SendMessage(msg, true);
             bool_addaddress = true;
             int time = 0;
-            while (bool_addaddress&& time> waitTime)
+            while (bool_addaddress && time <= waitTime)
             {
                 await Task.Delay(100);
                 time += 100;
@@ -332,7 +320,7 @@ namespace driver_win
         public event DeleteAddressEventHandlerCallBack deleteAddressEventHandlerCallBack;
         public void DeleteAddressCallBack(bool suc)
         {
-            if (deleteAddressEventHandlerCallBack!=null)
+            if (deleteAddressEventHandlerCallBack != null)
                 deleteAddressEventHandlerCallBack(suc);
             //重新获取地址列表
             GetAddressList();
@@ -344,7 +332,7 @@ namespace driver_win
         string hashstr;
         byte[] data;
         string src;
-        public void Sign(string _data ,string _src)
+        public void Sign(string _data, string _src)
         {
             src = _src;
             data = NeoDun.SignTool.HexString2Bytes(_data);
@@ -391,9 +379,9 @@ namespace driver_win
 
         }
 
-        public delegate void SignEventHandlerCallBack(byte[] outdata,string hashstr,bool suc);
+        public delegate void SignEventHandlerCallBack(byte[] outdata, string hashstr, bool suc);
         public event SignEventHandlerCallBack signEventHandlerCallBack;
-        private void ConfirmSignCallBack(byte[] _outdata,bool suc)
+        private void ConfirmSignCallBack(byte[] _outdata, bool suc)
         {
             if (signEventHandlerCallBack != null)
                 signEventHandlerCallBack(_outdata, hashstr, suc);

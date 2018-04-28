@@ -280,7 +280,6 @@ namespace driver_win
         private void Init()
         {
             //初始化各种委托     ps：验证密码的委托在方法里动态赋值
-            driverCtr.getAddresslistEventHandlerCallBack += GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack += LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack += GetSingerInfoCallBack;
             driverCtr.privateKey2AddressEventHandlerCallBack += PrivateKey2AddressCallBack;
@@ -297,7 +296,6 @@ namespace driver_win
         private void UInit()
         {
             //解绑各种委托
-            driverCtr.getAddresslistEventHandlerCallBack -= GetAddressCallBack;
             driverCtr.linkSingerEventHandlerCallBack -= LinkSingerCallBack;
             driverCtr.getSiggerInfoEventHandlerCallBack -= GetSingerInfoCallBack;
             driverCtr.errorEventHandlerCallBack -= ErrorMsgShow;

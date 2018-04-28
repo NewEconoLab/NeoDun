@@ -120,6 +120,7 @@
       <DependentUpon>MainDialogue.xaml</DependentUpon>
     </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
+    <Compile Include="driver\DriverControl.cs" />
     <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
@@ -137,9 +138,6 @@
     <Compile Include="server\StaticFile.cs" />
     <Compile Include="driver\Signer.cs" />
     <Compile Include="driver\UsbHidDriver.cs" />
-    <Compile Include="myControl\Mybutton1.xaml.cs">
-      <DependentUpon>Mybutton1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowDriver.xaml.cs">
       <DependentUpon>WindowDriver.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -164,10 +162,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="dialogs\MainDialogue.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="myControl\Mybutton1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -276,6 +270,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="res\？.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\close.png" />
+    <Resource Include="res\maximise.png" />
+    <Resource Include="res\minimise.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
