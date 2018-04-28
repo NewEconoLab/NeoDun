@@ -7,10 +7,9 @@
 #include "math.h"
 #include "getaddress.h"
 
-static char final[BUFSIZ] = "";//存储最终的字符串商
-static int index_add = 0;      //字符地址对应的索引
-char Alphabet[58] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-char finaladdress[50] = "";  //存储最终的字符地址
+#define  SHOWSIGN_BUF_LEN	100
+const char Alphabet[58] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+char finaladdress[40] = "";  //存储最终的字符地址
 
 /******************************************************************
 *	函数名：	GetIndexFromBuff
@@ -40,7 +39,7 @@ int GetIndexFromBuff(char *buff,char ch)
 * 输入参数：ch		输入字符	
 * 输出参数：value 输出10进制数   返回为0xff表示出错
 *******************************************************************/
-int Ascii2Dec(char ch)
+static int Ascii2Dec(char ch)
 {
     if(ch < 0x30)
         return 0xff;
@@ -63,7 +62,7 @@ int Ascii2Dec(char ch)
 * 输入参数：buf	输入字符数组	
 * 输出参数：
 *******************************************************************/
-void ReverseArray(char *buf)//翻转数组
+static void ReverseArray(char *buf)//翻转数组
 {
     int i;
     char x;
@@ -79,19 +78,23 @@ void ReverseArray(char *buf)//翻转数组
 /******************************************************************
 *	函数名：	bigdiv
 *	函数说明：对字符数组表示的大数进行除法运算
-* 输入参数：diva	除数字符数组
-						lena	除数数组长度
-						divb	被除数字符数组
-						lenb	被除数数组长度
-* 输出参数：len	是返回商的长度
+* 输入参数：diva			除数字符数组
+						lena			除数数组长度
+						divb			被除数字符数组
+						lenb			被除数数组长度
+						shang_div	输出商的数组
+						index_div	输出索引
+* 输出参数：
+			len	是返回商的长度
+			len = 0xffff 表示出错
 *******************************************************************/
-int bigdiv(char *diva,int lena,char *divb,int lenb)
+int bigdiv(char *diva, int lena, char *divb, int lenb, char *shang_div,int* index_div)
 {
     int i=0,j=0,k=0,len=0;
     int yushu[2] = {0,0};
 		char result_tmp[BUFSIZ] = "";//存储临时的商值，即进入strcmp循环的次数	
 	
-    memset(final,0,512);
+    memset(shang_div,0,BUFSIZ);
     //死循环只有当lena和lenb相等时跳出循环，因为会不断的在divb数组前加0所以该数组的长度会不断的
     //变化，当两者相等时说明已经无法再作减法
     while(1)
@@ -146,7 +149,7 @@ int bigdiv(char *diva,int lena,char *divb,int lenb)
 		
     for(;i<k;i++)//得到最终字符形式的商
     {
-        final[j++]=result_tmp[i]+'0';
+        shang_div[j++]=result_tmp[i]+'0';
     }
     len = j;//len是返回商的长度
 		
@@ -158,8 +161,8 @@ int bigdiv(char *diva,int lena,char *divb,int lenb)
     if(j==lena)//全为0的特殊情况，即除数为0	
     {
 //        printf("0\n");
-		finaladdress[index_add] = '1';
-		index_add++;
+		finaladdress[*index_div] = '1';
+		(*index_div)++;
         return len;
     }
     i=0;
@@ -171,18 +174,18 @@ int bigdiv(char *diva,int lena,char *divb,int lenb)
 		
     if(i==1)
     {
-        finaladdress[index_add] = Alphabet[yushu[0]];
+        finaladdress[*index_div] = Alphabet[yushu[0]];
     }
     else if(i==2)
     {
-        finaladdress[index_add] = Alphabet[yushu[0]*10+yushu[1]];
+        finaladdress[*index_div] = Alphabet[yushu[0]*10+yushu[1]];
     }
     else
     {
-				printf("Error！！！\r\n");
+				return 0xffff;
     }
 
-    index_add++;
+    (*index_div)++;
     return len;
 }
 /******************************************************************
@@ -190,16 +193,20 @@ int bigdiv(char *diva,int lena,char *divb,int lenb)
 *	函数说明：将10进制表示的大数字符数组进行Base58编码
 * 输入参数：str	输入数组
 * 输出参数：
+					成功返回 1
+					失败返回 0
 *******************************************************************/
-void DecTOAddress(char *str)//将10进制大数转换成地址
+uint8_t DecTOAddress(char *str,int len_of_str)//将10进制大数转换成地址
 {
     int lena,lenb,i,len;
     int value = 0;
-    char sa[BUFSIZ] = "";
-    char sb[BUFSIZ] = "58";
-		memset(finaladdress,0,512);	
+		int index_add = 0;				   //字符地址对应的索引
+    char sa[SHOWSIGN_BUF_LEN] = "";
+    char sb[SHOWSIGN_BUF_LEN] = "58";
+		char result_shang[BUFSIZ] = "";//存储最终的字符串商
+		memset(finaladdress,0,40);	
 	
-    for(i=0;i<strlen(str);i++)
+    for(i=0;i<len_of_str;i++)
 		{
 				sa[i] = str[i];
 		}
@@ -208,24 +215,28 @@ void DecTOAddress(char *str)//将10进制大数转换成地址
     {
         lena=strlen(sa);
         lenb=strlen(sb);			
-        len = bigdiv(sa,lena,sb,lenb);
-
-        memset(sa,0,512);
+        len = bigdiv(sa, lena, sb, lenb, result_shang,&index_add);
+				if(len == 0xffff)
+						return 0;			
+				
+        memset(sa,0,SHOWSIGN_BUF_LEN);
         for(i=0;i<len;i++)
-            sa[i] = final[i];
+            sa[i] = result_shang[i];
 
         if(len == 2)
-            value = (final[0]-'0')*10 + final[1]-'0';
+            value = (result_shang[0]-'0')*10 + result_shang[1]-'0';
         if(len == 1)
-            value = final[0]-'0';
+            value = result_shang[0]-'0';
 
-        memset(sb,0,512);
-        strcpy(sb,"58");
+        memset(sb,0,SHOWSIGN_BUF_LEN);
+				sb[0] = '5';
+				sb[1] = '8';
     }while((len > 2)||(value > 58));
 
     finaladdress[index_add] = Alphabet[value];//添加最后一个余数的遍历
     ReverseArray(finaladdress);
     index_add = 0;
+		return 1;
 }
 /******************************************************************
 *	函数名：	strupr
@@ -233,7 +244,7 @@ void DecTOAddress(char *str)//将10进制大数转换成地址
 * 输入参数：buff	输入数组
 * 输出参数：
 *******************************************************************/
-void strlwr(char *buff)
+void mystrlwr(char *buff)
 {
     int i;
     int len=strlen(buff);
@@ -252,11 +263,9 @@ void strlwr(char *buff)
 * 输入参数：buff	输入数组
 * 输出参数：
 *******************************************************************/
-void strupr(char *buff)
+void mystrupr(char *buff,int len)
 {
     int i;
-    int len=strlen(buff);
-
     for(i=0;i<len;i++)
     {
         if(buff[i] >= 'a')
@@ -272,26 +281,24 @@ void strupr(char *buff)
 						result	输出结果数组
 * 输出参数：
 *******************************************************************/
-void HexToDec(char *src,char *result)//16进制转10进制
+uint8_t HexToDec(char *src, int Lenin, char *result, int *Lenout)//16进制转10进制
 {
-    char pn_Result[BUFSIZ];
-    char pn_old[BUFSIZ];
-    unsigned char num,rn,c,len,m=0,i,j;
-		char str[80];
+    char pn_Result[BUFSIZ] = "";
+    char pn_old[BUFSIZ] = "";
+    unsigned char num,rn,c,m=0,i,j;
+		char str[80] = "";
 	
-    len=strlen(src);	
-		for(c=0;c<len;c++)
+		for(c=0;c<Lenin;c++)
 				str[c] = src[c];
-    for(c=0; c<len; c++)
+    for(c=0; c<Lenin; c++)
 		{
         if(!isxdigit(str[c]))//检查是否为16进制数
         {
-            printf("      Sorry! You are errer. Can only enter hexadecimal digit!!!\r\n");
-            return;
+            return 0;
         }
 		}
-    strcpy(pn_old,str);
-    strupr(str);
+    memcpy(pn_old,str,80);
+    mystrupr(str,80);
 		i=0;
     while((c=str[i])!=0)
     {
@@ -316,8 +323,9 @@ void HexToDec(char *src,char *result)//16进制转10进制
     pn_Result[m]=0;//数组末尾添加0
 	
 		ReverseArray(pn_Result);
-    strcpy(result,pn_Result);
-//		printf("result:%s\r\n",result);
+		*Lenout = strlen(pn_Result);
+		memcpy(result, pn_Result, *Lenout);
+		return 1;
 }
 /******************************************************************
 *	函数名：	Div
@@ -326,7 +334,7 @@ void HexToDec(char *src,char *result)//16进制转10进制
 						s2	存储商的大数字符数组	
 * 输出参数：
 *******************************************************************/
-void Div(char s1[],char s2[])
+static void Div(char s1[],char s2[])
 {
     int i,j,k,t,yu;
     if((s1[0]<'2')&&(strlen(s1)==1))
@@ -365,7 +373,7 @@ void Div(char s1[],char s2[])
 						s16	16进制大数数组
 * 输出参数：
 *******************************************************************/
-void convert2to16(char s2[],char s16[])//将2进制转换为16进制
+static void convert2to16(char s2[],char s16[])//将2进制转换为16进制
 {
     int i,len,t,k,j;
     char s[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
@@ -419,20 +427,7 @@ void DecToHex(char *str,char *result)
 				result[i] = sixteen[i];			
 //		printf("sixteen:%s\r\n",sixteen);
 }
-/******************************************************************
-*	函数名：	Convert2address
-*	函数说明：将字符数组表示的大数转换成地址
-* 输入参数：buff 输入数组
-* 输出参数：
-*******************************************************************/
-void Convert2address(char *buff)
-{
-		char Dec[BUFSIZ] = "";
-		printf("buff:%s\r\n",buff);
-    HexToDec(buff,Dec);
-		printf("Dec:%s\r\n",Dec);
-    DecTOAddress(Dec);
-}
+
 /******************************************************************
 *	函数名：	HexToString
 *	函数说明：将输入16进制数组，转换成字符数组
@@ -489,58 +484,17 @@ void ReverseString(char *buf)
 				buf[len-2*i-1] = ch2;
 		}
 }
-/******************************************************************
-*	函数名：	ShowTransactionType
-*	函数说明：查询交易的类型
-* 输入参数：type 交易类型  
-* 输出参数：
-*******************************************************************/	
-void ShowTransactionType(int type)
-{
-		switch (type)
-		{
-				case 0x00:// 用于分配字节费的特殊交易
-						printf("type:MinerTransaction\r\n");
-						break;
-				case 0x01:// 用于分发资产的特殊交易
-						printf("type:IssueTransaction\r\n");						
-						break;
-				case 0x02:// 用于分配小蚁币的特殊交易
-						printf("type:ClaimTransaction\r\n");						
-						break;
-				case 0x20:// 用于报名成为记账候选人的特殊交易
-						printf("type:EnrollmentTransaction\r\n");						
-						break;
-				case 0x40:// 用于资产登记的特殊交易		
-						printf("type:RegisterTransaction\r\n");						
-						break;
-				case 0x80:// 合约交易，这是最常用的一种交易		
-						printf("type:ContractTransaction\r\n");						
-						break;
-				case 0xd0:	
-						printf("type:PublishTransaction\r\n");						
-						break;
-				case 0xd1:
-						printf("type:InvocationTransaction\r\n");						
-						break;
-				default:
-						printf("Error type!!!\r\n");
-						break;
-		}
-}
 
 /******************************************************************
 *	函数名：	CountMoney
 *	函数说明：解析数组字符串对应的钱的数额
 * 输入参数：buff 输入数组                
-* 输出参数：value 浮点数类型的钱
+* 输出参数：
 *******************************************************************/	
 long long CountMoney(uint8_t *buff)
 {
-//		float value;
 		int i;
 	  int64_t num=0;
-//		float D = 100000000.0000;
 		char result[16] = "";
 	
 		HexToString(buff,8,result);
@@ -550,8 +504,6 @@ long long CountMoney(uint8_t *buff)
 		}
 	
 		return num;
-//		value = (float)num/D;
-//		return value;
 }
 /******************************************************************
 *	函数名：	ReadByteLengthIndex
@@ -559,7 +511,7 @@ long long CountMoney(uint8_t *buff)
 * 输入参数：fd 长度标识符                
 * 输出参数：index 占用的字节长度
 *******************************************************************/	
-int ReadByteLengthIndex(int fb)
+static int ReadByteLengthIndex(int fb)
 {
 		int index=0;
 		if(fb == 0xfd)
@@ -581,7 +533,7 @@ int ReadByteLengthIndex(int fb)
 						fb		长度类型判断
 * 输出参数：value 需要读取的长度值，以字节为单位
 *******************************************************************/
-uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb)
+static uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb)
 {
 		uint64_t value;
 		if(fb == 0xfd)
@@ -606,8 +558,11 @@ uint64_t ReadByteLength(uint8_t *buff,int start,int max,int fb)
 				return 0;//出错	
 		return value;
 }
-
-unsigned char GetAssetID(unsigned char *assetID)
+/******************************************************************
+*	函数名：	GetAssetID
+*	函数说明：得到AssetID
+*******************************************************************/
+static unsigned char GetAssetID(unsigned char *assetID)
 {
 		unsigned char gas[32] = {0x60,0x2c,0x79,0x71,0x8b,0x16,0xe4,0x42,0xde,0x58,0x77,0x8e,0x14,0x8d,0x0b,0x10,
 														 0x84,0xe3,0xb2,0xdf,0xfd,0x5d,0xe6,0xb7,0xb1,0x6c,0xee,0x79,0x69,0x28,0x2d,0xe7};
@@ -641,7 +596,7 @@ unsigned char GetAssetID(unsigned char *assetID)
 					 dataInLen 输入数组长度
 * 输出参数：0表示解释成功，1表示解释出错
 *******************************************************************/	
-int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
+uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 {
 		int i,j,index=0,index_type=0,length=0,fb=0;
 		//通用的数据结构，数组和变量定义
@@ -655,10 +610,7 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		memset(&sign_data,0,sizeof(sign_data));	
 		
 		//交易类型
-		type = dataIn[0];
-#ifdef	Printf	
-		ShowTransactionType(type);
-#endif 		
+		type = dataIn[0];		
 		SIGN_Out->type = type;
 		//Version
 		Version = dataIn[1];
@@ -1043,351 +995,3 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				return 1;
 		}
 }
-
-
-//  用来测试的解释签名数据
-//	char src[2048] = "80000002235fc72a3372fa601d39017685c3a77ebb24f1369a16e80f218f5ff76880fb3800005d1ab60715d73e806cca1449fc089520211360ea526450803345e8987ad35e76010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c60008b585a170000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6070222f1817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";
-//	char src[2048] = "800000010c8fa242aaf7461f802bf0d6e0fc8694e3daed2d66de4dc70fe017012d075350010002e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c6080969800000000001b02c180df019e6113a985411cae62db80f90db4e72d286979ee6cb1b7e65dfddfb2e384100b8d148e7758de42e4168b71792c607098df2817000000738679b1fd7dbc21fa7ebc1218e74f08e6afbdae";	
-/******************************************************************
-*	函数名：	showsign
-*	函数说明：解释签名函数
-* 输入参数：src是用来测试的字符串                
-* 输出参数：0表示解释成功，1表示解释出错
-*******************************************************************/	
-//int showsign(char* src)
-//{
-//		int i,j,index=0,index_type=0,length=0,fb=0;
-//		//不同的交易类型定义的数组和变量
-//		uint64_t Nonce=0;//MinerTransaction
-//		char Claims[68]; //ClaimTransaction			PrevHash:0-63,PrevIndex:64-67
-//		char PublicKey[128];//EnrollmentTransaction
-//		//RegisterTransaction
-//		int AssetType;
-//		char* NameR;
-//		uint64_t Amount;
-//		int Precision;
-//		char Owner[66];
-//		char Admin[40];
-//		//PublishTransaction
-//		char Code[6];
-//		int NeedStorage;
-//		char* NameP;
-//		char* CodeVersion;
-//		char* Author;
-//		char* Email;
-//		char* Description;
-//		//InvocationTransaction
-//		char* Script;
-//		int64_t Gas;
-//		//通用的数据结构，数组和变量定义
-//		int type,Version,countAttributes,countInputs,countOutputs;		
-//		char Input[64];
-//		char Output[64];	
-//		char buff_money[16];		
-//		char address_data[42] = "17";
-//		char result_address[50] = "";
-//		int len_address=0;
-//		int len = strlen(src);
-//	
-//		printf("src:%s\r\n",src);
-//		printf("len: %d byte\r\n",len/2);
-//			
-//		//交易类型
-//		type = Ascii2Dec(src[0])*16+Ascii2Dec(src[1]);
-//		ShowTransactionType(type);
-//		//Version
-//		Version = Ascii2Dec(src[2])*16+Ascii2Dec(src[3]);
-//		printf("Version:%d\r\n",Version);
-//	
-//		//不同交易类型的数据结构不一样，额外数据需要处理
-//		switch (type)
-//		{
-//				case 0x00://MinerTransaction
-//				{
-//						if(Version == 0)
-//						{
-//								Nonce = Ascii2Dec(src[4])*pow(16,0)+Ascii2Dec(src[5])*pow(16,1)+Ascii2Dec(src[6])*pow(16,2)+Ascii2Dec(src[7])*pow(16,3)+
-//												Ascii2Dec(src[8])*pow(16,4)+Ascii2Dec(src[9])*pow(16,5)+Ascii2Dec(src[10])*pow(16,6)+Ascii2Dec(src[11])*pow(16,7);
-//								printf("Nonce:%lld\r\n",Nonce);
-//								index_type = 8;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x01://IssueTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}
-//						break;
-//				}
-//				case 0x02://ClaimTransaction
-//				{			
-//						if(Version == 0)
-//						{
-//								for(i=0;i<68;i++)
-//										Claims[i] = src[4+i];
-//								printf("Claims:%s\r\n",Claims);
-//								if(strlen(Claims) == 0)
-//										return 1;
-//								index_type = 68;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x20://EnrollmentTransaction
-//				{						
-//						if(Version == 0)
-//						{
-//								for(i=0;i<128;i++)
-//										PublicKey[i] = src[4+i];
-//								printf("PublicKey:%s\r\n",PublicKey);
-//								index_type = 128;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x40://RegisterTransaction
-//				{
-//						if(Version == 0)
-//						{
-//								AssetType = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
-//								printf("AssetType:%d\r\n",AssetType);
-//								index_type += 2;							
-//								//Name:
-//								fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//								length = ReadByteLength(src,6+index_type,1024,fb);
-//								if(length == 0)	return 1;						
-//								index_type += 2 + ReadByteLengthIndex(fb);
-//								NameR = &src[4+index_type];		
-//								printf("Name:");						
-//								for(i=0;i<length*2;i++)
-//										printf("%c",*(NameR+i));
-//								printf("\r\n");
-//								index_type += length*2;									
-//								//Amount														
-//								Amount = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
-//												 Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
-//												 Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,6)+Ascii2Dec(src[index_type+14])*pow(16,6)+Ascii2Dec(src[index_type+15])*pow(16,4)+
-//												 Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
-//								printf("Amount:%lld\r\n",Amount);
-//								index_type += 16;
-//								//Precision
-//								Precision = Ascii2Dec(src[index_type+4])*16+Ascii2Dec(src[index_type+5]);
-//								printf("Precision:%d\r\n",Precision);								
-//								index_type += 2;
-//								//Owner
-//								for(i=0;i<66;i++)
-//										Owner[i] = src[i+index_type+4];
-//								index_type += 66;
-//								printf("Owner:%s\r\n",Owner);
-//								//Admin
-//								for(i=0;i<40;i++)	
-//										Admin[i] = src[i+index_type+4];					
-//								printf("Admin:%s\r\n",Admin);
-//								index_type += 40;
-//								break;
-//						}
-//						else
-//						{
-//								return 1;
-//						}
-//				}
-//				case 0x80://ContractTransaction  最常见的合约交易	 没有自己的独特处理			
-//				{
-//						if(Version != 0)
-//						{
-//								return 1;
-//						}
-//						break;
-//				}					
-//				case 0xd0://PublishTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}
-//						for(i=0;i<6;i++)
-//								Code[i] = src[4+i];
-//						printf("Code:%s\r\n",Code);
-//						if(Version == 1)
-//						{
-//								NeedStorage = Ascii2Dec(src[10])*16 + Ascii2Dec(src[11]);
-//						}
-//						else 
-//						{
-//								NeedStorage = 0;
-//						}
-//						printf("NeedStorage:%d\r\n",NeedStorage);
-//						index_type += 8;
-//						//NameP:
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						NameP = &src[4+index_type];		
-//						printf("Name:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(NameP+i));
-//						printf("\r\n");
-//						index_type += length*2;						
-//						//CodeVersion
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						CodeVersion = &src[4+index_type];						
-//						printf("CodeVersion:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(CodeVersion+i));
-//						printf("\r\n");
-//						index_type += length*2;										
-//						//Author
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Author = &src[4+index_type];						
-//						printf("Author:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Author+i));
-//						printf("\r\n");
-//						index_type += length*2;	
-//						//Email
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,252,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Email = &src[4+index_type];						
-//						printf("Email:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Email+i));
-//						printf("\r\n");
-//						index_type += length*2;																			
-//						//Description
-//						fb = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);
-//						length = ReadByteLength(src,6+index_type,65536,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Description = &src[4+index_type];						
-//						printf("Description:");						
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Description+i));
-//						printf("\r\n");
-//						index_type += length*2;																	
-//						break;
-//				}
-//				case 0xd1://InvocationTransaction
-//				{
-//						if(Version > 1)
-//						{
-//								return 1;
-//						}						
-//						fb = Ascii2Dec(src[4])*16+Ascii2Dec(src[5]);
-//						length = ReadByteLength(src,6,65536,fb);
-//						if(length == 0)	return 1;						
-//						index_type += 2 + ReadByteLengthIndex(fb);
-//						Script = &src[4+index_type];						
-//						printf("Script:");
-//						for(i=0;i<length*2;i++)
-//								printf("%c",*(Script+i));
-//						printf("\r\n");
-//						index_type += length*2;
-//						if(Version == 1)
-//						{
-//								Gas = Ascii2Dec(src[index_type+4])*pow(16,15)+Ascii2Dec(src[index_type+5])*pow(16,14)+Ascii2Dec(src[index_type+6])*pow(16,13)+Ascii2Dec(src[index_type+7])*pow(16,12)+
-//											Ascii2Dec(src[index_type+8])*pow(16,11)+Ascii2Dec(src[index_type+9])*pow(16,10)+Ascii2Dec(src[index_type+10])*pow(16,9)+Ascii2Dec(src[index_type+11])*pow(16,8)+
-//											Ascii2Dec(src[index_type+12])*pow(16,7)+Ascii2Dec(src[index_type+13])*pow(16,9)+Ascii2Dec(src[index_type+14])*pow(16,5)+Ascii2Dec(src[index_type+15])*pow(16,4)+
-//											Ascii2Dec(src[index_type+16])*pow(16,3)+Ascii2Dec(src[index_type+17])*pow(16,2)+Ascii2Dec(src[index_type+18])*pow(16,1)+Ascii2Dec(src[index_type+19])*pow(16,0);
-//								printf("Gas:%lld\r\n",Gas);	
-//								index_type += 8;	
-//								if(Gas < 0) return 1;															
-//						}
-//						else
-//						{
-//							Gas = 0;// Fixed.Zero 表示为0
-//						}						
-//						break;
-//				}
-//				default:
-//						printf("Type Error!!!");
-//						break;
-//		}		
-//			
-//		//countAttributes
-//		countAttributes = Ascii2Dec(src[4+index_type])*16+Ascii2Dec(src[5+index_type]);		
-//		printf("countAttributes:%d\r\n",countAttributes);
-
-//		//countInputs
-//		countInputs = Ascii2Dec(src[6+index_type])*16+Ascii2Dec(src[7+index_type]);
-//		printf("countInputs:%d\r\n",countInputs);
-//		index = 8+index_type;
-//		for(i=0;i<countInputs;i++)
-//		{
-//				for(j=0;j<64;j++)
-//				{
-//						Input[j]=src[index+j+68*i];
-//				}
-//				//反向
-//				ReverseString(Input);
-//				printf("input%d:%s\r\n",i,Input);
-//				printf("index:%d\r\n",Ascii2Dec(src[index+j+68*i])*16+Ascii2Dec(src[index+j+1+68*i])+Ascii2Dec(src[index+j+2+68*i])*16*16*16+Ascii2Dec(src[index+j+3+68*i])*16*16);				
-//				memset(Input,0,64);//清空数组
-//		}
-//		index += 68*countInputs;
-//		
-//		//countOutputs	
-//		countOutputs = Ascii2Dec(src[index])*16+Ascii2Dec(src[index+1]);
-//		printf("countOutputs:%d\r\n",countOutputs);		
-//		index += 2;
-//		
-//		for(i=0;i<countOutputs;i++)
-//		{
-//				for(j=0;j<64;j++)
-//				{
-//						Output[j]=src[index+j+120*i];
-//				}			
-//				//反向
-//				ReverseString(Output);
-//				printf("Output%d:%s\r\n",i,Output);
-//				memset(Output,0,64);//清空数组				
-//				
-//				//计算money
-//				for(j=0;j<16;j++)
-//				{
-//						buff_money[j] = src[index+64+120*i+j];
-//				}
-//				printf("money%d = %.4f\r\n",i,CountMoney(buff_money));
-//								
-//				//计算地址
-//				for(j=0;j<40;j++)
-//				{
-//						address_data[2+j] = src[index+80+120*i+j];
-//				}
-//				Base58_Encode(address_data,21,result_address,&len_address);
-//				printf("address = %s\r\n",result_address);
-//		}		
-//		index += 120*countOutputs;
-//		
-//		if(index == len)
-//		{
-//				printf("Success!!!\r\n");
-//				return 0;
-//		}	
-//		else
-//		{
-//				printf("Error!!!\r\n");
-//				return 1;
-//		}
-//}
-

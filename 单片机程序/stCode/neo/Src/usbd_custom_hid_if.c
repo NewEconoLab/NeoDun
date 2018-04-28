@@ -81,9 +81,9 @@ static int8_t CUSTOM_HID_Init_FS     (void);
 static int8_t CUSTOM_HID_DeInit_FS   (void);
 static int8_t CUSTOM_HID_OutEvent_FS (uint8_t event_idx, uint8_t state);
 /* USER CODE BEGIN 2 */ 
-#include "myType.h"
+
 extern USBD_HandleTypeDef hUsbDeviceFS;
-extern void USB_DataReceiveHander(u8 * data ,int len );
+extern void USB_DataReceiveHander(uint8_t * data ,int len );
 /* USER CODE END 2 */ 
 
 USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_fops_FS = 

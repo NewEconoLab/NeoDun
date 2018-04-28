@@ -4,7 +4,7 @@
 
 extern void __delay_us(uint32_t nTime);// 定义在hal_stm32_timer.c
 
-/*&&&&&&&&&&&&&&&&&&&        引脚定义 文件内有效   &&&&&&&&&&&&&&&&&&&&&&&&&&&*/
+
 #define  _I2C_PORT         GPIOB
 #define  _SCL_PIN_NO       GPIO_PIN_8
 #define  _SDA_PIN_NO       GPIO_PIN_9
@@ -13,11 +13,11 @@ extern void __delay_us(uint32_t nTime);// 定义在hal_stm32_timer.c
 #define _SDA          PBout(9)
 #define _SDA_STATUS   PBin(9)
 
-void bitBang_I2c_Init(void)
+void ATSHA_I2c_Init(void)
 {
-	//注意端口时钟已提前使能
     GPIO_InitTypeDef GPIO_InitStructure;	
-    // Configure I2C pins: SCL and SDA
+	
+		__HAL_RCC_GPIOB_CLK_ENABLE();
     GPIO_InitStructure.Pin = _SCL_PIN_NO | _SDA_PIN_NO;
     GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;//GPIO_Speed_50MHz;//为减少EMI噪声
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD; //开漏输出
@@ -28,23 +28,19 @@ void bitBang_I2c_Init(void)
     _SDA =1;	
 }
 
-/*&&&&&&&&&&&&&&&&&&&&&&&    bitBang_i2c      &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 
-/*&&&&&&&&&&&&&&&&&&&        位操作       &&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 #define testbit(var, bit)  ((var) & (1 <<(bit)))
 #define setbit(var, bit)   ((var) |= (1 << (bit)))
 #define clrbit(var, bit)   ((var) &= ~(1 << (bit)))
 
-/*&&&&&&&&&&&&&&&&&&&        延时宏定义       &&&&&&&&&&&&&&&&&&&&&&&&&&&*/
+
 #define _1uS   __delay_us(1)
 #define _2uS   __delay_us(2)
 #define _3uS   __delay_us(3)
 #define _4uS   __delay_us(4)
 #define _5uS   __delay_us(5)
-/*&&&&&&&&&&&&&&&&&&&        器件地址       &&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 #define ATSHA204A_ADDR_W   0xC8
 #define ATSHA204A_ADDR_R   0xC9
-/*&&&&&&&&&&&&&&&&&&&        全局标志       &&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 static uint32_t ack;	         	//应答标志位 内部使用 0表示收到了应答，1表示没收到
 
 static void Start_I2c()

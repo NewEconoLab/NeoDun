@@ -53,7 +53,7 @@
 #define CUSTOM_HID_EPIN_SIZE                 0x40  //0x02
 
 #define CUSTOM_HID_EPOUT_ADDR                0x01
-#define CUSTOM_HID_EPOUT_SIZE                0x02  //0x02
+#define CUSTOM_HID_EPOUT_SIZE                0x40  //0x02
 
 #define USB_CUSTOM_HID_CONFIG_DESC_SIZ       41
 #define USB_CUSTOM_HID_DESC_SIZ              9

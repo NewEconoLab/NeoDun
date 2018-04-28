@@ -1,57 +1,56 @@
 #include "encrypt.h"
-//#include "usart.h"
-//#include "timer.h"
 #include <string.h>
 #include "getaddress.h" 
 #include "Algorithm.h"
 
-//extern unsigned long timecount;
+//分配存储空间
+static uint8_t preallocated_buffer[ECC_STORE_SPACE]; 
 static uint8_t P_key[200];
 static uint8_t result1[128];
-//extern uint8_t Digest[32];
-
+static uint8_t pub_x[50];
+static uint8_t pub_y[50];
+static uint8_t sign_r[50];
+static uint8_t sign_s[50];
 /******************************************************************************/
 /******** Parameters for Elliptic Curve P-256 SHA-256 from FIPS 186-3**********/
 /******************************************************************************/
-const uint8_t P_256_a[] =
+static const uint8_t P_256_a[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC
   };
-const uint8_t P_256_b[] =
+static const uint8_t P_256_b[] =
   {
     0x5a, 0xc6, 0x35, 0xd8, 0xaa, 0x3a, 0x93, 0xe7, 0xb3, 0xeb, 0xbd, 0x55, 0x76,
     0x98, 0x86, 0xbc, 0x65, 0x1d, 0x06, 0xb0, 0xcc, 0x53, 0xb0, 0xf6, 0x3b, 0xce,
     0x3c, 0x3e, 0x27, 0xd2, 0x60, 0x4b
   };
-const uint8_t P_256_p[] =
+static const uint8_t P_256_p[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
   };
-const uint8_t P_256_n[] =
+static const uint8_t P_256_n[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xBC, 0xE6, 0xFA, 0xAD, 0xA7, 0x17, 0x9E, 0x84, 0xF3, 0xB9,
     0xCA, 0xC2, 0xFC, 0x63, 0x25, 0x51
   };
-const uint8_t P_256_Gx[] =
+static const uint8_t P_256_Gx[] =
   {
     0x6B, 0x17, 0xD1, 0xF2, 0xE1, 0x2C, 0x42, 0x47, 0xF8, 0xBC, 0xE6, 0xE5, 0x63,
     0xA4, 0x40, 0xF2, 0x77, 0x03, 0x7D, 0x81, 0x2D, 0xEB, 0x33, 0xA0, 0xF4, 0xA1,
     0x39, 0x45, 0xD8, 0x98, 0xC2, 0x96
   };
-const uint8_t P_256_Gy[] =
+static const uint8_t P_256_Gy[] =
   {
     0x4F, 0xE3, 0x42, 0xE2, 0xFE, 0x1A, 0x7F, 0x9B, 0x8E, 0xE7, 0xEB, 0x4A, 0x7C,
     0x0F, 0x9E, 0x16, 0x2B, 0xCE, 0x33, 0x57, 0x6B, 0x31, 0x5E, 0xCE, 0xCB, 0xB6,
     0x40, 0x68, 0x37, 0xBF, 0x51, 0xF5
   };
-
-//分配存储空间
-static uint8_t preallocated_buffer[ECC_STORE_SPACE]; 		
+		
 /******************************************************************
 *	函数名：	 Alg_ECDSASignData
 *	函数说明：对输入的数据进行签名
@@ -99,11 +98,6 @@ int32_t Alg_ECDSASignData(uint8_t *dataIn,int dataInLen,uint8_t *dataOut,int *da
 *            pub_key              公钥参数         in
 * 输出参数：无
 *******************************************************************/	
-uint8_t MessDigest_t1[CRL_HASH_SIZE];
-uint8_t pub_x[50];
-uint8_t pub_y[50];
-uint8_t sign_r[50];
-uint8_t sign_s[50];
 void	EC_paraTestInit(EC_Para *ec, Pub_Key_Para *pub_key, Sign_Para *sign, 
 	                    InputMsg_Para *inputMsg, Digest_Para *digest)
 {
@@ -509,13 +503,13 @@ int32_t Alg_HashData(uint8_t *dataIn,int dataInLen,uint8_t *dataOut,int *dataout
 }
 
 /******************************************************************
-*	函数名：	 ECCGetPublickeyFromPrivKey
+*	函数名：	 ECCGetPublickeyFromPrivKey_OLD
 *	函数说明：从输入的私钥计算对应公钥
 * 输入参数：PrivKey		输入的私钥
 * 输出参数：Publickey	输出的公钥
 					 value 			返回值，为0表示成功，其它为错误码
 *******************************************************************/	
-int32_t Alg_GetPublicFromPrivate(uint8_t *PrivateKey,uint8_t *Publickey)
+static int32_t ECCGetPublickeyFromPrivKey_OLD(uint8_t *PrivateKey,uint8_t *Publickey)
 {
 		int32_t value = ECC_SUCCESS;
 		int i;
@@ -635,6 +629,31 @@ ECCKeyGenPub_L2:
 ECCKeyGenPub_L1:
  		RNGfree(&RNGstate1);
 		
+		return value;
+}
+
+/******************************************************************
+*	函数名：	 ECCGetPublickeyFromPrivKey
+*	函数说明：从输入的私钥计算对应公钥
+* 输入参数：PrivKey		输入的私钥
+						state			要计算的公钥组成形式
+* 输出参数：Publickey	输出的公钥
+					 value 			返回值，为0表示成功，其它为错误码
+*******************************************************************/	
+int32_t Alg_GetPublicFromPrivate(uint8_t *PrivateKey,uint8_t Publickey[65],uint8_t state)
+{
+		int32_t value = ECCGetPublickeyFromPrivKey_OLD(PrivateKey,Publickey+1);
+		if(state)
+		{
+				if(Publickey[64]%2)
+						Publickey[0] = 3;
+				else
+						Publickey[0] = 2;
+		}
+		else
+		{
+				Publickey[0] = 4;
+		}
 		return value;
 }
 
