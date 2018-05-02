@@ -372,7 +372,7 @@ namespace driver_win
                         {
                             NeoDun.Message msg = new NeoDun.Message();
                             msg.tag1 = 0x02;
-                            msg.tag2 = 0xc1;
+                            msg.tag2 = 0xa3;
                             msg.msgid = recv.msgid;
                             Array.Copy(recv.data, msg.data, 40 + 2);
                             SendMsg(msg, true);
@@ -385,7 +385,7 @@ namespace driver_win
                         {
                             NeoDun.Message msg = new NeoDun.Message();
                             msg.tag1 = 0x02;
-                            msg.tag2 = 0xc2;
+                            msg.tag2 = 0xe3;
                             msg.msgid = recv.msgid;
                             Array.Copy(recv.data, msg.data, 40 + 2);
                             SendMsg(msg, true);

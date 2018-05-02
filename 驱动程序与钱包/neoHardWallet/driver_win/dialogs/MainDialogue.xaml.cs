@@ -104,7 +104,7 @@ namespace driver_win.dialogs
 
         private void Btn_ImportWif(object sender, RoutedEventArgs e)
         {
-            ImportWifDialogue importWifDialogue = new ImportWifDialogue();
+            ImportWifDialogue importWifDialogue = new ImportWifDialogue(driverControl);
             importWifDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importWifDialogue.Owner = this;
             importWifDialogue.ShowDialog();

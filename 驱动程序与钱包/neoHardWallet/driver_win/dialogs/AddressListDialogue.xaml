@@ -9,7 +9,7 @@
     <Grid Background="Transparent">
         <Border BorderThickness="5" CornerRadius="10,10,10,10">
             <Border.Effect>
-                <DropShadowEffect Direction="270" BlurRadius="4" ShadowDepth="2"/>
+                <DropShadowEffect Direction="0" ShadowDepth="0" RenderingBias="Quality" BlurRadius="6"/>
             </Border.Effect>
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -23,27 +23,30 @@
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label Content="地址管理" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
+                <Label x:Name="test" Content="地址管理" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
                 <Label Content="序号" IsEnabled="False" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Label Content="别名" IsEnabled="False" Width="48" Height="15" Margin="72,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Label Content="地址" IsEnabled="False" Width="48" Height="15" Margin="330,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Image Grid.Row="0"  Source="/driver_win;component/res/？.png" Margin="101,83,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"/>
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
                 <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="  为地址设一个别名，以便更好的&#13;管理您的地址。（长度不超过7个&#13;字母）" Margin="113,48,310,339"/>
-                <ListBox  Name="listbox" Margin="14,106,10,10" Background="#00000000" BorderBrush="{x:Null}">
+                <ListBox  Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                </ListBox>
+                <ListBox Visibility="Hidden" Name="listboxDemo" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListBoxItem Style="{StaticResource ResourceKey=MyWpfListBoxItem}" Height="40" Width="584">
                         <Grid>
-                            <Label Name="index" Content="01" IsEnabled="False" Width="16" Height="21" Margin="12,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
+                            <Label Name="index" Content="00" IsEnabled="False" Width="16" Height="21" Margin="12,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                             <Label Name="name" Content="未命名" IsEnabled="False" Width="90" Height="21" Margin="45,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="#BFBFBF" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                             <Label Name="address" Content="" IsEnabled="False" Width="330" Height="21" Margin="160,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#7AFF91" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20" RenderTransformOrigin="5.253,0.547"/>
+                            <Label Name="type" Visibility="Hidden" Content="" IsEnabled="False" Width="330" Height="21" Margin="160,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#7AFF91" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20" RenderTransformOrigin="5.253,0.547"/>
                             <GridSplitter HorizontalAlignment="Left" Height="1" Margin="45,25,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                             <GridSplitter HorizontalAlignment="Left" Height="1" Margin="160,25,0,0" VerticalAlignment="Top" Width="330" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                            <Button Style="{StaticResource ResourceKey=MyWpfButton_image}"  Margin="502,0,0,0" Width="30" Height="30">
+                            <Button Name="copy" Style="{StaticResource ResourceKey=MyWpfButton_image}"  Margin="502,0,0,0" Width="30" Height="30" Click="Btn_Copy">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/driver_win;component/res/复制.png"/>
                                 </Button.Background>
                             </Button>
-                            <Button Style="{StaticResource ResourceKey=MyWpfButton_image}"  Margin="542,0,0,0" Width="30" Height="30">
+                            <Button Name="delete" Style="{StaticResource ResourceKey=MyWpfButton_image}"  Margin="542,0,0,0" Width="30" Height="30" Click="Btn_Delete">
                                 <Button.Background>
                                     <ImageBrush ImageSource="/driver_win;component/res/删除.png"/>
                                 </Button.Background>
@@ -51,6 +54,26 @@
                         </Grid>
                     </ListBoxItem>
                 </ListBox>
+                <Grid Width="448" Height="68" x:Name="message" Visibility="Collapsed">
+                    <Border BorderThickness="5" CornerRadius="10,10,10,10">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFFFFF" Offset="0"/>
+                                <GradientStop Color="#FFFFFF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Direction="0" ShadowDepth="0" RenderingBias="Quality" BlurRadius="6"/>
+                        </Border.Effect>
+                    </Border>
+                    <TextBlock TextWrapping="Wrap" Margin="20,18,10,18">
+                        <Run Text=" 一条删除 "/>
+                        <Run x:Name="lb_msg_name" Text=""/>
+                        <Run Text=" （"/>
+                        <Run x:Name="lb_msg_addr" Text="" Foreground="#A6FFB6"/>
+                        <Run Text="）的指令已发送至你的NEODUN，请在NEODUN上进行后续操作。"/>
+                    </TextBlock>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

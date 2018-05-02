@@ -181,7 +181,6 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="#000000"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

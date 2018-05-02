@@ -16,6 +16,8 @@ namespace driver_win
 
         private int waitTime = 30000;
 
+        private bool needLoop = true;
+
         private bool[] bools = new bool[6];
 
         private MyJson.JsonNode_Object isFirstConfirm = new MyJson.JsonNode_Object();
@@ -174,112 +176,72 @@ namespace driver_win
         #endregion
 
         #region 增加地址
-        public delegate void PrivateKey2AddressEventHandlerCallBack(string privateKey, string address, string err);
-        public event PrivateKey2AddressEventHandlerCallBack privateKey2AddressEventHandlerCallBack;
-        public void PrivateKey2Address_FromText(string _wif)
+        bool addResult;
+        public async Task<string> AddAddressByWif(string wif)
         {
-            try
-            {
-                byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_wif);
-                byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
-                string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
-                privateKey2AddressEventHandlerCallBack(_wif, str_address, "添加成功");
-            }
-            catch
-            {
-                privateKey2AddressEventHandlerCallBack("", "", "请输入有效的地址");
-            }
-        }
-        public void PrivateKey2Address_FromBackup()
-        {
-            try
-            {
-                Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-                dialog.Filter = "文本文件|*.txt";
-                if (dialog.ShowDialog() == true)
-                {
-                    string _wif = System.IO.File.ReadAllText(dialog.FileName);
-                    byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_wif);
-                    byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
-                    string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
-                    privateKey2AddressEventHandlerCallBack(_wif, str_address, "");
-                }
-                else
-                {
-
-                }
-            }
-            catch
-            {
-                privateKey2AddressEventHandlerCallBack("", "", "请选择有效的备份");
-            }
-
-        }
-
-
-        public async void AddAddress(string _address, string _privateKey)
-        {
-            if (string.IsNullOrEmpty(_address) || string.IsNullOrEmpty(_privateKey))
-                return;
+            byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(wif);
+            byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
+            string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
 
             //地址查重 
             foreach (var add in signer.addressPool.addresses)
             {
-                if (add.AddressText == _address)
+                if (add.AddressText == str_address)
                 {
-                    ErrorCallBack("地址重复", "通知");
-                    return;
+                    return "地址重复";
 
                 }
             }
-            string str_address = _address;
+            try
+            {
+                string str_addressType = "Neo";
+                UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), str_addressType);
+                byte[] bytes_address = NeoDun.SignTool.DecodeBase58(str_address);
+                byte[] hash = NeoDun.SignTool.ComputeSHA256(privateKey, 0, privateKey.Length);
+                string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
 
-            byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(_privateKey);
+                NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)privateKey.Length, NeoDun.DataBlockFrom.FromDriver);
+                block.data = privateKey;
+                signer.SendDataBlock(block);
 
-            string str_addressType = "Neo";
-            UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), str_addressType);
-            byte[] bytes_address = NeoDun.SignTool.DecodeBase58(str_address);
-            //byte[] privateKey = NeoDun.SignTool.HexString2Bytes(str_privateKey);
-            byte[] hash = NeoDun.SignTool.ComputeSHA256(privateKey, 0, privateKey.Length);
-            string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+                var __block = signer.dataTable.getBlockBySha256(str_hash);
+                uint remoteid = await __block.GetRemoteid();
+                __block.dataidRemote = 0;
 
-            NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)privateKey.Length, NeoDun.DataBlockFrom.FromDriver);
-            block.data = privateKey;
-            signer.SendDataBlock(block);
-            //轮询等待发送完成，需要加入超时机制
+                NeoDun.Message signMsg = new NeoDun.Message();
+                signMsg.tag1 = 0x02;
+                signMsg.tag2 = 0x04;//增
+                signMsg.msgid = NeoDun.SignTool.RandomShort();
+                signMsg.writeUInt16(0, addressType);
+                Array.Copy(bytes_address, 0, signMsg.data, 2, bytes_address.Length);
+                //这个dataid 要上一个block 传送完毕了才知道
+                signMsg.writeUInt32(42, remoteid);
+                signer.SendMessage(signMsg, true);
 
-            var __block = signer.dataTable.getBlockBySha256(str_hash);
-            uint remoteid = await __block.GetRemoteid();
-            __block.dataidRemote = 0;
-
-            NeoDun.Message signMsg = new NeoDun.Message();
-            signMsg.tag1 = 0x02;
-            signMsg.tag2 = 0x04;//增
-            signMsg.msgid = NeoDun.SignTool.RandomShort();
-            signMsg.writeUInt16(0, addressType);
-            Array.Copy(bytes_address, 0, signMsg.data, 2, bytes_address.Length);
-            //这个dataid 要上一个block 传送完毕了才知道
-            signMsg.writeUInt32(42, remoteid);
-            //await Task.Delay(50);
-            signer.SendMessage(signMsg, true);
+                needLoop = true;
+                addResult = false;
+                int time = 0;
+                while (needLoop && time <= waitTime)
+                {
+                    await Task.Delay(100);
+                    time += 100;
+                }
+                needLoop = false;
+                return addResult ? "suc" : "Neodun拒绝";
+            }
+            catch (Exception e)
+            {
+                return "请输入正确的私钥";
+            }
         }
-
-        public delegate void AddAddressEventHandlerCallBack(bool _suc);
-        public event AddAddressEventHandlerCallBack addAddressEventHandlerCallBack;
         public void AddAddressCallBack(bool _suc)
         {
-            if (addAddressEventHandlerCallBack != null)
-            {
-                addAddressEventHandlerCallBack(_suc);
-            }
-
-            //重新获取一次地址
-            GetAddressList();
+            addResult = _suc;
+            needLoop = false;
         }
         #endregion
 
         #region 查询地址
-        bool bool_addaddress = true;
         public async Task<ConcurrentBag<Address>> GetAddressList()
         {
             NeoDun.Message msg = new NeoDun.Message();
@@ -287,23 +249,25 @@ namespace driver_win
             msg.tag2 = 0x01;//查
             msg.msgid = NeoDun.SignTool.RandomShort();
             signer.SendMessage(msg, true);
-            bool_addaddress = true;
+            needLoop = true;
             int time = 0;
-            while (bool_addaddress && time <= waitTime)
+            while (needLoop && time <= waitTime)
             {
                 await Task.Delay(100);
                 time += 100;
             }
+            needLoop = false;
             return signer.addressPool.addresses;
         }
         public void GetAddressCallBack()
         {
-            bool_addaddress = false;
+            needLoop = false;
         }
         #endregion
 
         #region 删除地址
-        public void DeleteAddress(string _addressType, string _addressText)
+        bool deleteResult = false;
+        public async Task<string> DeleteAddress(string _addressType, string _addressText)
         {
             UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), _addressType);
             byte[] bytes_addressText = NeoDun.SignTool.DecodeBase58(_addressText);
@@ -314,16 +278,22 @@ namespace driver_win
             signMsg.writeUInt16(0, addressType);
             Array.Copy(bytes_addressText, 0, signMsg.data, 2, bytes_addressText.Length);
             signer.SendMessage(signMsg, true);
-        }
 
-        public delegate void DeleteAddressEventHandlerCallBack(bool suc);
-        public event DeleteAddressEventHandlerCallBack deleteAddressEventHandlerCallBack;
+            deleteResult = false;
+            needLoop = true;
+            int time = 0;
+            while (needLoop && time <= waitTime)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            needLoop = false;
+            return deleteResult?"删除成功":"Neodun拒绝";
+        }
         public void DeleteAddressCallBack(bool suc)
         {
-            if (deleteAddressEventHandlerCallBack != null)
-                deleteAddressEventHandlerCallBack(suc);
-            //重新获取地址列表
-            GetAddressList();
+            deleteResult = suc;
+            needLoop = false;
         }
 
         #endregion
@@ -440,8 +410,7 @@ namespace driver_win
                 }
             }
             catch (Exception e)
-            {
-                privateKey2AddressEventHandlerCallBack("", "", e.ToString());
+            { 
             }
         }
         #endregion

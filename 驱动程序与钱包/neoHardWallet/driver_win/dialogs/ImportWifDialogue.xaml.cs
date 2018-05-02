@@ -19,9 +19,12 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class ImportWifDialogue : Window
     {
-        public ImportWifDialogue()
+        private DriverControl driverControl;
+        public ImportWifDialogue(DriverControl _driverControl)
         {
             InitializeComponent();
+
+            driverControl = _driverControl;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -29,9 +32,29 @@ namespace driver_win.dialogs
             this.DragMove();
         }
 
-        private void btn_add(object sender, RoutedEventArgs e)
+        private async void btn_Add(object sender, RoutedEventArgs e)
         {
+            string result = await driverControl.AddAddressByWif(this.label_Wif.Text.ToString());
+            if (result == "suc")
+            {
+                this.Close();
+                AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
+                addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                addressListDialogue.Owner = this.Owner;
+                addressListDialogue.Show();
 
+                MessageDialogue messageDialogue = new MessageDialogue("添加成功");
+                messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                messageDialogue.Owner = addressListDialogue;
+                messageDialogue.Show(2);
+            }
+            else
+            {
+                MessageDialogue messageDialogue = new MessageDialogue(result);
+                messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                messageDialogue.Owner = this;
+                messageDialogue.Show(2);
+            }
         }
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)

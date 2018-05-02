@@ -314,12 +314,12 @@ namespace NeoDun
                     if (addAddressEventHandler != null)
                         addAddressEventHandler(false);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc1)
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)
                 {
                     if(delAddressEventHandler!=null)
                         delAddressEventHandler(true);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc2)
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
                     if (errorEventHandler != null)
                         delAddressEventHandler(false);
