@@ -68,7 +68,6 @@ void Set_Linear_Gray_Scale_Table(void);
 void clearArea(int x, int y, int width, int height);
 
 //以下ASCII程序
-void Asc6_12(unsigned char x, unsigned char y, unsigned char ch[]);
 void Asc8_16(unsigned char x, unsigned char y, unsigned char ch[]);
 //以下汉字程序
 void HZ12_12(unsigned char x, unsigned char y, unsigned char num);

@@ -1,6 +1,5 @@
 #include "oled281.h"
 #include "stdlib.h"
-#include "Asc6x12.h" 	   //ascii 8*16字库
 #include "Asc8x16.h" 	   //ascii 8*16字库
 #include "HZ12X12_S.h" 	   //12*12宋体自定义汉字库
 #include "bmp.h"
@@ -557,32 +556,6 @@ void Show_HZ12_12(unsigned char x, unsigned char y, unsigned char num1, unsigned
 	for (i = num1; i < num2 + 1; i++) {
 		HZ12_12(x, y, i);
 		x = x + d1;
-	}
-}
-//==============================================================
-//功能描述：写入一组标准ASCII字符串	 6x12
-//参数：显示的位置（x,y），ch[]要显示的字符串
-//返回：无
-//==============================================================  
-void Asc6_12(unsigned char x, unsigned char y, unsigned char ch[]) {
-	unsigned char x1, c = 0, i = 0, j = 0;
-	while (ch[i] != '\0') {
-		x1 = x / 4;
-		c = ch[i] - 32;
-		if (x1 > 61) {
-			x = 0;
-			x1 = x / 4;
-			y = y + 12;
-		}  //换行
-		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
-		Set_Row_Address(y, y + 11);
-		Set_Write_RAM();	 //	写显存
-
-		for (j = 0; j < 12; j++) {
-			Con_4_byte(ASC6X12[c * 12 + j]);	//数据转换
-		}
-		i++;
-		x = x + 8;	 //字间距，8为最小
 	}
 }
 //==============================================================

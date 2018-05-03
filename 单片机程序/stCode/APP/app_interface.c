@@ -8,8 +8,8 @@
 		X05：私钥3明文
 		X06：私钥4明文
 		X07：私钥5明文
-		X08：地址1
-		X09：地址2
+		X08：地址1			
+		X09：地址2			
 		X10：地址3
 		X11：地址4
 		X12：地址5
@@ -24,7 +24,7 @@ X14系统标识存储如下：
 				unsigned char count;						//地址数量
 	 8-15：空
 	16-21：设置标识
-				unsigned char auto_show;								//连接钱包后自动弹出驱动界面
+				unsigned char auto_show;										//连接钱包后自动弹出驱动界面
 				unsigned char Auto_Update_Flag;							//开机时自动检查更新
 				unsigned char Add_Address_Flag;							//新增地址
 				unsigned char Del_Address_Flag;							//删除地址
@@ -32,6 +32,10 @@ X14系统标识存储如下：
 				unsigned char Backup_Address_Encrypt_Flag; 	//备份钱包时进行加密标识			
 	24-27：空
 	28-31:新旧钱包标识
+地址存放说明：address[32]
+			0 -24：Base58前的25字节（0x17开始）数据
+			25-30：6字节作为地址名称
+			31	 ：高4字节表示该槽中地址名称的长度，低4字节表示隐藏属性
 *****************************************************************/
 #include "app_interface.h"
 #include <string.h>
@@ -52,6 +56,7 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
 		uint8_t i = 0;
 		uint8_t slot_data[32];
 		uint8_t slot_flag[32];
+		uint32_t	chipSN[3];
 
 		memset(slot_data,0,32);
 		memset(slot_flag,0,32);
@@ -93,7 +98,18 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
 		}
 #ifdef printf_debug
 		printf("address count: %d\r\n",flag->count);
-#endif		
+#endif
+		//获取芯片SN码
+		chipSN[0] = *(__IO uint32_t*)(0x1FFF7A10);
+		chipSN[1] = *(__IO uint32_t*)(0x1FFF7A14);
+		chipSN[2] = *(__IO uint32_t*)(0x1FFF7A18);
+		for(i=0;i<3;i++)
+		{		
+				flag->sn[4*i] 	= (chipSN[i] >> 24)&0xff;
+				flag->sn[4*i+1] = (chipSN[i] >> 16)&0xff;
+				flag->sn[4*i+2] = (chipSN[i] >>  8)&0xff;
+				flag->sn[4*i+3] = (chipSN[i])&0xff;
+		}	
 		return 1;
 }
 
@@ -277,7 +293,22 @@ uint8_t Get_Empty_SlotID(void)
 		return 0;
 }
 
-
+/***************************************************
+功能：
+		SlotID为地址所对应的槽号
+		state为1时，隐藏地址
+		state为0时，恢复地址					
+*****************	**********************************/
+void Hide_address(uint8_t SlotID,uint8_t state)
+{
+		uint8_t slot_data[32];
+		ATSHA_read_data_slot(SlotID+7,slot_data);
+		if(state)
+				slot_data[31] = 1;
+		else
+				slot_data[31] = 0;
+		ATSHA_write_data_slot(SlotID+7,0,slot_data,32);
+}
 
 
 

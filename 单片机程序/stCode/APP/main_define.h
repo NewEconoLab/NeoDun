@@ -4,6 +4,9 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
+//程序版本号，高4位主版本号，低4位次版本号
+#define	VERSION								"V1.0"
+#define VERSION_NEO						"V1.0"
 //宏开关
 #define printf_debug
 //#define HID_Delay
@@ -19,9 +22,6 @@
 
 #define HID_MAX_DATA_LEN			64*1024
 #define DATA_PACK_SIZE				50
-
-
-
 #define HID_SEND_DELAY				15
 
 //按键标识
@@ -69,14 +69,16 @@ typedef union
 }PASSPORT_FLAG;
 
 //系统标识
-typedef union
+typedef struct
 {
 		uint8_t	new_wallet; 			//1表示新钱包，0表示旧钱包
 		uint8_t	update;						//1表示需要升级，0表示不需要升级
 		uint8_t	language;					//1表示英文，0表示中文
 		uint8_t count;						//地址数量
+		uint8_t	sn[12];						//单片机唯一SN码
 }SYSTEM_FLAG;
 
+//HID数据解析结构体
 typedef struct
 {
 		uint32_t	dataLen;
@@ -85,8 +87,17 @@ typedef struct
 		uint16_t 	notifySerial;
 		uint16_t	reqSerial;
 		uint8_t 	hashRecord[32];
-		
 }DATA_HID_RECORD;
+
+//为地址显示开辟内存
+typedef struct
+{
+		uint8_t name[6];					//地址名称
+		uint8_t	len_name;					//地址名称长度
+		uint8_t	hide;							//隐藏属性
+		uint8_t	content[25];			//Base58前的地址数据
+		uint8_t	address[40];			//Base58后的字符地址数据
+}ADDRESS;
 
 enum TimerFunction
 {
@@ -94,21 +105,18 @@ enum TimerFunction
 		KEY_TIME 				= 1,
 };
 
-
-
-extern KEY_FLAG Key_Flag;
-extern SET_FLAG Set_Flag;
-extern SYSTEM_FLAG System_Flag;
-extern PASSPORT_FLAG Passport_Flag;
-extern DATA_HID_RECORD			HidData;
+extern KEY_FLAG 				Key_Flag;
+extern SET_FLAG 				Set_Flag;
+extern SYSTEM_FLAG 			System_Flag;
+extern PASSPORT_FLAG 		Passport_Flag;
+extern DATA_HID_RECORD	HidData;
+extern ADDRESS					showaddress[5];
 extern volatile 	uint32_t 	moter_delay;
 extern volatile 	uint8_t 	task_1s_flag;
 
 extern volatile int hid_flag;
 extern uint8_t hid_data[64];
 extern int len_hid;
-
-
 
 
 void Sys_Data_Init(void);

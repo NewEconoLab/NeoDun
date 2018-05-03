@@ -34,7 +34,7 @@
 #include "OLED281/oled281.h"
 #include "app_hal.h"
 
-void my_main(void) 
+void my_main(void)
 {
 		//数据初始化
 		Sys_Data_Init();
@@ -61,8 +61,8 @@ NEWWALLET:
 				Show_HZ12_12(84,16,0,1);//欢迎
 				Asc8_16(116,16,"NEODUN");
 				Display_Triangle(0);	
-				while(Key_Flag.flag.left == 0);
-				Key_Flag.flag.left = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
 				Display_SetCode();
 				System_Flag.new_wallet = 0;
 				Update_Flag_ATSHA(&Set_Flag,&System_Flag);
@@ -83,16 +83,16 @@ NEWWALLET:
 						Show_HZ12_12(224,28,3,3);//置
 						Display_Triangle(0);
 				}
-				while(Key_Flag.flag.left == 0);
-				Key_Flag.flag.left = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
 				{
 						Fill_RAM(0x00); 
 						Show_HZ12_12(88,16,10,11);//空的
 						Asc8_16(120,16,"NEODUN");
 				}
 				Display_Triangle(0);
-				while(Key_Flag.flag.left == 0);
-				Key_Flag.flag.left = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
 				{
 						Fill_RAM(0x00);
 						Show_HZ12_12(40,8,12,16);//请使用支持
@@ -105,8 +105,8 @@ NEWWALLET:
 						Asc8_16(168,28,"NEODUN");
 				}
 				Display_Triangle(0);
-				while(Key_Flag.flag.left == 0);
-				Key_Flag.flag.left = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
 				Key_Control(0);
 		}
 		else
@@ -115,6 +115,7 @@ NEWWALLET:
 						goto NEWWALLET;
 		}
 		
+		System_Flag.count =1;
 		//此处，已进行过密码验证，置此位为1
 		Passport_Flag.flag.poweron = 1;
 		//显示主页面
