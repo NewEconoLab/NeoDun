@@ -1,0 +1,9 @@
+D:\work\neo-thinsdk-cs\llvm\bin\Debug\netcoreapp2.0\llvm.deps.json
+D:\work\neo-thinsdk-cs\llvm\bin\Debug\netcoreapp2.0\llvm.dll
+D:\work\neo-thinsdk-cs\llvm\bin\Debug\netcoreapp2.0\llvm.pdb
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.csprojResolveAssemblyReference.cache
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.csproj.CoreCompileInputs.cache
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.AssemblyInfoInputs.cache
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.AssemblyInfo.cs
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.dll
+D:\work\neo-thinsdk-cs\llvm\obj\Debug\netcoreapp2.0\llvm.pdb

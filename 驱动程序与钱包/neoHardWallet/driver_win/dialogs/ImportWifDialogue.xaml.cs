@@ -43,23 +43,17 @@ namespace driver_win.dialogs
                 addressListDialogue.Owner = this.Owner;
                 addressListDialogue.Show();
 
-                MessageDialogue messageDialogue = new MessageDialogue("添加成功");
-                messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                messageDialogue.Owner = addressListDialogue;
-                messageDialogue.Show(2);
+                DialogueControl.ShowMessageDialogue("添加成功", 2, addressListDialogue);
             }
             else
             {
-                MessageDialogue messageDialogue = new MessageDialogue(result);
-                messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                messageDialogue.Owner = this;
-                messageDialogue.Show(2);
+                DialogueControl.ShowMessageDialogue(result,2,this);
             }
         }
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.DialogResult = true;
         }
     }
 }

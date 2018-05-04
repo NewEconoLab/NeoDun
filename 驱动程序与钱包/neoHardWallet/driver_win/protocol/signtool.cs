@@ -95,34 +95,34 @@ namespace NeoDun
         }
         public static byte[] GetPrivateKeyFromWif(string _wif)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Helper.GetPrivateKeyFromWIF(_wif);
+            return ThinNeo.Helper.GetPrivateKeyFromWIF(_wif);
         }
         public static string GetWifFromPrivateKey(byte[] _privatekey)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Helper.GetWifFromPrivateKey(_privatekey);
+            return ThinNeo.Helper.GetWifFromPrivateKey(_privatekey);
         }
         public static byte[] GetPublicKeyFromPrivateKey(byte[] privateKey)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Helper.GetPublicKeyFromPrivateKey(privateKey);
+            return ThinNeo.Helper.GetPublicKeyFromPrivateKey(privateKey);
         }
         public static string GetAddressFromPublicKey(byte[] publickey)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Helper.GetAddressFromPublicKey(publickey);
+            return ThinNeo.Helper.GetAddressFromPublicKey(publickey);
 
         }
         public static byte[] DecodeBase58(string txt)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Decode(txt);
+            return ThinNeo.Cryptography.Cryptography.Base58.Decode(txt);
         }
 
         public static string EncodeBase58(byte[] bytes)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Encode(bytes);
+            return ThinNeo.Cryptography.Cryptography.Base58.Encode(bytes);
         }
 
         public static byte[] SignData(byte[] prikey,byte[] data)
         {
-            var PublicKey = NEO.AllianceOfThinWallet.Cryptography.ECC.ECCurve.Secp256r1.G * prikey;
+            var PublicKey = ThinNeo.Cryptography.ECC.ECCurve.Secp256r1.G * prikey;
             byte[] pubkey = PublicKey.EncodePoint(false).Skip(1).ToArray();
 
 
@@ -144,7 +144,7 @@ namespace NeoDun
         {
             byte[] input = new byte[length];
             Array.Copy(data, begin, input, 0, length);
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Encode(input);
+            return ThinNeo.Cryptography.Cryptography.Base58.Encode(input);
         }
         public static string Bytes2HexString(byte[] data, int begin, int length)
         {
@@ -183,7 +183,7 @@ namespace NeoDun
 
             var alldata = data.Concat(hash.Take(4)).ToArray();
 
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Encode(alldata);
+            return ThinNeo.Cryptography.Cryptography.Base58.Encode(alldata);
         }
         public struct TransactionOutput
         {

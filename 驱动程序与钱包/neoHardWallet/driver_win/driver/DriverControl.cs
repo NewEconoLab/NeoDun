@@ -2,7 +2,6 @@
 using Microsoft.Owin;
 using NeoDun;
 using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using static hhgate.SignMachine;
@@ -242,7 +241,7 @@ namespace driver_win
         #endregion
 
         #region 查询地址
-        public async Task<ConcurrentBag<Address>> GetAddressList()
+        public async Task<System.Collections.Concurrent.ConcurrentBag<Address>> GetAddressList()
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x02;

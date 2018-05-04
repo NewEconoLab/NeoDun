@@ -46,13 +46,21 @@ namespace driver_win.dialogs
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.DialogResult = true;
         }
         //获取下位机地址数据
         private async void GetAddressList()
         {
             this.listbox.Items.Clear();
             var address = await driverControl.GetAddressList();
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
             var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
             for (var i =0;i<address.Count;i++)
             {
@@ -83,10 +91,7 @@ namespace driver_win.dialogs
             Copystr.Append(address.ToString());
             Clipboard.SetText(Copystr.ToString());
 
-            MessageDialogue messageDialogue = new MessageDialogue("复制成功");
-            messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            messageDialogue.Owner = this;
-            messageDialogue.Show(1);
+            DialogueControl.ShowMessageDialogue("复制成功", 1, this);
         }
 
         private async void Btn_Delete(object sender, RoutedEventArgs e)
@@ -104,10 +109,9 @@ namespace driver_win.dialogs
             this.message.Visibility = Visibility.Visible;
 
             string result = await driverControl.DeleteAddress(type.ToString(),address.ToString());
-            MessageDialogue messageDialogue = new MessageDialogue(result);
-            messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            messageDialogue.Owner = this;
-            messageDialogue.Show(1);
+
+            this.message.Visibility = Visibility.Collapsed;
+            DialogueControl.ShowMessageDialogue("result", 1, this);
             GetAddressList();
         }
     }

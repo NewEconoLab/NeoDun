@@ -1,0 +1,9 @@
+D:\work\neo-thinsdk-cs\thinSDK_neo\bin\Debug\netcoreapp2.0\thinSDK_neo.deps.json
+D:\work\neo-thinsdk-cs\thinSDK_neo\bin\Debug\netcoreapp2.0\thinSDK_neo.dll
+D:\work\neo-thinsdk-cs\thinSDK_neo\bin\Debug\netcoreapp2.0\thinSDK_neo.pdb
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.csprojResolveAssemblyReference.cache
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.csproj.CoreCompileInputs.cache
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.AssemblyInfoInputs.cache
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.AssemblyInfo.cs
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.dll
+D:\work\neo-thinsdk-cs\thinSDK_neo\obj\Debug\netcoreapp2.0\thinSDK_neo.pdb

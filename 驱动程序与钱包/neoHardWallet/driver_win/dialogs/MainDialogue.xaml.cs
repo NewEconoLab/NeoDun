@@ -27,8 +27,8 @@ namespace driver_win.dialogs
 
             InitializeComponent();
             DriverS.Init();
-            driverControl = new DriverControl();
 
+            driverControl = new DriverControl();
 
             this.notifyIcon = new System.Windows.Forms.NotifyIcon();
             this.notifyIcon.Icon = new System.Drawing.Icon(@"Neodun.ico");
@@ -96,18 +96,12 @@ namespace driver_win.dialogs
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
         {
-            AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
-            addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            addressListDialogue.Owner = this;
-            addressListDialogue.ShowDialog();
+            DialogueControl.ShowAddressListDialogue(driverControl, this);
         }
 
         private void Btn_ImportWif(object sender, RoutedEventArgs e)
         {
-            ImportWifDialogue importWifDialogue = new ImportWifDialogue(driverControl);
-            importWifDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            importWifDialogue.Owner = this;
-            importWifDialogue.ShowDialog();
+            DialogueControl.ShowImportWifDialogue(driverControl,this);
         }
 
         private void Click_install_gujian(object sender, RoutedEventArgs e)
@@ -117,10 +111,7 @@ namespace driver_win.dialogs
 
         private void Btn_ImportWallet(object sender, RoutedEventArgs e)
         {
-            ImportWalletDialogue importWalletDialogue = new ImportWalletDialogue();
-            importWalletDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            importWalletDialogue.Owner = this;
-            importWalletDialogue.ShowDialog();
+            DialogueControl.ShowImportWalletDialogue(driverControl,this);
         }
 
         private void Window_ShowWebWallet(object sender, RoutedEventArgs e)

@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>driver_win</RootNamespace>
     <AssemblyName>driver_win</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -82,6 +82,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -93,9 +94,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="vikoControl">
-      <HintPath>..\vikoControl\bin\Debug\vikoControl.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -110,6 +108,10 @@
     <Compile Include="dialogs\AddressListDialogue.xaml.cs">
       <DependentUpon>AddressListDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="dialogs\DialogueControl.cs" />
+    <Compile Include="dialogs\ImportAddressListDialogue.xaml.cs">
+      <DependentUpon>ImportAddressListDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\ImportWalletDialogue.xaml.cs">
       <DependentUpon>ImportWalletDialogue.xaml</DependentUpon>
     </Compile>
@@ -119,11 +121,15 @@
     <Compile Include="dialogs\MainDialogue.xaml.cs">
       <DependentUpon>MainDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="dialogs\MessageDialogue.xaml.cs">
+      <DependentUpon>MessageDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
     <Compile Include="driver\DriverControl.cs" />
     <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
+    <Compile Include="helper\PasswordBoxMonitor.cs" />
     <Compile Include="protocol\address.cs" />
     <Compile Include="protocol\datatable.cs" />
     <Compile Include="protocol\error.cs" />
@@ -153,6 +159,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="dialogs\ImportAddressListDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="dialogs\ImportWalletDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -162,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="dialogs\MainDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\MessageDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -207,9 +221,13 @@
       <Project>{0db86674-2a7b-4bdc-93c1-3f7dc771426c}</Project>
       <Name>HidSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NeoThinSDK\NeoThinSDK.csproj">
-      <Project>{7f0974f3-c948-447f-a170-3133cde4a1a7}</Project>
-      <Name>NeoThinSDK</Name>
+    <ProjectReference Include="..\thinSDK\thinSDK.csproj">
+      <Project>{012d6440-0ae7-41ea-8756-3cf639dfcd76}</Project>
+      <Name>thinSDK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\thinSDK_neo\thinSDK_neo.csproj">
+      <Project>{137af2bc-6060-4270-91a4-a2f45db09771}</Project>
+      <Name>thinSDK_neo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +293,9 @@
     <Resource Include="res\close.png" />
     <Resource Include="res\maximise.png" />
     <Resource Include="res\minimise.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

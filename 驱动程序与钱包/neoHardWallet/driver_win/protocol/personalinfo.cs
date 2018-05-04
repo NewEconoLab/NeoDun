@@ -15,7 +15,7 @@ namespace driver_win
 
         public byte[] GetBytes(string _str)
         {
-            return NEO.AllianceOfThinWallet.Cryptography.Base58.Decode(_str);
+            return null;
         }
 
         public string GetString(byte[] _bts)
