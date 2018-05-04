@@ -591,7 +591,7 @@ void Display_MainPage_4Add(void)
 						main_RefreshDisplay = 1;
 				}
 		}			
-}	
+}
 
 void Display_MainPage_5Add(void)
 {
@@ -991,7 +991,7 @@ void Display_Click_Add(uint8_t AddID)
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
-						ATSHA_read_data_slot(AddID*8,slot_buff);
+						ATSHA_read_data_slot(AddID+7,slot_buff);
 						Alg_Base58Encode(slot_buff , 25 ,temp,&tempLen);
 						Fill_RAM(0x00);
 						Asc8_16(0,16,(uint8_t*)temp);
@@ -1019,7 +1019,7 @@ void Display_Click_Add(uint8_t AddID)
 					
 						Show_HZ12_12(58,47,54,54);//否
 						Show_HZ12_12(120,47,53,53);//是
-						Show_HZ12_12(182,47,54,54);//否					
+						Show_HZ12_12(182,47,54,54);//否
 
 						while(1)
 						{
@@ -1027,15 +1027,16 @@ void Display_Click_Add(uint8_t AddID)
 								{
 										//隐藏地址操作 TBD
 										Key_Control(1);
-									
 										
-
-										return;
+										
+										RefreshDisplay = 1;
+										break;
 								}
 								if(Key_Flag.flag.left||Key_Flag.flag.right)
 								{
 										Key_Control(1);
-										return;
+										RefreshDisplay = 1;
+										break;
 								}
 						}
 				}
@@ -1054,8 +1055,7 @@ void Display_Click_Add(uint8_t AddID)
 						Show_HZ12_12(178,16,80,81);//隐藏
 						Show_HZ12_12(210,16,8,9);//地址
 						Display_Triangle(1);
-						Display_arrow(0);
-						Display_arrow(1);					
+						Display_arrow(1);
 				}
 				if((page_index == 1)&&(RefreshDisplay == 1))
 				{
@@ -1068,7 +1068,7 @@ void Display_Click_Add(uint8_t AddID)
 						Show_HZ12_12(184,16,82,83);//返回
 						Display_Triangle(1);
 						Display_arrow(0);
-						Display_arrow(1);					
+						Display_arrow(1);
 				}
 				if((page_index == 2)&&(RefreshDisplay == 1))
 				{
@@ -1079,21 +1079,20 @@ void Display_Click_Add(uint8_t AddID)
 						Show_HZ12_12(112,16,82,83);//返回
 						Display_Triangle(1);
 						Display_arrow(0);
-						Display_arrow(1);				
 				}
 				
-				if(Key_Flag.flag.left)//右键有效时，ID加1
+				if(Key_Flag.flag.right)//右键有效时，ID加1
 				{
-						Key_Flag.flag.left = 0;
+						Key_Flag.flag.right = 0;
 						if(page_index<2)
 						{
 								page_index++;
 								RefreshDisplay = 1;
 						}
 				}
-				if(Key_Flag.flag.right)//左键有效时，ID加1
+				if(Key_Flag.flag.left)//左键有效时，ID加1
 				{
-						Key_Flag.flag.right = 0;
+						Key_Flag.flag.left = 0;
 						if(page_index > 0)
 						{
 								page_index--;
@@ -1110,7 +1109,6 @@ void Display_Click_Add(uint8_t AddID)
 						Show_HZ12_12(168,16,80,81);//隐藏
 						Show_HZ12_12(200,16,8,9);//地址
 						Display_Triangle(1);
-						Display_arrow(0);
 						Display_arrow(1);
 				}
 		}
@@ -1125,6 +1123,15 @@ void Display_Set_Coin_NEO(void)
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
+						Fill_RAM(0x00);
+						Show_HZ12_12(88,16,97,97);//版
+						Show_HZ12_12(104,16,73,73);//本				
+						Show_HZ12_12(120,16,98,98);//号
+						Asc8_16(136,16,VERSION_NEO);
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+						RefreshDisplay = 1;						
 				}
 				if((Key_Flag.flag.middle)&&(page_index == 1))
 				{
@@ -1163,7 +1170,7 @@ void Display_Set_Coin_NEO(void)
 						Display_Triangle(1);	
 						Display_arrow(0);	
 						Display_arrow(1);
-				}	
+				}
 				if((page_index == 2)&&(RefreshDisplay == 1))
 				{
 						RefreshDisplay = 0;
@@ -1293,7 +1300,7 @@ void Display_Set_About(void)
 						Show_HZ12_12(88,16,97,97);//版
 						Show_HZ12_12(104,16,73,73);//本				
 						Show_HZ12_12(120,16,98,98);//号
-						Asc8_16(136,16,"V1.0");
+						Asc8_16(136,16,VERSION);
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0);
 						Key_Flag.flag.middle = 0;
@@ -1815,31 +1822,53 @@ uint8_t Display_DelAdd(void)
 		return value;
 }
 
-uint8_t Display_SignData(SIGN_Out_Para *data)//TBD  改参数
+uint8_t Display_SignData(SIGN_Out_Para *data,char* address,uint8_t address_name,uint8_t signdata_index)
 {
-		unsigned char num[2] = {'0','\0'};
-		char temp = 0;	
+		uint8_t num[2] = {'0','\0'};
+		char temp = 0;
+		//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
+		int count_bit=0;
+		int count_int = 0;//表示整数部分占用的显示位数
+		int count_dec = 8;//表示小数部分后缀的零的个数
 		Key_Control(1);
 		Fill_RAM(0x00);		
 		Show_HZ12_12(0,0,122,122);//从
 		Show_HZ12_12(16,0,8,9);//地址
-		
-		Asc8_16(48,0,"1");
-		
+		num[0] = address_name+0x30;
+		Asc8_16(48,0,num);
 		Show_HZ12_12(56,0,123,124);//发送
 		
-		Asc8_16(88,0,"1");
-		
-		Asc8_16(96,0,"NEO");
-		Asc8_16(96,0,"GAS");
-		
-		Show_HZ12_12(120,0,125,125);//到
-		Display_Triangle(0);
-		while(Key_Flag.flag.middle == 0);
-		Key_Flag.flag.middle = 0;
-		
+		if(signdata_index != 0xff)
+		{
+				count_int = drawNumber(88,0,data->money[signdata_index]/100000000,8);
+				if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
+				{
+						Asc8_16(28+count_int*8,0,".");
+						count_dec = drawxNumber(88+(count_int+1)*8,0,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
+				}
+				if(data->money[signdata_index] == 0)//值为0的情况
+						count_dec = 8;
+				count_bit = 88 + (count_int + 8 -count_dec)*8 + 4; //88是前面占用的显示，+4是显示空隙，美观
+				
+				if(data->coin == 0)
+						Asc8_16(count_bit,0,"GAS");
+				else if(data->coin == 1)
+						Asc8_16(count_bit,0,"NEO");
+
+				Show_HZ12_12(count_bit+24,0,125,125);//到
+				Display_Triangle(0);
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
+		}
+		else
+		{
+				if(data->coin == 0)
+						Asc8_16(88,0,"GAS");
+				else if(data->coin == 1)
+						Asc8_16(88,0,"NEO");
+		}
 		Fill_RAM(0x00);
-		Asc8_16(48,0,"NEO");
+		Asc8_16(48,0,(uint8_t*)address);
 		Show_HZ12_12(46,47,111,112);//取消
 		Show_HZ12_12(112,47,113,114);//继续
 		Show_HZ12_12(184,47,111,112);//取消
@@ -1847,7 +1876,7 @@ uint8_t Display_SignData(SIGN_Out_Para *data)//TBD  改参数
 		while(1)
 		{
 				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-				{		
+				{
 						temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
 						if(temp == 0)
 						{
@@ -1858,7 +1887,7 @@ uint8_t Display_SignData(SIGN_Out_Para *data)//TBD  改参数
 						Asc8_16(210,26,num);
 						num[0] = temp%10+0x30;
 						Asc8_16(218,26,num);
-				}				
+				}
 				if(Key_Flag.flag.middle)
 				{
 						Key_Control(0);

@@ -604,7 +604,7 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		uint8_t Input[32];
 		uint8_t buff_money[8];		
 		uint8_t address_data[21] = {0x17};
-		char result_address[50] = "";
+		uint8_t result_address[25];
 		int len_address=0;
 		SIGN_Out_Data sign_data;
 		memset(&sign_data,0,sizeof(sign_data));	
@@ -614,9 +614,6 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		SIGN_Out->type = type;
 		//Version
 		Version = dataIn[1];
-#ifdef	Printf			
-		printf("Version:%d\r\n",Version);
-#endif
 		SIGN_Out->version = Version;
 		
 		//不同交易类型的数据结构不一样，额外数据需要处理
@@ -627,10 +624,7 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						if(Version == 0)
 						{
 								sign_data.Nonce = (dataIn[2]/16)*pow(16,7) + (dataIn[2]%16)*pow(16,6) + (dataIn[3]/16)*pow(16,5) + (dataIn[3]%16)*pow(16,4)
-												+(dataIn[4]/16)*pow(16,3) + (dataIn[4]%16)*pow(16,2) + (dataIn[5]/16)*pow(16,1) + (dataIn[5]%16)*pow(16,0);
-#ifdef	Printf									
-								printf("Nonce:%lld\r\n",sign_data.Nonce);
-#endif								
+												+(dataIn[4]/16)*pow(16,3) + (dataIn[4]%16)*pow(16,2) + (dataIn[5]/16)*pow(16,1) + (dataIn[5]%16)*pow(16,0);						
 								index_type = 4;
 								break;
 						}
@@ -650,20 +644,11 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				case 0x02://ClaimTransaction
 				{			
 						if(Version == 0)
-						{
-#ifdef	Printf							
-								printf("Claims:");
-#endif							
+						{			
 								for(i=0;i<34;i++)
 								{		
-										sign_data.Claims[i] = dataIn[2+i];
-#ifdef	Printf									
-										printf("%x",sign_data.Claims[i]);
-#endif							
-								}
-#ifdef	Printf			
-								printf("\r\n");
-#endif							
+										sign_data.Claims[i] = dataIn[2+i];				
+								}			
 								if(sign_data.Claims[0] == 0)
 										return 1;
 								index_type = 34;
@@ -678,19 +663,10 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				{						
 						if(Version == 0)
 						{	
-#ifdef	Printf							
-								printf("PublicKey:");
-#endif							
-							for(i=0;i<64;i++)
+								for(i=0;i<64;i++)
 								{
-										sign_data.PublicKey[i] = dataIn[2+i];
-#ifdef	Printf			
-										printf("%x",sign_data.PublicKey[i]);
-#endif							
-								}
-#ifdef	Printf
-								printf("\r\n");
-#endif							
+										sign_data.PublicKey[i] = dataIn[2+i];			
+								}					
 								index_type = 64;
 								break;
 						}
@@ -703,67 +679,34 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				{
 						if(Version == 0)
 						{
-								sign_data.AssetType = dataIn[2];
-#ifdef	Printf							
-								printf("AssetType:%d\r\n",sign_data.AssetType);
-#endif								
+								sign_data.AssetType = dataIn[2];								
 								index_type += 1;							
 								//Name:
 								fb = dataIn[2+index_type];
 								length = ReadByteLength(dataIn,3+index_type,1024,fb);
 								if(length == 0)	return 1;						
-								index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf							
-								printf("Name:");													
-								for(i=0;i<length;i++)
-										printf("%x",dataIn[i+2+index_type]);
-								printf("\r\n");
-#endif								
+								index_type += 1 + ReadByteLengthIndex(fb);								
 								index_type += length;									
 								//Amount														
 								sign_data.Amount = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
 												+(dataIn[index_type+4]/16)*pow(16,11) + (dataIn[index_type+4]%16)*pow(16,10) + (dataIn[index_type+5]/16)*pow(16,9) + (dataIn[index_type+5]%16)*pow(16,8)
 												+(dataIn[index_type+6]/16)*pow(16,7) + (dataIn[index_type+6]%16)*pow(16,6) + (dataIn[index_type+7]/16)*pow(16,5) + (dataIn[index_type+7]%16)*pow(16,4)
-												+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);
-#ifdef	Printf								
-								printf("Amount:%lld\r\n",sign_data.Amount);
-#endif							
+												+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);		
 								index_type += 8;
 								//Precision
-								sign_data.Precision = dataIn[index_type+2];
-#ifdef	Printf				
-								printf("Precision:%d\r\n",sign_data.Precision);								
-#endif								
+								sign_data.Precision = dataIn[index_type+2];			
 								index_type += 1;
 								//Owner
-#ifdef	Printf								
-								printf("Owner:");
-#endif
 								for(i=0;i<33;i++)
 								{
-										sign_data.Owner[i] = dataIn[i+index_type+2];
-#ifdef	Printf			
-										printf("%x",sign_data.Owner[i]);
-#endif							
-								}
-#ifdef	Printf								
-								printf("\r\n");
-#endif							
+										sign_data.Owner[i] = dataIn[i+index_type+2];	
+								}				
 								index_type += 33;
-								//Admin
-#ifdef	Printf			
-								printf("Admin:");
-#endif							
+								//Admin		
 								for(i=0;i<20;i++)	
 								{
 										sign_data.Admin[i] = dataIn[i+index_type+2];
-#ifdef	Printf									
-										printf("%x",sign_data.Admin[i]);
-#endif							
-								}
-#ifdef	Printf			
-								printf("\r\n");
-#endif							
+								}			
 								index_type += 20;
 								break;
 						}
@@ -785,20 +728,11 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						if(Version > 1)
 						{
 								return 1;
-						}
-#ifdef	Printf							
-						printf("Code:");
-#endif						
+						}			
 						for(i=0;i<3;i++)
 						{
-								sign_data.Code[i] = dataIn[2+i];
-#ifdef	Printf				
-								printf("%x",sign_data.Code[i]);
-#endif						
-						}
-#ifdef	Printf				
-						printf("\r\n");
-#endif						
+								sign_data.Code[i] = dataIn[2+i];		
+						}		
 						if(Version == 1)
 						{
 								sign_data.NeedStorage = dataIn[5];
@@ -806,70 +740,37 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						else 
 						{
 								sign_data.NeedStorage = 0;
-						}
-#ifdef	Printf							
-						printf("NeedStorage:%d\r\n",sign_data.NeedStorage);
-#endif						
+						}				
 						index_type += 4;
 						//NameP:						
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,252,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf							
-						printf("Name:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);				
 						index_type += length;															
 						//CodeVersion
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,252,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf							
-						printf("CodeVersion:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);				
 						index_type += length;		
 						//Author
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,252,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf				
-						printf("Author:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);				
 						index_type += length;								
 						//Email
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,252,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf				
-						printf("Email:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);				
 						index_type += length;	
 						//Description
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,65536,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf				
-						printf("Description:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);				
 						index_type += length;	
 						break;
 				}
@@ -883,13 +784,7 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						fb = dataIn[2+index_type];
 						length = ReadByteLength(dataIn,3+index_type,65536,fb);
 						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);
-#ifdef	Printf							
-						printf("Script:");						
-						for(i=0;i<length;i++)
-								printf("%x",dataIn[i+2+index_type]);
-						printf("\r\n");
-#endif						
+						index_type += 1 + ReadByteLengthIndex(fb);		
 						index_type += length;													
 						if(Version == 1)
 						{
@@ -909,46 +804,28 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						}						
 						break;
 				}
-				default:
-#ifdef	Printf						
-						printf("Type Error!!!");
-#endif						
+				default:				
 						return 1;
-		}		
+		}
 			
 		//countAttributes
 		countAttributes = dataIn[2+index_type];
 		SIGN_Out->countAttributes = countAttributes;
-#ifdef	Printf			
-		printf("countAttributes:%d\r\n",countAttributes);
-#endif
 		//countInputs
 		countInputs = dataIn[3+index_type];
 		SIGN_Out->countInputs = countInputs;
-#ifdef	Printf			
-		printf("countInputs:%d\r\n",countInputs);
-#endif		
 		index = 4+index_type;
 		for(i=0;i<countInputs;i++)
 		{
 				for(j=0;j<32;j++)
-						Input[31-j]=dataIn[index+j+34*i];
-#ifdef	Printf					
-				printf("input%d:",i);				
-				for(j=0;j<32;j++)
-						printf("%x",Input[j]);				
-				printf("   index:%d\r\n",(dataIn[index+32+34*i]+dataIn[index+33+34*i]*256));				
-#endif				
+						Input[31-j]=dataIn[index+j+34*i];			
 				memset(Input,0,32);//清空数组
 		}
 		index += 34*countInputs;
 				
 		//countOutputs	
 		countOutputs = dataIn[index];
-		SIGN_Out->countOutputs = countOutputs;
-#ifdef	Printf			
-		printf("countOutputs:%d\r\n",countOutputs);		
-#endif		
+		SIGN_Out->countOutputs = countOutputs;	
 		index += 1;
 		
 		for(i=0;i<countOutputs;i++)
@@ -963,35 +840,23 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				{
 						buff_money[7-j] = dataIn[index+32+60*i+j];
 				}
-				SIGN_Out->money[i] = CountMoney(buff_money);
-#ifdef	Printf					
-				printf("   money%d = %lld\r\n",i,SIGN_Out->money[i]);
-#endif				
+				SIGN_Out->money[i] = CountMoney(buff_money);		
 				//计算地址
 				for(j=0;j<20;j++)
 				{
 						address_data[1+j] = dataIn[index+40+60*i+j];
 				}
-				Base58_Encode(address_data,21,result_address,&len_address);
-				memmove(SIGN_Out->address[i],result_address,len_address);
-#ifdef	Printf	
-				printf("address = %s\r\n",result_address);
-#endif		
+				Base58_25Bytes(address_data,21,result_address);
+				memmove(SIGN_Out->address[i],result_address,len_address);	
 		}		
 		index += 60*countOutputs;
 				
 		if(index == dataInLen)
-		{
-#ifdef	Printf				
-				printf("Success!!!\r\n");
-#endif			
+		{	
 				return 0;
 		}	
 		else
-		{
-#ifdef	Printf				
-				printf("Error!!!\r\n");
-#endif				
+		{	
 				return 1;
 		}
 }

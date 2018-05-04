@@ -646,24 +646,41 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 																		Fill_RAM(0x00);
 																		Asc8_16(76,26,"Sign Data ...");
 																}
-																uint8_t status = 1;
-																uint8_t i;
-																for(i=0;i<Sign.countOutputs;i++)//TBD
-																{
-//																		if(ArrayCompare(Sign.address[i],temp,strlen(Sign.address[i])) == 0)//对地址进行比较,不一样
-//																		{
-//																				status = 0;
-//																				break;
-//																		}						
-																}
-																if((status)||(Sign.coin == 0xff))//不存在这个地址
+																uint8_t index_add;
+																uint8_t addessID = 0;
+																char Sign_address[40] = "";
+																int len_add = 0;
+																
+																if(Sign.countOutputs == 0)		 //输出端地址为0个
 																{
 																		Display_MainPage();
 																		HID_SIGN_DATA_FAILED_REP(serialId);
-																		break;
+																		break;														
+																}
+																else if(Sign.countOutputs == 1)//输出端地址为1个
+																{
+																		index_add = 0;
+																}
+																else if(Sign.countOutputs == 2)//输出端地址为2个
+																{
+																		if(ArrayCompare(data+6,Sign.address[0],25))
+																				index_add = 0;
+																		else if(ArrayCompare(data+6,Sign.address[1],25))
+																				index_add = 1;
+																		else											 //本机没有存有该地址
+																		{
+																				Display_MainPage();
+																				HID_SIGN_DATA_FAILED_REP(serialId);
+																				break;																
+																		}
+																}
+																else//多个签名的情况
+																{
+																		index_add = 0xff;
 																}
 																
-																if(Display_SignData(&Sign))
+																Alg_Base58Encode(Sign.address[index_add] , 25 ,Sign_address,&len_add);
+																if(Display_SignData(&Sign,Sign_address,addessID,index_add))
 																{
 																		uint8_t hash_all[32];
 																		uint8_t hash_sign[32];

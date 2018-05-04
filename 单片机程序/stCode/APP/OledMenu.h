@@ -28,7 +28,7 @@ void Display_Click_Set(void);
 
 uint8_t Display_AddAdd(char *address);
 uint8_t Display_DelAdd(void);
-uint8_t Display_SignData(SIGN_Out_Para *data);
+uint8_t Display_SignData(SIGN_Out_Para *data,char* address,uint8_t address_name,uint8_t signdata_index);
 uint8_t Display_Sign_Data_Type_Identify(void);
 uint8_t Display_Updata_Wallet(void);
 

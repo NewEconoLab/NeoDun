@@ -11,7 +11,7 @@ typedef struct
     int countAttributes;
     int countInputs;
     int countOutputs;
-    char address[10][40];//每一行存储一个地址，10个地址
+    uint8_t address[10][25];//每一行存储一个地址，10个地址
 		uint8_t assetid[10][32];
     long long money[10];
 }SIGN_Out_Para;

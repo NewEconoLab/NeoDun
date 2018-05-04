@@ -118,6 +118,31 @@ uint8_t Base58_Encode(uint8_t *buff,int lenin,char *result,int *lenout)
 }
 
 /******************************************************************
+*	函数名：	 Base58_25Bytes
+*	函数说明：对输入的字符数组组合成Base58编码的25字节数组
+* 输入参数：buff 输入数组
+					  lenin 输入数组的长度
+* 输出参数：result 输出数组，长度为25字节
+*******************************************************************/	
+void	Base58_25Bytes(uint8_t *buff,int lenin,uint8_t result[25])
+{
+		uint8_t digest[32];
+		uint8_t digest1[32];
+		uint8_t i;
+		int hashlen = 32;
+
+		//进行两次哈希计算得到摘要
+		Alg_HashData(buff,lenin,digest,&hashlen);
+		Alg_HashData(digest,32,digest1,&hashlen);	
+	
+		//拷贝摘要的后四位，组合成最终的数据alldata
+		for(i=0;i<21;i++)		
+				result[i] = buff[i];
+		for(i=0;i<4;i++)
+				result[21+i] = digest1[i];
+}
+
+/******************************************************************
 *	函数名：	Alg_Base58Encode
 *	函数说明：对输入的字符数组进行Base58编码解析出地址
 * 输入参数：dataIn 	   输入数组  第一个值为0x17  ,最后四个值为哈希计算的值

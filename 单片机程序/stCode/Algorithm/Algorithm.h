@@ -45,8 +45,8 @@ void Alg_Base58Decode(char    *dataIn , int dataInLen , uint8_t *dataOut , int *
 
 
 
-//测试函数
-void Alg_test(void);
+////测试函数
+//void Alg_test(void);
 
 #ifdef __cplusplus
  }
