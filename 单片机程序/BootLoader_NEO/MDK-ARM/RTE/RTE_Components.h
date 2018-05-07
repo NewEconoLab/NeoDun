@@ -3,8 +3,8 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'BootLoader_NEO' 
- * Target:  'BootLoader_NEO' 
+ * Project: 'BootLoader' 
+ * Target:  'BootLoader' 
  */
 
 #ifndef RTE_COMPONENTS_H

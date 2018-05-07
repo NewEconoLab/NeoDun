@@ -95,8 +95,6 @@ void Center_button_init(void)
 **********************************************************/
 void AW9136_Init(void)
 {
-		uint16_t value1 = 0;
-		uint16_t value2 = 0;
     GPIO_InitTypeDef GPIO_Initure;
  
     __HAL_RCC_GPIOC_CLK_ENABLE();   //使能GPIOC时钟	
@@ -117,28 +115,20 @@ void AW9136_Init(void)
     HAL_NVIC_SetPriority(EXTI2_IRQn,2,3);   //抢占优先级为2，子优先级为3
     HAL_NVIC_EnableIRQ(EXTI2_IRQn);         //使能中断线2  	
 	
-		IIC2_Init();	
-	
+		IIC2_Init();
+		
 		AW9136_pwron();
 		HAL_Delay(5);
-		
-		value1 = I2C_read_reg(0x00);	
-#ifdef Debug_Print		
-		printf("AW9136 chip ID:0x%4x\r\n",value1);
-#endif		
-		AW_NormalMode();
 			
+		AW_NormalMode();
+		
 #ifdef AW_AUTO_CALI
 		cali_flag = 1;
 		cali_num = 0;
 		cali_cnt = 0;
 #endif		
 
-		value2 = I2C_read_reg(0x01);	
-#ifdef Debug_Print		
-		printf("AW9136 GCR:0x%4x\r\n",value2);	
-#endif
-		AW9136_LED_ON();
+//		AW9136_LED_ON();
 }
 
 void EXTI0_IRQHandler(void)
