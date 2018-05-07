@@ -4,7 +4,6 @@ using NeoDun;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static hhgate.SignMachine;
 
 namespace driver_win
 {
@@ -327,8 +326,6 @@ namespace driver_win
                 }
             }
 
-            Watcher watcher = new Watcher();
-            signer.watcherColl.AddWatcher(watcher);//加入监视器
 
             NeoDun.Message signMsg = new NeoDun.Message();
 

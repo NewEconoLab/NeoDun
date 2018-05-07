@@ -54,9 +54,6 @@ namespace NeoDun
             }
         }
 
-        private static driver_win.DriverCtr driverCtr = driver_win.DriverCtr.Ins;
-
-
         public delegate void GetSingerInfoEventHandler(MyJson.JsonNode_Object _myjson);
         public GetSingerInfoEventHandler getSingerInfoEventHandler;
 

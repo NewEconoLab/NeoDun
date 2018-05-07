@@ -38,12 +38,9 @@ namespace driver_win.dialogs
             if (result == "suc")
             {
                 this.Close();
-                AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
-                addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                addressListDialogue.Owner = this.Owner;
-                addressListDialogue.Show();
+                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
 
-                DialogueControl.ShowMessageDialogue("添加成功", 2, addressListDialogue);
+                DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
             }
             else
             {

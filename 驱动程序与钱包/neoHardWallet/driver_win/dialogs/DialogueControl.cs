@@ -41,5 +41,13 @@ namespace driver_win.dialogs
             addressListDialogue.Owner = window;
             addressListDialogue.ShowDialog();
         }
+
+        public static void ShowImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password, DriverControl driverControl, Window window)
+        {
+            ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue(nep6wallet, password,driverControl);
+            importAddressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            importAddressListDialogue.Owner = window;
+            importAddressListDialogue.ShowDialog();
+        }
     }
 }

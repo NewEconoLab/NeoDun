@@ -65,29 +65,8 @@ namespace driver_win.dialogs
                 return;
             }
 
-            foreach (var v in nep6wallet.accounts)
-            {
-                ThinNeo.NEP6.NEP6Account acc = v.Value as ThinNeo.NEP6.NEP6Account;
-                if (acc == null)
-                    return;
-                if (acc.nep2key == null)
-                    return;
-                try
-                {
-                    var prikey = acc.GetPrivate(nep6wallet.scrypt, this.label_pw.Text);
-                    var wif = NeoDun.SignTool.GetWifFromPrivateKey(prikey);
-
-                    var result = driverControl.AddAddressByWif(wif);
-                }
-                catch
-                {
-                    DialogueControl.ShowMessageDialogue("密码错误", 2, this);
-                    break;
-                }
-
-                this.DialogResult = true;
-                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
-            }
+            this.DialogResult = true;
+            DialogueControl.ShowImportAddressListDialogue(nep6wallet, this.label_pw.Text, driverControl, this.Owner);
 
         }
     }

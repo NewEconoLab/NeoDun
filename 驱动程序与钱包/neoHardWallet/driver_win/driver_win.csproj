@@ -126,7 +126,6 @@
     </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
     <Compile Include="driver\DriverControl.cs" />
-    <Compile Include="driver\DriverCtr.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
     <Compile Include="helper\PasswordBoxMonitor.cs" />
@@ -140,14 +139,9 @@
     <Compile Include="server\FormData.cs" />
     <Compile Include="server\HHGate.cs" />
     <Compile Include="server\Server.cs" />
-    <Compile Include="server\SignMachine.cs" />
     <Compile Include="server\StaticFile.cs" />
     <Compile Include="driver\Signer.cs" />
     <Compile Include="driver\UsbHidDriver.cs" />
-    <Compile Include="WindowDriver.xaml.cs">
-      <DependentUpon>WindowDriver.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="WindowSimHardware.xaml.cs">
       <DependentUpon>WindowSimHardware.xaml</DependentUpon>
     </Compile>
@@ -178,10 +172,6 @@
     <Page Include="dialogs\MessageDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WindowDriver.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="WindowSimHardware.xaml">
       <SubType>Designer</SubType>
@@ -296,6 +286,10 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\打勾.png" />
+    <Resource Include="res\警告.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

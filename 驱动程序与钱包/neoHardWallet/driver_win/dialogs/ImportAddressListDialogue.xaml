@@ -29,13 +29,15 @@
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
                 <ListBox  Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 </ListBox>
-                <ListBox Visibility="Visible" Name="listboxDemo" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                <ListBox Visibility="Hidden" Name="listboxDemo" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListBoxItem Style="{StaticResource ResourceKey=MyWpfListBoxItem}" Height="40" Width="584">
                         <Grid>
-                            <Label Name="index" Content="00" IsEnabled="False" Width="16" Height="21" Margin="12,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
-                            <Label Name="address" Content="" IsEnabled="False" Width="330" Height="21" Margin="67,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#7AFF91" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20" RenderTransformOrigin="5.253,0.547"/>
+                            <Label Name="index" Content="00" IsEnabled="False" Width="16" Height="21" Margin="12,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None"/>
+                            <Label Name="address" Content="" IsEnabled="False" Width="330" Height="21" Margin="67,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#7AFF91" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" RenderTransformOrigin="5.253,0.547"/>
                             <GridSplitter HorizontalAlignment="Left" Height="1" Margin="67,25,0,0" VerticalAlignment="Top" Width="330" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                            </Grid>
+                            <Image Name="img_state" Grid.Row="0"  Source="/driver_win;component/res/打勾.png" Margin="410,0,0,-20" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="-6.227,-15.846"/>
+                            <Label Name="label_state" Content="" IsEnabled="False" Width="160" Height="21" Margin="440,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None"/>
+                        </Grid>
                     </ListBoxItem>
                 </ListBox>
             </Grid>
