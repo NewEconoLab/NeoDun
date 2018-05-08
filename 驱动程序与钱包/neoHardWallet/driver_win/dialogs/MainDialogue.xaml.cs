@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,6 @@ namespace driver_win.dialogs
         public DriverControl driverControl;
         public MainDialogue()
         {
-
             InitializeComponent();
             DriverS.Init();
 
@@ -48,6 +48,8 @@ namespace driver_win.dialogs
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
             });
             CreateSimHardware();
+
+            GetPackageInfo();
         }
 
         //模拟插入钱包
@@ -92,6 +94,34 @@ namespace driver_win.dialogs
         private void btn_gujian_update_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private async void GetPackageInfo()
+        {
+            //获取当前最高版本的bin文件
+            //未加密的数据包
+            var files = Directory.GetFiles("./bin/", "*.bin");
+            byte[] data = System.IO.File.ReadAllBytes("./bin/a.bin");
+
+
+
+            return;
+            //获取固件插件版本号
+            MyJson.JsonNode_Array JA_PackageInfo = await driverControl.GetPackageInfo();
+
+            if (JA_PackageInfo.Count > 0)
+            {
+                this.label_gjversion.Content = (JA_PackageInfo[0] as MyJson.JsonNode_Object)["version"].ToString();
+
+                for (var i = 1; i < JA_PackageInfo.Count; i++)
+                {
+
+                }
+            }
+            else
+            {
+
+            }
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)

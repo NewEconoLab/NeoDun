@@ -72,8 +72,8 @@ namespace NeoDun
         public delegate void DelAddressEventHandler(bool _suc);
         public DelAddressEventHandler delAddressEventHandler;
 
-        public delegate void BackUpAddressEventHandler(bool suc ,string _privateKey);
-        public BackUpAddressEventHandler backUpAddressEventHandler;
+        public delegate void GetPackageInfoEventHandler(byte[] _bytes);
+        public GetPackageInfoEventHandler getPackageInfoEventHandler;
 
         public delegate void SignEventHandler(byte[] _bytes,bool suc);
         public SignEventHandler signEventHandler;
@@ -164,6 +164,8 @@ namespace NeoDun
 
             System.Threading.ThreadPool.QueueUserWorkItem(async (_state) =>
             {
+
+
                 if (msg.tag1 == 0x01 && msg.tag2 == 0x01)
                 {
                     //recv a file
@@ -262,7 +264,33 @@ namespace NeoDun
                     block.dataidRemote = remoteid;
 
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)//收到地址,//加进地址池子里
+
+
+
+                //设置地址名称失败
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
+                {
+                }
+                //删除地址失败
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
+                {
+                    if (errorEventHandler != null)
+                        delAddressEventHandler(false);
+                }
+                //增加地址失败
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe4)
+                {
+                    if (addAddressEventHandler != null)
+                        addAddressEventHandler(false);
+                }
+                //签名失败
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
+                {
+                }
+
+
+                //收到地址,//加进地址池子里
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
                 {
                     var pos = msg.readUInt16(0);
                     var count = msg.readUInt16(2);
@@ -272,6 +300,7 @@ namespace NeoDun
                     add.AddressText = SignTool.EncodeBase58(msg.data, 6, 25);
                     addressPool.addresses.Add(add);
                 }
+                //地址接受完毕
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
                     if(getAddressListEventHandler != null)
@@ -295,26 +324,52 @@ namespace NeoDun
                     //    }
                     //}
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xb1)
+                //设置地址名称成功
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xa2)
                 {
-                    if(addAddressEventHandler!=null)
-                        addAddressEventHandler(true);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xb2)
-                {
-                    if (addAddressEventHandler != null)
-                        addAddressEventHandler(false);
-                }
+                //删除地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)
                 {
-                    if(delAddressEventHandler!=null)
+                    if (delAddressEventHandler != null)
                         delAddressEventHandler(true);
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
+                //增加地址成功
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
-                    if (errorEventHandler != null)
-                        delAddressEventHandler(false);
+                    if (addAddressEventHandler != null)
+                        addAddressEventHandler(true);
                 }
+                //签名成功
+                if (msg.tag1 == 0x02 && msg.tag2 == 0xa5)
+                {
+                    byte[] outdata = null;
+                    string outdatahash = null;
+                    outdatahash = msg.readHash256(4);
+                    //轮询直到reciveid的数据被收到
+                    while (true)
+                    {
+                        await Task.Delay(5);
+                        var __block = dataTable.getBlockBySha256(outdatahash);
+                        if (__block.Check())
+                        {
+                            outdata = __block.data;
+                            break;
+                        }
+                    }
+                    if (signEventHandler != null)
+                        signEventHandler(outdata, true);
+                }
+
+                //查询固件插件版本回复
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
+                {
+                    byte[] outdata = null;
+                    outdata = msg.data;
+                    if (signEventHandler != null)
+                        getPackageInfoEventHandler(outdata);
+                }
+
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
                     string outdataHash = msg.readHash256(4);
@@ -333,15 +388,10 @@ namespace NeoDun
                     byte privatekeylen = outdata[0];
                     byte[] privatekey = new byte[privatekeylen];
                     Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
-                    if(backUpAddressEventHandler!=null)
-                        backUpAddressEventHandler(true,NeoDun.SignTool.Bytes2HexString(privatekey, 0, privatekey.Length));
+
                     
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xe0)
-                {
-                    if (backUpAddressEventHandler != null)
-                        backUpAddressEventHandler(false,"");
-                }
+
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
                     if (signEventHandler != null)
@@ -393,26 +443,7 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd4)
                 {
                 }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xa8)
-                {//签名成功
-                 //继续努力
-                    byte[] outdata = null;
-                    string outdatahash = null;
-                    outdatahash = msg.readHash256(4);
-                    //轮询直到reciveid的数据被收到
-                    while (true)
-                    {
-                        await Task.Delay(5);
-                        var __block = dataTable.getBlockBySha256(outdatahash);
-                        if (__block.Check())
-                        {
-                            outdata = __block.data;
-                            break;
-                        }
-                    }
-                    if(signEventHandler!=null)
-                        signEventHandler(outdata,true);
-                }
+
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xd5)
                 {
                     showSignerPasswordPageEventHandler();

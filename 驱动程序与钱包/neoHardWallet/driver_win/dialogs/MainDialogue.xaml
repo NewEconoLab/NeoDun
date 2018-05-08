@@ -91,14 +91,16 @@
                         <Label Content="插件" IsEnabled="False" Width="50" Height="26" Margin="110,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
                         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="50" Margin="110,277,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
                         <Image Source="/driver_win;component/res/固件.png" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="110,211" Width="20" Height="26" />
-                        <Label Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Name="label_gjversion" Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                         <GridSplitter HorizontalAlignment="Left" Height="1" Margin="110,256,0,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                         <Button Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="安装" Margin="606,204,0,0" Click="Click_install_gujian" />
-                        <ListBox Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
+                        <ListBox Name="listbox" Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
+                        </ListBox>
+                        <ListBox Name="listboxDemo" Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
                             <ListBoxItem Style="{StaticResource ResourceKey=MyWpfListBoxItem}" Height="88" Width="612">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/driver_win;component/res/固件.png" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="26"/>
-                                    <Label Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="-7,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
+                                    <Image Name="img" Source="/driver_win;component/res/固件.png" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="26"/>
+                                    <Label Name="label" Content="固件(V0.2)" IsEnabled="False" Width="67" Height="21" Margin="-7,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                                     <GridSplitter HorizontalAlignment="Left" Height="1" Margin="-95,65,-5,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                                     <Button Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="安装" Margin="-70,10,0,0" Click="Click_install_gujian" />
                                 </StackPanel>
