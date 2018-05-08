@@ -242,6 +242,8 @@ namespace driver_win
         #region 查询地址
         public async Task<System.Collections.Concurrent.ConcurrentBag<Address>> GetAddressList()
         {
+            signer.InitAddressPool();
+
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x02;
             msg.tag2 = 0x01;//查

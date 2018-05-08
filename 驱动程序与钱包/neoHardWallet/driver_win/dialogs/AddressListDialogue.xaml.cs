@@ -111,7 +111,7 @@ namespace driver_win.dialogs
             string result = await driverControl.DeleteAddress(type.ToString(),address.ToString());
 
             this.message.Visibility = Visibility.Collapsed;
-            DialogueControl.ShowMessageDialogue("result", 1, this);
+            DialogueControl.ShowMessageDialogue(result, 1, this);
             GetAddressList();
         }
     }

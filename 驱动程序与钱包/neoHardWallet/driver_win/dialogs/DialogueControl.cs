@@ -44,10 +44,11 @@ namespace driver_win.dialogs
 
         public static void ShowImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password, DriverControl driverControl, Window window)
         {
-            ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue(nep6wallet, password,driverControl);
+            ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue(driverControl);
             importAddressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importAddressListDialogue.Owner = window;
-            importAddressListDialogue.ShowDialog();
+            importAddressListDialogue.Show();
+            importAddressListDialogue.ShowAddressInfo(nep6wallet, password);
         }
     }
 }

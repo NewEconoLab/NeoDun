@@ -20,11 +20,10 @@ namespace driver_win.dialogs
     public partial class ImportAddressListDialogue : Window
     {
         private DriverControl driverControl;
-        public ImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet _nep6wallet,string password, DriverControl _driverControl)
+        public ImportAddressListDialogue(DriverControl _driverControl)
         {
             InitializeComponent();
             driverControl = _driverControl;
-            ShowAddressInfo(_nep6wallet, password);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -34,10 +33,10 @@ namespace driver_win.dialogs
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            this.Close();
         }
 
-        private void ShowAddressInfo(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password)
+        public void ShowAddressInfo(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password)
         {
             var wifs = new List<string>();
             var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
@@ -46,9 +45,9 @@ namespace driver_win.dialogs
                 var v = nep6wallet.accounts.ToList()[i];
                 ThinNeo.NEP6.NEP6Account acc = v.Value as ThinNeo.NEP6.NEP6Account;
                 if (acc == null)
-                    return;
+                    return ;
                 if (acc.nep2key == null)
-                    return;
+                    return ;
 
                 string xaml = System.Windows.Markup.XamlWriter.Save(demoItem);
                 ListBoxItem item = System.Windows.Markup.XamlReader.Parse(xaml) as ListBoxItem;
@@ -62,7 +61,7 @@ namespace driver_win.dialogs
                     var prikey = acc.GetPrivate(nep6wallet.scrypt, password);
                     var wif = NeoDun.SignTool.GetWifFromPrivateKey(prikey);
                     wifs.Add(wif);
-                    label_address.Content = ThinNeo.Helper.GetAddressFromPublicKey(acc.ScriptHash);
+                    label_address.Content = ThinNeo.Helper.GetAddressFromScriptHash(acc.ScriptHash);
                     label_index.Content = (i + 1).ToString("00");
                     label_state.Content = "等待中";
                     label_state.Foreground = new SolidColorBrush(Color.FromRgb(191, 191, 191));

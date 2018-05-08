@@ -264,10 +264,6 @@ namespace NeoDun
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)//收到地址,//加进地址池子里
                 {
-                    if (_new)
-                    {
-                        InitAddressPool();
-                    }
                     var pos = msg.readUInt16(0);
                     var count = msg.readUInt16(2);
                     var type = (NeoDun.AddressType)msg.readUInt16(4);
@@ -275,11 +271,9 @@ namespace NeoDun
                     add.type = type;
                     add.AddressText = SignTool.EncodeBase58(msg.data, 6, 25);
                     addressPool.addresses.Add(add);
-                    _new = false;
                 }
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
-                    _new = true;
                     if(getAddressListEventHandler != null)
                         getAddressListEventHandler();
                     //var count = msg.readUInt16(0);
