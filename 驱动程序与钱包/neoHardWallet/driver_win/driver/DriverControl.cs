@@ -63,7 +63,7 @@ namespace driver_win
             timer.Tick += new EventHandler(async (_s, _e) => {
                 if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
                 {
-                    if (!_islinking && "bootloader" != signer.CheckDevice())
+                    if (!_islinking)
                     {
                         _islinking = true;
                         GetPackageInfo();
@@ -88,8 +88,11 @@ namespace driver_win
         public event LinkStateEventHandlerCallBack linkStateEventHandlerCallBack;
         public void LinkStateCallBack(bool b)
         {
-            if (linkStateEventHandlerCallBack != null)
-                linkStateEventHandlerCallBack(b);
+            linkStateEventHandlerCallBack(b);
+            if (b)
+            {
+                GetPackageInfo();
+            }
         }
 
         public delegate void ShowBalloonTipEventHandlerCallBack(string str);
