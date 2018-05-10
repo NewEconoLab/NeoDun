@@ -446,6 +446,17 @@ namespace driver_win
                 msg.msgid = recv.msgid;
                 this.SendMsg(msg);
             }
+            if(recv.tag1 == 0x03 && recv.tag2 == 0x04)
+            {
+                NeoDun.Message msg = new NeoDun.Message();
+                msg.tag1 = 0x03;
+                msg.tag2 = 0xa4;
+                msg.msgid = recv.msgid;
+                msg.writeUInt16(0,0x0304);
+                //msg.writeUInt16(2,0x0101);
+                //msg.writeUInt16(4,0x0102);
+                this.SendMsg(msg);
+            }
             Action call = () =>
                 {
                     this.list1.Items.Add("recv msg:" + recv.ToString() + "|" + DateTime.Now.ToString());

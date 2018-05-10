@@ -47,7 +47,7 @@ namespace driver_win.dialogs
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e); 
             });
-            //CreateSimHardware();
+            CreateSimHardware();
 
             LinkSinger();
         }
@@ -143,39 +143,60 @@ namespace driver_win.dialogs
             });
         }
 
-        private void GetPackageInfo()
+        private async void GetPackageInfo()
         {
-            driverControl.GetPackageInfo();
-
-            /*
             //从服务器获取固件和插件的版本信息
             MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
             servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(0.1);
-            servicePackageInfo["Neo"] = new MyJson.JsonNode_ValueNumber(0.1);
+            servicePackageInfo["Neo"] = new MyJson.JsonNode_ValueNumber(9.1);
 
 
             //获取固件插件版本号
-            MyJson.JsonNode_Object JA_PackageInfo = driverControl.Jo_PackageInfo;
-
-            foreach (var key in servicePackageInfo.Keys)
-            {
-                var now_version =  JA_PackageInfo[key]==null?0:double.Parse(JA_PackageInfo[key].ToString());
-
-            }
+            MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
 
             if (JA_PackageInfo.Count > 0)
             {
-                this.label_gjversion.Content = JA_PackageInfo["gj"].ToString();
-                double nowgjversion = double.Parse(this.label_gjversion.Content.ToString());
+                this.label_gjversion.Content = "固件(V" +JA_PackageInfo["gj"].ToString()+")";
+                double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
                 //如果下位机固件版本低于服务器版本就显示升级按钮
                 this.Btn_gj_update.Visibility = nowgjversion < double.Parse(servicePackageInfo["gj"].ToString())? Visibility.Visible : Visibility.Hidden;
+                //现在只有neo 先这么搞
+                var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
+                string xaml = System.Windows.Markup.XamlWriter.Save(demoItem);
+                ListBoxItem item = System.Windows.Markup.XamlReader.Parse(xaml) as ListBoxItem;
+                var img_icon = item.FindName("img_icon") as Image;
+                var label_version = item.FindName("label_version") as Label;
+                var btn_install = item.FindName("btn_install") as Button;
+                var btn_uninstall = item.FindName("btn_uninstall") as Button;
+                var btn_update = item.FindName("btn_update") as Button;
+                if (JA_PackageInfo.ContainsKey("Neo"))
+                {
+                    var verson = float.Parse(JA_PackageInfo["Neo"].ToString());
+                    label_version.Content = "Neo(V" + verson.ToString("0.00") + ")";
+                    if (verson < double.Parse(servicePackageInfo["Neo"].ToString()))
+                    {
+                        btn_update.Visibility = Visibility.Visible;
+                        btn_update.Margin = new Thickness(-160, 10, 0, 0);
+                        btn_uninstall.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btn_update.Visibility = Visibility.Hidden;
+                    }
+                    btn_install.Visibility = Visibility.Hidden;
 
+                }
+                else
+                {
+                    label_version.Content = "Neo(未安装)";
+                    btn_install.Visibility = Visibility.Visible;
+                }
+                this.listbox.Items.Add(item);
             }
             else
             {
-
+                this.Btn_gj_update.Visibility = Visibility.Hidden;
             }
-            */
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)

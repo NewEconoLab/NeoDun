@@ -314,7 +314,7 @@ namespace NeoDun
                 {
                     byte[] outdata = null;
                     outdata = msg.data;
-                    if (signEventHandler != null)
+                    if (getPackageInfoEventHandler != null)
                         getPackageInfoEventHandler(outdata);
                 }
                 //同意更新固件

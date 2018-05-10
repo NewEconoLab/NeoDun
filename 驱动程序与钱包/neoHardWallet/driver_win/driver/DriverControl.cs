@@ -63,7 +63,7 @@ namespace driver_win
 
         #region 查询固件版本信息
         public MyJson.JsonNode_Object Jo_PackageInfo = new MyJson.JsonNode_Object();
-        public async void GetPackageInfo()
+        public async Task<MyJson.JsonNode_Object> GetPackageInfo()
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x03;
@@ -78,10 +78,14 @@ namespace driver_win
                 time += 100;
             }
             needLoop = false;
+            return Jo_PackageInfo;
         }
         public void GetPackageInfoCallBack(byte[] data)
         {
             string appVersion = data[0] + "." + data[1];
+            if (appVersion == "0.0")
+                return;
+
             Jo_PackageInfo["gj"] = new MyJson.JsonNode_ValueString(appVersion);
             //获取有几种插件
             for (var i = 2; i < data.Length; i = i + 4)
@@ -90,7 +94,6 @@ namespace driver_win
                 if (version == "0.0")
                     break;
                 var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
-                Jo_PackageInfo = new MyJson.JsonNode_Object();
                 Jo_PackageInfo[type.ToString()] = new MyJson.JsonNode_ValueString(version);
             }
             needLoop = false;
