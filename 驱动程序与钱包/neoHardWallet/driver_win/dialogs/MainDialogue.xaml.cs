@@ -45,15 +45,43 @@ namespace driver_win.dialogs
 
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler((o, e) =>
             {
-                if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
+                if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e); 
             });
             //CreateSimHardware();
 
-            driverControl.linkStateEventHandlerCallBack += ShowUnlinkPage;
-            driverControl.showBalloonTipEventHandlerCallBack += ShowBalloonTip;
-
-            driverControl.LinkSinger();
+            LinkSinger();
         }
+
+        bool _islinking = false;
+        private void LinkSinger()
+        {
+            System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1.0);
+            timer.Tick += new EventHandler(async (_s, _e) => {
+                if (!string.IsNullOrEmpty(driverControl.CheckDevice()))//有签名机连接了
+                {
+                    if (!_islinking)
+                    {
+                        _islinking = true;
+                        GetPackageInfo();
+                        ShowUnlinkPage(true);
+                        ShowBalloonTip("NeoDun已经连接");
+                    }
+                }
+                else
+                {
+                    if (_islinking)
+                    {
+                        ShowBalloonTip("NeoDun已经拔出");
+                        _islinking = false;
+                    }
+                    ShowUnlinkPage(false);
+                }
+                await Task.Delay(1000);
+            });
+            timer.Start();
+        }
+
 
         //模拟插入钱包
         WindowSimHardware hard = new WindowSimHardware();

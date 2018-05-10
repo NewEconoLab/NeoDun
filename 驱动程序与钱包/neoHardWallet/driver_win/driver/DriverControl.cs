@@ -54,53 +54,10 @@ namespace driver_win
             signer.updateApp -= UpdateApp;
         }
 
-        #region 连接签名机
-        bool _islinking = false;
-        public void LinkSinger()
+        #region 
+        public string CheckDevice()
         {
-            System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1.0);
-            timer.Tick += new EventHandler(async (_s, _e) => {
-                if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
-                {
-                    if (!_islinking)
-                    {
-                        _islinking = true;
-                        GetPackageInfo();
-                        LinkStateCallBack(true);
-                        ShowBalloonTipCallBack("NeoDun已经连接");
-                    }
-                }
-                else
-                {
-                    if (_islinking)
-                    {
-                        ShowBalloonTipCallBack("NeoDun已经拔出");
-                        _islinking = false;
-                    }
-                    LinkStateCallBack(false);
-                }
-                await Task.Delay(1000);
-            });
-            timer.Start();
-        }
-        public delegate void LinkStateEventHandlerCallBack(bool b);
-        public event LinkStateEventHandlerCallBack linkStateEventHandlerCallBack;
-        public void LinkStateCallBack(bool b)
-        {
-            linkStateEventHandlerCallBack(b);
-            if (b)
-            {
-                GetPackageInfo();
-            }
-        }
-
-        public delegate void ShowBalloonTipEventHandlerCallBack(string str);
-        public event ShowBalloonTipEventHandlerCallBack showBalloonTipEventHandlerCallBack;
-        public void ShowBalloonTipCallBack(string str)
-        {
-            if (showBalloonTipEventHandlerCallBack != null)
-                showBalloonTipEventHandlerCallBack(str);
+           return signer.CheckDevice();
         }
         #endregion
 
@@ -129,8 +86,10 @@ namespace driver_win
             //获取有几种插件
             for (var i = 2; i < data.Length; i = i + 4)
             {
-                var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
                 var version = data[i + 2] + "." + data[i + 3];
+                if (version == "0.0")
+                    break;
+                var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
                 Jo_PackageInfo = new MyJson.JsonNode_Object();
                 Jo_PackageInfo[type.ToString()] = new MyJson.JsonNode_ValueString(version);
             }

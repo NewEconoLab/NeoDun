@@ -165,7 +165,7 @@ namespace driver_win
             }
             if (recv.tag1 == 0x01 && recv.tag2 == 0x11)//给数据分配编号
             {
-                var remoteid = recv.readUInt32(0);
+                var remoteid = recv.readUInt16(0);
                 var hash = recv.readHash256(4);
                 var block = dataTable.getBlockBySha256(hash);
                 block.dataidRemote = remoteid;
@@ -202,7 +202,7 @@ namespace driver_win
                         {
                             NeoDun.Message msg = new NeoDun.Message();
                             msg.tag1 = 0x02;
-                            msg.tag2 = 0xb1;
+                            msg.tag2 = 0xa4;
                             msg.msgid = recv.msgid;
                             Array.Copy(recv.data, msg.data, 40 + 2);
                             SendMsg(msg, true);
@@ -215,7 +215,7 @@ namespace driver_win
                         {
                             NeoDun.Message msg = new NeoDun.Message();
                             msg.tag1 = 0x02;
-                            msg.tag2 = 0xb2;
+                            msg.tag2 = 0xe4;
                             msg.msgid = recv.msgid;
                             Array.Copy(recv.data, msg.data, 40 + 2);
                             SendMsg(msg, true);
@@ -274,7 +274,7 @@ namespace driver_win
                     SendMsg(msg2, true);
                 });
             }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x0a)//签名
+            if (recv.tag1 == 0x02 && recv.tag2 == 0x05)//签名
             {
                 var type = (NeoDun.AddressType)recv.readUInt16(0);
                 UInt32 data0id = recv.readUInt32(42);
@@ -322,7 +322,7 @@ namespace driver_win
                         //再发条通知消息 告诉上位机hash
                         NeoDun.Message msg = new Message();
                         msg.tag1 = 0x02;
-                        msg.tag2 = 0xa8;
+                        msg.tag2 = 0xa5;
                         msg.msgid = recv.msgid;
                         msg.writeUInt32(0, (UInt32)outdata.Length);
                         msg.writeHash256(4, hash);
@@ -405,42 +405,6 @@ namespace driver_win
                     });
                 }
             }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x06)//获取地址安全信息
-            {
-                AddressType addressType = (NeoDun.AddressType)recv.readUInt16(4);
-                string addressText = NeoDun.SignTool.EncodeBase58(recv.data, 6, 25);
-                Address address = addresspool.getAddress(addressType,addressText);
-                //发消息给驱动
-                NeoDun.Message msg = new Message();
-                if (address != null)
-                {
-                    byte pkeylen = (byte)address.privatekey.Length;
-                    var outdata = new byte[] { pkeylen }.Concat(address.privatekey).ToArray();
-                    byte[] hash = SignTool.ComputeSHA256(outdata, 0, outdata.Length);
-
-                    {//准备好数据块，飞回去
-                        var block = dataTable.newOrGet(SignTool.Bytes2HexString(hash, 0, hash.Length), (UInt32)outdata.Length, DataBlockFrom.FromSigner);
-                        block.data = outdata;
-                        this.dataUpdate = true;
-                        //将outdata 发回上位机
-                        this.SendBlock(block);
-                    }
-
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xa4;
-                    msg.msgid = recv.msgid;
-                    msg.writeUInt32(0, (UInt32)address.privatekey.Length);
-                    msg.writeHash256(4,hash);
-
-                }
-                else
-                {
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xe0;
-                    msg.msgid = recv.msgid;
-                }
-                this.SendMsg(msg);
-            }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//发送app包
             {
                 UInt32 data0id = recv.readUInt32(42);
@@ -473,71 +437,6 @@ namespace driver_win
                     this.SendMsg(msg);
                 }
 
-            }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x0c)//验证钱包密码
-            {
-                byte passwordlen = (byte)recv.readUInt16(0);
-                byte[] bytes_password = new byte[passwordlen];
-                Console.WriteLine();
-                Array.Copy(recv.data, 4, bytes_password, 0, passwordlen);
-                string str_password = personalinfo.GetString(bytes_password);
-                string realpassword = "";
-                this.Dispatcher.Invoke((Action)delegate() {
-                    //将传过来的伪密码转换成实际密码
-                    for (int i = 0; i < str_password.Length; i++)
-                    {
-                        var items = this.password.Items;
-                        var item = items.GetItemAt(int.Parse(str_password[i].ToString())-1) as ListViewItem;
-                        realpassword += item.Content;
-                    }
-                });
-                NeoDun.Message msg = new NeoDun.Message();
-                if (personalinfo.ConfirmPassword(realpassword))
-                {
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xc5;
-                }
-                else
-                {
-                    msg.tag1 = 0x02;
-                    msg.tag2 = 0xc6;
-                }
-                msg.msgid = recv.msgid;
-                this.SendMsg(msg);
-            }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x1b)
-            {
-                NeoDun.Message msg = new NeoDun.Message();
-                msg.tag1 = 0x02;
-                msg.tag2 = 0xd1;
-                msg.msgid = recv.msgid;
-                string[] _setting = personalinfo.setting;
-                msg.writeUInt16(0, UInt16.Parse(_setting[0]));
-                msg.writeUInt16(2, UInt16.Parse(_setting[1]));
-                msg.writeUInt16(4, UInt16.Parse(_setting[2]));
-                msg.writeUInt16(6, UInt16.Parse(_setting[3]));
-                msg.writeUInt16(8, UInt16.Parse(_setting[4]));
-                msg.writeUInt16(10, UInt16.Parse(_setting[5]));
-                msg.writeUInt16(12, UInt16.Parse(_setting[6]));
-                Console.WriteLine("收到驱动获取消息的通知并开始返还");
-                this.SendMsg(msg);
-            }
-            if (recv.tag1 == 0x02 && recv.tag2 == 0x1a)
-            {//赶 写死 -- 后续优化
-                string[] setting = new string[7];
-                setting[0] = personalinfo.setting[0];
-                setting[1] = recv.readUInt16(2).ToString();
-                setting[2] = recv.readUInt16(4).ToString();
-                setting[3] = recv.readUInt16(6).ToString();
-                setting[4] = recv.readUInt16(8).ToString();
-                setting[5] = recv.readUInt16(10).ToString();
-                setting[6] = recv.readUInt16(12).ToString();
-                personalinfo.SetSetting(setting);
-                NeoDun.Message msg = new NeoDun.Message();
-                msg.tag1 = 0x02;
-                msg.tag2 = 0xd3;
-                msg.msgid = recv.msgid;
-                this.SendMsg(msg);
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x1c)
             {

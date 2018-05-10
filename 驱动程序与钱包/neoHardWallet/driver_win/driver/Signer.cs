@@ -310,7 +310,7 @@ namespace NeoDun
                         signEventHandler(outdata, true);
                 }
                 //查询固件插件版本回复
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
                 {
                     byte[] outdata = null;
                     outdata = msg.data;
