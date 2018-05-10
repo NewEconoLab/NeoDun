@@ -145,6 +145,9 @@ namespace driver_win.dialogs
 
         private void GetPackageInfo()
         {
+            driverControl.GetPackageInfo();
+
+            /*
             //从服务器获取固件和插件的版本信息
             MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
             servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(0.1);
@@ -172,6 +175,7 @@ namespace driver_win.dialogs
             {
 
             }
+            */
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
