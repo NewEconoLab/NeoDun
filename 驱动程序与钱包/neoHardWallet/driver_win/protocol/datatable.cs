@@ -87,7 +87,7 @@ namespace NeoDun
             }
         }
 
-        public async Task<uint> GetRemoteid()
+        public async Task<UInt32> GetRemoteid()
         {
             while (true)
             {

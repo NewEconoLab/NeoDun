@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using NeoDun;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,9 +19,6 @@ namespace driver_win
 
         private bool[] bools = new bool[6];
 
-        private MyJson.JsonNode_Object isFirstConfirm = new MyJson.JsonNode_Object();
-
-        private MyJson.JsonNode_Object json_setting = new MyJson.JsonNode_Object();
         public DriverControl()
         {
             signer.Start();
@@ -42,7 +40,7 @@ namespace driver_win
             signer.getAddressListEventHandler += GetAddressCallBack;
             signer.delAddressEventHandler += DeleteAddressCallBack;
             signer.getPackageInfoEventHandler += GetPackageInfoCallBack;
-
+            signer.updateApp += UpdateApp;
             signer.errorEventHandler += ErrorCallBack;
         }
 
@@ -53,7 +51,7 @@ namespace driver_win
             signer.delAddressEventHandler -= DeleteAddressCallBack;
             signer.getPackageInfoEventHandler -= GetPackageInfoCallBack;
             signer.errorEventHandler -= ErrorCallBack;
-
+            signer.updateApp -= UpdateApp;
         }
 
         #region 连接签名机
@@ -65,11 +63,11 @@ namespace driver_win
             timer.Tick += new EventHandler(async (_s, _e) => {
                 if (!string.IsNullOrEmpty(signer.CheckDevice()))//有签名机连接了
                 {
-                    //只在第一次连接的时候    连接成功后去请求签名机的状态
                     if (!_islinking && "bootloader" != signer.CheckDevice())
                     {
                         _islinking = true;
-                        LinkCallBack("连接成功", System.Windows.Visibility.Collapsed, true);
+                        GetPackageInfo();
+                        LinkStateCallBack(true);
                         ShowBalloonTipCallBack("NeoDun已经连接");
                     }
                 }
@@ -80,18 +78,18 @@ namespace driver_win
                         ShowBalloonTipCallBack("NeoDun已经拔出");
                         _islinking = false;
                     }
-                    LinkCallBack("连接中……", System.Windows.Visibility.Collapsed, false);
+                    LinkStateCallBack(false);
                 }
                 await Task.Delay(1000);
             });
             timer.Start();
         }
-        public delegate void LinkSingerEventHandlerCallBack(string str, System.Windows.Visibility visibility, bool _islink);
-        public event LinkSingerEventHandlerCallBack linkSingerEventHandlerCallBack;
-        public void LinkCallBack(string str, System.Windows.Visibility visibility, bool _islink)
+        public delegate void LinkStateEventHandlerCallBack(bool b);
+        public event LinkStateEventHandlerCallBack linkStateEventHandlerCallBack;
+        public void LinkStateCallBack(bool b)
         {
-            if (linkSingerEventHandlerCallBack != null)
-                linkSingerEventHandlerCallBack(str, visibility, _islink);
+            if (linkStateEventHandlerCallBack != null)
+                linkStateEventHandlerCallBack(b);
         }
 
         public delegate void ShowBalloonTipEventHandlerCallBack(string str);
@@ -103,10 +101,9 @@ namespace driver_win
         }
         #endregion
 
-
-        #region
-        MyJson.JsonNode_Array JA_PackageInfo = new MyJson.JsonNode_Array();
-        public async Task<MyJson.JsonNode_Array> GetPackageInfo()
+        #region 查询固件版本信息
+        public MyJson.JsonNode_Object Jo_PackageInfo = new MyJson.JsonNode_Object();
+        public async void GetPackageInfo()
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x03;
@@ -121,26 +118,19 @@ namespace driver_win
                 time += 100;
             }
             needLoop = false;
-            return JA_PackageInfo;
         }
         public void GetPackageInfoCallBack(byte[] data)
         {
-            MyJson.JsonNode_Array Ja_packageInfo = new MyJson.JsonNode_Array();
             string appVersion = data[0] + "." + data[1];
-            MyJson.JsonNode_Object myjson = new MyJson.JsonNode_Object();
-            myjson["type"] = new MyJson.JsonNode_ValueString("gujian");
-            myjson["version"] = new MyJson.JsonNode_ValueString(appVersion);
+            Jo_PackageInfo["gj"] = new MyJson.JsonNode_ValueString(appVersion);
             //获取有几种插件
             for (var i = 2; i < data.Length; i = i + 4)
             {
                 var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
                 var version = data[i + 2] + "." + data[i + 3];
-                myjson = new MyJson.JsonNode_Object();
-                myjson["type"] = new MyJson.JsonNode_ValueString(type.ToString());
-                myjson["version"] = new MyJson.JsonNode_ValueString(version);
-                Ja_packageInfo.Add(myjson);
+                Jo_PackageInfo = new MyJson.JsonNode_Object();
+                Jo_PackageInfo[type.ToString()] = new MyJson.JsonNode_ValueString(version);
             }
-            JA_PackageInfo = Ja_packageInfo;
             needLoop = false;
         }
         #endregion
@@ -271,47 +261,70 @@ namespace driver_win
         #endregion
 
         #region 安装更新app
+        //请求更新固件
+        bool applyResult = false;
+        public async Task<bool> ApplyForUpdate()
+        {
+            NeoDun.Message msg = new NeoDun.Message();
+            msg.tag1 = 0x03;
+            msg.tag2 = 0x02;
+            msg.msgid = NeoDun.SignTool.RandomShort();
+            signer.SendMessage(msg, true);
+            applyResult = false;
+            needLoop = true;
+            int time = 0;
+            while (needLoop && time <= waitTime)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            needLoop = false;
+            return applyResult;
+        }
+        public void ApplyForUpdateCallBack(bool suc)
+        {
+            applyResult = suc;
+            needLoop = false;
+        }
 
-        public async void UpdateApp(byte[] data)
+
+        public async void UpdateApp(byte[] data,UInt16 type,UInt16 content, UInt16 version)
         {
             try
             {
-                string wif = "L2EHemxzCYKxhH81QVwPDwUT5Bd8yBgbPt7GnUFpGuttiiYroRFi"; //"JceDDbDThUsUMbxbAdjtvvqfqM1ziwFUp4eyH6NKU4JMave1rBg9BDy3yvA2bWvDEaNt9vHSHMQUeDDhDFhEA9DuTq3kqFbMgcwgQRmqZ54FhRgp92k5TLhsWBAQUL18MAfHcWq98gYWDg"
-                //对未加密的数据包hash以方便下位机验证
-                byte[] hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+                var hash = NeoDun.SignTool.ComputeSHA256(data, 0,data.Length);
+                string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+                int num = data.Length / (1024 * 50) + 1;
 
-                //经过ecc加密之后的hash
-                byte[] data_ecc = SignTool.EccEncrypt(hash, wif);
+                List<UInt32> remoteids = new List<UInt32>();
 
-
-                //拼装新数据包
-                byte[] dataHead = new byte[] { (byte)data_ecc.Length };
-                data = dataHead.Concat(data_ecc).Concat(data).ToArray();
-                hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
-                string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length); ;
-
-
-                var length = data.Length;
-                if (length > 50 * 1024)
+                for (var i = 0; i < num; i++)
                 {
+                    byte[] _data = data.Skip(1024*50*i).Take(1024*50).ToArray();
+                    var _hash = NeoDun.SignTool.ComputeSHA256(_data, 0, _data.Length);
+                    string _str_hash = NeoDun.SignTool.Bytes2HexString(_hash, 0, _hash.Length);
+                    NeoDun.DataBlock block = signer.dataTable.newOrGet(_str_hash, (UInt32)_data.Length, NeoDun.DataBlockFrom.FromDriver);
+                    block.data = _data;
+                    signer.SendDataBlock(block);
 
+                    var __block = signer.dataTable.getBlockBySha256(_str_hash);
+                    UInt32 remoteid = await __block.GetRemoteid();
+                    remoteids.Add(remoteid);
+                    __block.dataidRemote = 0;
                 }
-
-                NeoDun.DataBlock block = signer.dataTable.newOrGet(str_hash, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
-                block.data = data;
-                signer.SendDataBlock(block);
-
-                var __block = signer.dataTable.getBlockBySha256(str_hash);
-                uint remoteid = await __block.GetRemoteid();
-                __block.dataidRemote = 0;
-
                 NeoDun.Message signMsg = new NeoDun.Message();
-                signMsg.tag1 = 0x02;
-                signMsg.tag2 = 0x0b;
+                signMsg.tag1 = 0x03;
+                signMsg.tag2 = 0x01;
                 signMsg.msgid = NeoDun.SignTool.RandomShort();
-                Array.Copy(hash, 0, signMsg.data, 0, hash.Length);
+                signMsg.writeUInt16(0, type);
+                signMsg.writeUInt16(2, content);
+                Array.Copy(hash, 0, signMsg.data, 4, hash.Length);
+                signMsg.writeUInt16(40, version);
                 //这个dataid 要上一个block 传送完毕了才知道
-                signMsg.writeUInt32(42, remoteid);
+                //for (var i = 0; i < remoteids.Count; i++)
+                //{
+                //    signMsg.writeUInt32(42, remoteids[i]);
+                //}
                 signer.SendMessage(signMsg, true);
             }
             catch (Exception e)

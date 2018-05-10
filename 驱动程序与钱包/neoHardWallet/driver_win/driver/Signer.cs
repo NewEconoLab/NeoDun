@@ -54,15 +54,6 @@ namespace NeoDun
             }
         }
 
-        public delegate void GetSingerInfoEventHandler(MyJson.JsonNode_Object _myjson);
-        public GetSingerInfoEventHandler getSingerInfoEventHandler;
-
-        public delegate void SetPasswordEventHandler();
-        public SetPasswordEventHandler setPasswordEventHandler;
-
-        public delegate void ConfirmPasswordEventHandler(bool _suc);
-        public ConfirmPasswordEventHandler confirmPasswordEventHandler;
-
         public delegate void AddAddressEventHandler(bool _suc);
         public AddAddressEventHandler addAddressEventHandler;
 
@@ -78,11 +69,8 @@ namespace NeoDun
         public delegate void SignEventHandler(byte[] _bytes,bool suc);
         public SignEventHandler signEventHandler;
 
-        public delegate void ShowSignerPasswordPageEventHandler();
-        public ShowSignerPasswordPageEventHandler showSignerPasswordPageEventHandler;
-
-        public delegate void SetSettingInfoEventHandler();
-        public SetSettingInfoEventHandler setSettingInfoEventHandler;
+        public delegate void UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
+        public UpdateApp updateApp;
 
         public delegate void ErrorEventHandler(string _str,string _header);
         public ErrorEventHandler errorEventHandler;
@@ -203,7 +191,6 @@ namespace NeoDun
                     }
                     else
                     {
-
                         for (var i = blockbegin; i < blockend + 1; i++)
                         {
                             Message msg1 = new Message();
@@ -218,44 +205,6 @@ namespace NeoDun
                         SendMessage(msg2, false);
                     }
                 }
-                if (msg.tag1 == 0x01 && msg.tag2 == 0xa2)//收到一个分片
-                {
-                    var hash = srcmsg.readHash256(4);
-                    var data = dataTable.getBlockBySha256(hash);
-                    data.FromPieceMsg(msg);
-                }
-                if (msg.tag1 == 0x01 && msg.tag2 == 0xa3)//接收完毕
-                {
-                    var hash = srcmsg.readHash256(4);
-                    var data = dataTable.getBlockBySha256(hash);
-                    bool bcheck = data.Check();
-                    if (bcheck)
-                    {//数据接收完整
-                        System.Threading.ThreadPool.QueueUserWorkItem((__state) =>
-                        {
-                            NeoDun.Message _msg = new NeoDun.Message();
-                            _msg.tag1 = 0x01;
-                            _msg.tag2 = 0x11;
-                            _msg.msgid = NeoDun.SignTool.RandomShort();
-                            _msg.writeUInt32(0, data.dataid);
-                            _msg.writeHash256(4, hash);
-                            SendMessage(_msg, false);
-                        });
-                    }
-                    else
-                    {//数据接收完毕，但是hash256 不匹配
-                        System.Threading.ThreadPool.QueueUserWorkItem((__state) =>
-                        {
-                            NeoDun.Message _msg = new NeoDun.Message();
-                            _msg.tag1 = 0x01;
-                            _msg.tag2 = 0x12;
-                            _msg.msgid = NeoDun.SignTool.RandomShort();
-                            _msg.writeUInt32(0, data.dataid);
-                            _msg.writeHash256(4, hash);
-                            SendMessage(_msg, false);
-                        });
-                    }
-                }
                 if (msg.tag1 == 0x01 && msg.tag2 == 0x11)//给数据分配编号
                 {
                     var remoteid = msg.readUInt32(0);
@@ -264,9 +213,6 @@ namespace NeoDun
                     block.dataidRemote = remoteid;
 
                 }
-
-
-
                 //设置地址名称失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
@@ -287,8 +233,11 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
                 {
                 }
+                //拒绝更新固件
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
+                {
 
-
+                }
                 //收到地址,//加进地址池子里
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
                 {
@@ -360,7 +309,6 @@ namespace NeoDun
                     if (signEventHandler != null)
                         signEventHandler(outdata, true);
                 }
-
                 //查询固件插件版本回复
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
                 {
@@ -369,86 +317,19 @@ namespace NeoDun
                     if (signEventHandler != null)
                         getPackageInfoEventHandler(outdata);
                 }
-
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
+                //同意更新固件
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
-                    string outdataHash = msg.readHash256(4);
-                    byte[] outdata;
-                    //轮询直到reciveid的数据被收到
-                    while (true)
-                   {
-                       await System.Threading.Tasks.Task.Delay(5);
-                       var __block = dataTable.getBlockBySha256(outdataHash);
-                       if (__block.Check())
-                       {
-                           outdata = __block.data;
-                           break;
-                       }
-                   }
-                    byte privatekeylen = outdata[0];
-                    byte[] privatekey = new byte[privatekeylen];
-                    Array.Copy(outdata, 1, privatekey, 0, privatekeylen);
-
-                    
-                }
-
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
-                {
-                    if (signEventHandler != null)
-                        signEventHandler(null,false);
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc3)//设置密码成功
-                {
-                    if(setPasswordEventHandler!=null)
-                        setPasswordEventHandler();
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc5)//密钥验证合规
-                {
-                    if(confirmPasswordEventHandler!=null)
-                        confirmPasswordEventHandler(true);
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xc6)//密钥验证不合规
-                {
-                    if(confirmPasswordEventHandler!=null)
-                        confirmPasswordEventHandler(false);
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xd1)
-                {
-                    Console.WriteLine("msg:"+ msg);
-                    MyJson.JsonNode_Object myjson = new MyJson.JsonNode_Object();
-                    myjson["是否是新设备"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(0));
-                    myjson["连接钱包后是否自动弹出驱动界面"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(2));
-                    myjson["开机时是否自动检查更新"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(4));
-                    myjson["新增地址时是否要密码验证"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(6));
-                    myjson["删除地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(8));
-                    myjson["备份地址是否要密码验证"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(10));
-                    myjson["备份钱包时进行是否要加密"] = new MyJson.JsonNode_ValueNumber(msg.readUInt16(12));
-                    if (getSingerInfoEventHandler != null)
-                    {
-                        Console.WriteLine("收到签名机的消息并准备执行");
-                        getSingerInfoEventHandler(myjson);
-                    }
 
                 }
-                if (msg.tag1 == 0x02&& msg.tag2 == 0xd2)
+                //下位机请求更新固件
+                if (msg.tag1 == 0x03 && msg.tag2 == 0x11)
                 {
-                    if (errorEventHandler != null)
-                        errorEventHandler("设置失败","错误");
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xd3)
-                {
-                    if(setSettingInfoEventHandler != null)
-                        setSettingInfoEventHandler();
-                }
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xd4)
-                {
-                }
+                    //获取最新的bin
+                    byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
 
-                if (msg.tag1 == 0x02 && msg.tag2 == 0xd5)
-                {
-                    showSignerPasswordPageEventHandler();
+                    updateApp(data,0x0000,0x0000,0x0001);
                 }
-
             });
             watcherColl.OnRecv(msg, srcmsg);
             //if (userHandleRecv != null)

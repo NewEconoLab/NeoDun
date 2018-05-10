@@ -47,9 +47,12 @@ namespace driver_win.dialogs
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
             });
-            CreateSimHardware();
+            //CreateSimHardware();
 
-            GetPackageInfo();
+            driverControl.linkStateEventHandlerCallBack += ShowUnlinkPage;
+            driverControl.showBalloonTipEventHandlerCallBack += ShowBalloonTip;
+
+            driverControl.LinkSinger();
         }
 
         //模拟插入钱包
@@ -96,27 +99,46 @@ namespace driver_win.dialogs
 
         }
 
-        private async void GetPackageInfo()
+        //气泡框的显示
+        private void ShowBalloonTip(string content)
         {
-            //获取当前最高版本的bin文件
-            //未加密的数据包
-            var files = Directory.GetFiles("./bin/", "*.bin");
-            byte[] data = System.IO.File.ReadAllBytes("./bin/a.bin");
+            System.Windows.Forms.ToolTipIcon type = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.ShowBalloonTip(1000, "通知", content, type);
+        }
+
+        private void ShowUnlinkPage(bool islink)
+        {
+            Dispatcher.Invoke((Action)delegate ()
+            {
+                this.unlink.Visibility = islink ? Visibility.Hidden : Visibility.Visible;
+                this.main.Visibility = islink ? Visibility.Visible : Visibility.Hidden;
+            });
+        }
+
+        private void GetPackageInfo()
+        {
+            //从服务器获取固件和插件的版本信息
+            MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
+            servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(0.1);
+            servicePackageInfo["Neo"] = new MyJson.JsonNode_ValueNumber(0.1);
 
 
-
-            return;
             //获取固件插件版本号
-            MyJson.JsonNode_Array JA_PackageInfo = await driverControl.GetPackageInfo();
+            MyJson.JsonNode_Object JA_PackageInfo = driverControl.Jo_PackageInfo;
+
+            foreach (var key in servicePackageInfo.Keys)
+            {
+                var now_version =  JA_PackageInfo[key]==null?0:double.Parse(JA_PackageInfo[key].ToString());
+
+            }
 
             if (JA_PackageInfo.Count > 0)
             {
-                this.label_gjversion.Content = (JA_PackageInfo[0] as MyJson.JsonNode_Object)["version"].ToString();
+                this.label_gjversion.Content = JA_PackageInfo["gj"].ToString();
+                double nowgjversion = double.Parse(this.label_gjversion.Content.ToString());
+                //如果下位机固件版本低于服务器版本就显示升级按钮
+                this.Btn_gj_update.Visibility = nowgjversion < double.Parse(servicePackageInfo["gj"].ToString())? Visibility.Visible : Visibility.Hidden;
 
-                for (var i = 1; i < JA_PackageInfo.Count; i++)
-                {
-
-                }
             }
             else
             {
@@ -134,11 +156,6 @@ namespace driver_win.dialogs
             DialogueControl.ShowImportWifDialogue(driverControl,this);
         }
 
-        private void Click_install_gujian(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void Btn_ImportWallet(object sender, RoutedEventArgs e)
         {
             DialogueControl.ShowImportWalletDialogue(driverControl,this);
@@ -147,6 +164,10 @@ namespace driver_win.dialogs
         private void Window_ShowWebWallet(object sender, RoutedEventArgs e)
         {
             Process.Start("https://wallet.nel.group/");
+        }
+
+        private void Click_update_gujian(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
