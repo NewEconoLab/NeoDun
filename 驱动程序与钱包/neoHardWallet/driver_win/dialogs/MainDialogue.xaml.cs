@@ -161,18 +161,28 @@ namespace driver_win.dialogs
                 double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
                 //如果下位机固件版本低于服务器版本就显示升级按钮
                 this.Btn_gj_update.Visibility = nowgjversion < double.Parse(servicePackageInfo["gj"].ToString())? Visibility.Visible : Visibility.Hidden;
-               
+
+
+                this.listbox.Items.Clear();
+
                 //现在只有neo 先这么搞
                 var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
                 string xaml = System.Windows.Markup.XamlWriter.Save(demoItem);
                 ListBoxItem item = System.Windows.Markup.XamlReader.Parse(xaml) as ListBoxItem;
                 var img_icon = item.FindName("img_icon") as Image;
                 var label_version = item.FindName("label_version") as Label;
+
                 var btn_install = item.FindName("btn_install") as Button;
                 btn_install.Click += new RoutedEventHandler(Click_Install);
                 btn_install.Name = "Neo_" + btn_install.Name;
+
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
+                btn_uninstall.Click += new RoutedEventHandler(Click_Uninstall);
+                btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
+
                 var btn_update = item.FindName("btn_update") as Button;
+                btn_update.Click += new RoutedEventHandler(Click_Install);
+                btn_update.Name = "Neo_" + btn_update.Name;
 
                 if (JA_PackageInfo.ContainsKey("Neo"))
                 {
@@ -237,8 +247,31 @@ namespace driver_win.dialogs
             //获取最新的bin
             byte[] data = System.IO.File.ReadAllBytes("./neo.bin");
             bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
+            if (result)
+            {
+                DialogueControl.ShowMessageDialogue("安装成功",2, this);
+                GetPackageInfo();
+            }
+            else
+            {
+                DialogueControl.ShowMessageDialogue("安装失败",2, this);
+            }
+        }
 
-            GetPackageInfo();
+        private async void Click_Uninstall(object sender, RoutedEventArgs e)
+        {
+            var str_content = (sender as Button).Name.Split('_')[0];
+            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
+            bool result = await driverControl.UninstallApp(content);
+            if (result)
+            {
+                DialogueControl.ShowMessageDialogue("卸载成功",2, this);
+                GetPackageInfo();
+            }
+            else
+            {
+                DialogueControl.ShowMessageDialogue("卸载失败", 2, this);
+            }
         }
     }
 }

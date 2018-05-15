@@ -71,6 +71,8 @@ namespace driver_win
         AddressPool addresspool = new AddressPool();
         PersonalInfo personalinfo = new PersonalInfo();
 
+
+        UInt16 version = 0x0000;
         void onRecvMsg(NeoDun.Message recv, NeoDun.Message src)//标记 hkh
         {
             if (recv.tag1 == 0x01 && recv.tag2 == 0x01)
@@ -446,6 +448,24 @@ namespace driver_win
                 msg.msgid = recv.msgid;
                 this.SendMsg(msg);
             }
+            if (recv.tag1 == 0x03 && recv.tag2 == 0x01)
+            {
+                NeoDun.Message msg = new NeoDun.Message();
+                msg.tag1 = 0x03;
+                msg.tag2 = 0xa1;
+                msg.msgid = recv.msgid;
+                version = 0x0101;
+                this.SendMsg(msg);
+            }
+            if (recv.tag1 == 0x03 && recv.tag2 == 0x03)
+            {
+                NeoDun.Message msg = new NeoDun.Message();
+                msg.tag1 = 0x03;
+                msg.tag2 = 0xa3;
+                msg.msgid = recv.msgid;
+                version = 0x0000;
+                this.SendMsg(msg);
+            }
             if(recv.tag1 == 0x03 && recv.tag2 == 0x04)
             {
                 NeoDun.Message msg = new NeoDun.Message();
@@ -453,8 +473,8 @@ namespace driver_win
                 msg.tag2 = 0xa4;
                 msg.msgid = recv.msgid;
                 msg.writeUInt16(0,0x0304);
-                //msg.writeUInt16(2,0x0101);
-                //msg.writeUInt16(4,0x0102);
+                msg.writeUInt16(2, 0x0101);
+                msg.writeUInt16(4, version);
                 this.SendMsg(msg);
             }
             Action call = () =>

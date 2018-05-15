@@ -4,7 +4,10 @@
         xmlns:driver_win="clr-namespace:driver_win" x:Class="driver_win.dialogs.MainDialogue"
         WindowStyle="None" Height="650px"  Width="1010px" ResizeMode="NoResize" Activated="Window_Activated" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent" AllowsTransparency="True">
     <Grid>
-        <Grid x:Name="title" VerticalAlignment="Top" Width="1010" Height="60" Background="#20274A">
+        <Grid x:Name="title" VerticalAlignment="Top" Width="1010" Height="60" Background="#20274A" Panel.ZIndex="100">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="2" Direction="270" ShadowDepth="2"/>
+            </Grid.Effect>
             <Grid Width="160" HorizontalAlignment="Left" Background="#3B4267">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/neodun反白logo.png" Width="160" Height="52" />
             </Grid>

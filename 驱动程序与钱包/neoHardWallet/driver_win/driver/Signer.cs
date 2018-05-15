@@ -66,11 +66,17 @@ namespace NeoDun
         public delegate void GetPackageInfoEventHandler(byte[] _bytes);
         public GetPackageInfoEventHandler getPackageInfoEventHandler;
 
-        public delegate void SignEventHandler(byte[] _bytes,bool suc);
+        public delegate void SignEventHandler(byte[] _bytes,bool _suc);
         public SignEventHandler signEventHandler;
 
         public delegate Task<bool> UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
         public UpdateApp updateApp;
+
+        public delegate void UpdateAppEventHandler(bool _suc);
+        public UpdateAppEventHandler updateAppEventHandler;
+
+        public delegate void UninstallAppEventHandler(bool _suc);
+        public UninstallAppEventHandler uninstallAppEventHandler;
 
         public delegate void ErrorEventHandler(string _str,string _header);
         public ErrorEventHandler errorEventHandler;
@@ -232,16 +238,22 @@ namespace NeoDun
                 //签名失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
                 {
+
                 }
                 //安装失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe1)
                 {
-
+                    updateAppEventHandler(false);
                 }
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
 
+                }
+                //卸载失败
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)
+                {
+                    uninstallAppEventHandler(false);
                 }
                 //收到地址,//加进地址池子里
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
@@ -317,12 +329,17 @@ namespace NeoDun
                 //安装成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
                 {
-
+                    updateAppEventHandler(true);
                 }
                 //同意更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
 
+                }
+                //卸载成功
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
+                {
+                    uninstallAppEventHandler(true);
                 }
                 //查询固件插件版本回复
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)

@@ -42,6 +42,8 @@ namespace driver_win
             signer.getPackageInfoEventHandler += GetPackageInfoCallBack;
             signer.updateApp += UpdateApp;
             signer.errorEventHandler += ErrorCallBack;
+            signer.updateAppEventHandler += UpdateAppCallBack;
+            signer.uninstallAppEventHandler += UninstallAppCallBack;
         }
 
         private void UInit()
@@ -52,6 +54,7 @@ namespace driver_win
             signer.getPackageInfoEventHandler -= GetPackageInfoCallBack;
             signer.errorEventHandler -= ErrorCallBack;
             signer.updateApp -= UpdateApp;
+            signer.uninstallAppEventHandler -= UninstallAppCallBack;
         }
 
         #region 
@@ -85,6 +88,7 @@ namespace driver_win
             string appVersion = data[0] + "." + data[1];
             if (appVersion == "0.0")
                 return;
+            Jo_PackageInfo = new MyJson.JsonNode_Object();
 
             Jo_PackageInfo["gj"] = new MyJson.JsonNode_ValueString(appVersion);
             //获取有几种插件
@@ -225,7 +229,7 @@ namespace driver_win
 
         #endregion
 
-        #region 安装更新app
+        #region 安装更新删除app
         //请求更新固件
         bool applyResult = false;
         public async Task<bool> ApplyForUpdate()
@@ -246,7 +250,7 @@ namespace driver_win
             needLoop = false;
             return applyResult;
         }
-        public void ApplyForUpdateCallBack(bool suc)
+        private void ApplyForUpdateCallBack(bool suc)
         {
             applyResult = suc;
             needLoop = false;
@@ -308,6 +312,30 @@ namespace driver_win
         }
 
         private void UpdateAppCallBack(bool suc)
+        {
+            applyResult = suc;
+            needLoop = false;
+        }
+
+        public async Task<bool> UninstallApp(UInt16 content)
+        {
+            NeoDun.Message msg = new NeoDun.Message();
+            msg.tag1 = 0x03;
+            msg.tag2 = 0x03;
+            msg.msgid = NeoDun.SignTool.RandomShort();
+            signer.SendMessage(msg, true);
+            applyResult = false;
+            needLoop = true;
+            int time = 0;
+            while (needLoop && time <= waitTime)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            needLoop = false;
+            return applyResult;
+        }
+        private void UninstallAppCallBack(bool suc)
         {
             applyResult = suc;
             needLoop = false;
