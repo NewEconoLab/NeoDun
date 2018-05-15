@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeoDun;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -160,6 +161,7 @@ namespace driver_win.dialogs
                 double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
                 //如果下位机固件版本低于服务器版本就显示升级按钮
                 this.Btn_gj_update.Visibility = nowgjversion < double.Parse(servicePackageInfo["gj"].ToString())? Visibility.Visible : Visibility.Hidden;
+               
                 //现在只有neo 先这么搞
                 var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
                 string xaml = System.Windows.Markup.XamlWriter.Save(demoItem);
@@ -167,8 +169,11 @@ namespace driver_win.dialogs
                 var img_icon = item.FindName("img_icon") as Image;
                 var label_version = item.FindName("label_version") as Label;
                 var btn_install = item.FindName("btn_install") as Button;
+                btn_install.Click += new RoutedEventHandler(Click_Install);
+                btn_install.Name = "Neo_" + btn_install.Name;
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
                 var btn_update = item.FindName("btn_update") as Button;
+
                 if (JA_PackageInfo.ContainsKey("Neo"))
                 {
                     var verson = float.Parse(JA_PackageInfo["Neo"].ToString());
@@ -221,6 +226,19 @@ namespace driver_win.dialogs
 
         private void Click_update_gujian(object sender, RoutedEventArgs e)
         {
+        }
+
+        private async void Click_Install(object sender, RoutedEventArgs e)
+        {
+            var str_content = (sender as Button).Name.Split('_')[0];
+            UInt16 type = 0x0001;
+            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
+            //从本地获取需要安装的插件
+            //获取最新的bin
+            byte[] data = System.IO.File.ReadAllBytes("./neo.bin");
+            bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
+
+            GetPackageInfo();
         }
     }
 }

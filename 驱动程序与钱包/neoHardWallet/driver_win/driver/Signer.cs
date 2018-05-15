@@ -69,7 +69,7 @@ namespace NeoDun
         public delegate void SignEventHandler(byte[] _bytes,bool suc);
         public SignEventHandler signEventHandler;
 
-        public delegate void UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
+        public delegate Task<bool> UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
         public UpdateApp updateApp;
 
         public delegate void ErrorEventHandler(string _str,string _header);
@@ -233,6 +233,11 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
                 {
                 }
+                //安装失败
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xe1)
+                {
+
+                }
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
@@ -309,6 +314,16 @@ namespace NeoDun
                     if (signEventHandler != null)
                         signEventHandler(outdata, true);
                 }
+                //安装成功
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
+                {
+
+                }
+                //同意更新固件
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
+                {
+
+                }
                 //查询固件插件版本回复
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
                 {
@@ -316,11 +331,6 @@ namespace NeoDun
                     outdata = msg.data;
                     if (getPackageInfoEventHandler != null)
                         getPackageInfoEventHandler(outdata);
-                }
-                //同意更新固件
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
-                {
-
                 }
                 //下位机请求更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0x11)

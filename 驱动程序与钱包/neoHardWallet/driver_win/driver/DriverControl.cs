@@ -252,8 +252,7 @@ namespace driver_win
             needLoop = false;
         }
 
-
-        public async void UpdateApp(byte[] data,UInt16 type,UInt16 content, UInt16 version)
+        public async Task<bool> UpdateApp(byte[] data,UInt16 type,UInt16 content, UInt16 version)
         {
             try
             {
@@ -291,10 +290,27 @@ namespace driver_win
                 //    signMsg.writeUInt32(42, remoteids[i]);
                 //}
                 signer.SendMessage(signMsg, true);
+                applyResult = false;
+                needLoop = true;
+                int time = 0;
+                while (needLoop && time <= waitTime)
+                {
+                    await Task.Delay(100);
+                    time += 100;
+                }
+                needLoop = false;
+                return applyResult;
             }
             catch (Exception e)
             {
+                return false;
             }
+        }
+
+        private void UpdateAppCallBack(bool suc)
+        {
+            applyResult = suc;
+            needLoop = false;
         }
         #endregion
 

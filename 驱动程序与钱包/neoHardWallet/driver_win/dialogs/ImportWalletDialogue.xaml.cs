@@ -66,8 +66,12 @@ namespace driver_win.dialogs
             }
 
             this.DialogResult = true;
+            if (nep6wallet == null)
+            {
+                DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
+                return;
+            }
             DialogueControl.ShowImportAddressListDialogue(nep6wallet, this.label_pw.Text, driverControl, this.Owner);
-
         }
     }
 }
