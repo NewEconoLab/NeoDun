@@ -155,7 +155,7 @@ namespace driver_win.dialogs
             //获取固件插件版本号
             MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
 
-            //if (JA_PackageInfo.Count > 0)
+            if (JA_PackageInfo.Count > 0)
             {
                 this.label_gjversion.Content = "固件(V" +JA_PackageInfo["gj"].ToString()+")";
                 double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
@@ -218,10 +218,10 @@ namespace driver_win.dialogs
                 }
                 this.listbox.Items.Add(item);
             }
-            //else
-            //{
-            //    this.Btn_gj_update.Visibility = Visibility.Hidden;
-            //}
+            else
+            {
+                this.Btn_gj_update.Visibility = Visibility.Hidden;
+            }
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
