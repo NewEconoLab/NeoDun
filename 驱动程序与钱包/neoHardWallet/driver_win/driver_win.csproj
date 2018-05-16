@@ -99,6 +99,9 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WpfAnimatedGif, Version=1.4.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.16\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -290,6 +293,12 @@
   <ItemGroup>
     <Resource Include="res\打勾.png" />
     <Resource Include="res\警告.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\loading2.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
