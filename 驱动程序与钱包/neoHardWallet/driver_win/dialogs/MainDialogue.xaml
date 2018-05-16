@@ -5,6 +5,7 @@
         xmlns:driver_win="clr-namespace:driver_win" x:Class="driver_win.dialogs.MainDialogue"
         WindowStyle="None" Height="650px"  Width="1010px" ResizeMode="NoResize" Activated="Window_Activated" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent" AllowsTransparency="True">
     <Grid>
+        <Border Grid.ZIndex ="1000" Opacity="0.1" Visibility="Visible" />
         <Grid x:Name="title" VerticalAlignment="Top" Width="1010" Height="60" Background="#20274A" Panel.ZIndex="100">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="2" Direction="270" ShadowDepth="2"/>
@@ -13,12 +14,12 @@
                 <Image Grid.Row="0"  Source="/driver_win;component/res/neodun反白logo.png" Width="160" Height="52" />
             </Grid>
             <Label Content="Neodun 驱动程序 v0.1" Margin="170,0,0,0" FontSize="14px" VerticalContentAlignment="Center" Foreground="White" Height="60"/>
-            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="912,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
+            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="932,20,0,0" Width="18" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
                 <Button.Background>
                     <ImageBrush ImageSource="/driver_win;component/res/minimise.png" Stretch="None"/>
                 </Button.Background>
             </Button>
-            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="945,16,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Hide">
+            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="970,16,0,0" Width="18" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Hide">
                 <Button.Background>
                     <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                 </Button.Background>

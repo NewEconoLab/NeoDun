@@ -30,7 +30,7 @@
                 <Image Grid.Row="0"  Source="/driver_win;component/res/？.png" Margin="101,83,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"/>
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
                 <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="  为地址设一个别名，以便更好的&#13;管理您的地址。（长度不超过7个&#13;字母）" Margin="113,48,310,339"/>
-                <ListBox  Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                <ListBox Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}">
                 </ListBox>
                 <ListBox Visibility="Hidden" Name="listboxDemo" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListBoxItem Style="{StaticResource ResourceKey=MyWpfListBoxItem}" Height="40" Width="584">

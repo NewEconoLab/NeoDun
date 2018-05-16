@@ -50,6 +50,11 @@ namespace driver_win.dialogs
             });
             CreateSimHardware();
 
+            this.list_btns.Add(this.Btn_gj_update);
+            this.list_btns.Add(this.manageAddr);
+            this.list_btns.Add(this.importWif);
+            this.list_btns.Add(this.importWallet);
+
             LinkSinger();
         }
 
@@ -177,16 +182,19 @@ namespace driver_win.dialogs
                 btn_install.Click += new RoutedEventHandler(Click_Install);
                 btn_install.Name = "Neo_" + btn_install.Name;
                 btn_install.Visibility = Visibility.Visible;
+                this.list_btns.Add(btn_install);
 
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
                 btn_uninstall.Click += new RoutedEventHandler(Click_Uninstall);
                 btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
                 btn_uninstall.Visibility = Visibility.Collapsed;
+                this.list_btns.Add(btn_uninstall);
 
                 var btn_update = item.FindName("btn_update") as Button;
                 btn_update.Click += new RoutedEventHandler(Click_Install);
                 btn_update.Name = "Neo_" + btn_update.Name;
-                btn_uninstall.Visibility = Visibility.Collapsed;
+                btn_update.Visibility = Visibility.Collapsed;
+                this.list_btns.Add(btn_update);
 
                 var git_loading = item.FindName("gif_loading") as Image;
                 if (this.FindName("Neo_" + git_loading.Name) != null)
@@ -251,7 +259,7 @@ namespace driver_win.dialogs
         private async void Click_Install(object sender, RoutedEventArgs e)
         {
             Button btn = (sender as Button);
-
+            ForbidAllBtnClick();
             var str_content = btn.Name.Split('_')[0];
 
             //安装按钮隐藏  等待按钮显示
@@ -275,6 +283,7 @@ namespace driver_win.dialogs
             {
                 DialogueControl.ShowMessageDialogue("安装失败",2, this);
             }
+            AllowAllBtnClick();
         }
 
         private async void Click_Uninstall(object sender, RoutedEventArgs e)
@@ -290,6 +299,34 @@ namespace driver_win.dialogs
             else
             {
                 DialogueControl.ShowMessageDialogue("卸载失败", 2, this);
+            }
+        }
+
+
+        List<Button> list_btns = new List<Button>();
+        //禁止所有的按键点击
+        private void ForbidAllBtnClick()
+        {
+            for(var i =0;i<list_btns.Count;i++)
+            {
+                var btn = list_btns[i];
+                if (this.FindName(btn.Name) == null)
+                    list_btns.Remove(btn);
+                else
+                    btn.IsEnabled = false;
+            }
+        }
+
+        //禁止所有的按键点击
+        private void AllowAllBtnClick()
+        {
+            for (var i = 0; i < list_btns.Count; i++)
+            {
+                var btn = list_btns[i];
+                if (this.FindName(btn.Name) == null)
+                    list_btns.Remove(btn);
+                else
+                    btn.IsEnabled = true;
             }
         }
     }
