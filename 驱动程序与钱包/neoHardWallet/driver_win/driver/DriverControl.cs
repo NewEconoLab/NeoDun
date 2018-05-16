@@ -86,8 +86,7 @@ namespace driver_win
         public void GetPackageInfoCallBack(byte[] data)
         {
             string appVersion = data[0] + "." + data[1];
-            if (appVersion == "0.0")
-                return;
+
             Jo_PackageInfo = new MyJson.JsonNode_Object();
 
             Jo_PackageInfo["gj"] = new MyJson.JsonNode_ValueString(appVersion);
