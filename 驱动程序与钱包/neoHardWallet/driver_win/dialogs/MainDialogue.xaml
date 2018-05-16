@@ -1,6 +1,7 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:driver_win="clr-namespace:driver_win" x:Class="driver_win.dialogs.MainDialogue"
         WindowStyle="None" Height="650px"  Width="1010px" ResizeMode="NoResize" Activated="Window_Activated" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent" AllowsTransparency="True">
     <Grid>
@@ -108,6 +109,7 @@
                                     <Button Visibility="Hidden" Name="btn_install" Style="{StaticResource ResourceKey=MyWpfButton_install}" Content="安装" Margin="-70,10,0,0" />
                                     <Button Visibility="Hidden" Name="btn_uninstall" Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="删除" Margin="-70,10,0,0" />
                                     <Button Visibility="Hidden" Name="btn_update" Style="{StaticResource ResourceKey=MyWpfButton_update}" Content="升级" Margin="-70,10,0,0" />
+                                    <Image Visibility="Hidden" Name="gif_loading" gif:ImageBehavior.AnimatedSource="/driver_win;component/res/loading.gif" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </ListBoxItem>
                         </ListBox>

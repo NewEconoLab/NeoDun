@@ -188,6 +188,12 @@ namespace driver_win.dialogs
                 btn_update.Name = "Neo_" + btn_update.Name;
                 btn_uninstall.Visibility = Visibility.Collapsed;
 
+                var git_loading = item.FindName("gif_loading") as Image;
+                if (this.FindName("Neo_" + git_loading.Name) != null)
+                    this.UnregisterName("Neo_" + git_loading.Name);
+                this.RegisterName("Neo_" + git_loading.Name, git_loading);
+                git_loading.Visibility = Visibility.Hidden;
+
                 if (JA_PackageInfo.ContainsKey("Neo"))
                 {
                     var verson = float.Parse(JA_PackageInfo["Neo"].ToString());
@@ -244,7 +250,16 @@ namespace driver_win.dialogs
 
         private async void Click_Install(object sender, RoutedEventArgs e)
         {
-            var str_content = (sender as Button).Name.Split('_')[0];
+            Button btn = (sender as Button);
+
+            var str_content = btn.Name.Split('_')[0];
+
+            //安装按钮隐藏  等待按钮显示
+            Image img = this.FindName(str_content + "_gif_loading") as Image;
+            img.Visibility = Visibility.Visible;
+            btn.Visibility = Visibility.Hidden;
+            img.Margin = btn.Margin;
+
             UInt16 type = 0x0001;
             UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
             //从本地获取需要安装的插件
