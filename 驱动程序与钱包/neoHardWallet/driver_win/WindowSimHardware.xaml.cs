@@ -473,7 +473,7 @@ namespace driver_win
                 msg.tag2 = 0xa4;
                 msg.msgid = recv.msgid;
                 msg.writeUInt16(0,0x0304);
-                msg.writeUInt16(2, 0x0101);
+                msg.writeUInt16(2, 0x0000);
                 msg.writeUInt16(4, version);
                 this.SendMsg(msg);
             }

@@ -155,7 +155,7 @@ namespace driver_win.dialogs
             //获取固件插件版本号
             MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
 
-            if (JA_PackageInfo.Count > 0)
+            //if (JA_PackageInfo.Count > 0)
             {
                 this.label_gjversion.Content = "固件(V" +JA_PackageInfo["gj"].ToString()+")";
                 double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
@@ -171,18 +171,22 @@ namespace driver_win.dialogs
                 ListBoxItem item = System.Windows.Markup.XamlReader.Parse(xaml) as ListBoxItem;
                 var img_icon = item.FindName("img_icon") as Image;
                 var label_version = item.FindName("label_version") as Label;
+                label_version.Content = "Neo(V0.00)";
 
                 var btn_install = item.FindName("btn_install") as Button;
                 btn_install.Click += new RoutedEventHandler(Click_Install);
                 btn_install.Name = "Neo_" + btn_install.Name;
+                btn_install.Visibility = Visibility.Visible;
 
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
                 btn_uninstall.Click += new RoutedEventHandler(Click_Uninstall);
                 btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
+                btn_uninstall.Visibility = Visibility.Collapsed;
 
                 var btn_update = item.FindName("btn_update") as Button;
                 btn_update.Click += new RoutedEventHandler(Click_Install);
                 btn_update.Name = "Neo_" + btn_update.Name;
+                btn_uninstall.Visibility = Visibility.Collapsed;
 
                 if (JA_PackageInfo.ContainsKey("Neo"))
                 {
@@ -208,10 +212,10 @@ namespace driver_win.dialogs
                 }
                 this.listbox.Items.Add(item);
             }
-            else
-            {
-                this.Btn_gj_update.Visibility = Visibility.Hidden;
-            }
+            //else
+            //{
+            //    this.Btn_gj_update.Visibility = Visibility.Hidden;
+            //}
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)

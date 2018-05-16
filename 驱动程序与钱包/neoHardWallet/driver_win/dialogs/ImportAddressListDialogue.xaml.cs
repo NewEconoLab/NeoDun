@@ -96,6 +96,8 @@ namespace driver_win.dialogs
                 label_state.Foreground = new SolidColorBrush(Color.FromRgb(191, 191, 191));
 
                 var wif = wifs[i];
+                if (this.Visibility != Visibility.Visible)
+                    return;
                 var result =await driverControl.AddAddressByWif(wif);
                 if (result == "suc")
                 {
