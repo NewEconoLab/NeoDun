@@ -252,8 +252,34 @@ namespace driver_win.dialogs
             Process.Start("https://wallet.nel.group/");
         }
 
-        private void Click_update_gujian(object sender, RoutedEventArgs e)
+        private async void Click_update_gujian(object sender, RoutedEventArgs e)
         {
+            Button btn = (sender as Button);
+            ForbidAllBtnClick();
+            var str_content = btn.Name.Split('_')[0];
+
+            //安装按钮隐藏  等待按钮显示
+            Image img = this.FindName("gj_gif_loading") as Image;
+            img.Visibility = Visibility.Visible;
+            btn.Visibility = Visibility.Hidden;
+            img.Margin = btn.Margin;
+
+            UInt16 type = 0x0000;
+            UInt16 content = 0x0000;
+            //从本地获取需要安装的插件
+            //获取最新的bin
+            byte[] data = System.IO.File.ReadAllBytes("./app.bin");
+            bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
+            if (result)
+            {
+                DialogueControl.ShowMessageDialogue("安装成功", 2, this);
+                GetPackageInfo();
+            }
+            else
+            {
+                DialogueControl.ShowMessageDialogue("安装失败", 2, this);
+            }
+            AllowAllBtnClick();
         }
 
         private async void Click_Install(object sender, RoutedEventArgs e)

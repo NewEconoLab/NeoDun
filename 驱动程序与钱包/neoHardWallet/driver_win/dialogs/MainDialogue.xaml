@@ -98,7 +98,8 @@
                         <Image Source="/driver_win;component/res/固件.png" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="110,211" Width="20" Height="26" />
                         <Label Name="label_gjversion" Content="固件(V0.0)" IsEnabled="False" Width="67" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                         <GridSplitter HorizontalAlignment="Left" Height="1" Margin="110,256,0,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                        <Button Visibility="Hidden" Style="{StaticResource ResourceKey=MyWpfButton_update}" Name="Btn_gj_update" Content="升级" Margin="606,204,0,0" Click="Click_update_gujian" />
+                        <Image Visibility="Hidden" Name="gj_gif_loading" gif:ImageBehavior.AnimatedSource="/driver_win;component/res/loading.gif" Margin="606,204,0,0" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button Visibility="Hidden" Style="{StaticResource ResourceKey=MyWpfButton_update}" Name="Btn_gj_update" Content="升级" Margin="606,204,0,0" Click="Click_Install" />
                         <ListBox Name="listbox" Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
                         </ListBox>
                         <ListBox Name="listboxDemo" Visibility="Collapsed"  Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
