@@ -4,6 +4,7 @@
 #include <stm32f4xx_hal.h>
 #include "main_define.h"
 
+void Hid_Need_Updata_Rp(void);
 void Hid_Data_Analysis(uint8_t data[],int len);
 uint8_t isAllPackGot(void);
 uint16_t Get_Serial_ID(void);

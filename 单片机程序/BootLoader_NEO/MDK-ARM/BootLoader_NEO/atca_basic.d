@@ -1,0 +1,17 @@
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\basic\atca_basic.c
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\basic\atca_basic.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\cryptoauthlib.h
+bootloader_neo\atca_basic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+bootloader_neo\atca_basic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\atca_iface.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\atca_command.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\atca_status.h
+bootloader_neo\atca_basic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\atca_bool.h
+bootloader_neo\atca_basic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\hal/hal_timer.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\basic/atca_basic.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\cryptoauthlib.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\crypto/atca_crypto_sw_sha2.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\crypto/atca_crypto_sw.h
+bootloader_neo\atca_basic.o: ..\ATSHA204\lib\host/atca_host.h

@@ -36,8 +36,8 @@ void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite);		
 void STMFLASH_Read(uint32_t ReadAddr,uint32_t *pBuffer,uint32_t NumToRead);   		//从指定地址开始读出指定长度的数据
 void STMFLASH_Erase_Sectors(uint32_t sector);		
 void STMFLASH_WriteWord(uint32_t faddr,uint32_t value);	 
-
-
+void STMFLASH_WriteHalfWord(uint32_t faddr,uint16_t value);
+void STMFLASH_Write_ByteArray(uint32_t WriteAddr,uint8_t *pBuffer,uint32_t NumToWrite);
 	 
 #ifdef __cplusplus
  }

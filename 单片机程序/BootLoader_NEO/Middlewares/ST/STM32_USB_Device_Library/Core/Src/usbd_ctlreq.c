@@ -430,7 +430,7 @@ static void USBD_GetDescriptor(USBD_HandleTypeDef *pdev ,
   if((len != 0)&& (req->wLength != 0))
   {
     
-    len = MIN(len , req->wLength);
+    len = USB_MIN(len , req->wLength);
     
     USBD_CtlSendData (pdev, 
                       pbuf,

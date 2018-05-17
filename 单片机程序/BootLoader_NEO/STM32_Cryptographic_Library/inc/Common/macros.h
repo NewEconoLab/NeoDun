@@ -57,7 +57,7 @@
   * @param  b  Second input  
   * @retval Max(a,b)
   */
-//#define MAX(a,b)        ((((uint32_t)(a)) > ((uint32_t)(b)))  ? (a)  : (b))
+#define MAX(a,b)        ((((uint32_t)(a)) > ((uint32_t)(b)))  ? (a)  : (b))
 
 /**
   * @brief  This macro returns the minumum value between two inputs,
@@ -66,7 +66,7 @@
   * @param  b  Second input  
   * @retval Min(a,b)
   */
-//#define MIN(a,b)        ((((uint32_t)(a)) > ((uint32_t)(b)))  ? (b)  : (a))
+#define MIN(a,b)        ((((uint32_t)(a)) > ((uint32_t)(b)))  ? (b)  : (a))
 
 
 /**
