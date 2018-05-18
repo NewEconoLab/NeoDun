@@ -158,7 +158,7 @@ namespace driver_win.dialogs
         {
             //从服务器获取固件和插件的版本信息
             MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
-            servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(0.1);
+            servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(3.1);
             servicePackageInfo["Neo"] = new MyJson.JsonNode_ValueNumber(9.1);
 
 
@@ -272,17 +272,25 @@ namespace driver_win.dialogs
             UInt16 content = 0x0000;
             //从本地获取需要安装的插件
             //获取最新的bin
-            byte[] data = System.IO.File.ReadAllBytes("./app.bin");
+            byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
             bool result = await driverControl.ApplyForUpdate();
             if (result)
             {
                 DialogueControl.ShowMessageDialogue("同意更新固件", 2, this);
-                GetPackageInfo();
+                //GetPackageInfo();
             }
             else
             {
                 DialogueControl.ShowMessageDialogue("拒绝更新固件", 2, this);
+                AllowAllBtnClick();
+                return;
             }
+
+            result = await driverControl.Update();
+
+            img.Visibility = Visibility.Hidden;
+            btn.Visibility = Visibility.Visible;
+
             AllowAllBtnClick();
         }
 
@@ -313,10 +321,7 @@ namespace driver_win.dialogs
                 DialogueControl.ShowMessageDialogue("安装失败",2, this);
             }
 
-            result = await driverControl.Update();
 
-            img.Visibility = Visibility.Hidden;
-            btn.Visibility = Visibility.Visible;
             AllowAllBtnClick();
         }
 
