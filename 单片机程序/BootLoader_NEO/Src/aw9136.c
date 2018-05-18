@@ -112,7 +112,7 @@ void AW9136_Init(void)
     HAL_GPIO_Init(GPIOC,&GPIO_Initure);		
 	
     //中断线2-PC2
-    HAL_NVIC_SetPriority(EXTI2_IRQn,2,3);   //抢占优先级为2，子优先级为3
+    HAL_NVIC_SetPriority(EXTI2_IRQn,1,3);   //抢占优先级为2，子优先级为3l
     HAL_NVIC_EnableIRQ(EXTI2_IRQn);         //使能中断线2  	
 	
 		IIC2_Init();
@@ -621,26 +621,20 @@ void AW9136_eint_work(void)
 
 void AW_left_press(void)
 {
-#ifdef Debug_Print		
-		printf("AW9136 left press \n");
-#endif	
 }
 
 void AW_left_release(void)
 {
-#ifdef Debug_Print		
-		printf("AW9136 left release\n");
-#endif	
 }
 
 void AW_center_press(void)
 {		
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
+		if(aw9136_key_flag&&Key_Flag.flag.key_state)
 		{
 #ifdef Debug_Print				
 				printf("AW9136 right press \n");
 #endif			
-				Key_Flag.Key_right_Flag = 1;
+				Key_Flag.flag.right = 1;
 		}
 		if(touch_motor_flag)
 				Motor_touch(MOTOR_TIME);
@@ -648,23 +642,16 @@ void AW_center_press(void)
 
 void AW_center_release(void)
 {
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
-		{
-#ifdef Debug_Print				
-				printf("AW9136 right release \n");
-#endif			
-//				Key_Flag.Key_right_Flag = 1;
-		}
 }
 
 void AW_right_press(void)
 {
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
+		if(aw9136_key_flag&&Key_Flag.flag.key_state)
 		{
 #ifdef Debug_Print				
 				printf("AW9136 left press \n");
 #endif			
-				Key_Flag.Key_left_Flag = 1;
+				Key_Flag.flag.left = 1;
 		}
 		if(touch_motor_flag)
 				Motor_touch(MOTOR_TIME);
@@ -672,48 +659,28 @@ void AW_right_press(void)
 		
 void AW_right_release(void)
 {
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)
-		{
-#ifdef Debug_Print				
-				printf("AW9136 left release \n");
-#endif			
-//				Key_Flag.Key_left_Flag = 1;
-		}
 }
 
 void AW_double(void)
 {
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)			
-		{		
-#ifdef Debug_Print				
-				printf("AW9136 center double click \n");
-#endif			
-				Key_Flag.Key_double_Flag = 1;
-		}
 }
 
 void AW_right_slip(void)
 {
-#ifdef Debug_Print		
-		printf("AW9136 right slip \n");
-#endif
 }
 
 void AW_left_slip(void)
 {
-#ifdef Debug_Print		
-		printf("AW9136 left slip \n");
-#endif	
 }
 
 void Home_Key_press(void)
 {	
-		if(aw9136_key_flag&&Key_Flag.Key_Control_Flag)			
+		if(aw9136_key_flag&&Key_Flag.flag.key_state)			
 		{		
 #ifdef Debug_Print			
 				printf("中间按键按下！！！\n");
 #endif			
-				Key_Flag.Key_center_Flag = 1;
+				Key_Flag.flag.middle = 1;
 		}
 		if(touch_motor_flag)
 				Motor_touch(MOTOR_TIME);
@@ -744,12 +711,12 @@ void Key_Control(unsigned char value)
 		if(value == 1)
 		{
 				AW9136_LED_ON();					
-				Key_Flag.Key_Control_Flag = 1;
+				Key_Flag.flag.key_state = 1;
 		}
 		else
 		{
 				AW9136_LED_OFF();
-				Key_Flag.Key_Control_Flag = 0;
+				Key_Flag.flag.key_state = 0;
 		}
 }	
 

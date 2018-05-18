@@ -35,12 +35,11 @@
 #include "hw_config.h"
 #include "main_define.h"
 #include "app_interface.h"
-#include "test_jpg.h"
+#include "bmp.h"
 #include "usbd_customhid.h"
 #include "app_command.h"
 
 UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
 RNG_HandleTypeDef hrng;
 CRC_HandleTypeDef hcrc;
 
@@ -51,13 +50,16 @@ static void MX_CRC_Init(void);
 static void MX_RNG_Init(void);
 static void MX_USART1_UART_Init(void);
 
+static uint8_t	aw9136_init_flag = 0;
 //HID数据处理变量
 static volatile uint8_t 	HID_PAGE_RECV[64];
-static volatile int 			HID_RECV_LEN = 0;
+static volatile int 			HID_RECV_LEN  = 0;
 static volatile uint8_t 	hid_recv_flag = 0;
 
 int main(void)
 {
+		uint8_t	slot_data_read[32];
+		
 		//数据初始化
 		DATA_Init();
 		
@@ -72,13 +74,16 @@ int main(void)
 				HAL_Delay(10000);
 				return 0;
 		}
-
-		//加延时给按键芯片足够的时间来完成初始化
-		//HAL_Delay(500);
 		
 		//调试和升级选择
 		if(Have_App() == 0)       			//不存在APP程序
 		{
+				if(aw9136_init_flag == 0)					
+				{
+						aw9136_init_flag = 1;
+						AW9136_Init();					//触摸按键
+						HAL_Delay(500);
+				}
 				Fill_RAM(0x00);							//清屏
 				Show_HZ12_12(80,7,0,0,5);		//没有安装程序
 				Show_HZ12_12(80,26,0,6,9);	//是否进行
@@ -89,18 +94,18 @@ int main(void)
 				Key_Control(1);							//清空按键标志位，开启按键有效
 				while(1)
 				{
-						if(Key_Flag.Key_center_Flag)
+						if(Key_Flag.flag.middle)
 						{
-								Key_Flag.Key_center_Flag = 0;
-								BootFlag.update = 1;
+								Key_Flag.flag.middle = 0;
+								BootFlag.flag.update = 1;
 								MX_USB_DEVICE_Init();			//USB初始化
 								Key_Control(0);
 								break;
 						}
-						if(Key_Flag.Key_left_Flag||Key_Flag.Key_right_Flag)
+						if(Key_Flag.flag.left||Key_Flag.flag.right)
 						{
-								Key_Flag.Key_left_Flag = 0;
-								Key_Flag.Key_right_Flag = 0;
+								Key_Flag.flag.left  = 0;
+								Key_Flag.flag.right = 0;
 								MX_USB_DEVICE_Init();			//USB初始化							
 								if(NEO_Test())
 								{
@@ -119,22 +124,28 @@ int main(void)
 								return 0;
 						}
 				}
-		}		
+		}
 		
 		//升级处理
-#ifdef Debug_Print
-		printf("Update Flag:%d\n",BootFlag.update);
-#endif
-		if(BootFlag.update)//需要升级
+		if(BootFlag.flag.update)//需要升级
 		{
+				BootFlag.flag.update = 0;
+				ATSHA_read_data_slot(SLOT_FLAG,slot_data_read);
+				slot_data_read[1] = 0;
+				ATSHA_write_data_slot(SLOT_FLAG,0,slot_data_read,32);
+				if(aw9136_init_flag == 0)
+				{
+						aw9136_init_flag = 1;
+						AW9136_Init();					//触摸按键
+				}
 				Fill_RAM(0x00);
-				if(BootFlag.language == 0)
+				if(BootFlag.flag.language == 0)
 						Show_HZ12_12(96,26,0,10,13);	//等待更新
 				else
 				{
 						Asc8_16(100,24,"Waiting");
 				}
-				MX_USB_DEVICE_Init();							//USB初始化
+				MX_USB_DEVICE_Init();							//USB初始化				
 				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);
 				while(1)
 				{
@@ -143,7 +154,7 @@ int main(void)
 								Hid_Data_Analysis((uint8_t *)HID_PAGE_RECV,HID_RECV_LEN);
 								hid_recv_flag = 0;
 						}
-						if(BootFlag.update_flag_failed)//一旦检测到更新失败，则退出程序
+						if(BootFlag.flag.update_flag_failed)//一旦检测到更新失败，则退出程序
 						{
 								Fill_RAM(0x00);
 								__set_FAULTMASK(1);
@@ -151,10 +162,8 @@ int main(void)
 						}
 				}
 		}
-		
 		//大厅app已安装，且不需要升级，则直接进入大厅app
 		iap_load_app(FLASH_APP0_ADDR);
-		
 		return 0;
 }
 
@@ -171,7 +180,6 @@ static void BSP_Init(void)
 		clearArea(104,56,48,1);
 		MX_USART1_UART_Init();		//打印信息串口
 		ATSHA204_Init();
-		AW9136_Init();						//触摸按键
 }
 
 /** System Clock Configuration

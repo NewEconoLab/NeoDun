@@ -40,20 +40,20 @@ uint8_t ReadAT204Flag(BOOT_SYS_FLAG *flag)
 				return 0;
 		
 		if((slot_data[31] == 0x88)&&(slot_data[30] == 0x88)&&(slot_data[29] == 0x88)&&(slot_data[28] == 0x88))
-				flag->new_wallet = 0;
+				flag->flag.new_wallet = 0;
 		else
-				flag->new_wallet = 1;
+				flag->flag.new_wallet = 1;
 		
-		if(flag->new_wallet)
+		if(flag->flag.new_wallet)
 		{
-				flag->update = 0;
-				flag->language = 0;
+				flag->flag.update 	= 0;
+				flag->flag.language = 0;
 				EmptyWallet();
 		}
 		else
 		{
-				flag->update = slot_data[1];
-				flag->language = slot_data[2];
+				flag->flag.update 	= slot_data[1];
+				flag->flag.language = slot_data[2];
 		}
 		
 		return 1;		
@@ -84,7 +84,7 @@ void EmptyWallet(void)
 *****************	**********************************/
 uint8_t Have_App(void)
 {
-		if(STMFLASH_ReadWord(0x08010000) == 0XFFFFFFFF)//不存在APP程序
+		if(STMFLASH_ReadWord(0x08020000) == 0XFFFFFFFF)//不存在APP程序
 				return 0;
 		else
 				return 1;
@@ -106,7 +106,7 @@ uint8_t NEO_Test(void)
 	
 		while(1)
 		{
-				if(Key_Flag.Key_center_Flag)
+				if(Key_Flag.flag.middle)
 				{
 						touch_motor_flag = 0;
 						Key_Control(0);				//清空按键标志位，开启按键无效
@@ -136,19 +136,19 @@ uint8_t NEO_Test(void)
 						
 						while(1) 
 						{
-								if(Key_Flag.Key_left_Flag)
+								if(Key_Flag.flag.left)
 								{
-										Key_Flag.Key_left_Flag = 0;
+										Key_Flag.flag.left = 0;
 										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
 								}
-								if(Key_Flag.Key_right_Flag)
+								if(Key_Flag.flag.right)
 								{
-										Key_Flag.Key_right_Flag = 0;
+										Key_Flag.flag.right = 0;
 										HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);						
 								}
-								if(Key_Flag.Key_center_Flag)//中间按键按下，退出
+								if(Key_Flag.flag.middle)//中间按键按下，退出
 								{
-										Key_Flag.Key_center_Flag = 0;
+										Key_Flag.flag.middle = 0;
 										break;
 								}
 						}
@@ -156,7 +156,7 @@ uint8_t NEO_Test(void)
 						value = 1;						
 						break;
 				}
-				else if((Key_Flag.Key_right_Flag == 1)||(Key_Flag.Key_left_Flag == 1))
+				else if((Key_Flag.flag.right == 1)||(Key_Flag.flag.left == 1))
 				{							
 						value = 0;
 						break;
@@ -166,17 +166,5 @@ uint8_t NEO_Test(void)
 		return value;
 }
 
-/***************************************************
-功能：
-		系统更新测试
-*****************	**********************************/
-void SYS_TEST(void)
-{
-		uint8_t array_write[32] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-																			0,0,0,0,0,0,0,0,0,0,0,0,0x88,0x88,0x88,0x88};
 
-		STMFLASH_WriteWord(0x08010000,1);
-		ATSHA_write_data_slot(14,0,array_write,32);
-
-}
 

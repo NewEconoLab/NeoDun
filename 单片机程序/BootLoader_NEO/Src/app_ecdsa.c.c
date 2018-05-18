@@ -2,47 +2,46 @@
 #include <string.h> 
 
 //·ÖÅä´æ´¢¿Õ¼ä
-static uint8_t preallocated_buffer[ECC_STORE_SPACE]   __attribute__((at(0x10001000)));
-static uint8_t digest_malloc[128];
-static uint8_t pub_x_malloc[50];
-static uint8_t pub_y_malloc[50];
-static uint8_t sign_r_malloc[50];
-static uint8_t sign_s_malloc[50];
+uint8_t digest_malloc[128];
+uint8_t pub_x_malloc[50];
+uint8_t pub_y_malloc[50];
+uint8_t sign_r_malloc[50];
+uint8_t sign_s_malloc[50];
 
 /******************************************************************************/
 /******** Parameters for Elliptic Curve P-256 SHA-256 from FIPS 186-3**********/
 /******************************************************************************/
-static const uint8_t P_256_a[] =
+const uint8_t P_256_a[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC
   };
-static const uint8_t P_256_b[] =
+const uint8_t P_256_b[] =
   {
     0x5a, 0xc6, 0x35, 0xd8, 0xaa, 0x3a, 0x93, 0xe7, 0xb3, 0xeb, 0xbd, 0x55, 0x76,
     0x98, 0x86, 0xbc, 0x65, 0x1d, 0x06, 0xb0, 0xcc, 0x53, 0xb0, 0xf6, 0x3b, 0xce,
     0x3c, 0x3e, 0x27, 0xd2, 0x60, 0x4b
   };
-static const uint8_t P_256_p[] =
+const uint8_t P_256_p[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
   };
-static const uint8_t P_256_n[] =
+const uint8_t P_256_n[] =
   {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     0xFF, 0xFF, 0xFF, 0xBC, 0xE6, 0xFA, 0xAD, 0xA7, 0x17, 0x9E, 0x84, 0xF3, 0xB9,
     0xCA, 0xC2, 0xFC, 0x63, 0x25, 0x51
   };
-static const uint8_t P_256_Gx[] =
+const uint8_t P_256_Gx[] =
   {
     0x6B, 0x17, 0xD1, 0xF2, 0xE1, 0x2C, 0x42, 0x47, 0xF8, 0xBC, 0xE6, 0xE5, 0x63,
     0xA4, 0x40, 0xF2, 0x77, 0x03, 0x7D, 0x81, 0x2D, 0xEB, 0x33, 0xA0, 0xF4, 0xA1,
     0x39, 0x45, 0xD8, 0x98, 0xC2, 0x96
   };
-static const uint8_t P_256_Gy[] =
+const uint8_t P_256_Gy[] =
   {
     0x4F, 0xE3, 0x42, 0xE2, 0xFE, 0x1A, 0x7F, 0x9B, 0x8E, 0xE7, 0xEB, 0x4A, 0x7C,
     0x0F, 0x9E, 0x16, 0x2B, 0xCE, 0x33, 0x57, 0x6B, 0x31, 0x5E, 0xCE, 0xCB, 0xB6,
@@ -50,7 +49,7 @@ static const uint8_t P_256_Gy[] =
   };
 
 uint8_t Alg_ECDSASignVerify(uint8_t *public_key,BIN_FILE_INFO *file,uint8_t *input_msg)
-{	
+{
 		int32_t error_sta = 0;
 	  EC_Para EC;
 	  Pub_Key_Para pub_key;
@@ -63,19 +62,19 @@ uint8_t Alg_ECDSASignVerify(uint8_t *public_key,BIN_FILE_INFO *file,uint8_t *inp
 
 		pub_key.pub_xSize = 32;
 		pub_key.pub_ySize = 32;
-		pub_key.pub_x = public_key;
-		pub_key.pub_y = public_key + 32;
+		pub_key.pub_x 		= public_key;
+		pub_key.pub_y 		= public_key + 32;
 
-		sign.sign_rSize = file->Len_sign/2;
-		sign.sign_sSize = file->Len_sign/2;
-		sign.sign_r = file->signature;
-		sign.sign_s = file->signature + file->Len_sign/2;
+		sign.sign_rSize 	= file->Len_sign/2;
+		sign.sign_sSize 	= file->Len_sign/2;
+		sign.sign_r 			= file->signature;
+		sign.sign_s 			= file->signature + file->Len_sign/2;
 	
 		inputMsg.inputMsg_size = 32;
-		inputMsg.input_msg = input_msg;
+		inputMsg.input_msg 		 = input_msg;
 			
 		digest.digt = digest_malloc;
-		error_sta = ECCSignVerify(&EC, &pub_key, &sign, &inputMsg, &digest);
+		error_sta 	= ECCSignVerify(&EC, &pub_key, &sign, &inputMsg, &digest);
 	
 		if (error_sta == AUTHENTICATION_SUCCESSFUL)
 		{
@@ -206,7 +205,7 @@ int32_t ECCSignVerify(const EC_Para *ec, const Pub_Key_Para *pub_key, const Sign
                       const InputMsg_Para *inputMsg, Digest_Para *digest)
 {
 		int32_t error_sta  = ECC_SUCCESS;
-	
+		uint8_t preallocated_buffer[ECC_STORE_SPACE];
 		const	uint8_t * InputMessage;
 		uint32_t InputLength = NULL;
 

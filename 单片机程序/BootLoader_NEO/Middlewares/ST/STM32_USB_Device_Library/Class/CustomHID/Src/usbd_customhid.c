@@ -359,13 +359,13 @@ static uint8_t  USBD_CUSTOM_HID_Setup (USBD_HandleTypeDef *pdev,
     case USB_REQ_GET_DESCRIPTOR: 
       if( req->wValue >> 8 == CUSTOM_HID_REPORT_DESC)
       {
-        len = MIN(USBD_CUSTOM_HID_REPORT_DESC_SIZE , req->wLength);
+        len = USB_MIN(USBD_CUSTOM_HID_REPORT_DESC_SIZE , req->wLength);
         pbuf =  ((USBD_CUSTOM_HID_ItfTypeDef *)pdev->pUserData)->pReport;
       }
       else if( req->wValue >> 8 == CUSTOM_HID_DESCRIPTOR_TYPE)
       {
         pbuf = USBD_CUSTOM_HID_Desc;   
-        len = MIN(USB_CUSTOM_HID_DESC_SIZ , req->wLength);
+        len = USB_MIN(USB_CUSTOM_HID_DESC_SIZ , req->wLength);
       }
       
       USBD_CtlSendData (pdev, 

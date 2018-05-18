@@ -312,7 +312,7 @@ USBD_StatusTypeDef USBD_LL_DataOutStage(USBD_HandleTypeDef *pdev , uint8_t epnum
        
         USBD_CtlContinueRx (pdev, 
                             pdata,
-                            MIN(pep->rem_length ,pep->maxpacket));
+                            USB_MIN(pep->rem_length ,pep->maxpacket));
       }
       else
       {
