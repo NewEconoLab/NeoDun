@@ -66,7 +66,7 @@ namespace NeoDun
         public delegate void GetPackageInfoEventHandler(byte[] _bytes);
         public GetPackageInfoEventHandler getPackageInfoEventHandler;
 
-        public delegate void SignEventHandler(byte[] _bytes,bool _suc);
+        public delegate void SignEventHandler(byte[] _bytes,UInt16 _suc);
         public SignEventHandler signEventHandler;
 
         public delegate Task<bool> UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
@@ -324,7 +324,7 @@ namespace NeoDun
                         }
                     }
                     if (signEventHandler != null)
-                        signEventHandler(outdata, true);
+                        signEventHandler(outdata, 0x0001);
                 }
                 //安装成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
@@ -355,7 +355,7 @@ namespace NeoDun
                     //获取最新的bin
                     byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
 
-                    updateApp(data,0x0000,0x0000,0x0001);
+                    await updateApp(data,0x0000,0x0000,0x0001);
                 }
             });
             watcherColl.OnRecv(msg, srcmsg);

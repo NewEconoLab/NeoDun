@@ -21,17 +21,17 @@ namespace hhgate
         static IDisposable handleServer;
         public static void BeginServer()
         {
-            //var url = "http://127.0.0.1:50288/";
-            //var startOpts = new StartOptions(url)
-            //{
-            //
-            //};
-            //mapParser.Clear();
-            //handleServer = WebApp.Start<CustomServer>(startOpts);
-            //AddStaticFileMap("www", "www");
-            //AddCustomFileParser("_api", new SignMachine());
-            ////AddCustomFileParser("_api", new HarddriveHttpGateway());
-            //Console.WriteLine("open server on:" + url);
+            var url = "http://127.0.0.1:50288/";
+            var startOpts = new StartOptions(url)
+            {
+            
+            };
+            mapParser.Clear();
+            handleServer = WebApp.Start<CustomServer>(startOpts);
+            AddStaticFileMap("www", "www");
+            AddCustomFileParser("_api", Api.Ins);
+            //AddCustomFileParser("_api", new HarddriveHttpGateway());
+            Console.WriteLine("open server on:" + url);
         }
         public static void CloseServer()
         {

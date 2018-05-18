@@ -44,6 +44,7 @@ namespace driver_win
             signer.errorEventHandler += ErrorCallBack;
             signer.updateAppEventHandler += UpdateAppCallBack;
             signer.uninstallAppEventHandler += UninstallAppCallBack;
+            signer.signEventHandler += SignCallBack;
         }
 
         private void UInit()
@@ -55,6 +56,8 @@ namespace driver_win
             signer.errorEventHandler -= ErrorCallBack;
             signer.updateApp -= UpdateApp;
             signer.uninstallAppEventHandler -= UninstallAppCallBack;
+            signer.signEventHandler -= SignCallBack;
+
         }
 
         #region 
@@ -255,6 +258,24 @@ namespace driver_win
             needLoop = false;
         }
 
+
+        public async Task<bool> Update()
+        {
+            needLoop = true;
+            int time = 0;
+            while (needLoop && time <= 60000)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            return applyResult;
+        }
+        private void UpdateCallBack(bool suc)
+        {
+            applyResult = suc;
+            needLoop = false;
+        }
+
         public async Task<bool> UpdateApp(byte[] data,UInt16 type,UInt16 content, UInt16 version)
         {
             try
@@ -338,6 +359,89 @@ namespace driver_win
         {
             applyResult = suc;
             needLoop = false;
+        }
+        #endregion
+
+        #region  签名 sign
+
+        MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
+
+        public async Task<MyJson.JsonNode_Object> Sign(string str_data, string str_address)
+        {
+            result = new MyJson.JsonNode_Object();
+            result["signdata"] = new MyJson.JsonNode_ValueString();
+            result["pubkey"] = new MyJson.JsonNode_ValueString();
+            result["tag"] = new MyJson.JsonNode_ValueNumber(0);
+            result["msg"] = new MyJson.JsonNode_ValueString("success");
+
+            var data = NeoDun.SignTool.HexString2Bytes(str_data);
+            var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+            var hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+
+            //发送待签名数据块
+            var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
+            block.data = data;
+            signer.SendDataBlock(block);//need a finish callback.
+
+            var __block = signer.dataTable.getBlockBySha256(hashstr);
+            uint remoteid = await __block.GetRemoteid();
+            __block.dataidRemote = 0;
+ 
+            NeoDun.Message signMsg = new NeoDun.Message();
+
+            {//发送签名报文
+                var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, str_address);
+
+                if (add == null)
+                    return result;
+
+                var addbytes = add.GetAddbytes();
+                signMsg.tag1 = 0x02;
+                signMsg.tag2 = 0x05;//签
+                signMsg.msgid = NeoDun.SignTool.RandomShort();
+                signMsg.writeUInt16(0, (UInt16)add.type);//neo tag
+                Array.Copy(addbytes, 0, signMsg.data, 2, addbytes.Length);//addbytes
+
+                //这个dataid 要上一个block 传送完毕了才知道
+                signMsg.writeUInt32(42, remoteid);
+                signer.SendMessage(signMsg, true);
+            }
+
+
+
+            needLoop = true;
+            addResult = false;
+            int time = 0;
+            while (needLoop && time <= waitTime)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            needLoop = false;
+            return result ;
+        }
+        private void SignCallBack(byte[] _outdata, UInt16 resultcode)
+        {
+            if (resultcode == 0x0001)
+            {
+                var pubkeylen = _outdata[0];
+                var pubkey = new byte[pubkeylen];
+                Array.Copy(_outdata, 1, pubkey, 0, pubkeylen);
+                var signdata = _outdata.Skip(pubkeylen + 1).ToArray();
+                result["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
+                result["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
+                result["tag"] = new MyJson.JsonNode_ValueNumber(0);
+                result["msg"] = new MyJson.JsonNode_ValueNumber(resultcode);
+            }
+            else
+            {
+                result["signdata"] = new MyJson.JsonNode_ValueString();
+                result["pubkey"] = new MyJson.JsonNode_ValueString();
+                result["tag"] = new MyJson.JsonNode_ValueNumber(0);
+                result["msg"] = new MyJson.JsonNode_ValueNumber(resultcode);
+            }
+
+
         }
         #endregion
 

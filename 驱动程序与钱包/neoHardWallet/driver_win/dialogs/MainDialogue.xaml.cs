@@ -31,6 +31,9 @@ namespace driver_win.dialogs
 
             driverControl = new DriverControl();
 
+            hhgate.CustomServer.BeginServer();
+            hhgate.Api.Ins.driverControl = driverControl;
+
             this.notifyIcon = new System.Windows.Forms.NotifyIcon();
             this.notifyIcon.Icon = new System.Drawing.Icon(@"Neodun.ico");
             this.notifyIcon.Visible = true;
@@ -56,6 +59,8 @@ namespace driver_win.dialogs
             this.list_btns.Add(this.importWallet);
 
             LinkSinger();
+
+            //hhgate.CustomServer.BeginServer();
         }
 
         bool _islinking = false;
@@ -262,22 +267,21 @@ namespace driver_win.dialogs
             Image img = this.FindName("gj_gif_loading") as Image;
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
-            img.Margin = btn.Margin;
 
             UInt16 type = 0x0000;
             UInt16 content = 0x0000;
             //从本地获取需要安装的插件
             //获取最新的bin
             byte[] data = System.IO.File.ReadAllBytes("./app.bin");
-            bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
+            bool result = await driverControl.ApplyForUpdate();
             if (result)
             {
-                DialogueControl.ShowMessageDialogue("安装成功", 2, this);
+                DialogueControl.ShowMessageDialogue("同意更新固件", 2, this);
                 GetPackageInfo();
             }
             else
             {
-                DialogueControl.ShowMessageDialogue("安装失败", 2, this);
+                DialogueControl.ShowMessageDialogue("拒绝更新固件", 2, this);
             }
             AllowAllBtnClick();
         }
@@ -292,7 +296,6 @@ namespace driver_win.dialogs
             Image img = this.FindName(str_content + "_gif_loading") as Image;
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
-            img.Margin = btn.Margin;
 
             UInt16 type = 0x0001;
             UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
@@ -309,6 +312,11 @@ namespace driver_win.dialogs
             {
                 DialogueControl.ShowMessageDialogue("安装失败",2, this);
             }
+
+            result = await driverControl.Update();
+
+            img.Visibility = Visibility.Hidden;
+            btn.Visibility = Visibility.Visible;
             AllowAllBtnClick();
         }
 
