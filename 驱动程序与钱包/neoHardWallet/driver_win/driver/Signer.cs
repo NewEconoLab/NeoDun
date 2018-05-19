@@ -72,6 +72,9 @@ namespace NeoDun
         public delegate Task<bool> UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
         public UpdateApp updateApp;
 
+        public delegate void UpdateEventHandler(bool _suc);
+        public UpdateEventHandler updateEventHandler;
+
         public delegate void UpdateAppEventHandler(bool _suc);
         public UpdateAppEventHandler updateAppEventHandler;
 
@@ -248,7 +251,7 @@ namespace NeoDun
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
-
+                    updateEventHandler(false);
                 }
                 //卸载失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)
@@ -327,14 +330,14 @@ namespace NeoDun
                         signEventHandler(outdata, 0x0001);
                 }
                 //安装成功
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa0)
                 {
                     updateAppEventHandler(true);
                 }
                 //同意更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
-
+                    updateEventHandler(true);
                 }
                 //卸载成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
@@ -342,7 +345,7 @@ namespace NeoDun
                     uninstallAppEventHandler(true);
                 }
                 //查询固件插件版本回复
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
                 {
                     byte[] outdata = null;
                     outdata = msg.data;

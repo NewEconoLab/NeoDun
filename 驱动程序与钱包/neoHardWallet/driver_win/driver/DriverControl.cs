@@ -45,6 +45,7 @@ namespace driver_win
             signer.updateAppEventHandler += UpdateAppCallBack;
             signer.uninstallAppEventHandler += UninstallAppCallBack;
             signer.signEventHandler += SignCallBack;
+            signer.updateEventHandler += UpdateCallBack;
         }
 
         private void UInit()
@@ -57,7 +58,7 @@ namespace driver_win
             signer.updateApp -= UpdateApp;
             signer.uninstallAppEventHandler -= UninstallAppCallBack;
             signer.signEventHandler -= SignCallBack;
-
+            signer.updateEventHandler -= UpdateCallBack;
         }
 
         #region 
