@@ -277,16 +277,22 @@ namespace driver_win.dialogs
             if (result)
             {
                 DialogueControl.ShowMessageDialogue("同意更新固件", 2, this);
-                //GetPackageInfo();
+
+                result = await driverControl.Update();
+                if (result)
+                {
+                    DialogueControl.ShowMessageDialogue("安装成功", 2, this);
+                }
+                else
+                {
+                    DialogueControl.ShowMessageDialogue("安装失败", 2, this);
+                }
+
             }
             else
             {
                 DialogueControl.ShowMessageDialogue("拒绝更新固件", 2, this);
-                AllowAllBtnClick();
-                return;
             }
-
-            result = await driverControl.Update();
 
             img.Visibility = Visibility.Hidden;
             btn.Visibility = Visibility.Visible;

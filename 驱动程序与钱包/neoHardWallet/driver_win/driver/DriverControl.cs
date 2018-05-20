@@ -45,7 +45,8 @@ namespace driver_win
             signer.updateAppEventHandler += UpdateAppCallBack;
             signer.uninstallAppEventHandler += UninstallAppCallBack;
             signer.signEventHandler += SignCallBack;
-            signer.updateEventHandler += UpdateCallBack;
+            signer.applyUpdateEventHandler += ApplyForUpdateCallBack;
+            signer.updateAppEventHandler += UpdateCallBack;
         }
 
         private void UInit()
@@ -58,7 +59,8 @@ namespace driver_win
             signer.updateApp -= UpdateApp;
             signer.uninstallAppEventHandler -= UninstallAppCallBack;
             signer.signEventHandler -= SignCallBack;
-            signer.updateEventHandler -= UpdateCallBack;
+            signer.applyUpdateEventHandler -= ApplyForUpdateCallBack;
+            signer.updateAppEventHandler -= UpdateCallBack;
         }
 
         #region 
@@ -111,16 +113,27 @@ namespace driver_win
         bool addResult;
         public async Task<string> AddAddressByWif(string wif)
         {
-            byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(wif);
-            byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
-            string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
+
+            byte[] privateKey;
+            byte[] publicKey;
+            string str_address="";
+            try
+            {
+                privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(wif);
+                publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
+                str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
+            }
+            catch (Exception e)
+            {
+                return "0205";
+            }
 
             //地址查重 
             foreach (var add in signer.addressPool.addresses)
             {
                 if (add.AddressText == str_address)
                 {
-                    return "地址重复";
+                    return "0202";
 
                 }
             }
