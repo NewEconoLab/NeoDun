@@ -138,6 +138,7 @@
     <Compile Include="protocol\message.cs" />
     <Compile Include="protocol\personalinfo.cs" />
     <Compile Include="protocol\signtool.cs" />
+    <Compile Include="server\Api.cs" />
     <Compile Include="server\Cmd.cs" />
     <Compile Include="server\FormData.cs" />
     <Compile Include="server\HHGate.cs" />

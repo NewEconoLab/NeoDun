@@ -365,15 +365,11 @@ namespace driver_win
 
         #region  签名 sign
 
-        MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
+        public MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
 
-        public async Task<MyJson.JsonNode_Object> Sign(string str_data, string str_address)
+        public async void Sign(string str_data, string str_address)
         {
             result = new MyJson.JsonNode_Object();
-            result["signdata"] = new MyJson.JsonNode_ValueString();
-            result["pubkey"] = new MyJson.JsonNode_ValueString();
-            result["tag"] = new MyJson.JsonNode_ValueNumber(0);
-            result["msg"] = new MyJson.JsonNode_ValueString("success");
 
             var data = NeoDun.SignTool.HexString2Bytes(str_data);
             var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
@@ -394,7 +390,13 @@ namespace driver_win
                 var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, str_address);
 
                 if (add == null)
-                    return result;
+                {
+                    result["signdata"] = new MyJson.JsonNode_ValueString("");
+                    result["pubkey"] = new MyJson.JsonNode_ValueString("");
+                    result["tag"] = new MyJson.JsonNode_ValueNumber(0);
+                    result["msg"] = new MyJson.JsonNode_ValueString("0206");
+                    return;
+                }
 
                 var addbytes = add.GetAddbytes();
                 signMsg.tag1 = 0x02;
@@ -407,19 +409,6 @@ namespace driver_win
                 signMsg.writeUInt32(42, remoteid);
                 signer.SendMessage(signMsg, true);
             }
-
-
-
-            needLoop = true;
-            addResult = false;
-            int time = 0;
-            while (needLoop && time <= waitTime)
-            {
-                await Task.Delay(100);
-                time += 100;
-            }
-            needLoop = false;
-            return result ;
         }
         private void SignCallBack(byte[] _outdata, UInt16 resultcode)
         {

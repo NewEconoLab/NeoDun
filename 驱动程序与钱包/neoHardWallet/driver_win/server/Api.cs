@@ -84,16 +84,28 @@ namespace hhgate
                 }
                 var address = formdata.mapParams["address"];
                 var data = formdata.mapParams["data"];
-                MyJson.JsonNode_Object result = await Sign(address, data);
-                //读出来，拼为http响应，发回去
+                var time = 0;
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                 json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                json["msg"] = result["msg"];
                 json["data"] = new MyJson.JsonNode_ValueString(data);
-                json["signdata"] = result["signdata"];
-                json["pubkey"] = result["pubkey"];
+                MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
+                json["msg"] = new MyJson.JsonNode_ValueString("0501");
+                driverControl.Sign(data,address);
+                while (time <= 10000)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    result = driverControl.result;
+                    if (result.Count>0)
+                    {
+                        json["msg"] = result["msg"];
+                        json["signdata"] = result["signdata"];
+                        json["pubkey"] = result["pubkey"];
+                    }
+                    time += 100;
+                }
+                //读出来，拼为http响应，发回去
                 context.Response.Write(json.ToString());
-        }
+            }
             else if (relativePath == "addaddress")
             {
 
@@ -112,11 +124,5 @@ namespace hhgate
             return;
         }
 
-        public async Task<MyJson.JsonNode_Object> Sign(string data,string address)
-        {
-
-            MyJson.JsonNode_Object result =  await driverControl.Sign(address,data);
-            return result;
-        }
     }
 }
