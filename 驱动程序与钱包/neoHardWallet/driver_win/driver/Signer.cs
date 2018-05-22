@@ -330,7 +330,7 @@ namespace NeoDun
                         signEventHandler(outdata, 0x0001);
                 }
                 //安装成功
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa0)
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
                 {
                     updateAppEventHandler(true);
                 }
@@ -345,7 +345,7 @@ namespace NeoDun
                     uninstallAppEventHandler(true);
                 }
                 //查询固件插件版本回复
-                if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
+                if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
                 {
                     byte[] outdata = null;
                     outdata = msg.data;

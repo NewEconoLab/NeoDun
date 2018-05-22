@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:driver_win.dialogs"
         mc:Ignorable="d"
         WindowStyle="None" Height="462" Width="628" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White" MouseLeftButtonDown="Window_MouseLeftButtonDown">
@@ -18,15 +19,16 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
+                <Image Visibility="Visible" Name="gif_loading" gif:ImageBehavior.AnimatedSource="/driver_win;component/res/loading.gif" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center" Panel.ZIndex="10"/>
                 <Button Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" Grid.Row="0" BorderBrush="{x:Null}" Margin="586,10,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue" RenderTransformOrigin="-0.511,3.89">
                     <Button.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label x:Name="test" Content="地址管理" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
+                <Label x:Name="test" Content="管理钱包" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
                 <Label Content="序号" IsEnabled="False" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Label Content="别名" IsEnabled="False" Width="48" Height="15" Margin="72,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
-                <Label Content="地址" IsEnabled="False" Width="48" Height="15" Margin="330,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Label Content="钱包地址" IsEnabled="False" Width="56" Height="15" Margin="330,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Image Grid.Row="0"  Source="/driver_win;component/res/？.png" Margin="101,83,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"/>
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
                 <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="  为地址设一个别名，以便更好的&#13;管理您的地址。（长度不超过7个&#13;字母）" Margin="113,48,310,339"/>

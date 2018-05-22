@@ -48,7 +48,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Source="/driver_win;component/res/setting.png" Width="20" Height="20" />
-                                    <Label Content="管理地址" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Content="管理钱包" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -56,7 +56,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Width="20" Height="20" Source="/driver_win;component/res/privatekey.png" />
-                                    <Label  Content="导入WIF私钥" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label  Content="手动导入钱包" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -64,7 +64,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Width="20" Height="20" Source="/driver_win;component/res/wallet.png" />
-                                    <Label Content="导入钱包(Json)" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Content="导入钱包文件" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>

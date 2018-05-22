@@ -59,7 +59,13 @@ namespace driver_win.dialogs
 
         private void Btn_Add(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.label_pw.Text) || this.label_pw.Text == "请输入密码")
+            // 使用一个IntPtr类型值来存储加密字符串的起始点  
+            IntPtr p = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(this.pwb_pw.SecurePassword);
+
+            // 使用.NET内部算法把IntPtr指向处的字符集合转换成字符串  
+            string password = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(p);
+
+            if (string.IsNullOrEmpty(password))
             {
                 DialogueControl.ShowMessageDialogue("请输入密码",2,this);
                 return;
@@ -71,7 +77,26 @@ namespace driver_win.dialogs
                 DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
                 return;
             }
-            DialogueControl.ShowImportAddressListDialogue(nep6wallet, this.label_pw.Text, driverControl, this.Owner);
+            DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, driverControl, this.Owner);
+        }
+
+        private void Action_PwGotFouces(object sender, RoutedEventArgs e)
+        {
+            this.label_pw.Visibility = Visibility.Collapsed;
+        }
+
+        private void Action_PwLostFouces(object sender, RoutedEventArgs e)
+        {
+            // 使用一个IntPtr类型值来存储加密字符串的起始点  
+            IntPtr p = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(this.pwb_pw.SecurePassword);
+
+            // 使用.NET内部算法把IntPtr指向处的字符集合转换成字符串  
+            string password = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(p);
+
+            if (string.IsNullOrEmpty(password))
+            {
+                this.label_pw.Visibility = Visibility.Visible;
+            }
         }
     }
 }

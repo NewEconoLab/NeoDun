@@ -111,9 +111,19 @@ namespace driver_win
         bool addResult;
         public async Task<string> AddAddressByWif(string wif)
         {
-            byte[] privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(wif);
-            byte[] publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
-            string str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
+            byte[] privateKey = new byte[] { };
+            byte[] publicKey = new byte[] { }; ;
+            string str_address = "";
+            try
+            {
+                privateKey = NeoDun.SignTool.GetPrivateKeyFromWif(wif);
+                publicKey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(privateKey);
+                str_address = NeoDun.SignTool.GetAddressFromPublicKey(publicKey);
+            }
+            catch (Exception e)
+            {
+                return "无效的wif";
+            }
 
             //地址查重 
             foreach (var add in signer.addressPool.addresses)
@@ -138,6 +148,7 @@ namespace driver_win
 
                 var __block = signer.dataTable.getBlockBySha256(str_hash);
                 uint remoteid = await __block.GetRemoteid();
+                if (remoteid == 0) return "suc";
                 __block.dataidRemote = 0;
 
                 NeoDun.Message signMsg = new NeoDun.Message();
@@ -298,6 +309,7 @@ namespace driver_win
 
                     var __block = signer.dataTable.getBlockBySha256(_str_hash);
                     UInt32 remoteid = await __block.GetRemoteid();
+                    if (remoteid == 0) return false;
                     remoteids.Add(remoteid);
                     __block.dataidRemote = 0;
                 }
@@ -386,6 +398,7 @@ namespace driver_win
 
             var __block = signer.dataTable.getBlockBySha256(hashstr);
             uint remoteid = await __block.GetRemoteid();
+            if (remoteid == 0) return result;
             __block.dataidRemote = 0;
  
             NeoDun.Message signMsg = new NeoDun.Message();

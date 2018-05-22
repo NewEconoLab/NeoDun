@@ -38,9 +38,12 @@ namespace driver_win.dialogs
             if (result == "suc")
             {
                 this.Close();
-                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
 
                 DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
+
+                await Task.Delay(2000);
+
+                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
             }
             else
             {
@@ -51,6 +54,19 @@ namespace driver_win.dialogs
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+
+        private void Action_GotFocus(object sender, RoutedEventArgs e)
+        {
+            this.label_Wif.Text = "";
+        }
+
+        private void Action_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.label_Wif.Text))
+            {
+                this.label_Wif.Text = "请输入您的WIF";
+            }
         }
     }
 }

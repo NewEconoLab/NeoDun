@@ -23,11 +23,12 @@
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label Content="导入钱包(Json)" IsEnabled="False" Width="86" Height="20" Margin="44,32,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                <Label Content="导入钱包文件" IsEnabled="False" Width="86" Height="20" Margin="44,32,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
                 <TextBox Name="label_path" Text="请选择路径" Width="360" Height="16" Margin="74,126,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0"/>
                 <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,144,0,0" VerticalAlignment="Top" Width="370" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                <TextBox Name="label_pw" Width="360" Height="16" Margin="74,176,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0"/>
-                <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,194,0,0" VerticalAlignment="Top" Width="370" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
+                <PasswordBox Name="pwb_pw" Width="360" Height="19" Margin="74,176,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0" GotFocus="Action_PwGotFouces" LostFocus="Action_PwLostFouces" Panel.ZIndex="10"/>
+                <TextBox Name="label_pw" Text="请输入密码" Width="360" Height="19" Margin="74,176,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0"/>
+                <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,195,0,0" VerticalAlignment="Top" Width="370" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                 <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Width="108" Height="44" Click="Btn_Add" Margin="260,242,0,0">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">

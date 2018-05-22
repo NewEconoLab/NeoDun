@@ -46,6 +46,7 @@ namespace driver_win.dialogs
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
         {
+            this.gif_loading.Visibility = Visibility.Visible;
             this.DialogResult = true;
         }
         //获取下位机地址数据
@@ -81,7 +82,7 @@ namespace driver_win.dialogs
                 btn_delete.Click += Btn_Delete;
                 this.listbox.Items.Add(item);
             }
-
+            this.gif_loading.Visibility = Visibility.Hidden;
         }
         private void Btn_Copy(object sender, RoutedEventArgs e)
         {

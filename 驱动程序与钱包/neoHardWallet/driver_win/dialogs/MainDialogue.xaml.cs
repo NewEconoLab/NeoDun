@@ -156,6 +156,8 @@ namespace driver_win.dialogs
 
         private async void GetPackageInfo()
         {
+            ForbidAllBtnClick();
+
             //从服务器获取固件和插件的版本信息
             MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
             servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(3.1);
@@ -235,6 +237,10 @@ namespace driver_win.dialogs
             {
                 this.Btn_gj_update.Visibility = Visibility.Hidden;
             }
+
+            await driverControl.GetAddressList();
+
+            AllowAllBtnClick();
         }
 
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
