@@ -72,8 +72,8 @@ namespace NeoDun
         public delegate Task<bool> UpdateApp(byte[] data, UInt16 type, UInt16 content, UInt16 version);
         public UpdateApp updateApp;
 
-        public delegate void UpdateEventHandler(bool _suc);
-        public UpdateEventHandler updateEventHandler;
+        public delegate void ApplyUpdateEventHandler(bool _suc);
+        public ApplyUpdateEventHandler applyUpdateEventHandler;
 
         public delegate void UpdateAppEventHandler(bool _suc);
         public UpdateAppEventHandler updateAppEventHandler;
@@ -162,7 +162,7 @@ namespace NeoDun
             System.Threading.ThreadPool.QueueUserWorkItem(async (_state) =>
             {
 
-
+                #region 0x01
                 if (msg.tag1 == 0x01 && msg.tag2 == 0x01)
                 {
                     //recv a file
@@ -222,6 +222,46 @@ namespace NeoDun
                     block.dataidRemote = remoteid;
 
                 }
+                if (msg.tag1 == 0x01 && msg.tag2 == 0xa2)//收到一个分片
+                {
+                    var hash = srcmsg.readHash256(4);
+                    var data = dataTable.getBlockBySha256(hash);
+                    data.FromPieceMsg(msg);
+                }
+                if (msg.tag1 == 0x01 && msg.tag2 == 0xa3)//接收完毕
+                {
+                    var hash = srcmsg.readHash256(4);
+                    var data = dataTable.getBlockBySha256(hash);
+                    bool bcheck = data.Check();
+                    if (bcheck)
+                    {//数据接收完整
+                        System.Threading.ThreadPool.QueueUserWorkItem((__state) =>
+                        {
+                            NeoDun.Message _msg = new NeoDun.Message();
+                            _msg.tag1 = 0x01;
+                            _msg.tag2 = 0x11;
+                            _msg.msgid = NeoDun.SignTool.RandomShort();
+                            _msg.writeUInt32(0, data.dataid);
+                            _msg.writeHash256(4, hash);
+                            SendMessage(_msg, false);
+                        });
+                    }
+                    else
+                    {//数据接收完毕，但是hash256 不匹配
+                        System.Threading.ThreadPool.QueueUserWorkItem((__state) =>
+                        {
+                            NeoDun.Message _msg = new NeoDun.Message();
+                            _msg.tag1 = 0x01;
+                            _msg.tag2 = 0x12;
+                            _msg.msgid = NeoDun.SignTool.RandomShort();
+                            _msg.writeUInt32(0, data.dataid);
+                            _msg.writeHash256(4, hash);
+                            SendMessage(_msg, false);
+                        });
+                    }
+                }
+                #endregion
+
                 //设置地址名称失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
@@ -251,7 +291,7 @@ namespace NeoDun
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
-                    updateEventHandler(false);
+                    applyUpdateEventHandler(false);
                 }
                 //卸载失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)
@@ -337,7 +377,7 @@ namespace NeoDun
                 //同意更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
-                    updateEventHandler(true);
+                    applyUpdateEventHandler(true);
                 }
                 //卸载成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)

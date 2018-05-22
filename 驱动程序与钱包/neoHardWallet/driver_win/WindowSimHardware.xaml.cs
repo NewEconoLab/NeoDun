@@ -313,9 +313,9 @@ namespace driver_win
 
                         //var outdata = SignTool.SignData(addr.privatekey, data.data);
                         var hash = SignTool.ComputeSHA256(outdata, 0, outdata.Length);
-
+                        var strhash = SignTool.Bytes2HexString(hash, 0, hash.Length);
                         {//准备好数据块，飞回去
-                            var block = dataTable.newOrGet(SignTool.Bytes2HexString(hash, 0, hash.Length), (UInt32)outdata.Length, DataBlockFrom.FromSigner);
+                            var block = dataTable.newOrGet(strhash, (UInt32)outdata.Length, DataBlockFrom.FromSigner);
                             block.data = outdata;
                             this.dataUpdate = true;
                             //将outdata 发回上位机

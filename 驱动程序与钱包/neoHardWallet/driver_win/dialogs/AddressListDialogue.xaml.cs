@@ -54,14 +54,14 @@ namespace driver_win.dialogs
         {
             this.listbox.Items.Clear();
             var address = await driverControl.GetAddressList();
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
-            address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
+            //address.Add(address.ToList()[0]);
             var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
             for (var i =0;i<address.Count;i++)
             {
