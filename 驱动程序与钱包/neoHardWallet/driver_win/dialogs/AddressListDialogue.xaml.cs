@@ -70,21 +70,31 @@ namespace driver_win.dialogs
                 var add = address.ToList()[i];
                 var label_address = item.FindName("address") as Label;
                 var label_index = item.FindName("index") as Label;
-                var label_name = item.FindName("name") as Label;
+                var label_name = item.FindName("name") as TextBox;
                 var label_type = item.FindName("type") as Label;
                 var btn_copy = item.FindName("copy") as Button;
                 var btn_delete = item.FindName("delete") as Button;
+                var btn_setName = item.FindName("setName") as Button;
                 label_address.Content = add.AddressText;
-                label_name.Content = add.type;
+                if (!string.IsNullOrEmpty(add.name))
+                {
+                    label_name.Text = add.name;
+                }
                 label_type.Content = add.type;
                 label_index.Content = (i + 1).ToString("00");
-                btn_copy.Click += Btn_Copy;
-                btn_delete.Click += Btn_Delete;
+                label_name.GotFocus += Actrion_GotFocus;
+                btn_setName.Click += Click_SetName;
+                btn_copy.Click += Click_Copy;
+                btn_delete.Click += Click_Delete;
                 this.listbox.Items.Add(item);
+            }
+            if (address.Count == 0)
+            {
+                this.noWallet.Visibility = Visibility.Visible;
             }
             this.gif_loading.Visibility = Visibility.Hidden;
         }
-        private void Btn_Copy(object sender, RoutedEventArgs e)
+        private void Click_Copy(object sender, RoutedEventArgs e)
         {
             var listboxitem = ((sender as Button).Parent as Grid).Parent as ListBoxItem;
             var address = (listboxitem.FindName("address") as Label).Content;
@@ -95,7 +105,7 @@ namespace driver_win.dialogs
             DialogueControl.ShowMessageDialogue("复制成功", 1, this);
         }
 
-        private async void Btn_Delete(object sender, RoutedEventArgs e)
+        private async void Click_Delete(object sender, RoutedEventArgs e)
         {
 
             var listboxitem = ((sender as Button).Parent as Grid).Parent as ListBoxItem;
@@ -114,6 +124,41 @@ namespace driver_win.dialogs
             this.message.Visibility = Visibility.Collapsed;
             DialogueControl.ShowMessageDialogue(result, 1, this);
             GetAddressList();
+        }
+
+        private async void Click_SetName(object sender, RoutedEventArgs e)
+        {
+            this.gif_loading.Visibility = Visibility.Visible;
+            Button setName = sender as Button;
+            TextBox tb = (setName.Parent as Grid).FindName("name") as TextBox;
+            Label lb = (setName.Parent as Grid).FindName("address") as Label;
+            var name = tb.Text;
+            var address = lb.Content.ToString();
+            byte[] bytes_name = System.Text.Encoding.UTF8.GetBytes(name);
+            if (bytes_name.Length > 6)
+            {
+                DialogueControl.ShowMessageDialogue("名字太长",2,this);
+                return;
+            }
+
+            string result = await driverControl.SetName(address, bytes_name);
+            this.gif_loading.Visibility = Visibility.Hidden;
+            setName.Focus();
+            setName.Visibility = Visibility.Hidden;
+
+            DialogueControl.ShowMessageDialogue(result,2,this);
+        }
+
+        Button cur_setName;
+        private void Actrion_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if(cur_setName != null)
+                cur_setName.Visibility = Visibility.Hidden;
+
+            TextBox tb = sender as TextBox;
+            Button setName = (tb.Parent as Grid).FindName("setName") as Button;
+            setName.Visibility = Visibility.Visible;
+            cur_setName = setName;
         }
     }
 }

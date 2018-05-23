@@ -57,6 +57,9 @@ namespace NeoDun
         public delegate void AddAddressEventHandler(bool _suc);
         public AddAddressEventHandler addAddressEventHandler;
 
+        public delegate void SetNameEventHandler(string _result);
+        public SetNameEventHandler setNameEventHandler;
+
         public delegate void GetAddressListEventHandler();
         public GetAddressListEventHandler getAddressListEventHandler;
 
@@ -265,6 +268,7 @@ namespace NeoDun
                 //设置地址名称失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
+                    setNameEventHandler("失败");
                 }
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
@@ -307,6 +311,7 @@ namespace NeoDun
                     var add = new NeoDun.Address();
                     add.type = type;
                     add.AddressText = SignTool.EncodeBase58(msg.data, 6, 25);
+                    add.name = System.Text.Encoding.UTF8.GetString(msg.data, 32, 6).Replace("\0", ""); 
                     addressPool.addresses.Add(add);
                 }
                 //地址接受完毕
@@ -336,6 +341,7 @@ namespace NeoDun
                 //设置地址名称成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa2)
                 {
+                    setNameEventHandler("成功");
                 }
                 //删除地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)

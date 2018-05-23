@@ -13,6 +13,7 @@ namespace NeoDun
     public class Address
     {
         public string AddressText;
+        public string name;
         public AddressType type;
         public byte[] privatekey;
 
@@ -27,6 +28,12 @@ namespace NeoDun
                 return SignTool.DecodeBase58(this.AddressText);
             }
             return null;
+        }
+        public byte[] GetAddName()
+        {
+            if (!string.IsNullOrEmpty(name))
+                return System.Text.Encoding.UTF8.GetBytes(name);
+            return new byte[] { };
         }
     }
     public class AddressPool

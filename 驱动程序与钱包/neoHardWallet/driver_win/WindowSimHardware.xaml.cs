@@ -262,8 +262,10 @@ namespace driver_win
                         msg1.writeUInt16(2, (UInt16)imax);
                         msg1.writeUInt16(4, (UInt16)add.type);
                         var bytes = add.GetAddbytes();
+                        var bytes_name = add.GetAddName(); 
 
                         Array.Copy(bytes, 0, msg1.data, 6, bytes.Length);
+                        Array.Copy(bytes_name, 0, msg1.data, 32, bytes_name.Length);
 
                         iseek++;
                         SendMsg(msg1, true);
@@ -406,6 +408,24 @@ namespace driver_win
                         SendMsg(msg, true);
                     });
                 }
+            }
+            if (recv.tag1 == 0x02 && recv.tag2 == 0x02)
+            {
+                var address = NeoDun.SignTool.EncodeBase58(recv.data, 0, 25);
+                var length = recv.readUInt16(26);
+                var name = System.Text.Encoding.UTF8.GetString(recv.data,28,(int)length);
+
+                Address add = addresspool.getAddress(AddressType.Neo, address);
+                add.name = name;
+
+                System.Threading.ThreadPool.QueueUserWorkItem((_state) =>
+                {
+                    NeoDun.Message msg = new NeoDun.Message();
+                    msg.tag1 = 0x02;
+                    msg.tag2 = 0xa2;
+                    msg.msgid = recv.msgid;
+                    SendMsg(msg, true);
+                });
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x0b)//发送app包
             {

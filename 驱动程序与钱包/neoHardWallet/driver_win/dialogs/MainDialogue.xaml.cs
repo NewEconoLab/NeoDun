@@ -29,6 +29,8 @@ namespace driver_win.dialogs
             InitializeComponent();
             DriverS.Init();
 
+
+
             driverControl = new DriverControl();
 
             hhgate.CustomServer.BeginServer();

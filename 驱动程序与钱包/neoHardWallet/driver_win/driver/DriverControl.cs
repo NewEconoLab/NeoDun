@@ -47,6 +47,7 @@ namespace driver_win
             signer.signEventHandler += SignCallBack;
             signer.applyUpdateEventHandler += ApplyForUpdateCallBack;
             signer.updateAppEventHandler += UpdateCallBack;
+            signer.setNameEventHandler += SetNameCallBack;
         }
 
         private void UInit()
@@ -61,6 +62,7 @@ namespace driver_win
             signer.signEventHandler -= SignCallBack;
             signer.applyUpdateEventHandler -= ApplyForUpdateCallBack;
             signer.updateAppEventHandler -= UpdateCallBack;
+            signer.setNameEventHandler -= SetNameCallBack;
         }
 
         #region 
@@ -125,7 +127,7 @@ namespace driver_win
             }
             catch (Exception e)
             {
-                return "0205";
+                return "私钥格式错误";
             }
 
             //地址查重 
@@ -133,7 +135,7 @@ namespace driver_win
             {
                 if (add.AddressText == str_address)
                 {
-                    return "0202";
+                    return "该私钥已导入";
 
                 }
             }
@@ -219,13 +221,13 @@ namespace driver_win
         {
             UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), _addressType);
             byte[] bytes_addressText = NeoDun.SignTool.DecodeBase58(_addressText);
-            NeoDun.Message signMsg = new NeoDun.Message();
-            signMsg.tag1 = 0x02;
-            signMsg.tag2 = 0x03;//删除
-            signMsg.msgid = NeoDun.SignTool.RandomShort();
-            signMsg.writeUInt16(0, addressType);
-            Array.Copy(bytes_addressText, 0, signMsg.data, 2, bytes_addressText.Length);
-            signer.SendMessage(signMsg, true);
+            NeoDun.Message msg = new NeoDun.Message();
+            msg.tag1 = 0x02;
+            msg.tag2 = 0x03;//删除
+            msg.msgid = NeoDun.SignTool.RandomShort();
+            msg.writeUInt16(0, addressType);
+            Array.Copy(bytes_addressText, 0, msg.data, 2, bytes_addressText.Length);
+            signer.SendMessage(msg, true);
 
             deleteResult = false;
             needLoop = true;
@@ -244,6 +246,39 @@ namespace driver_win
             needLoop = false;
         }
 
+        #endregion
+
+        #region 设置地址名字
+        string setNameResult;
+        public async Task<string> SetName(string address ,byte[] bytes_name)
+        {
+            byte[] bytes_address = NeoDun.SignTool.DecodeBase58(address);
+            NeoDun.Message msg = new NeoDun.Message();
+            msg.tag1 = 0x02;
+            msg.tag2 = 0x02;
+            msg.msgid = NeoDun.SignTool.RandomShort();
+            Array.Copy(bytes_address, 0, msg.data, 0, bytes_address.Length);
+            msg.writeUInt16(26,(ushort)bytes_name.Length);
+            Array.Copy(bytes_name, 0, msg.data, 28, bytes_name.Length);
+            signer.SendMessage(msg, true);
+
+            needLoop = true;
+            int time = 0;
+            setNameResult = "";
+            while (needLoop && time <= waitTime)
+            {
+                await Task.Delay(100);
+                time += 100;
+            }
+            needLoop = false;
+            return setNameResult;
+        }
+
+        public void SetNameCallBack(string resule)
+        {
+            setNameResult = resule;
+            needLoop = false;
+        }
         #endregion
 
         #region 安装更新删除app

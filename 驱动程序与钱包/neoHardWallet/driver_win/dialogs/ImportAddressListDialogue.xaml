@@ -18,7 +18,7 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
-                <Button Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" Grid.Row="0" BorderBrush="{x:Null}" Margin="586,10,0,0" Width="22" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue" RenderTransformOrigin="-0.511,3.89">
+                <Button Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" Grid.Row="0" BorderBrush="{x:Null}" Margin="580,32,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue" RenderTransformOrigin="-0.511,3.89">
                     <Button.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
