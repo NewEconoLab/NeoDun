@@ -9,10 +9,11 @@
 #include "Algorithm.h"
 #include "app_oled.h"
 #include "OLED281/oled281.h"
+#include "stmflash.h"
 
+extern uint8_t gImage_wait[128];
 static uint8_t dataSave[HID_MAX_DATA_LEN];
 static uint8_t packIndexRecord[(HID_MAX_DATA_LEN+DATA_PACK_SIZE-1)/DATA_PACK_SIZE ];
-static uint8_t resultsignRecord[98];
 
 static uint8_t isAllPackGot(void)
 {
@@ -109,8 +110,8 @@ static void HID_PULL_DATA_REEQ_OVER_REP(uint8_t state,uint16_t packIndex,uint8_t
 		
 		data_rp[4] = (uint8_t)(packIndex & 0xff);
 		data_rp[5] = (uint8_t)((packIndex >> 8) & 0xff);
-		data_rp[6] = 0;
-		data_rp[7] = 0;
+		data_rp[6] = (uint8_t)(system_base_time&0xff);
+		data_rp[7] = (uint8_t)((system_base_time>>8)&0xff);
 		memmove(data_rp+8,data,32);
 		
 		crc = Utils_crc32(0,data_rp,62);
@@ -140,17 +141,18 @@ static void HID_PULL_LOST_DATA(uint16_t blockbegin,uint16_t blockend,uint16_t se
 		SendUSBData(data_rp,64);
 }
 
-static void HID_QUERY_ADDRESS_ALL_REP(uint16_t serialID)//TBD
+#define SEND_ADDRESS
+#define SEND_ADDRESS_DELAY	15
+static void HID_QUERY_ADDRESS_ALL_REP(uint16_t serialID)
 {
 		uint32_t crc = 0;
 		uint8_t data_rp[64];
-		uint8_t slot_buff[32];
 				
 		for(uint8_t i = 0;i < 5;i++)
 		{
-				memset(slot_buff,0,32);
-				ATSHA_read_data_slot(i + 8,slot_buff);
-				if(slot_buff[0] == 0)
+				if(showaddress[i].content[0] == 0)
+						continue;
+				if(showaddress[i].hide)
 						continue;
 				memset(data_rp,0,64);
 				data_rp[0] = 0x02;
@@ -159,18 +161,19 @@ static void HID_QUERY_ADDRESS_ALL_REP(uint16_t serialID)//TBD
 				data_rp[3] = (serialID >> 8) & 0xff;
 				data_rp[4] = i;
 				data_rp[5] = 0;
-				data_rp[6] = System_Flag.count;
+				data_rp[6] = Neo_System.count;
 				data_rp[7] = 0;
 				data_rp[8] = (uint8_t)(ADDR_XiaoYi & 0xff);
 				data_rp[9] = (uint8_t)((ADDR_XiaoYi >> 8) & 0xff);
-				memmove(data_rp+10,slot_buff,32);
+				memmove(data_rp+10,showaddress[i].content,25);
+				memmove(data_rp+36,showaddress[i].name,showaddress[i].len_name);
 				
 				crc = Utils_crc32(0,data_rp,62);
 				data_rp[62] = crc & 0xff;
 				data_rp[63] = (crc >> 8) & 0xff;
 				SendUSBData(data_rp,64);
-#ifdef HID_Delay
-				HAL_Delay(HID_SEND_DELAY);
+#ifdef SEND_ADDRESS
+				HAL_Delay(SEND_ADDRESS_DELAY);
 #endif				
 		}
 }
@@ -185,7 +188,29 @@ static void HID_QUERY_ADDRESS_REP(uint16_t serialID)
 		data_rp[1] = 0xa1;
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
-		data_rp[4] = System_Flag.count;
+		data_rp[4] = Neo_System.count;
+	
+		crc = Utils_crc32(0,data_rp,62);
+		data_rp[62] = crc & 0xff;
+		data_rp[63] = (crc >> 8) & 0xff;
+		SendUSBData(data_rp,64);
+}
+
+static void HID_SET_ADDRESS_NAME_REP(uint8_t state,uint16_t serialID,uint16_t errCode)
+{
+		uint32_t crc = 0;
+		uint8_t data_rp[64];
+		memset(data_rp,0,64);
+		
+		data_rp[0] = 0x02;
+		if(state)
+				data_rp[1] = 0xa2;
+		else
+				data_rp[1] = 0xe2;
+		data_rp[2] = serialID & 0xff;
+		data_rp[3] = (serialID >> 8) & 0xff;
+		data_rp[4] = errCode & 0xff;
+		data_rp[5] = (errCode >> 8) & 0xff;
 		
 		crc = Utils_crc32(0,data_rp,62);
 		data_rp[62] = crc & 0xff;
@@ -193,7 +218,7 @@ static void HID_QUERY_ADDRESS_REP(uint16_t serialID)
 		SendUSBData(data_rp,64);
 }
 
-static void HID_DEL_ADDRESS_REP(uint8_t state,uint16_t serialID,uint16_t addressType)
+static void HID_DEL_ADDRESS_REP(uint16_t state,uint16_t serialID,uint16_t addressType)
 {
 		uint32_t crc = 0;
 		uint8_t data_rp[64];
@@ -201,13 +226,17 @@ static void HID_DEL_ADDRESS_REP(uint8_t state,uint16_t serialID,uint16_t address
 		
 		data_rp[0] = 0x02;
 		if(state)
-				data_rp[1] = 0xc1;
+				data_rp[1] = 0xa3;
 		else
-				data_rp[1] = 0xc2;
+		{
+				data_rp[1] = 0xe3;
+				data_rp[4] = (state >> 8)& 0xff;
+				data_rp[5] = state & 0xff;			
+		}
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
-		data_rp[4] = addressType & 0xff;
-		data_rp[5] = (addressType >> 8) & 0xff;
+//		data_rp[4] = addressType & 0xff;
+//		data_rp[5] = (addressType >> 8) & 0xff;
 		
 		crc = Utils_crc32(0,data_rp,62);
 		data_rp[62] = crc & 0xff;
@@ -215,22 +244,25 @@ static void HID_DEL_ADDRESS_REP(uint8_t state,uint16_t serialID,uint16_t address
 		SendUSBData(data_rp,64);			
 }
 
-static void HID_ADD_ADDRESS_REP(uint8_t state,uint16_t serialID,uint16_t addressType,uint8_t *data)
+static void HID_ADD_ADDRESS_REP(uint16_t state,uint16_t serialID,uint16_t addressType,uint8_t *data)
 {
 		uint32_t crc = 0;
 		uint8_t data_rp[64];
 		memset(data_rp,0,64);
 		
 		data_rp[0] = 0x02;
-		if(state)
-				data_rp[1] = 0xb1;
+		if(state == 1)
+		{
+				data_rp[1] = 0xa4;
+		}
 		else
-				data_rp[1] = 0xb2;
+		{
+				data_rp[1] = 0xe4;
+				data_rp[4] = (state >> 8)& 0xff;
+				data_rp[5] = state & 0xff;
+		}
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
-		data_rp[4] = addressType & 0xff;
-		data_rp[5] = (addressType >> 8) & 0xff;
-		memmove(data_rp+6,data,42);
 		
 		crc = Utils_crc32(0,data_rp,62);
 		data_rp[62] = crc & 0xff;
@@ -245,7 +277,7 @@ static void HID_SIGN_DATA_FAILED_REP(uint16_t serialID)
 		memset(data_rp,0,64);
 		
 		data_rp[0] = 0x02;
-		data_rp[1] = 0xe3;
+		data_rp[1] = 0xe5;
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
 		
@@ -294,38 +326,6 @@ static void HID_SET_INFO_REP(uint16_t serialID)
 		SendUSBData(data_rp,64);			
 }
 
-static void HID_GET_INFO_REP(uint16_t serialID)
-{
-		uint32_t crc = 0;
-		uint8_t data_rp[64];
-		memset(data_rp,0,64);
-		
-		data_rp[0] = 0x02;
-		data_rp[1] = 0xd1;
-		data_rp[2] = serialID & 0xff;
-		data_rp[3] = (serialID >> 8) & 0xff;
-		
-		data_rp[4] = System_Flag.new_wallet;
-		data_rp[5] = 0;
-		data_rp[6] = Set_Flag.flag.auto_show;
-		data_rp[7] = 0;
-		data_rp[8] = Set_Flag.flag.auto_update;
-		data_rp[9] = 0;
-		data_rp[10] = Set_Flag.flag.add_address;
-		data_rp[11] = 0;
-		data_rp[12] = Set_Flag.flag.del_address;
-		data_rp[13] = 0;
-		data_rp[14] = Set_Flag.flag.backup_address;
-		data_rp[15] = 0;
-		data_rp[16] = Set_Flag.flag.backup_address_encrypt;
-		data_rp[17] = 0;
-		
-		crc = Utils_crc32(0,data_rp,62);
-		data_rp[62] = crc & 0xff;
-		data_rp[63] = (crc >> 8) & 0xff;
-		SendUSBData(data_rp,64);		
-}
-
 static void HID_CRC_ERROR_REP(uint16_t serialID)
 {
 		uint32_t crc = 0;
@@ -343,10 +343,224 @@ static void HID_CRC_ERROR_REP(uint16_t serialID)
 		SendUSBData(data_rp,64);
 }
 
+void Deal_Sign_Data_Restart(void)
+{
+		uint16_t serialId = 0;	
+		uint8_t	sign_cmd_data[32];
+		uint8_t	SIGN_Out_Para_data[136];
+		SIGN_Out_Para Sign;	
+		uint8_t resultsignRecord[98];
+		uint8_t hash_sign[32];
+		memset(&Sign,0,sizeof(Sign));
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_SIGN_DATA) != 0)
+		{
+				//恢复现场
+				serialId = (uint16_t)STMFLASH_ReadWord(FLASH_ADDRESS_SCENE);
+				STMFLASH_Read_ByteArray(FLASH_ADDRESS_SCENE+4,sign_cmd_data,32);
+				//从FLASH中得到数据
+				STMFLASH_Read_ByteArray(FLASH_ADDRESS_SIGN_DATA,SIGN_Out_Para_data,136);
+				STMFLASH_Read_ByteArray(FLASH_ADDRESS_SIGN_DATA+0x800,resultsignRecord,98);
+				STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
+				//组合数据
+				{
+						Sign.type							= SIGN_Out_Para_data[0];
+						Sign.version 					= SIGN_Out_Para_data[1];
+						Sign.coin							= SIGN_Out_Para_data[2];
+						Sign.countAttributes  = SIGN_Out_Para_data[3];
+						Sign.countInputs			= SIGN_Out_Para_data[4];
+						Sign.countOutputs			= SIGN_Out_Para_data[5];
+						memmove(Sign.address[0],SIGN_Out_Para_data+6,25);
+						memmove(Sign.address[1],SIGN_Out_Para_data+31,25);
+						memmove(Sign.assetid[0],SIGN_Out_Para_data+56,32);
+						memmove(Sign.assetid[1],SIGN_Out_Para_data+88,32);
+						Sign.money[0] = (uint64_t)SIGN_Out_Para_data[120]|((uint64_t)SIGN_Out_Para_data[121]<<8)
+														|((uint64_t)SIGN_Out_Para_data[122]<<16)|((uint64_t)SIGN_Out_Para_data[123]<<24)
+														|((uint64_t)SIGN_Out_Para_data[124]<<32)|((uint64_t)SIGN_Out_Para_data[125]<<40)
+														|((uint64_t)SIGN_Out_Para_data[126]<<48)|((uint64_t)SIGN_Out_Para_data[127]<<56);
+						Sign.money[1] = (uint64_t)SIGN_Out_Para_data[128]|((uint64_t)SIGN_Out_Para_data[129]<<8)
+														|((uint64_t)SIGN_Out_Para_data[130]<<16)|((uint64_t)SIGN_Out_Para_data[131]<<24)
+														|((uint64_t)SIGN_Out_Para_data[132]<<32)|((uint64_t)SIGN_Out_Para_data[133]<<40)
+														|((uint64_t)SIGN_Out_Para_data[134]<<48)|((uint64_t)SIGN_Out_Para_data[135]<<56);
+				}
+				SHA256_Data(resultsignRecord,98,hash_sign,32);
+				
+				if(Sign.type != 0x80)//不是合约交易
+				{
+						if(Display_Sign_Data_Type_Identify() == 0)//用户拒绝签名或者操作超时
+						{
+								Display_Usb();
+								HID_SIGN_DATA_FAILED_REP(serialId);
+								return;
+						}
+				}
+				uint8_t index_add;
+				uint8_t addessID = 0;
+				char Sign_address[40] = "";
+				int len_add = 0;
+
+				if(Sign.countOutputs == 0)		 //输出端地址为0个
+				{
+						Display_Usb();
+						HID_SIGN_DATA_FAILED_REP(serialId);
+						return;														
+				}
+				else if(Sign.countOutputs == 1)//输出端地址为1个
+				{
+						index_add = 0;
+				}
+				else if(Sign.countOutputs == 2)//输出端地址为2个
+				{
+						if(ArrayCompare(sign_cmd_data,Sign.address[0],25))
+								index_add = 0;
+						else if(ArrayCompare(sign_cmd_data,Sign.address[1],25))
+								index_add = 1;
+						else											 //本机没有存有该地址
+						{
+								Display_Usb();
+								HID_SIGN_DATA_FAILED_REP(serialId);
+								return;
+						}
+				}
+				else//多个签名的情况
+				{
+						index_add = 0xff;
+				}
+
+				Alg_Base58Encode(Sign.address[index_add] , 25 ,Sign_address,&len_add);
+				if(Display_SignData(&Sign,Sign_address,addessID,index_add))
+				{
+						Display_Usb();
+						memset(dataSave,0,HID_MAX_DATA_LEN);
+						memmove(dataSave,resultsignRecord,0);
+						HidData.reqSerial = RandomInteger();
+						HID_SIGN_DATA_REP(CMD_NOTIFY_DATA,HidData.reqSerial,98,hash_sign,32);
+#ifdef HID_Delay
+						HAL_Delay(delay_hid);
+#endif
+						HID_SIGN_DATA_REP(CMD_SIGN_OK,serialId,98,hash_sign,32);
+				}
+				else//拒绝签名
+				{
+						Display_Usb();
+						HID_SIGN_DATA_FAILED_REP(serialId);	
+				}
+		}
+		else
+		{
+				Display_Usb();
+				HID_SIGN_DATA_FAILED_REP(serialId);
+		}
+}
+
+static void HID_INSTALL_PACK_REP(uint8_t state,uint16_t serialID,uint16_t install_type,uint16_t install_cont,uint16_t version)
+{
+		uint32_t crc = 0;
+		uint8_t data_rp[64];
+		memset(data_rp,0,64);
+		
+		data_rp[0] = 0x03;
+		if(state)
+		{			
+				data_rp[1] = 0xa1;
+		}
+		else
+		{
+				data_rp[1] = 0xe1;
+				data_rp[42] = 1;
+		}
+
+		data_rp[2] = serialID & 0xff;
+		data_rp[3] = (serialID >> 8) & 0xff;
+		data_rp[4] = install_type & 0xff;
+		data_rp[5] = (install_type >> 8) & 0xff;		
+		data_rp[6] = install_cont & 0xff;
+		data_rp[7] = (install_cont >> 8) & 0xff;		
+		data_rp[40] = version & 0xff;
+		data_rp[41] = (version >> 8) & 0xff;
+		
+		crc = Utils_crc32(0,data_rp,62);
+		data_rp[62] = crc & 0xff;
+		data_rp[63] = (crc >> 8) & 0xff;
+		SendUSBData(data_rp,64);
+}	
+
+static void HID_INSTALL_REQUEST_REP(uint8_t state,uint16_t serialID)
+{
+		uint32_t crc = 0;
+		uint8_t data_rp[64];
+		memset(data_rp,0,64);
+		
+		data_rp[0] = 0x03;
+		if(state)	
+				data_rp[1] = 0xa2;
+		else
+				data_rp[1] = 0xe2;
+
+		data_rp[2] = serialID & 0xff;
+		data_rp[3] = (serialID >> 8) & 0xff;
+
+		crc = Utils_crc32(0,data_rp,62);
+		data_rp[62] = crc & 0xff;
+		data_rp[63] = (crc >> 8) & 0xff;
+		SendUSBData(data_rp,64);
+}
+
+static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
+{
+		uint32_t crc = 0;
+		uint8_t data_rp[64];
+		memset(data_rp,0,64);
+		
+		data_rp[0] = 0x03;	
+		data_rp[1] = 0xa4;
+		data_rp[2] = serialID & 0xff;
+		data_rp[3] = (serialID >> 8) & 0xff;
+		data_rp[4] = VERSION_NEODUN & 0xff;
+		data_rp[5] = (VERSION_NEODUN >> 8) & 0xff;		
+		
+		data_rp[6] = coinrecord.coin1;
+		data_rp[7] = coinrecord.version1;
+		data_rp[8] = coinrecord.coin2;
+		data_rp[9] = coinrecord.version2;
+		data_rp[10] = coinrecord.coin3;
+		data_rp[11] = coinrecord.version3;
+		data_rp[12] = coinrecord.coin4;
+		data_rp[13] = coinrecord.version4;
+		data_rp[14] = coinrecord.coin5;
+		data_rp[15] = coinrecord.version5;
+	
+		crc = Utils_crc32(0,data_rp,62);
+		data_rp[62] = crc & 0xff;
+		data_rp[63] = (crc >> 8) & 0xff;
+		SendUSBData(data_rp,64);
+}
+
+static void HID_UNINSTALL_PACK_REP(uint8_t state,uint16_t serialID,uint16_t install_type)
+{
+		uint32_t crc = 0;
+		uint8_t data_rp[64];
+		memset(data_rp,0,64);
+		
+		data_rp[0] = 0x03;
+		if(state)
+				data_rp[1] = 0xa3;
+		else
+				data_rp[1] = 0xe3;
+		data_rp[2] = serialID & 0xff;
+		data_rp[3] = (serialID >> 8) & 0xff;
+		data_rp[4] = install_type & 0xff;
+		data_rp[5] = (install_type >> 8) & 0xff;		
+		
+		crc = Utils_crc32(0,data_rp,62);
+		data_rp[62] = crc & 0xff;
+		data_rp[63] = (crc >> 8) & 0xff;
+		SendUSBData(data_rp,64);			
+}
+
 void Hid_Data_Analysis(uint8_t data[],int len)
 {
 		uint16_t cmd 			= (data[0] << 8) | data[1];
-		uint16_t serialId = data[2] | (data[3] << 8);	
+		uint16_t serialId = data[2] | (data[3] << 8);
 		if(Utils_verifycrc(data,len))
 		{
 				if(Passport_Flag.flag.poweron)
@@ -422,325 +636,287 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 										HID_QUERY_ADDRESS_REP(serialId);
 										break;
 								}
+								case CMD_SET_ADDRESS_NAME:		//0x0202
+								{
+										uint8_t slot_data[32];
+										uint8_t	temp_name[6];
+										uint8_t  AddressID = Get_Address_ID(data+4);
+										uint16_t len_name  = data[30] | (data[31] << 8);
+										memset(temp_name,0,6);
+										if((AddressID == 0)||(len_name > 6)||(len_name == 0))
+										{
+												HID_SET_ADDRESS_NAME_REP(0,serialId,0x0206);
+												break;
+										}
+										if(ArrayCompare(data+32,(uint8_t*)showaddress[AddressID-1].name,len_name))
+										{
+												HID_SET_ADDRESS_NAME_REP(0,serialId,0x0203);
+												break;										
+										}
+										//更新内存中的地址属性
+										memmove(temp_name,data+32,len_name);
+										memmove(showaddress[AddressID].name,temp_name,6);
+										showaddress[AddressID].len_name = len_name;
+										//更新到加密芯片中
+										ATSHA_read_data_slot(AddressID+7,slot_data);
+										memmove(slot_data+25,temp_name,6);
+										slot_data[31] |= ((len_name<<4)|0x0f);
+										ATSHA_write_data_slot(AddressID+7,0,slot_data,32);
+										HID_SET_ADDRESS_NAME_REP(1,serialId,0);
+										break;
+								}
 								case CMD_DEL_ADDRESS:					//0x0203
 								{
-										if(Set_Flag.flag.del_address)
+										uint16_t addressType = data[4] | (data[5] << 8);
+										if(addressType == ADDR_XiaoYi)
 										{
-												if(Display_VerifyCode() == 0)
-												{
-														Passport_Flag.flag.del_address = 1;
-												}
-										}
-										else
-										{
-												if(Passport_Flag.flag.del_address == 0)
-												{
-														if(Display_VerifyCode() == 0)
-														{
-																Passport_Flag.flag.del_address = 1;
-														}
-												}
-										}
-										if(Passport_Flag.flag.del_address)
-										{
-												uint16_t addressType = data[4] | (data[5] << 8);
-												if(Display_DelAdd() == 0)//超时或者拒绝删除
-												{
-														HID_DEL_ADDRESS_REP(0,serialId,addressType);
-												}												
-												if(addressType == ADDR_XiaoYi)
-												{
-														uint8_t addressID = Get_Address_ID(data+6);
-														uint8_t data_write[32];
-														memset(data_write,0,32);
+												uint8_t addressID = Get_Address_ID(data+6);
+												uint8_t data_write[32];
+												memset(data_write,0,32);
 #ifdef printf_debug
-														printf("addressID: %d\r\n",addressID);
+												printf("addressID: %d\r\n",addressID);
 #endif
-														if(addressID)
+												if(addressID)
+												{
+														if(Display_DelAdd(addressID-1) == 0)//超时或者拒绝删除
+														{
+																HID_DEL_ADDRESS_REP(0x0401,serialId,addressType);
+																Display_Usb();
+																break;
+														}
+														if(Set_Flag.flag.del_address)
+														{
+																if(Display_VerifyCode() == 0)
+																{
+																		Passport_Flag.flag.del_address = 1;
+																}
+														}
+														else
+														{
+																if(Passport_Flag.flag.del_address == 0)
+																{
+																		if(Display_VerifyCode() == 0)
+																		{
+																				Passport_Flag.flag.del_address = 1;
+																		}
+																}
+														}
+														if(Passport_Flag.flag.del_address)
 														{
 																//将该地址ID对应的私钥和地址槽，都写入0
 																ATSHA_write_data_slot(addressID+2,0,data_write,32);
 																ATSHA_write_data_slot(addressID+7,0,data_write,32);
-																System_Flag.count--;
-																Updata_SYS_Count(System_Flag.count);				//更新计数的值
+																Neo_System.count--;
+																Updata_SYS_Count(Neo_System.count);				//更新计数的值
+																memset(&showaddress[addressID-1],0,sizeof(ADDRESS));
 															
 																if(Set_Flag.flag.del_address)//是否重复进行删除地址时的密码验证，1为需要，0为不需要
 																		Passport_Flag.flag.del_address = 0;
 																else
 																		Passport_Flag.flag.del_address = 1;		
-																Display_MainPage();																
+																Display_Usb();															
 																HID_DEL_ADDRESS_REP(1,serialId,addressType);
-																break;
 														}
-														else//没有存储此地址
+														else
 														{
 																if(Set_Flag.flag.del_address)//是否重复进行删除地址时的密码验证，1为需要，0为不需要
 																		Passport_Flag.flag.del_address = 0;
 																else
-																		Passport_Flag.flag.del_address = 1;		
-																Display_MainPage();
-																HID_DEL_ADDRESS_REP(0,serialId,addressType);
-																break;
+																		Passport_Flag.flag.del_address = 1;															
+																Display_Usb();
+																HID_DEL_ADDRESS_REP(0,serialId,addressType);														
 														}
 												}
-												else
+												else//没有存储此地址
 												{
 														if(Set_Flag.flag.del_address)//是否重复进行删除地址时的密码验证，1为需要，0为不需要
 																Passport_Flag.flag.del_address = 0;
 														else
 																Passport_Flag.flag.del_address = 1;		
-														Display_MainPage();
+														Display_Usb();
 														HID_DEL_ADDRESS_REP(0,serialId,addressType);
 														break;
 												}
 										}
-										Display_MainPage();
+										else
+										{
+												if(Set_Flag.flag.del_address)//是否重复进行删除地址时的密码验证，1为需要，0为不需要
+														Passport_Flag.flag.del_address = 0;
+												else
+														Passport_Flag.flag.del_address = 1;		
+												Display_Usb();
+												HID_DEL_ADDRESS_REP(0,serialId,addressType);
+												break;
+										}
+										Display_Usb();
 										break;
 								}
 								case CMD_ADD_ADDRESS:					//0x0204
 								{
-										if(Set_Flag.flag.add_address)
+										uint16_t addressType = data[4] | (data[5] << 8);
+										if(Neo_System.count == 5) //地址已满
 										{
-												if(Display_VerifyCode() == 0)
-												{
+												if(Set_Flag.flag.add_address)
+														Passport_Flag.flag.add_address = 0;
+												else
 														Passport_Flag.flag.add_address = 1;
-												}
+												Display_Usb();
+												HID_ADD_ADDRESS_REP(0x0201,serialId,addressType,data+6);
+												break;
 										}
-										else
+										if(addressType == ADDR_XiaoYi)
 										{
-												if(Passport_Flag.flag.add_address == 0)
-												{
-														if(Display_VerifyCode() == 0)
-														{
-																Passport_Flag.flag.add_address = 1;
-														}
-												}
-										}
-										if(Passport_Flag.flag.add_address)
-										{
-												Fill_RAM(0x00);
-												Asc8_16(72,26,"Add Address ...");
-												uint16_t addressType = data[4] | (data[5] << 8);
-												if(System_Flag.count == 5) //地址已满
+												if(Get_Address_ID(data+6))//已经存在了这个地址
 												{
 														if(Set_Flag.flag.add_address)
 																Passport_Flag.flag.add_address = 0;
 														else
 																Passport_Flag.flag.add_address = 1;
-														Display_MainPage();
-														HID_ADD_ADDRESS_REP(0,serialId,addressType,data+6);
+														Display_Usb();
+														HID_ADD_ADDRESS_REP(0x0202,serialId,addressType,data+6);
 														break;
 												}
-												if(addressType == ADDR_XiaoYi)
+												uint8_t	PrivateKey[32];
+												uint8_t PublicKey[65];
+												uint8_t	PubKey[33];
+												int tempLen = 0;
+												char temp[40] = "";
+												char addrCacl[40] = "";
+												//得到传入的地址
+												Alg_Base58Encode(data+6 , 25 ,temp,&tempLen);
+												memmove(PrivateKey,dataSave,32);
+												Alg_GetPublicFromPrivate(PrivateKey,PublicKey,1);
+												memmove(PubKey,PublicKey,33);
+												//得到数据包计算出的地址
+												Alg_GetAddressFromPublic(PubKey,addrCacl,33);
+#ifdef printf_debug
+												printf("Address Prikey:%s\r\n",addrCacl);
+#endif
+												if(ArrayCompare((uint8_t*)temp,(uint8_t*)addrCacl,tempLen))
 												{
-														if(Get_Address_ID(data+6))//已经存在了这个地址
+														if(Display_AddAdd(addrCacl) == 0)//用户添加地址失败
 														{
-																if(Set_Flag.flag.add_address)
-																		Passport_Flag.flag.add_address = 0;
-																else
-																		Passport_Flag.flag.add_address = 1;
-																Display_MainPage();
-																HID_ADD_ADDRESS_REP(0,serialId,addressType,data+6);
+																Display_Usb();
+																HID_ADD_ADDRESS_REP(0x0401,serialId,addressType,data+6);
 																break;
 														}
-														uint8_t	PrivateKey[32];
-														uint8_t PublicKey[65];
-														uint8_t	PubKey[33];
-														int tempLen = 0;
-														char temp[40] = "";
-														char addrCacl[40] = "";
-														//得到传入的地址
-														Alg_Base58Encode(data+6 , 25 ,temp,&tempLen);
-														memmove(PrivateKey,dataSave,32);
-														Alg_GetPublicFromPrivate(PrivateKey,PublicKey,1);
-														memmove(PubKey,PublicKey,33);
-														//得到数据包计算出的地址
-														Alg_GetAddressFromPublic(PubKey,addrCacl,33);
-#ifdef printf_debug
-														printf("Address Prikey:%s\r\n",addrCacl);
-#endif
-														if(ArrayCompare((uint8_t*)temp,(uint8_t*)addrCacl,tempLen))
+														if(Set_Flag.flag.add_address)
 														{
-																if(Display_AddAdd(addrCacl) == 0)//用户添加地址失败
+																if(Display_VerifyCode() == 0)
 																{
-																		Display_MainPage();
-																		HID_ADD_ADDRESS_REP(0,serialId,addressType,data+6);
-																		break;
+																		Passport_Flag.flag.add_address = 1;
 																}
+														}
+														else
+														{
+																if(Passport_Flag.flag.add_address == 0)
+																{
+																		if(Display_VerifyCode() == 0)
+																		{
+																				Passport_Flag.flag.add_address = 1;
+																		}
+																}
+														}
+														if(Passport_Flag.flag.add_address)
+														{
 																uint8_t slotID = Get_Empty_SlotID();
 																uint8_t slot_data[32];
 #ifdef printf_debug
 																printf("slotID: %d\r\n",slotID);
 #endif
-																if(System_Flag.count == 0)
-																		EncryptDataNew(PrivateKey,32,slotID+2);
+																if(Neo_System.count == 0)
+																		EncryptDataNew(PrivateKey,32,slotID+2,Neo_System.pin);
 																else
-																		EncryptData(PrivateKey,32,slotID+2);
+																		EncryptData(PrivateKey,32,slotID+2,Neo_System.pin);
 																memset(slot_data,0,32);
 																memmove(slot_data,data+6,25);
 																ATSHA_write_data_slot(slotID+7,0,slot_data,32);
-																System_Flag.count++;
-																Updata_SYS_Count(System_Flag.count);			 //更新计数的值
+																Neo_System.count++;
+																Updata_SYS_Count(Neo_System.count);			 //更新计数的值
+																memmove(showaddress[slotID-1].content,data+6,25);
+																memmove(showaddress[slotID-1].address,addrCacl,tempLen);
+																
 																if(Set_Flag.flag.add_address)//是否重复进行添加地址时的密码验证，1为需要，0为不需要
 																		Passport_Flag.flag.add_address = 0;
 																else
 																		Passport_Flag.flag.add_address = 1;															
-																Display_MainPage();
+																Display_Usb();
 																HID_ADD_ADDRESS_REP(1,serialId,addressType,data+6);
-																break;
 														}
-														else//地址匹配失败
+														else
 														{
 																if(Set_Flag.flag.add_address)//是否重复进行添加地址时的密码验证，1为需要，0为不需要
 																		Passport_Flag.flag.add_address = 0;
 																else
-																		Passport_Flag.flag.add_address = 1;														
-																Display_MainPage();
-																HID_ADD_ADDRESS_REP(0,serialId,addressType,data+6);
-																break;
+																		Passport_Flag.flag.add_address = 1;																
+																Display_Usb();
+																HID_ADD_ADDRESS_REP(0x0203,serialId,addressType,data+6);															
 														}
 												}
-												else
+												else//地址匹配失败
 												{
 														if(Set_Flag.flag.add_address)//是否重复进行添加地址时的密码验证，1为需要，0为不需要
 																Passport_Flag.flag.add_address = 0;
 														else
-																Passport_Flag.flag.add_address = 1;
-														Display_MainPage();
-														HID_ADD_ADDRESS_REP(0,serialId,addressType,data+6);
+																Passport_Flag.flag.add_address = 1;														
+														Display_Usb();
+														HID_ADD_ADDRESS_REP(0x0205,serialId,addressType,data+6);
 														break;
 												}
 										}
-										Display_MainPage();
+										else
+										{
+												if(Set_Flag.flag.add_address)//是否重复进行添加地址时的密码验证，1为需要，0为不需要
+														Passport_Flag.flag.add_address = 0;
+												else
+														Passport_Flag.flag.add_address = 1;
+												Display_Usb();
+												HID_ADD_ADDRESS_REP(0x0205,serialId,addressType,data+6);
+												break;
+										}
+										Display_Usb();
 										break;
 								}
-								case CMD_SIGN_DATA:						//0x020a
+								case CMD_SIGN_DATA:						//0x0205
 								{
 										if(Display_VerifyCode() == 0)
 										{
 												Passport_Flag.flag.sign_data = 1;
 										}									
 										if(Passport_Flag.flag.sign_data)
-										{
-												Fill_RAM(0x00);
-												Asc8_16(76,26,"Sign Data ...");
-//												uint16_t addressType 	= data[4] | (data[5] << 8);
+										{											
 												uint8_t  AddressID 		= Get_Address_ID(data+6);
 												if(AddressID)
 												{
-														uint8_t slot_data[32];
-														uint8_t privateKey[32];
-														SIGN_Out_Para Sign;												
-														ATSHA_read_data_slot(AddressID+2,slot_data);
-														DecryptData(slot_data,32,privateKey);
-														memset(&Sign,0,sizeof(Sign));
-														if(Alg_ShowSignData(dataSave,HidData.dataLen,&Sign))//数据包解析出错
+														uint8_t Privekey[32];
+														if(Get_Privekey(AddressID+7,Neo_System.pin,Privekey) != 0)//出错
 														{
-																Display_MainPage();
+																Display_Usb();
 																HID_SIGN_DATA_FAILED_REP(serialId);
-																break;
+																return;															
 														}
-														else
-														{
-																if(Sign.type != 0x80)//不是合约交易
-																{
-																		if(Display_Sign_Data_Type_Identify() == 0)//用户拒绝签名或者操作超时
-																		{
-																				Display_MainPage();
-																				HID_SIGN_DATA_FAILED_REP(serialId);
-																				break;
-																		}
-																		Fill_RAM(0x00);
-																		Asc8_16(76,26,"Sign Data ...");
-																}
-																uint8_t index_add;
-																uint8_t addessID = 0;
-																char Sign_address[40] = "";
-																int len_add = 0;
-																
-																if(Sign.countOutputs == 0)		 //输出端地址为0个
-																{
-																		Display_MainPage();
-																		HID_SIGN_DATA_FAILED_REP(serialId);
-																		break;														
-																}
-																else if(Sign.countOutputs == 1)//输出端地址为1个
-																{
-																		index_add = 0;
-																}
-																else if(Sign.countOutputs == 2)//输出端地址为2个
-																{
-																		if(ArrayCompare(data+6,Sign.address[0],25))
-																				index_add = 0;
-																		else if(ArrayCompare(data+6,Sign.address[1],25))
-																				index_add = 1;
-																		else											 //本机没有存有该地址
-																		{
-																				Display_MainPage();
-																				HID_SIGN_DATA_FAILED_REP(serialId);
-																				break;																
-																		}
-																}
-																else//多个签名的情况
-																{
-																		index_add = 0xff;
-																}
-																
-																Alg_Base58Encode(Sign.address[index_add] , 25 ,Sign_address,&len_add);
-																if(Display_SignData(&Sign,Sign_address,addessID,index_add))
-																{
-																		uint8_t hash_all[32];
-																		uint8_t hash_sign[32];
-																		int len;
-																		uint8_t resultsign[64];
-																		uint8_t PublicKey[65];
-																		uint8_t PubKey[33];
-																		memset(hash_all,0,32);
-																		memset(hash_sign,0,32);
-																		memset(resultsign,0,64);
-																		memset(resultsignRecord,0,98);
-																		//签名的结果保存
-																		Alg_ECDSASignData(dataSave,HidData.dataLen,resultsign,&len,privateKey);														
-																		//组合成最终的数据，长度1字节+公钥33字节+签名结果64字节													
-																		Alg_GetPublicFromPrivate(privateKey,PublicKey,1);
-																		memmove(PubKey,PublicKey,33);
-																		//需要确定上位机具体是要哪个数据，是长度为98的，还是长度为64的？？？？
-																		resultsignRecord[0] = 33;
-																		memmove(resultsignRecord+1,PubKey,33);
-																		memmove(resultsignRecord+34,resultsign,64);
-																		SHA256_Data(resultsignRecord, 98, hash_all, 32);										
-//																	memmove(this->dataSave, resultsign,DATA_PACK_SIZE);
-//																	memmove(this->dataSave + DATA_PACK_SIZE, resultsign + DATA_PACK_SIZE,64-DATA_PACK_SIZE);
-																		memmove(dataSave, resultsignRecord,DATA_PACK_SIZE);
-																		memmove(dataSave + DATA_PACK_SIZE, resultsignRecord + DATA_PACK_SIZE,98-DATA_PACK_SIZE);
-																		SHA256_Data(resultsign, 64, hash_sign, 32);			
-
-																		Display_MainPage();
-																		
-																		HidData.reqSerial = RandomInteger();
-																		HID_SIGN_DATA_REP(CMD_NOTIFY_DATA,HidData.reqSerial,98,hash_all,32);
-#ifdef HID_Delay
-																		HAL_Delay(delay_hid);
-#endif
-																		HID_SIGN_DATA_REP(CMD_SIGN_OK,serialId,98,hash_all,32);
-																		break;																			
-																}
-																else//决绝签名
-																{
-																		Display_MainPage();
-																		HID_SIGN_DATA_FAILED_REP(serialId);
-																		break;																		
-																}
-														}
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_4);
+														//写入现场数据
+														STMFLASH_WriteWord(FLASH_ADDRESS_SCENE,serialId);
+														STMFLASH_Write_ByteArray(FLASH_ADDRESS_SCENE+4,data+6,32);													
+														//写入数据包及相关数据
+														STMFLASH_WriteWord(FLASH_ADDRESS_PACK,HidData.dataLen);
+														STMFLASH_Write_ByteArray(FLASH_ADDRESS_PACK+4,Privekey,32);
+														STMFLASH_Write_ByteArray(FLASH_ADDRESS_PACK+36,dataSave,((HidData.dataLen)/4)*4+4);
+														//显示等待图标
+														Fill_RAM(0x00);
+														Show_Pattern(&gImage_wait[0],30,33,24,40);
+														clearArea(120,40,16,1);
+														jump_to_app(FLASH_ADDRESS_APP1);
 												}
 												else
 												{
-														Display_MainPage();
+														Display_Usb();
 														HID_SIGN_DATA_FAILED_REP(serialId);
 														break;
 												}
 										}
-										Display_MainPage();
+										Display_Usb();
 										break;
 								}
 								case CMD_SET_INFO:						//0x021a
@@ -757,6 +933,132 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								}
 								case CMD_INSTALL_PACK:				//0x0301
 								{
+										uint16_t install_type = data[4] | (data[5] << 8);
+										uint16_t install_cont = data[6] | (data[7] << 8);
+										uint16_t version_coin = data[40] | (data[41] << 8);
+										
+										if((install_type != 0x0001)||(coinrecord.count>=5))
+										{
+												HID_INSTALL_PACK_REP(0,serialId,install_type,install_cont,version_coin);
+										}
+										uint8_t hash_file[32];
+										SHA256_Data(dataSave,HidData.dataLen,hash_file,32);
+										if(ArrayCompare(data+8,hash_file,32))
+										{
+												//TBD
+//												uint32_t Flash_Sector_Address = Get_Empty_Sector();
+												uint32_t Flash_Sector_Address = FLASH_ADDRESS_APP1;
+												if(Flash_Sector_Address == FLASH_ADDRESS_APP1)
+												{
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_7);
+														coinrecord.coin1 = install_cont;
+														coinrecord.version1 = version_coin;
+												}
+												else if(Flash_Sector_Address == FLASH_ADDRESS_APP2)
+												{
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_8);
+														coinrecord.coin2 = install_cont;
+														coinrecord.version2 = version_coin;														
+												}
+												else if(Flash_Sector_Address == FLASH_ADDRESS_APP3)
+												{
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_9);
+														coinrecord.coin3 = install_cont;
+														coinrecord.version3 = version_coin;														
+												}
+												else if(Flash_Sector_Address == FLASH_ADDRESS_APP4)
+												{
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_10);
+														coinrecord.coin4 = install_cont;
+														coinrecord.version4 = version_coin;														
+												}
+												else if(Flash_Sector_Address == FLASH_ADDRESS_APP5)
+												{
+														STMFLASH_Erase_Sectors(FLASH_SECTOR_11);
+														coinrecord.coin5 = install_cont;
+														coinrecord.version5 = version_coin;													
+												}
+												else
+												{
+														HID_INSTALL_PACK_REP(0,serialId,install_type,install_cont,version_coin);
+														break;
+												}
+												STMFLASH_Write_ByteArray(Flash_Sector_Address,dataSave,HidData.dataLen);
+												STMFLASH_WriteHalfWord(Flash_Sector_Address+0x1fffc,install_cont);
+												STMFLASH_WriteHalfWord(Flash_Sector_Address+0x1fffe,version_coin);
+												HID_INSTALL_PACK_REP(1,serialId,install_type,install_cont,version_coin);
+										}
+										else
+										{
+												HID_INSTALL_PACK_REP(0,serialId,install_type,install_cont,version_coin);	
+										}								
+										break;
+								}
+								case CMD_INSTALL_REQUEST:			//0x0302
+								{
+										if(Display_Updata_Wallet())
+										{
+												//更改更新标识
+												uint8_t slot_data[32];
+												ATSHA_read_data_slot(14,slot_data);
+												slot_data[1] = 1;
+												ATSHA_write_data_slot(14,0,slot_data,32);
+												HID_INSTALL_REQUEST_REP(1,serialId);
+												HAL_Delay(500);
+												Deal_USB_ERROR();//重新配置下USB
+												//重启回跳到BootLoader
+												System_Reset();
+										}
+										else
+										{
+												HID_INSTALL_REQUEST_REP(0,serialId);
+										}
+										Display_Usb();
+										break;
+								}
+								case CMD_UNINSTALL_PACK:			//0x0303
+								{
+										uint16_t install_type = data[4] | (data[5] << 8);
+										if(install_type == coinrecord.coin1)
+										{
+												coinrecord.count--;
+												coinrecord.coin1 = 0;
+												coinrecord.version1 = 0;
+												STMFLASH_Erase_Sectors(FLASH_SECTOR_7);
+										}
+										else if(install_type == coinrecord.coin2)
+										{
+												coinrecord.count--;
+												coinrecord.coin2 = 0;
+												coinrecord.version2 = 0;											
+												STMFLASH_Erase_Sectors(FLASH_SECTOR_8);
+										}
+										else if(install_type == coinrecord.coin3)
+										{
+												coinrecord.count--;
+												coinrecord.coin3 = 0;
+												coinrecord.version3 = 0;											
+												STMFLASH_Erase_Sectors(FLASH_SECTOR_9);
+										}
+										else if(install_type == coinrecord.coin4)
+										{
+												coinrecord.count--;
+												coinrecord.coin4 = 0;
+												coinrecord.version4 = 0;											
+												STMFLASH_Erase_Sectors(FLASH_SECTOR_10);
+										}
+										else if(install_type == coinrecord.coin5)
+										{
+												coinrecord.count--;
+												coinrecord.coin5 = 0;
+												coinrecord.version5 = 0;											
+												STMFLASH_Erase_Sectors(FLASH_SECTOR_11);
+										}
+										else
+										{
+												HID_UNINSTALL_PACK_REP(0,serialId,install_type);
+										}										
+										HID_UNINSTALL_PACK_REP(1,serialId,install_type);
 										break;
 								}
 								case CMD_SECU_PIPE:						//0x0401
@@ -767,9 +1069,9 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								break;
 						}
 				}
-				if(cmd == CMD_GET_INFO)								//0x021b
+				if(cmd == CMD_QUERY_PACK_INFO)								//0x0304
 				{
-						HID_GET_INFO_REP(serialId);
+						HID_QUERY_PACK_INFO_REP(serialId);
 				}
 		}
 		else

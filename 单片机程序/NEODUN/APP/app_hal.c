@@ -26,6 +26,17 @@ uint8_t Scan_USB(void)
 				return 0;
 }
 
+void Deal_USB_ERROR(void)
+{
+		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);		
+}
+
 void System_Reset(void)
 {
 		__set_FAULTMASK(1);
@@ -42,5 +53,7 @@ void OTG_FS_IRQHandler(void)
 {
 		HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
 }
+
+
 
 

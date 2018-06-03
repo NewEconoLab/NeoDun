@@ -104,14 +104,15 @@
 #endif /* STM32F427xx || STM32F437xx || STM32F429xx || STM32F439xx || STM32F446xx */
 
 #if defined(DATA_IN_ExtSRAM) && defined(DATA_IN_ExtSDRAM)
- #error "Please select DATA_IN_ExtSRAM or DATA_IN_ExtSDRAM " 
+ #error "Please select DATA_IN_ExtSRAM or DATA_IN_ExtSDRAM "
 #endif /* DATA_IN_ExtSRAM && DATA_IN_ExtSDRAM */
 
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
-#define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field. 
-                                   This value must be a multiple of 0x200. */
+//#define VECT_TAB_OFFSET  0
+#define VECT_TAB_OFFSET  0x20000 /*!< Vector Table base offset field.
+//                                   This value must be a multiple of 0x200. */
 /******************************************************************************/
 
 /**

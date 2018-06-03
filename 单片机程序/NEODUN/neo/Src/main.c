@@ -43,6 +43,8 @@
 #include "OLED281/oled281.h"
 #include "aw9136.h"
 #include "timer.h"
+#include "main_define.h"
+#include "stmflash.h"
 
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
@@ -60,15 +62,15 @@ static void MX_UART4_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
 
-extern  void my_main(void);
+extern void my_main(void);
 
 int main(void)
 {
+		if(STMFLASH_ReadWord(0x0801F000) == 0xffffffff)
+				SysFlagType = 0;
+		else
+				SysFlagType = 1;
 	
-		
-//#ifndef  printf_debug
-//		SCB->VTOR = FLASH_BASE | 0x10000;//设置偏移量
-//#endif
 		HAL_Init();//设置中断优先级，中断分组2
 		SystemClock_Config();
 		MX_GPIO_Init();
@@ -77,11 +79,11 @@ int main(void)
 		MX_UART4_Init();			//指纹
 		MX_USART2_UART_Init();//蓝牙
 		MX_USART1_UART_Init();//打印
-		MX_USB_DEVICE_Init();
 		ATSHA_I2c_Init();
+		MX_USB_DEVICE_Init();		
 		OLED281_Init();
-		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
 		AW9136_Init();
+		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
 
 		while (1)
 		{

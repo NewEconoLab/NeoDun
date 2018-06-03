@@ -112,6 +112,14 @@ iapfun jump2app;
 //appxaddr:用户代码起始地址.
 void jump_to_app(uint32_t appxaddr)
 {	
+		//跳转之前失能所有的时钟和中断
+		HAL_DeInit();
+		HAL_NVIC_DisableIRQ(SysTick_IRQn);
+		HAL_NVIC_DisableIRQ(USART2_IRQn);
+		HAL_NVIC_DisableIRQ(TIM3_IRQn);
+		HAL_NVIC_DisableIRQ(EXTI2_IRQn);
+		HAL_NVIC_DisableIRQ(OTG_FS_IRQn);
+	
 		if(((*(vu32*)appxaddr)&0x2FFE0000)==0x20000000)	//检查栈顶地址是否合法.
 		{ 
 				jump2app=(iapfun)*(vu32*)(appxaddr+4);		//用户代码区第二个字为程序开始地址(复位地址)		

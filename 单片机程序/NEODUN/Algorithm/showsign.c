@@ -491,7 +491,7 @@ void ReverseString(char *buf)
 * 输入参数：buff 输入数组                
 * 输出参数：
 *******************************************************************/	
-long long CountMoney(uint8_t *buff)
+uint64_t CountMoney(uint8_t *buff)
 {
 		int i;
 	  int64_t num=0;

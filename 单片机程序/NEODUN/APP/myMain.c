@@ -33,6 +33,7 @@
 #include "aw9136.h"
 #include "OLED281/oled281.h"
 #include "app_hal.h"
+#include "stmflash.h"
 
 void my_main(void)
 {
@@ -40,104 +41,131 @@ void my_main(void)
 		Sys_Data_Init();
 	
 		//开机更新系统标识、设置标识
-		if(Update_PowerOn_SYSFLAG(&System_Flag)==0)			
+		if(Update_PowerOn_SYSFLAG(&Neo_System)==0)			
 		{
 				Fill_RAM(0x00);
 				Asc8_16(60,24,"ATSHA204 ERROR!!!");
 				HAL_Delay(DISPLAY_ERROR_TIME);
 				return;
 		}
-		Update_PowerOn_SetFlag(&Set_Flag,&System_Flag);
-	
-		//开机振动下马达 200ms
-		Motor_touch(200);
+		Update_PowerOn_SetFlag(&Set_Flag,&Neo_System);
 		
-		//新、旧钱包开机处理
-NEWWALLET:
-		if(System_Flag.new_wallet)
+		//快速开机处理，应用在插件回跳APP
+		if(SysFlagType == 0)
 		{
-				Key_Control(1);
-				Fill_RAM(0x00);
-				Show_HZ12_12(84,16,0,1);//欢迎
-				Asc8_16(116,16,"NEODUN");
-				Display_Triangle(0);	
-				while(Key_Flag.flag.middle == 0);
-				Key_Flag.flag.middle = 0;
-				Display_SetCode();
-				System_Flag.new_wallet = 0;
-				Update_Flag_ATSHA(&Set_Flag,&System_Flag);
-				Key_Control(1);
+				//开机振动下马达 200ms
+				Motor_touch(200);
+				
+				//新、旧钱包开机处理
+NEWWALLET:
+				if(Neo_System.new_wallet)
 				{
+						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(80,8,4,5);//密码
-						Show_HZ12_12(112,8,2,3);//设置
-						Show_HZ12_12(144,8,26,27);//完成
-						Show_HZ12_12(16,28,12,12);//请
-						Show_HZ12_12(32,28,28,29);//牢记
-						Show_HZ12_12(64,28,4,5);//密码
-						Show_HZ12_12(96,28,30,32);//丢失将
-						Show_HZ12_12(144,28,24,24);//导
-						Show_HZ12_12(160,28,33,33);//致
-						Show_HZ12_12(176,28,17,18);//钱包
-						Show_HZ12_12(208,28,34,34);//重
-						Show_HZ12_12(224,28,3,3);//置
+						Show_HZ12_12(84,16,0,1);//欢迎
+						Asc8_16(116,16,"NEODUN");
+						Display_Triangle(0);	
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+						Display_SetCode();
+						Neo_System.new_wallet = 0;
+						Update_Flag_ATSHA(&Set_Flag,&Neo_System);
+						Key_Control(1);
+						{
+								Fill_RAM(0x00);
+								Show_HZ12_12(80,8,4,5);//密码
+								Show_HZ12_12(112,8,2,3);//设置
+								Show_HZ12_12(144,8,26,27);//完成
+								Show_HZ12_12(16,28,12,12);//请
+								Show_HZ12_12(32,28,28,29);//牢记
+								Show_HZ12_12(64,28,4,5);//密码
+								Show_HZ12_12(96,28,30,32);//丢失将
+								Show_HZ12_12(144,28,24,24);//导
+								Show_HZ12_12(160,28,33,33);//致
+								Show_HZ12_12(178,28,2,2);//设
+								Show_HZ12_12(192,28,43,43);//备
+								Show_HZ12_12(208,28,34,34);//重
+								Show_HZ12_12(224,28,3,3);//置
+								Display_Triangle(0);
+						}
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+						{
+								Fill_RAM(0x00); 
+								Show_HZ12_12(88,16,10,11);//空的
+								Asc8_16(120,16,"NEODUN");
+						}
 						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+						{
+								Fill_RAM(0x00);
+								Show_HZ12_12(40,8,12,16);//请使用支持
+								Asc8_16(120,8,"NEODUN");
+								Show_HZ12_12(168,8,11,11);//的
+								Show_HZ12_12(184,8,17,18);//钱包
+								Show_HZ12_12(40,28,19,21);//创建新
+								Show_HZ12_12(88,28,4,4);//密
+								Show_HZ12_12(104,28,22,25);//钥并导入
+								Asc8_16(168,28,"NEODUN");
+						}
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+						Key_Control(0);
 				}
-				while(Key_Flag.flag.middle == 0);
-				Key_Flag.flag.middle = 0;
+				else
 				{
-						Fill_RAM(0x00); 
-						Show_HZ12_12(88,16,10,11);//空的
-						Asc8_16(120,16,"NEODUN");
+						if(Display_VerifyCode_PowerOn())//密码验证5次出错
+								goto NEWWALLET;
 				}
-				Display_Triangle(0);
-				while(Key_Flag.flag.middle == 0);
-				Key_Flag.flag.middle = 0;
-				{
-						Fill_RAM(0x00);
-						Show_HZ12_12(40,8,12,16);//请使用支持
-						Asc8_16(120,8,"NEODUN");
-						Show_HZ12_12(168,8,11,11);//的
-						Show_HZ12_12(184,8,17,18);//钱包
-						Show_HZ12_12(40,28,19,21);//创建新
-						Show_HZ12_12(88,28,4,4);//密
-						Show_HZ12_12(104,28,22,25);//钥并导入
-						Asc8_16(168,28,"NEODUN");
-				}
-				Display_Triangle(0);
-				while(Key_Flag.flag.middle == 0);
-				Key_Flag.flag.middle = 0;
-				Key_Control(0);
+
+				//此处，已进行过密码验证，置此位为1
+				Passport_Flag.flag.poweron = 1;
+				//显示主页面
+				Display_MainPage();
 		}
 		else
 		{
-				if(Display_VerifyCode_PowerOn())//密码验证5次出错
-						goto NEWWALLET;
+				SysFlagType = 0;
+				Deal_Sign_Data_Restart();
+				Passport_Flag.flag.poweron = 1;
 		}
-		
-		System_Flag.count =1;
-		//此处，已进行过密码验证，置此位为1
-		Passport_Flag.flag.poweron = 1;
-		//显示主页面
-		Display_MainPage();
-		
+
 		while (1)
 		{
-				if(hid_flag == 1)						 		 			//HID数据包解析
+				if(hid_flag == 1)						 		 						//收到HID数据包
 				{
-						Hid_Data_Analysis(hid_data,len_hid);
+						Hid_Data_Analysis(hid_data,len_hid);		//HID数据包解析
 						memset(hid_data,0,64);
 						hid_flag = 0;
 				}
-				Display_MainPage_judge();							//显示更新
-				if(task_1s_flag)											//1s任务
+				if(task_1s_flag)														//1s任务
 				{
 						task_1s_flag = 0;
-						if(Scan_USB())	//扫描USB
-								Set_Flag.flag.usb_offline = 0;
-																							//电池电量较低做个提醒
+						if(Scan_USB())													//扫描USB
+						{
+								if(Set_Flag.flag.usb_state_pre)			//表示从断开连接USB，到连上USB
+										Display_Usb();
+								Set_Flag.flag.usb_offline 	= 0;		//USB连上
+								Set_Flag.flag.usb_state_pre = 0;
+						}
+						else
+						{
+								if(Set_Flag.flag.usb_state_pre == 0)//表示从连接USB，到断开USB
+								{
+										Fill_RAM(0x00);
+										Display_MainPage();
+								}
+								Set_Flag.flag.usb_offline 	= 1;		//USB断开
+								Set_Flag.flag.usb_state_pre = 1;
+						}
+						//电池电量较低做个提醒
 				}
-				//考虑USB连上后关掉其它功能
+				if(Set_Flag.flag.usb_offline)								//USB断开后开启系统显示功能
+				{
+						Display_MainPage_judge();								//显示更新
+				}
 		}
 }
 

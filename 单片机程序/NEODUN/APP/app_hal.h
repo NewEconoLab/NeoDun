@@ -5,7 +5,7 @@
 
 
 	 
-	 
+void Deal_USB_ERROR(void);	 
 void SendUSBData(uint8_t *data ,int len);
 uint8_t Scan_USB(void);
 void System_Reset(void);
