@@ -43,9 +43,10 @@
 #define CMD_GET_INFO_FAILED					0x02d2
 
 //插件管理
-#define CMD_INSTALL_PACK						0x0301		//安装更新
-#define CMD_INSTALL_OK							
-#define CMD_INSTALL_FAILED					
+#define CMD_INSTALL_PACK						0x0301		//安装插件
+#define CMD_INSTALL_REQUEST					0x0302		//请求安装	
+#define CMD_UNINSTALL_PACK					0x0303		//卸载插件
+#define CMD_QUERY_PACK_INFO					0x0304		//查询固件信息
 
 //特殊操作
 #define CMD_SECU_PIPE								0x0401		//请求安全通道公钥

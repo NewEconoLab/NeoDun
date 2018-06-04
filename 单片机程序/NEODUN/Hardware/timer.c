@@ -5,7 +5,6 @@
 //local
 static		volatile 	uint32_t 	input_time_counter = 0;
 static 		volatile  uint8_t 	input_time_flag = 0;
-static		volatile 	uint32_t 	system_base_time = 0;
 static		volatile	uint32_t	center_key_count = 0;
 
 TIM_HandleTypeDef TIM3_Handler;      //定时器句柄 
@@ -25,10 +24,10 @@ void TIM3_Init(uint16_t arr,uint16_t psc)
     TIM3_Handler.Init.ClockDivision=TIM_CLOCKDIVISION_DIV1;	//时钟分频因子
     HAL_TIM_Base_Init(&TIM3_Handler);
     
-    HAL_TIM_Base_Start_IT(&TIM3_Handler); //使能定时器3和定时器3更新中断：TIM_IT_UPDATE   
-		__HAL_RCC_TIM3_CLK_ENABLE();					//开启定时器
+		__HAL_TIM_CLEAR_FLAG(&TIM3_Handler,TIM_IT_UPDATE);
+    HAL_TIM_Base_Start_IT(&TIM3_Handler); 									//使能定时器3和定时器3更新中断：TIM_IT_UPDATE   
+		__HAL_RCC_TIM3_CLK_ENABLE();														//开启定时器
 }
-
 
 //定时器底册驱动，开启时钟，设置中断优先级
 //此函数会被HAL_TIM_Base_Init()函数调用
@@ -37,7 +36,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
     if(htim->Instance==TIM3)
 	{
 		__HAL_RCC_TIM3_CLK_ENABLE();            //使能TIM3时钟
-		HAL_NVIC_SetPriority(TIM3_IRQn,1,3);    //设置中断优先级，抢占优先级1，子优先级3
+		HAL_NVIC_SetPriority(TIM3_IRQn,2,3);    //设置中断优先级，抢占优先级1，子优先级3
 		HAL_NVIC_EnableIRQ(TIM3_IRQn);          //开启ITM3中断   
 	}
 }

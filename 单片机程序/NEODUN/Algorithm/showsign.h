@@ -3,17 +3,18 @@
 
 #include "stm32f4xx.h"
 
+//6+50+64+16=136 Byte
 typedef struct
 {
-    int type;
-    int version;
+    uint8_t type;
+    uint8_t version;
 		uint8_t coin;						 // 1 表示NEO， 0 表示GAS，0xff其它暂不识别
-    int countAttributes;
-    int countInputs;
-    int countOutputs;
-    uint8_t address[10][25];//每一行存储一个地址，10个地址
-		uint8_t assetid[10][32];
-    long long money[10];
+    uint8_t countAttributes;
+    uint8_t countInputs;
+    uint8_t countOutputs;
+    uint8_t address[2][25];//每一行存储一个地址，10个地址
+		uint8_t assetid[2][32];
+    uint64_t money[2];
 }SIGN_Out_Para;
 
 //不同的交易类型定义的数组和变量，输出不同的数据

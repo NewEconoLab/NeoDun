@@ -2729,28 +2729,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\viko\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\34771\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj",
+      "projectUniqueName": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj",
       "projectName": "thinSDK_neo",
-      "projectPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj",
-      "packagesPath": "C:\\Users\\viko\\.nuget\\packages\\",
-      "outputPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\obj\\",
+      "projectPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj",
+      "packagesPath": "C:\\Users\\34771\\.nuget\\packages\\",
+      "outputPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\viko\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\34771\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net47"

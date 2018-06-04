@@ -9,14 +9,6 @@
 #include "aw9136.h"
 #include "OledMenu.h"
 
-//声明ASCII库
-extern unsigned char ASC6X12[];
-extern unsigned char ASC8X16[];
-extern unsigned char  HZ12X12_S[];
-//声明图片
-extern unsigned char gImage_emptypin[72];
-extern unsigned char gImage_fullpin[72];
-
 /************************************************
 设置密码函数
 返回值： 0  失败
@@ -29,7 +21,7 @@ uint8_t SetCode(uint8_t code_array[8])
 		memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 		
 		Fill_RAM(0x00);
-		if(System_Flag.language == 0)
+		if(Neo_System.language == 0)
 		{
 				//第一行显示
 				Show_HZ12_12(96,7,2,5);//设置密码
@@ -112,10 +104,12 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
     memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 
 		Fill_RAM(0x00);
-		if(System_Flag.language == 0)
+		if(Neo_System.language == 0)
 		{
 				//第一行显示
-				Show_HZ12_12(96,7,4,7);//密码确认
+				Show_HZ12_12(96,7,133,133);//输
+				Show_HZ12_12(112,7,25,25);//入
+				Show_HZ12_12(128,7,4,5);//密码		
 		}
 		else
 		{
@@ -327,6 +321,67 @@ uint8_t verifyCode(uint8_t state)
 				return 4;
 		}
 }
+
+uint8_t verifyCodeGetPin(uint8_t state,uint8_t PinCode[8])
+{
+		uint8_t pin[8];//用户输入的PIN码
+		uint8_t MingWen[32];
+		uint8_t AnWen[32];
+		uint32_t Len_Out = 0;
+		uint32_t crc = 0;
+		
+		if(VerifyCode(pin,state) == 0)		//得到用户输入的有效6位PIN码
+				return 5;
+		crc = Utils_crc32(0,pin,6);//组合成8位的PIN码
+		pin[6] = crc & 0xff;
+		pin[7] = (crc>>8) & 0xff;
+		memmove(PinCode,pin,8);		
+				
+		memset(AnWen,0,32);
+		memset(MingWen,0,32);
+		if(ATSHA_read_data_slot(0,MingWen) == 0)
+		{
+#ifdef printf_debug			
+				printf("ATSHA_read_data_slot \n");
+#endif			
+				Asc8_16(176,9,"ERROR!!!");
+				HAL_Delay(1000);
+				return 1;
+		}
+		if(My_DES_Decrypt(MingWen,32,pin,AnWen,&Len_Out))
+		{
+#ifdef printf_debug			
+				printf("My_DES_Decrypt \n");
+#endif					
+				Asc8_16(176,9,"ERROR!!!");
+				HAL_Delay(1000);
+				return 2;
+		}
+		if(Len_Out != 32)
+		{
+#ifdef printf_debug			
+				printf("My_DES_Decrypt Len_Out ERROR \n");
+#endif					
+				Asc8_16(176,9,"ERROR!!!");
+				HAL_Delay(1000);
+				return 3;
+		}
+		if(Utils_verifycrc(AnWen,32))
+		{
+				Asc8_16(176,9,"OK");
+				HAL_Delay(1000);
+				return 0;
+		}
+		else
+		{
+#ifdef printf_debug			
+				printf("VerifyCrc ERROR \n");
+#endif
+				Asc8_16(176,9,"ERROR!!!");
+				HAL_Delay(1000);
+				return 4;
+		}
+}
 /************************************************
 新钱包加密数据
 参数：
@@ -341,7 +396,7 @@ uint8_t verifyCode(uint8_t state)
 				4	 加密芯片写入数据出错
 				5  DES加密出错
 *************************************************/
-uint8_t EncryptDataNew(uint8_t *data,int len,uint8_t num_slot)
+uint8_t EncryptDataNew(uint8_t *data,int len,uint8_t num_slot,uint8_t PinCode[8])
 {
 		uint8_t A[30],B[32],D[32],U[64];
 		uint32_t crc = 0;
@@ -349,7 +404,6 @@ uint8_t EncryptDataNew(uint8_t *data,int len,uint8_t num_slot)
 		uint8_t MingWenAB[64];
 		uint8_t MingWenKey[32];
 		uint32_t Len_Out = 0;
-		uint8_t pin[8] = {1,2,3,4,5,6,7,8};
 		
 		memset(A,0,30);
 		memset(B,0,32);
@@ -387,7 +441,7 @@ uint8_t EncryptDataNew(uint8_t *data,int len,uint8_t num_slot)
 		crc = Utils_crc32(0,U,62);
 		U[62] = crc & 0xff;
 		U[63] = (crc >> 8) & 0xff;
-		if(My_DES_Encrypt(U,64,pin,MingWenAB,&Len_Out))
+		if(My_DES_Encrypt(U,64,PinCode,MingWenAB,&Len_Out))
 		{
 				return 5;
 		}
@@ -414,15 +468,15 @@ uint8_t EncryptDataNew(uint8_t *data,int len,uint8_t num_slot)
 				5  AES加密出错
 				6  加密芯片写入数据出错
 *************************************************/
-uint8_t EncryptData(uint8_t *data,int len,uint8_t num_slot)
+uint8_t EncryptData(uint8_t *data,int len,uint8_t num_slot,uint8_t PinCode[8])
 {
-		uint8_t A[30],B[32],D[32],U[64];
+		uint8_t A[32],B[32],D[32],U[64];
 		uint32_t crc = 0;
 		uint8_t AnWenAB[64];
 		uint8_t MingWenKey[32];
 		uint8_t key[32];
 		uint32_t Len_Out = 0;
-		uint8_t pin[8] = {1,2,3,4,5,6,7,8};	
+
 		
 		memset(A,0,32);
 		memset(B,0,32);
@@ -438,7 +492,7 @@ uint8_t EncryptData(uint8_t *data,int len,uint8_t num_slot)
 				return 1;
 		memmove(U,A,32);
 		memmove(U+32,B,32);
-		if(My_DES_Decrypt(U,64,pin,AnWenAB,&Len_Out))
+		if(My_DES_Decrypt(U,64,PinCode,AnWenAB,&Len_Out))
 		{
 				return 2;
 		}
@@ -487,14 +541,13 @@ uint8_t EncryptData(uint8_t *data,int len,uint8_t num_slot)
 				4	 加密芯片mac指令出错
 				5  AES解密出错
 *************************************************/
-uint8_t DecryptData(uint8_t *data,int len,uint8_t *Output)
+uint8_t DecryptData(uint8_t *data,int len,uint8_t Pin[8],uint8_t *Output)
 {
-		uint8_t A[30],B[32],D[32],U[64];
+		uint8_t A[32],B[32],D[32],U[64];
 		uint32_t crc = 0;
 		uint8_t AnWenAB[64];
 		uint8_t key[32];
 		uint32_t Len_Out = 0;
-		uint8_t pin[8] = {1,2,3,4,5,6,7,8};	
 		
 		memset(A,0,32);
 		memset(B,0,32);
@@ -509,7 +562,7 @@ uint8_t DecryptData(uint8_t *data,int len,uint8_t *Output)
 				return 1;
 		memmove(U,A,32);
 		memmove(U+32,B,32);
-		if(My_DES_Decrypt(U,64,pin,AnWenAB,&Len_Out))
+		if(My_DES_Decrypt(U,64,Pin,AnWenAB,&Len_Out)) 
 		{
 				return 2;
 		}

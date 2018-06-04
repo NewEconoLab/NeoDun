@@ -4,9 +4,29 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
+#define FLASH_ADDRESS_SIGN_DATA	0x0801F000 //签名结果地址
+#define	FLASH_ADDRESS_SCENE		  0x0801FE00 //现场数据地址
+#define FLASH_ADDRESS_PACK		  0x08010000 //扇区4
+
+////为了调试
+//#define FLASH_ADDRESS_SIGN_DATA	0x0808F000 //签名结果地址
+//#define	FLASH_ADDRESS_SCENE		  0x0808FE00 //现场数据地址
+//#define FLASH_ADDRESS_PACK		  0x08080000 //扇区4
+
+#define FLASH_ADDRESS_NEODUN	  0x08020000 //扇区5+扇区6
+#define FLASH_ADDRESS_APP1		  0x08060000 //扇区7
+#define FLASH_ADDRESS_APP2		  0x08080000 //扇区8
+#define FLASH_ADDRESS_APP3		  0x080a0000 //扇区9
+#define FLASH_ADDRESS_APP4		  0x080c0000 //扇区10
+#define FLASH_ADDRESS_APP5		  0x080e0000 //扇区11
+
+
+
 //程序版本号，高4位主版本号，低4位次版本号
-#define	VERSION								"V1.0"
-#define VERSION_NEO						"V1.0"
+#define	VERSION_NEODUN				0x0100
+#define VERSION_NEO						0x0100
+#define	VERSION_NEODUN_STR		"V1.0"
+#define VERSION_NEO_STR				"V1.0"
 //宏开关
 #define printf_debug
 //#define HID_Delay
@@ -49,6 +69,7 @@ typedef union
 				uint8_t del_address:1;							//删除地址
 				uint8_t backup_address:1;				  	//备份地址
 				uint8_t backup_address_encrypt:1; 	//备份钱包时进行加密标识
+				uint8_t usb_state_pre:1;						//USB前时刻的状态
 		}flag;
 		uint8_t data;
 }SET_FLAG;
@@ -76,7 +97,8 @@ typedef struct
 		uint8_t	language;					//1表示英文，0表示中文
 		uint8_t count;						//地址数量
 		uint8_t	sn[12];						//单片机唯一SN码
-}SYSTEM_FLAG;
+		uint8_t pin[8];
+}SYSTEM_NEODUN;
 
 //HID数据解析结构体
 typedef struct
@@ -92,12 +114,28 @@ typedef struct
 //为地址显示开辟内存
 typedef struct
 {
-		uint8_t name[6];					//地址名称
+		uint8_t	hide;							//隐藏属性	
 		uint8_t	len_name;					//地址名称长度
-		uint8_t	hide;							//隐藏属性
+		char 		name[7];					//地址名称
 		uint8_t	content[25];			//Base58前的地址数据
 		uint8_t	address[40];			//Base58后的字符地址数据
 }ADDRESS;
+
+//系统插件信息,缺省值为0
+typedef struct
+{
+		uint8_t  count;
+		uint16_t coin1;
+		uint16_t version1;
+		uint16_t coin2;
+		uint16_t version2;
+		uint16_t coin3;
+		uint16_t version3;
+		uint16_t coin4;
+		uint16_t version4;
+		uint16_t coin5;
+		uint16_t version5;
+}COIN;
 
 enum TimerFunction
 {
@@ -105,18 +143,36 @@ enum TimerFunction
 		KEY_TIME 				= 1,
 };
 
+extern volatile 	uint32_t 	system_base_time;
+extern uint8_t					SysFlagType;
 extern KEY_FLAG 				Key_Flag;
 extern SET_FLAG 				Set_Flag;
-extern SYSTEM_FLAG 			System_Flag;
+extern SYSTEM_NEODUN 		Neo_System;
 extern PASSPORT_FLAG 		Passport_Flag;
 extern DATA_HID_RECORD	HidData;
 extern ADDRESS					showaddress[5];
+extern COIN							coinrecord;
 extern volatile 	uint32_t 	moter_delay;
 extern volatile 	uint8_t 	task_1s_flag;
 
 extern volatile int hid_flag;
 extern uint8_t hid_data[64];
 extern int len_hid;
+
+//声明ASCII库
+extern uint8_t ASC8X16[];
+extern uint8_t HZ12X12_S[];
+//声明图片
+extern uint8_t gImage_emptypin[72];
+extern uint8_t gImage_fullpin[72];
+extern uint8_t gImage_Set[512];
+extern uint8_t gImage_triangle_up[72];
+extern uint8_t gImage_triangle_down[72];
+extern uint8_t gImage_Address[512];
+extern uint8_t gImage_Address_hide[512];
+extern uint8_t gImage_arrow_left[128];
+extern uint8_t gImage_arrow_right[128];
+extern uint8_t gImage_Usb[288];
 
 
 void Sys_Data_Init(void);

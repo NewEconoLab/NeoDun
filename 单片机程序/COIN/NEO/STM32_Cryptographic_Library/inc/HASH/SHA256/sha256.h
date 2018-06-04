@@ -78,7 +78,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-
+#include "crypto.h"
 /* Includes ------------------------------------------------------------------*/
 
 /** @ingroup SHA256

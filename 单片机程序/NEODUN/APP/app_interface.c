@@ -33,15 +33,23 @@ X14系统标识存储如下：
 	24-27：空
 	28-31:新旧钱包标识
 地址存放说明：address[32]
-			0 -24：Base58前的25字节（0x17开始）数据
+			0 -24：Base58计算前的25字节（0x17开始）数据
 			25-30：6字节作为地址名称
-			31	 ：高4字节表示该槽中地址名称的长度，低4字节表示隐藏属性
+			31	 ：高4bit表示该槽中地址名称的长度，低4bit表示隐藏属性
+内部FLASH插件存储规划：扇区7-扇区11
+			插件类型：扇区起始地址
+			插件版本：扇区起始地址+2
+			文件位置：扇区起始地址+4
 *****************************************************************/
 #include "app_interface.h"
 #include <string.h>
 #include <stdio.h>
 #include "atsha204a.h"
 #include "main_define.h"
+#include "app_utils.h"
+#include "app_oled.h"
+#include "stmflash.h"
+#include "Algorithm.h"
 #include "app_utils.h"
 
 /***************************************************
@@ -51,7 +59,7 @@ X14系统标识存储如下：
 返回值：		1  成功
 					0  失败
 *****************	**********************************/
-uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
+uint8_t Update_PowerOn_SYSFLAG(SYSTEM_NEODUN *flag)
 {
 		uint8_t i = 0;
 		uint8_t slot_data[32];
@@ -78,16 +86,9 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
 		}
 		else//旧钱包，读取系统标识
 		{
-				flag->update = slot_flag[1];
-				flag->language = slot_flag[2];
-				for(i=8;i<13;i++)
-				{
-						if(ATSHA_read_data_slot(i,slot_data) == 0)
-								return 0;
-						if(slot_data[0] != 0x00)
-								flag->count++;
-						memset(slot_data,0,32);
-				}
+				flag->update   = slot_flag[1];
+				flag->language = slot_flag[2];			
+				flag->count    = Update_AddressInfo_To_Ram();
 				if(flag->count != slot_flag[3])//开机检测的地址数量和记录的数量不一致，则更新存储的计数值
 				{
 						slot_flag[0] = 0;
@@ -109,7 +110,8 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
 				flag->sn[4*i+1] = (chipSN[i] >> 16)&0xff;
 				flag->sn[4*i+2] = (chipSN[i] >>  8)&0xff;
 				flag->sn[4*i+3] = (chipSN[i])&0xff;
-		}	
+		}
+		PowerOn_PACKInfo_To_Ram();
 		return 1;
 }
 
@@ -120,7 +122,7 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_FLAG *flag)
 返回值：		1  成功
 					0  失败
 *****************	**********************************/
-uint8_t Update_PowerOn_SetFlag(SET_FLAG *Flag,SYSTEM_FLAG *flag)
+uint8_t Update_PowerOn_SetFlag(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 {
 		uint8_t slot_data[32];
 	
@@ -171,6 +173,44 @@ uint8_t Updata_SYS_Count(unsigned char count)
 }
 
 /***************************************************
+上电后，更新插件信息值到内存中
+*****************	**********************************/
+void PowerOn_PACKInfo_To_Ram(void)
+{
+		//插件信息
+		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1) != 0xFFFF)
+		{
+				coinrecord.count++;
+				coinrecord.coin1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+0x1fffc);
+				coinrecord.version1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+0x1fffe);
+		}
+		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2) != 0xFFFF)
+		{
+				coinrecord.count++;
+				coinrecord.coin2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+0x1fffc);
+				coinrecord.version2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+0x1fffe);
+		}
+		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3) != 0xFFFF)
+		{
+				coinrecord.count++;
+				coinrecord.coin3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+0x1fffc);
+				coinrecord.version3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+0x1fffe);
+		}
+		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4) != 0xFFFF)
+		{
+				coinrecord.count++;
+				coinrecord.coin4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+0x1fffc);
+				coinrecord.version4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+0x1fffe);
+		}		
+		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5) != 0xFFFF)
+		{
+				coinrecord.count++;
+				coinrecord.coin5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+0x1fffc);
+				coinrecord.version5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+0x1fffe);
+		}	
+}
+
+/***************************************************
 更新系统的设置标识  
 返回值：		1  成功
 					0  失败
@@ -196,7 +236,7 @@ uint8_t Updata_Set_Flag(SET_FLAG *Flag)
 功能：
 		将RAM中的设置标识和系统标识，更新到加密芯片
 ***************************************************/
-void Update_Flag_ATSHA(SET_FLAG *Flag,SYSTEM_FLAG *flag)
+void Update_Flag_ATSHA(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 {
 		uint8_t array_write[32];
 		array_write[0] = flag->new_wallet;
@@ -246,29 +286,11 @@ void EmptyWallet(void)
 *****************	**********************************/
 uint8_t Get_Address_ID(uint8_t array_address[25])
 {
-		uint8_t i = 0;
-		uint8_t j = 0;
-		uint8_t flag = 0;
-		uint8_t slot_data[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-																	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	
+		uint8_t i = 0;		
 		for(i=0;i<5;i++)
 		{
-				ATSHA_read_data_slot(i+8,slot_data);				
-				if(slot_data[0] == 0)
-						continue;
-				for(j=0;j<25;j++)
-				{
-						if(array_address[j] != slot_data[j])
-						{		
-								flag = 1;
-								break;
-						}
-				}
-				if(flag == 0)
+				if(ArrayCompare(array_address,showaddress[i].content,25))
 						return (i+1);
-				memset(slot_data,0,32);
-				flag = 0;
 		}
 		return 0;
 }
@@ -295,6 +317,27 @@ uint8_t Get_Empty_SlotID(void)
 
 /***************************************************
 功能：
+		得到一个空的APP存放扇区
+输出：
+		扇区地址
+*****************	**********************************/
+uint32_t Get_Empty_Sector(void)
+{
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP1) == 0xFFFFFFFF)
+				return FLASH_ADDRESS_APP1;
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP2) == 0xFFFFFFFF)
+				return FLASH_ADDRESS_APP2;
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP3) == 0xFFFFFFFF)
+				return FLASH_ADDRESS_APP3;
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP4) == 0xFFFFFFFF)
+				return FLASH_ADDRESS_APP4;
+		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP5) == 0xFFFFFFFF)
+				return FLASH_ADDRESS_APP5;
+		return 0;
+}
+
+/***************************************************
+功能：
 		SlotID为地址所对应的槽号
 		state为1时，隐藏地址
 		state为0时，恢复地址					
@@ -309,6 +352,292 @@ void Hide_address(uint8_t SlotID,uint8_t state)
 				slot_data[31] = 0;
 		ATSHA_write_data_slot(SlotID+7,0,slot_data,32);
 }
+
+/***************************************************
+功能：
+		SlotID为地址所对应的槽号
+		得到地址所对应的私钥
+*****************	**********************************/
+uint8_t	Get_Privekey(uint8_t SlotID,uint8_t pin[8],uint8_t Privekey[32])
+{
+		uint8_t slot_data[32];
+		ATSHA_read_data_slot(SlotID-5,slot_data);
+		return (DecryptData(slot_data,32,pin,Privekey));
+}
+
+/***************************************************
+功能：
+		更新钱包的地址信息到内存中
+*****************	**********************************/
+uint8_t Update_AddressInfo_To_Ram(void)
+{
+		uint8_t count = 0;
+		uint8_t i;
+		uint8_t slot_data[32];
+		char base58char[40];
+		int len_base58char = 0;
+
+		for(i=0;i<5;i++)
+		{
+				ATSHA_read_data_slot(i+8,slot_data);
+				if(slot_data[0] == 0x00)
+						continue;
+				showaddress[i].hide     = slot_data[31]&0xF;
+				showaddress[i].len_name = (slot_data[31]>>4)&0xF;
+				memmove(showaddress[i].name,slot_data+25,6);
+				memmove(showaddress[i].content,slot_data,25);
+				Alg_Base58Encode(showaddress[i].content,25,base58char,&len_base58char);
+				memmove(showaddress[i].address,base58char,len_base58char);
+				count++;
+		}
+		return count;
+}
+
+void Sort_One_Address(void)
+{
+		uint8_t i = 0;
+		uint8_t slot_buff[32];
+		memset(slot_buff,0,32);
+		if(showaddress[0].content != 0)
+				return;
+		else
+		{
+				for(i = 1;i<=4;i++)
+				{
+						if(showaddress[i].content != 0)
+						{
+								memmove(&showaddress[0],&showaddress[i],sizeof(ADDRESS));
+								memmove(slot_buff,showaddress[i].content,25);
+								memmove(slot_buff+25,showaddress[i].name,showaddress[i].len_name);
+								slot_buff[31] = (showaddress[i].len_name<<4)|(showaddress[i].hide);
+								ATSHA_write_data_slot(8,0,slot_buff,32);
+								ATSHA_read_data_slot(3+i,slot_buff);
+								ATSHA_write_data_slot(3,0,slot_buff,32);							
+								//清空前一个地址的信息
+								memset(&showaddress[i],0,sizeof(ADDRESS));
+								memset(slot_buff,0,32);
+								ATSHA_write_data_slot(8+i,0,slot_buff,32);
+								ATSHA_write_data_slot(3+i,0,slot_buff,32);						
+								break;
+						}
+				}
+		}
+}
+void Sort_Two_Address(void)
+{
+		uint8_t i = 0;
+		uint8_t slot_buff[32];
+		memset(slot_buff,0,32);
+		if(showaddress[0].content != 0)
+		{
+				if(showaddress[1].content != 0)
+						return;
+				else
+				{
+						for(i = 2;i<=4;i++)
+						{
+								if(showaddress[i].content != 0)
+								{
+										memmove(&showaddress[1],&showaddress[i],sizeof(ADDRESS));
+										memmove(slot_buff,showaddress[i].content,25);
+										memmove(slot_buff+25,showaddress[i].name,showaddress[i].len_name);
+										slot_buff[31] = (showaddress[i].len_name<<4)|(showaddress[i].hide);
+										ATSHA_write_data_slot(8,0,slot_buff,32);
+										ATSHA_read_data_slot(3+i,slot_buff);
+										ATSHA_write_data_slot(3+1,0,slot_buff,32);										
+										//清空前一个地址的信息
+										memset(&showaddress[i],0,sizeof(ADDRESS));
+										memset(slot_buff,0,32);
+										ATSHA_write_data_slot(8+i,0,slot_buff,32);
+										ATSHA_write_data_slot(3+i,0,slot_buff,32);									
+										break;
+								}
+						}
+				}
+		}
+		else
+		{
+				for(i = 1;i<=4;i++)
+				{
+						if(showaddress[i].content != 0)
+						{
+								memmove(&showaddress[0],&showaddress[i],sizeof(ADDRESS));
+								memmove(slot_buff,showaddress[i].content,25);
+								memmove(slot_buff+25,showaddress[i].name,showaddress[i].len_name);
+								slot_buff[31] = (showaddress[i].len_name<<4)|(showaddress[i].hide);
+								ATSHA_write_data_slot(8,0,slot_buff,32);
+								ATSHA_read_data_slot(3+i,slot_buff);
+								ATSHA_write_data_slot(3,0,slot_buff,32);							
+								//清空前一个地址的信息
+								memset(&showaddress[i],0,sizeof(ADDRESS));
+								memset(slot_buff,0,32);
+								ATSHA_write_data_slot(8+i,0,slot_buff,32);
+								ATSHA_write_data_slot(3+i,0,slot_buff,32);
+								break;
+						}
+				}
+				if(showaddress[1].content != 0)
+						return;
+				else
+				{
+						for(i = 2;i<=4;i++)
+						{
+								if(showaddress[i].content != 0)
+								{
+										memmove(&showaddress[1],&showaddress[i],sizeof(ADDRESS));
+										memmove(slot_buff,showaddress[i].content,25);
+										memmove(slot_buff+25,showaddress[i].name,showaddress[i].len_name);
+										slot_buff[31] = (showaddress[i].len_name<<4)|(showaddress[i].hide);
+										ATSHA_write_data_slot(8,0,slot_buff,32);
+										ATSHA_read_data_slot(3+i,slot_buff);
+										ATSHA_write_data_slot(3+1,0,slot_buff,32);									
+										//清空前一个地址的信息
+										memset(&showaddress[i],0,sizeof(ADDRESS));
+										memset(slot_buff,0,32);
+										ATSHA_write_data_slot(8+i,0,slot_buff,32);
+										ATSHA_write_data_slot(3+i,0,slot_buff,32);
+										break;
+								}
+						}
+				}				
+		}
+}
+void Sort_Three_Address(void)
+{
+		uint8_t i = 0;
+		uint8_t slot_buff[32];
+		memset(slot_buff,0,32);
+	
+		if(showaddress[4].content == 0)
+		{
+				if(showaddress[3].content == 0)
+						return;
+				else
+				{
+						for(i = 0;i<=2;i++)
+						{
+								if(showaddress[i].content == 0)
+								{
+										memmove(&showaddress[i],&showaddress[3],sizeof(ADDRESS));
+										memmove(slot_buff,showaddress[3].content,25);
+										memmove(slot_buff+25,showaddress[3].name,showaddress[3].len_name);
+										slot_buff[31] = (showaddress[3].len_name<<4)|(showaddress[3].hide);
+										ATSHA_write_data_slot(8+i,0,slot_buff,32);
+										ATSHA_read_data_slot(3+3,slot_buff);
+										ATSHA_write_data_slot(3+i,0,slot_buff,32);										
+										//清空前一个地址的信息
+										memset(&showaddress[3],0,sizeof(ADDRESS));
+										memset(slot_buff,0,32);
+										ATSHA_write_data_slot(8+3,0,slot_buff,32);
+										ATSHA_write_data_slot(3+3,0,slot_buff,32);									
+										break;
+								}
+						}						
+				}
+		}
+		else
+		{
+				for(i = 0;i<=3;i++)
+				{
+						if(showaddress[i].content == 0)
+						{
+								memmove(&showaddress[i],&showaddress[4],sizeof(ADDRESS));
+								memmove(slot_buff,showaddress[4].content,25);
+								memmove(slot_buff+25,showaddress[4].name,showaddress[4].len_name);
+								slot_buff[31] = (showaddress[4].len_name<<4)|(showaddress[4].hide);
+								ATSHA_write_data_slot(8,0,slot_buff,32);
+								ATSHA_read_data_slot(3+4,slot_buff);
+								ATSHA_write_data_slot(3+i,0,slot_buff,32);
+								//清空前一个地址的信息
+								memset(&showaddress[4],0,sizeof(ADDRESS));
+								memset(slot_buff,0,32);
+								ATSHA_write_data_slot(8+4,0,slot_buff,32);
+								ATSHA_write_data_slot(3+4,0,slot_buff,32);							
+								break;
+						}
+				}
+				if(showaddress[3].content == 0)
+						return;
+				else
+				{
+						for(i = 0;i<=2;i++)
+						{
+								if(showaddress[i].content == 0)
+								{
+										memmove(&showaddress[i],&showaddress[3],sizeof(ADDRESS));
+										memmove(slot_buff,showaddress[3].content,25);
+										memmove(slot_buff+25,showaddress[3].name,showaddress[3].len_name);
+										slot_buff[31] = (showaddress[3].len_name<<4)|(showaddress[3].hide);
+										ATSHA_write_data_slot(8,0,slot_buff,32);
+										ATSHA_read_data_slot(3+3,slot_buff);
+										ATSHA_write_data_slot(3+i,0,slot_buff,32);									
+										//清空前一个地址的信息
+										memset(&showaddress[3],0,sizeof(ADDRESS));
+										memset(slot_buff,0,32);
+										ATSHA_write_data_slot(8+3,0,slot_buff,32);
+										ATSHA_write_data_slot(3+3,0,slot_buff,32);
+										break;
+								}
+						}						
+				}				
+		}
+}
+void Sort_Four_Address(void)
+{
+		uint8_t i = 0;
+		uint8_t slot_buff[32];
+		memset(slot_buff,0,32);	
+		if(showaddress[4].content == 0)
+				return;
+		for(i = 0;i<=3;i++)
+		{
+				if(showaddress[i].content == 0)
+				{
+						memmove(&showaddress[i],&showaddress[4],sizeof(ADDRESS));
+						memmove(slot_buff,showaddress[4].content,25);
+						memmove(slot_buff+25,showaddress[4].name,showaddress[4].len_name);
+						slot_buff[31] = (showaddress[4].len_name<<4)|(showaddress[4].hide);
+						ATSHA_write_data_slot(8+i,0,slot_buff,32);
+						ATSHA_read_data_slot(3+4,slot_buff);
+						ATSHA_write_data_slot(3+i,0,slot_buff,32);
+						//清空前一个地址的信息
+						memset(&showaddress[4],0,sizeof(ADDRESS));
+						memset(slot_buff,0,32);
+						ATSHA_write_data_slot(8+4,0,slot_buff,32);
+						ATSHA_write_data_slot(3+4,0,slot_buff,32);
+						break;
+				}
+		}
+}
+/***************************************************
+功能：
+		整理钱包地址，内存和加密芯片存储排序
+调用场景：
+		用户连接USB删除地址，新增地址，断开USB后，刷新屏幕前
+*****************	**********************************/
+void Sort_wallet_Address(void)
+{
+		switch (Neo_System.count)
+		{
+			case 0:					
+					break;
+			case 1:
+					Sort_One_Address();
+					break;
+			case 2:
+					Sort_Two_Address();
+					break;
+			case 3:
+					Sort_Three_Address();
+					break;
+			case 4:
+					Sort_Four_Address();
+					break;
+			case 5:
+					break;			
+		}
+}
+
 
 
 

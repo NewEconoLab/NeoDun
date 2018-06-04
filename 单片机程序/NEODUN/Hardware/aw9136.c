@@ -110,7 +110,7 @@ void AW9136_Init(void)
     HAL_GPIO_Init(GPIOC,&GPIO_Initure);
 	
     //中断线2-PC2
-    HAL_NVIC_SetPriority(EXTI2_IRQn,2,3);   //抢占优先级为2，子优先级为3
+    HAL_NVIC_SetPriority(EXTI2_IRQn,1,3);   //抢占优先级为2，子优先级为3
     HAL_NVIC_EnableIRQ(EXTI2_IRQn);         //使能中断线2
 	
 		IIC2_Init();	
@@ -600,7 +600,7 @@ void AW_left_release(void)
 }
 
 void AW_center_press(void)
-{		
+{
 		if(Key_Flag.flag.key_state)
 		{
 #ifdef printf_debug	
@@ -609,7 +609,7 @@ void AW_center_press(void)
 				Key_Flag.flag.right = 1;
 		}
 		Motor_touch(MOTOR_TIME);
-	}		
+}		
 
 void AW_center_release(void)
 {

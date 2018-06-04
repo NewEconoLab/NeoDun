@@ -6,6 +6,7 @@
 
 typedef __IO uint32_t  vu32;
 
+
 uint32_t 	Utils_crc32(uint32_t crc, uint8_t* buff, int len);
 uint8_t		Utils_verifycrc(uint8_t data[],int len);
 uint16_t	RandomInteger(void);
