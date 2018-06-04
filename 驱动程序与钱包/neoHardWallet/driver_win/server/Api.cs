@@ -93,7 +93,7 @@ namespace hhgate
                     MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
                     json["msg"] = new MyJson.JsonNode_ValueString("0501");
                     driverControl.Sign(data, address);
-                    while (time <= 10000)
+                    while (time <= 60000)
                     {
                         System.Threading.Thread.Sleep(100);
                         result = driverControl.result;
@@ -102,6 +102,7 @@ namespace hhgate
                             json["msg"] = result["msg"];
                             json["signdata"] = result["signdata"];
                             json["pubkey"] = result["pubkey"];
+                            break;
                         }
                         time += 100;
                     }
