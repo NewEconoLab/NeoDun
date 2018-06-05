@@ -89,6 +89,7 @@ namespace driver_win.dialogs
                         _islinking = false;
                     }
                     ShowUnlinkPage(false);
+                    DialogueControl.CloseAllWindow();
                 }
                 await Task.Delay(1000);
             });
@@ -153,6 +154,7 @@ namespace driver_win.dialogs
             {
                 this.unlink.Visibility = islink ? Visibility.Hidden : Visibility.Visible;
                 this.main.Visibility = islink ? Visibility.Visible : Visibility.Hidden;
+                //关掉当前页面所打开的二级页面
             });
         }
 

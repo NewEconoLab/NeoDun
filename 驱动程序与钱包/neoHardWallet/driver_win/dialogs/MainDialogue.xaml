@@ -14,9 +14,18 @@
                 <Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" Height="27" Margin="0,0,0,0" Source="/driver_win;component/res/neodun反白logo.png" Stretch="UniformToFill" />
             </Grid>
             <Label Content="Neodun 驱动程序 v0.1" Margin="170,0,0,0" FontSize="14px" VerticalContentAlignment="Center" Foreground="White"/>
-            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="932,28,0,0" Width="15" Height="4" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
+            <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="932,18,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
                 <Button.Background>
-                    <ImageBrush ImageSource="/driver_win;component/res/minimise.png" Stretch="None"/>
+                    <ImageBrush ImageSource="/driver_win;component/res/minimise.png" Stretch="None">
+                        <ImageBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform X="0" Y="0.3"/>
+                            </TransformGroup>
+                        </ImageBrush.RelativeTransform>
+                    </ImageBrush>
                 </Button.Background>
             </Button>
             <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="960,18,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Hide">

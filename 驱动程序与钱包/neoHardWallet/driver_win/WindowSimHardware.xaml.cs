@@ -170,7 +170,7 @@ namespace driver_win
                 var remoteid = recv.readUInt16(0);
                 var hash = recv.readHash256(4);
                 var block = dataTable.getBlockBySha256(hash);
-                block.dataidRemote = remoteid;
+                block.dataidRemote = (int)remoteid;
                 this.dataUpdate = true;
             }
             if (recv.tag1 == 0x02 && recv.tag2 == 0x04)//增加一个地址

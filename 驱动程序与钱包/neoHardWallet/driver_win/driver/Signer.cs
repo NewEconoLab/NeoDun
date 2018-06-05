@@ -222,8 +222,15 @@ namespace NeoDun
                     var remoteid = msg.readUInt32(0);
                     var hash = msg.readHash256(4);
                     var block = dataTable.getBlockBySha256(hash);
-                    block.dataidRemote = remoteid;
+                    block.dataidRemote = (int)remoteid;
 
+                }
+                if (msg.tag1 == 0x01 && msg.tag2 == 0x12)
+                {
+                    var remoteid = msg.readUInt32(0);
+                    var hash = msg.readHash256(4);
+                    var block = dataTable.getBlockBySha256(hash);
+                    block.dataidRemote = -1;
                 }
                 if (msg.tag1 == 0x01 && msg.tag2 == 0xa2)//收到一个分片
                 {

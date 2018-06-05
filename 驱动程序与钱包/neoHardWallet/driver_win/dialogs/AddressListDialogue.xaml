@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStyle="None" Height="462" Width="628" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Grid Background="Transparent">
-        <Border BorderThickness="5" CornerRadius="0,0,10,10">
+        <Border BorderThickness="5" CornerRadius="10,10,10,10">
             <Border.Effect>
                 <DropShadowEffect Direction="0" ShadowDepth="0" RenderingBias="Quality" BlurRadius="6"/>
             </Border.Effect>

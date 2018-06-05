@@ -29,7 +29,7 @@ namespace NeoDun
             return (from== DataBlockFrom.FromDriver?"[D]":"[S]")+ data.Length + "  id=" + dataid  +" id(S)="+ dataidRemote + "  match=" + match + "  hash=" + sha256;
         }
         public UInt32 dataid;
-        public UInt32 dataidRemote;
+        public Int32 dataidRemote;
         public string sha256;
         public byte[] data;
         public byte[] piecetag;
@@ -87,7 +87,7 @@ namespace NeoDun
             }
         }
 
-        public async Task<UInt32> GetRemoteid()
+        public async Task<Int32> GetRemoteid()
         {
             int time = 0;
             while (true)

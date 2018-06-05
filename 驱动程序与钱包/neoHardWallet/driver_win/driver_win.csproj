@@ -301,5 +301,17 @@
   <ItemGroup>
     <Resource Include="res\loading2.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\无钱包.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\钱包文件.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\setname.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\确认.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
