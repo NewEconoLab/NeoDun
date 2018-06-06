@@ -113,42 +113,27 @@ void Display_Address(uint8_t state,ADDRESS *address)
 void Display_MainPage(void)
 {
 		Sort_wallet_Address();
-		Fill_RAM(0x00);
-		Show_Pattern(&gImage_Set[0],28,35,0,32);
-		clearArea(112,32,32,1);
-		Show_HZ12_12(112,32,2,3);//设置
-		Display_Triangle(1);
-
-		if(Neo_System.count)
-				Display_arrow(0);
-		if(Neo_System.count > 1)
-				Display_arrow(1);
-
 		Key_Control(1);
+		main_RefreshDisplay = 1;
 		switch(Neo_System.count)
 		{
 				case 0:
+						Display_MainPage_0Add();					
 				break;
 				case 1:
-						Display_Address(0,&showaddress[0]);
+						Display_MainPage_1Add();
 				break;
 				case 2:
-						Display_Address(0,&showaddress[0]);
-						Display_Address(2,&showaddress[1]);
+						Display_MainPage_2Add();
 				break;
 				case 3:
-						Display_Address(0,&showaddress[0]);
-						Display_Address(2,&showaddress[2]);		
+						Display_MainPage_3Add();	
 				break;
 				case 4:
-						Display_Address(0,&showaddress[0]);
-						Display_Address(2,&showaddress[3]);					
+						Display_MainPage_4Add();				
 				break;
 				case 5:
-						Display_Address(0,&showaddress[0]);
-						Display_Address(2,&showaddress[4]);			
-				break;
-				default:
+						Display_MainPage_5Add();		
 				break;
 		}
 }
@@ -249,13 +234,13 @@ void Display_MainPage_2Add(void)
 		{
 				Key_Flag.flag.middle = 0;
 				main_RefreshDisplay = 1;
-				Display_Click_Add(2);
+				Display_Click_Add(1);
 		}			
 		if((Key_Flag.flag.middle)&&(main_page_index == 2))
 		{
 				Key_Flag.flag.middle = 0;
 				main_RefreshDisplay = 1;
-				Display_Click_Add(1);
+				Display_Click_Add(2);
 		}
 		
 		if((main_page_index == 0)&&(main_RefreshDisplay == 1))
@@ -275,27 +260,27 @@ void Display_MainPage_2Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
+				Show_Pattern(&gImage_Set[0],47,54,0,32);			
+				clearArea(188,32,32,1);
+				Show_HZ12_12(188,32,2,3);//设置
+				Display_Triangle(1);
+				Display_arrow(0);
+				Display_arrow(1);
+				Display_Address(0,&showaddress[1]);
+				Display_Address(1,&showaddress[0]);
+		}
+		if((main_page_index == 2)&&(main_RefreshDisplay == 1))
+		{
+				main_RefreshDisplay = 0;
+				Fill_RAM(0x00);
 				Show_Pattern(&gImage_Set[0],12,19,0,32);
 				clearArea(48,32,32,1);
 				Show_HZ12_12(48,32,2,3);//设置
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
-				Display_Address(1,&showaddress[1]);	
+				Display_Address(1,&showaddress[1]);
 				Display_Address(2,&showaddress[0]);
-		}
-		if((main_page_index == 2)&&(main_RefreshDisplay == 1))
-		{
-				main_RefreshDisplay = 0;
-				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
-				Display_Triangle(1);
-				Display_arrow(0);
-				Display_arrow(1);
-				Display_Address(1,&showaddress[0]);
-				Display_Address(0,&showaddress[1]);
 		}
 		if(Key_Flag.flag.left)//左键有效时，ID加1
 		{
@@ -310,7 +295,7 @@ void Display_MainPage_2Add(void)
 						main_page_index++;
 						main_RefreshDisplay = 1;
 				}
-		}			
+		}
 		if(Key_Flag.flag.right)//右键有效时，ID加1
 		{
 				Key_Flag.flag.right = 0;
@@ -479,8 +464,8 @@ void Display_MainPage_4Add(void)
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
-				Display_Address(0,&showaddress[0]);			
-				Display_Address(2,&showaddress[0]);
+				Display_Address(0,&showaddress[0]);
+				Display_Address(2,&showaddress[3]);
 		}
 		if((main_page_index == 1)&&(main_RefreshDisplay == 1))
 		{
@@ -1279,11 +1264,11 @@ void Display_Set_Coin_NEO(void)
 				}					
 		}
 }
-
+//TBD
 void Display_Set_Coin(void)
 {
 		uint8_t RefreshDisplay = 1;//是否重新刷新界面标志
-		uint8_t page_index = 0;		//页面ID	
+		uint8_t page_index = 0;		 //页面ID
 		Key_Control(1);
 		while(1)
 		{
@@ -1656,8 +1641,18 @@ void Display_Click_Set(void)
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
-						Display_Set_Coin();
-						RefreshDisplay = 1;
+						if(coinrecord.count != 0)
+						{
+								Display_Set_Coin();
+								RefreshDisplay = 1;
+						}
+						else
+						{
+								Fill_RAM(0x00);
+								Show_HZ12_12(120,24,91,91);//无
+								HAL_Delay(2000);
+								RefreshDisplay = 1;
+						}
 				}
 				if((Key_Flag.flag.middle)&&(page_index == 1))
 				{
@@ -1877,9 +1872,10 @@ uint8_t Display_DelAdd(uint8_t AddID)
 		return value;
 }
 
-uint8_t Display_SignData(SIGN_Out_Para *data,char* address,uint8_t address_name,uint8_t signdata_index)
+uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_index)
 {
-		uint8_t num[2] = {'0','\0'};
+		unsigned char num[2] = {'0','\0'};	
+		uint8_t index = 0;
 		char temp = 0;
 		//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
 		int count_bit=0;
@@ -1888,22 +1884,21 @@ uint8_t Display_SignData(SIGN_Out_Para *data,char* address,uint8_t address_name,
 		Key_Control(1);
 		Fill_RAM(0x00);		
 		Show_HZ12_12(0,0,122,122);//从
-		Show_HZ12_12(16,0,8,9);//地址
-		num[0] = address_name+0x30;
-		Asc8_16(48,0,num);
-		Show_HZ12_12(56,0,123,124);//发送
-		
+		Asc8_16(16,0,(uint8_t*)address->name);
+		index = 16 + 8*address->len_name;
+		Show_HZ12_12(index,0,123,124);//发送
+		index += 32;
 		if(signdata_index != 0xff)
 		{
-				count_int = drawNumber(88,0,data->money[signdata_index]/100000000,8);
+				count_int = drawNumber(index,0,data->money[signdata_index]/100000000,8);
 				if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
 				{
-						Asc8_16(28+count_int*8,0,".");
-						count_dec = drawxNumber(88+(count_int+1)*8,0,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
+						Asc8_16(index+count_int*8,0,".");
+						count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
 				}
 				if(data->money[signdata_index] == 0)//值为0的情况
 						count_dec = 8;
-				count_bit = 88 + (count_int + 8 -count_dec)*8 + 4; //88是前面占用的显示，+4是显示空隙，美观
+				count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
 				
 				if(data->coin == 0)
 						Asc8_16(count_bit,0,"GAS");
@@ -1918,12 +1913,12 @@ uint8_t Display_SignData(SIGN_Out_Para *data,char* address,uint8_t address_name,
 		else
 		{
 				if(data->coin == 0)
-						Asc8_16(88,0,"GAS");
+						Asc8_16(index,0,"GAS");
 				else if(data->coin == 1)
-						Asc8_16(88,0,"NEO");
+						Asc8_16(index,0,"NEO");
 		}
 		Fill_RAM(0x00);
-		Asc8_16(48,0,(uint8_t*)address);
+		Asc8_16(0,0,address->address);
 		Show_HZ12_12(46,47,111,112);//取消
 		Show_HZ12_12(112,47,113,114);//继续
 		Show_HZ12_12(184,47,111,112);//取消

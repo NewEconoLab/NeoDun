@@ -66,11 +66,16 @@ extern void my_main(void);
 
 int main(void)
 {
+		SCB->VTOR = FLASH_BASE | 0x20000;//设置偏移量
 		if(STMFLASH_ReadWord(0x0801F000) == 0xffffffff)
 				SysFlagType = 0;
 		else
 				SysFlagType = 1;
-	
+		
+		//清除程序跳转，残留的FLASH标识
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
+													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+		
 		HAL_Init();//设置中断优先级，中断分组2
 		SystemClock_Config();
 		MX_GPIO_Init();

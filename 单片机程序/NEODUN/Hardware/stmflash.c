@@ -128,9 +128,8 @@ void STMFLASH_Read(uint32_t ReadAddr,uint32_t *pBuffer,uint32_t NumToRead)
 void STMFLASH_Erase_Sectors(uint32_t sector)
 {
 		FLASH_EraseInitTypeDef FlashEraseInit;	
-		HAL_StatusTypeDef FlashStatus = HAL_OK;		
 		uint32_t SectorError=0;
-	
+
 		HAL_FLASH_Unlock();																					//解锁
 		FlashEraseInit.TypeErase=FLASH_TYPEERASE_SECTORS;      			//擦除类型，扇区擦除
 		FlashEraseInit.Sector=sector;   														//要擦除的扇区
@@ -142,17 +141,13 @@ void STMFLASH_Erase_Sectors(uint32_t sector)
 		}	
 		FLASH_WaitForLastOperation(FLASH_WAITETIME);                //等待上次操作完成
 		HAL_FLASH_Lock();           																//上锁
-		
-		if(FlashStatus != HAL_OK)
-		{
-		}
 }
 
 void STMFLASH_Write_ByteArray(uint32_t WriteAddr,uint8_t *pBuffer,uint32_t NumToWrite)	//从指定地址开始写入指定长度的数据	 
 { 
 		uint32_t addrx=0;
 		uint32_t endaddr=0;	
-		if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//非法地址
+		if(WriteAddr<STM32_FLASH_BASE)return;	//非法地址
 		
 		HAL_FLASH_Unlock();						//解锁 
 		addrx=WriteAddr;							//写入的起始地址

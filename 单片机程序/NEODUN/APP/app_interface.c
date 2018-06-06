@@ -36,10 +36,19 @@ X14系统标识存储如下：
 			0 -24：Base58计算前的25字节（0x17开始）数据
 			25-30：6字节作为地址名称
 			31	 ：高4bit表示该槽中地址名称的长度，低4bit表示隐藏属性
-内部FLASH插件存储规划：扇区7-扇区11
-			插件类型：扇区起始地址
-			插件版本：扇区起始地址+2
-			文件位置：扇区起始地址+4
+******************************************************************		
+内部FLASH插件存储规划：
+		扇区0-扇区3：BootLoader
+		扇区4			：数据存储(程序跳转临时数据)
+		扇区5+扇区6：大厅APP（NEODUN）
+		扇区7		 	：APP1
+		扇区8			：APP2
+		扇区9			：APP3
+		扇区10		：APP4
+		扇区11		：APP5
+APP存储扇区（扇区7-扇区11）：
+			插件类型：扇区结束地址-4
+			插件版本：扇区结束地址-2
 *****************************************************************/
 #include "app_interface.h"
 #include <string.h>
@@ -177,36 +186,37 @@ uint8_t Updata_SYS_Count(unsigned char count)
 *****************	**********************************/
 void PowerOn_PACKInfo_To_Ram(void)
 {
+		coinrecord.count = 0;
 		//插件信息
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1) != 0xFFFF)
 		{
 				coinrecord.count++;
-				coinrecord.coin1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+0x1fffc);
-				coinrecord.version1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+0x1fffe);
+				coinrecord.coin1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+COIN_TYPE_OFFSET);
+				coinrecord.version1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+COIN_VERSION_OFFSET);
 		}
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2) != 0xFFFF)
 		{
 				coinrecord.count++;
-				coinrecord.coin2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+0x1fffc);
-				coinrecord.version2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+0x1fffe);
+				coinrecord.coin2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+COIN_TYPE_OFFSET);
+				coinrecord.version2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+COIN_VERSION_OFFSET);
 		}
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3) != 0xFFFF)
 		{
 				coinrecord.count++;
-				coinrecord.coin3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+0x1fffc);
-				coinrecord.version3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+0x1fffe);
+				coinrecord.coin3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+COIN_TYPE_OFFSET);
+				coinrecord.version3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+COIN_VERSION_OFFSET);
 		}
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4) != 0xFFFF)
 		{
 				coinrecord.count++;
-				coinrecord.coin4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+0x1fffc);
-				coinrecord.version4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+0x1fffe);
+				coinrecord.coin4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+COIN_TYPE_OFFSET);
+				coinrecord.version4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+COIN_VERSION_OFFSET);
 		}		
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5) != 0xFFFF)
 		{
 				coinrecord.count++;
-				coinrecord.coin5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+0x1fffc);
-				coinrecord.version5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+0x1fffe);
+				coinrecord.coin5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+COIN_TYPE_OFFSET);
+				coinrecord.version5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+COIN_VERSION_OFFSET);
 		}	
 }
 
@@ -398,13 +408,13 @@ void Sort_One_Address(void)
 		uint8_t i = 0;
 		uint8_t slot_buff[32];
 		memset(slot_buff,0,32);
-		if(showaddress[0].content != 0)
+		if(showaddress[0].content[0] != 0)
 				return;
 		else
 		{
 				for(i = 1;i<=4;i++)
 				{
-						if(showaddress[i].content != 0)
+						if(showaddress[i].content[0] != 0)
 						{
 								memmove(&showaddress[0],&showaddress[i],sizeof(ADDRESS));
 								memmove(slot_buff,showaddress[i].content,25);
@@ -428,15 +438,15 @@ void Sort_Two_Address(void)
 		uint8_t i = 0;
 		uint8_t slot_buff[32];
 		memset(slot_buff,0,32);
-		if(showaddress[0].content != 0)
+		if(showaddress[0].content[0] != 0)
 		{
-				if(showaddress[1].content != 0)
+				if(showaddress[1].content[0] != 0)
 						return;
 				else
 				{
 						for(i = 2;i<=4;i++)
 						{
-								if(showaddress[i].content != 0)
+								if(showaddress[i].content[0] != 0)
 								{
 										memmove(&showaddress[1],&showaddress[i],sizeof(ADDRESS));
 										memmove(slot_buff,showaddress[i].content,25);
@@ -459,7 +469,7 @@ void Sort_Two_Address(void)
 		{
 				for(i = 1;i<=4;i++)
 				{
-						if(showaddress[i].content != 0)
+						if(showaddress[i].content[0] != 0)
 						{
 								memmove(&showaddress[0],&showaddress[i],sizeof(ADDRESS));
 								memmove(slot_buff,showaddress[i].content,25);
@@ -476,13 +486,13 @@ void Sort_Two_Address(void)
 								break;
 						}
 				}
-				if(showaddress[1].content != 0)
+				if(showaddress[1].content[0] != 0)
 						return;
 				else
 				{
 						for(i = 2;i<=4;i++)
 						{
-								if(showaddress[i].content != 0)
+								if(showaddress[i].content[0] != 0)
 								{
 										memmove(&showaddress[1],&showaddress[i],sizeof(ADDRESS));
 										memmove(slot_buff,showaddress[i].content,25);
@@ -508,15 +518,15 @@ void Sort_Three_Address(void)
 		uint8_t slot_buff[32];
 		memset(slot_buff,0,32);
 	
-		if(showaddress[4].content == 0)
+		if(showaddress[4].content[0] == 0)
 		{
-				if(showaddress[3].content == 0)
+				if(showaddress[3].content[0] == 0)
 						return;
 				else
 				{
 						for(i = 0;i<=2;i++)
 						{
-								if(showaddress[i].content == 0)
+								if(showaddress[i].content[0] == 0)
 								{
 										memmove(&showaddress[i],&showaddress[3],sizeof(ADDRESS));
 										memmove(slot_buff,showaddress[3].content,25);
@@ -539,7 +549,7 @@ void Sort_Three_Address(void)
 		{
 				for(i = 0;i<=3;i++)
 				{
-						if(showaddress[i].content == 0)
+						if(showaddress[i].content[0] == 0)
 						{
 								memmove(&showaddress[i],&showaddress[4],sizeof(ADDRESS));
 								memmove(slot_buff,showaddress[4].content,25);
@@ -556,13 +566,13 @@ void Sort_Three_Address(void)
 								break;
 						}
 				}
-				if(showaddress[3].content == 0)
+				if(showaddress[3].content[0] == 0)
 						return;
 				else
 				{
 						for(i = 0;i<=2;i++)
 						{
-								if(showaddress[i].content == 0)
+								if(showaddress[i].content[0] == 0)
 								{
 										memmove(&showaddress[i],&showaddress[3],sizeof(ADDRESS));
 										memmove(slot_buff,showaddress[3].content,25);
@@ -587,11 +597,11 @@ void Sort_Four_Address(void)
 		uint8_t i = 0;
 		uint8_t slot_buff[32];
 		memset(slot_buff,0,32);	
-		if(showaddress[4].content == 0)
+		if(showaddress[4].content[0] == 0)
 				return;
 		for(i = 0;i<=3;i++)
 		{
-				if(showaddress[i].content == 0)
+				if(showaddress[i].content[0] == 0)
 				{
 						memmove(&showaddress[i],&showaddress[4],sizeof(ADDRESS));
 						memmove(slot_buff,showaddress[4].content,25);
