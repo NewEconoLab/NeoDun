@@ -23,13 +23,8 @@ void Sys_Data_Init(void)
 		Key_Flag.data 			= 0;										//清除按键标志位
 		Set_Flag.data 			= 0xff;									//清除设置标志位
 		Passport_Flag.data 	= 0;										//清除密码标识
-		memset(&Neo_System,0,sizeof(Neo_System));	//清除系统标识
+		memset(&Neo_System,0,sizeof(Neo_System));		//清除系统标识
 		memset(&showaddress,0,sizeof(showaddress)); //清除开辟地址内存空间
-		showaddress[0].name[6] = '\0';
-		showaddress[1].name[6] = '\0';
-		showaddress[2].name[6] = '\0';
-		showaddress[3].name[6] = '\0';
-		showaddress[4].name[6] = '\0';
 		memset(&coinrecord,0,sizeof(COIN));					//清除插件信息记录
 }
 

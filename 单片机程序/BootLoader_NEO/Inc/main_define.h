@@ -28,7 +28,7 @@ typedef union
 
 
 typedef union
-{	
+{
 		struct
 		{		
 				uint8_t	new_wallet:1; 			//1表示新钱包，0表示旧钱包

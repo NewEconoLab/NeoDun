@@ -158,7 +158,7 @@ void STMFLASH_Write_ByteArray(uint32_t WriteAddr,uint8_t *pBuffer,uint32_t NumTo
 { 
 		uint32_t addrx=0;
 		uint32_t endaddr=0;	
-		if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//非法地址
+		if(WriteAddr<STM32_FLASH_BASE)return;	//非法地址
 		
 		HAL_FLASH_Unlock();						//解锁 
 		addrx=WriteAddr;							//写入的起始地址

@@ -7,20 +7,22 @@
 #define FLASH_ADDRESS_SIGN_DATA	0x0801F000 //签名结果地址
 #define	FLASH_ADDRESS_SCENE		  0x0801FE00 //现场数据地址
 #define FLASH_ADDRESS_PACK		  0x08010000 //扇区4
-
-////为了调试
-//#define FLASH_ADDRESS_SIGN_DATA	0x0808F000 //签名结果地址
-//#define	FLASH_ADDRESS_SCENE		  0x0808FE00 //现场数据地址
-//#define FLASH_ADDRESS_PACK		  0x08080000 //扇区4
+#define FLASH_DATA_SECTOR				FLASH_SECTOR_4
 
 #define FLASH_ADDRESS_NEODUN	  0x08020000 //扇区5+扇区6
 #define FLASH_ADDRESS_APP1		  0x08060000 //扇区7
+#define FLASH_SECTOR_APP1				FLASH_SECTOR_7
 #define FLASH_ADDRESS_APP2		  0x08080000 //扇区8
-#define FLASH_ADDRESS_APP3		  0x080a0000 //扇区9
-#define FLASH_ADDRESS_APP4		  0x080c0000 //扇区10
-#define FLASH_ADDRESS_APP5		  0x080e0000 //扇区11
+#define FLASH_SECTOR_APP2				FLASH_SECTOR_8
+#define FLASH_ADDRESS_APP3		  0x080A0000 //扇区9
+#define FLASH_SECTOR_APP3				FLASH_SECTOR_9
+#define FLASH_ADDRESS_APP4		  0x080C0000 //扇区10
+#define FLASH_SECTOR_APP4				FLASH_SECTOR_10
+#define FLASH_ADDRESS_APP5		  0x080E0000 //扇区11
+#define FLASH_SECTOR_APP5				FLASH_SECTOR_11
 
-
+#define COIN_TYPE_OFFSET				0x1FFFC
+#define COIN_VERSION_OFFSET			0x1FFFE
 
 //程序版本号，高4位主版本号，低4位次版本号
 #define	VERSION_NEODUN				0x0100
@@ -29,7 +31,7 @@
 #define VERSION_NEO_STR				"V1.0"
 //宏开关
 #define printf_debug
-//#define HID_Delay
+#define HID_Delay
 //宏定义
 #define ADDR_XiaoYi 					0x0101
 #define ADDR_SIZE   					40
@@ -43,6 +45,27 @@
 #define HID_MAX_DATA_LEN			64*1024
 #define DATA_PACK_SIZE				50
 #define HID_SEND_DELAY				15
+
+//错误码
+#define ERR_DATA_HASH					0x0100
+#define ERR_NO_SPACE_INSTALL	0x0101
+#define ERR_COIN_RUNNING			0x0102
+#define ERR_COIN_TYPE					0x0103
+#define ERR_KEY_MAX_COUNT			0x0201
+#define	ERR_EXIST_KEY					0x0202
+#define	ERR_SAME_ADD_NAME			0x0203
+#define ERR_UNKNOW_COIN				0x0204
+#define ERR_KEY_FORMAT				0x0205
+#define ERR_UNKONW_ADD				0x0206
+#define ERR_UNKNOW_KEY				0x0301
+#define ERR_MULTI_SIGN				0x0302
+#define ERR_USER_REFUSE				0x0401
+#define ERR_TIME_OUT					0x0501
+
+//币种
+#define COIN_NEO							"NEO"
+#define COIN_BTC							"BTC"
+#define COIN_ETH							"ETH"
 
 //按键标识
 typedef union
@@ -103,12 +126,12 @@ typedef struct
 //HID数据解析结构体
 typedef struct
 {
-		uint32_t	dataLen;
-		uint16_t 	packIndex;
-		uint16_t  packCount;
-		uint16_t 	notifySerial;
-		uint16_t	reqSerial;
-		uint8_t 	hashRecord[32];
+		uint32_t	dataLen;				
+		uint16_t 	packIndex;			
+		uint16_t  packCount;			
+		uint16_t 	notifySerial;		
+		uint16_t	reqSerial;			
+		uint8_t 	hashRecord[32];	
 }DATA_HID_RECORD;
 
 //为地址显示开辟内存
@@ -124,9 +147,9 @@ typedef struct
 //系统插件信息,缺省值为0
 typedef struct
 {
-		uint8_t  count;
-		uint16_t coin1;
-		uint16_t version1;
+		uint8_t  count;						
+		uint16_t coin1;						//类型
+		uint16_t version1;				//版本
 		uint16_t coin2;
 		uint16_t version2;
 		uint16_t coin3;

@@ -52,13 +52,17 @@ void jump_to_app(uint32_t appxaddr)
 int main(void)
 {
 		SCB->VTOR = FLASH_BASE | 0x60000;//设置偏移量
+		//清除程序跳转，残留的FLASH标识
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
+													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+	
 		uint8_t resultsignRecord[98];
 		int 		len_sign_alg = 0;
 		uint8_t result_SignData[64];
 		SIGN_Out_Para Sign;
 		uint8_t PublicKey_Flash[65];
 		uint8_t PubKey_Flash[33];
-	
+
 		//硬件初始化
 		HAL_Init();
 
@@ -70,7 +74,7 @@ int main(void)
 #ifdef Debug
 		Test_Ecc_Sign_Data();
 #endif
-	
+
 		//数据初始化
 		memset(&data_pack,0,512);
 		pack_len = STMFLASH_ReadWord(FLASH_PACK_ADDRESS);

@@ -6,9 +6,9 @@
 **------------------------------------------------------------------------------------------------------
 ** Created By: 		 hkh
 ** Created date:   2017-11-14
-** Version: 
+** Version:
 ** Descriptions: BootLoader NEODUN
-**	
+**
 ** 1、STM32内部FLASH分配
 ** 2、修改Base58解码出现数组中出现0项的bug，修改Ripemd160算法的bug
 ** 3、安全性考虑
@@ -21,6 +21,7 @@
 			重置密码					重复						不保存
 ** 4、修复底层OLED显示，参数传递出错的BUG，导致换行显示出问题
 ** 5、重构代码
+** 6、修复FALSH操作BUG,清除程序跳转，残留的FLASH标识
 ********************************************************************************************************/
 #include "stm32f4xx_hal.h"
 #include "myMain.h"
@@ -39,8 +40,8 @@ void my_main(void)
 {
 		//数据初始化
 		Sys_Data_Init();
-	
-		//开机更新系统标识、设置标识
+
+		//开机更新系统标识、设置标识、地址、插件信息
 		if(Update_PowerOn_SYSFLAG(&Neo_System)==0)			
 		{
 				Fill_RAM(0x00);
@@ -161,6 +162,7 @@ NEWWALLET:
 								Set_Flag.flag.usb_state_pre = 1;
 						}
 						//电池电量较低做个提醒
+						
 				}
 				if(Set_Flag.flag.usb_offline)								//USB断开后开启系统显示功能
 				{
