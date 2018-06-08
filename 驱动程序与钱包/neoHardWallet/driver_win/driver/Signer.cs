@@ -312,6 +312,8 @@ namespace NeoDun
                 //收到地址,//加进地址池子里
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
                 {
+                    var epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
+                    Console.WriteLine(epoch);
                     var pos = msg.readUInt16(0);
                     var count = msg.readUInt16(2);
                     var type = (NeoDun.AddressType)msg.readUInt16(4);
@@ -324,7 +326,7 @@ namespace NeoDun
                 //地址接受完毕
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
-                    if(getAddressListEventHandler != null)
+                    if (getAddressListEventHandler != null)
                         getAddressListEventHandler();
                     //var count = msg.readUInt16(0);
                     //if (count == 0 && addressPool.addresses.Count != 0)

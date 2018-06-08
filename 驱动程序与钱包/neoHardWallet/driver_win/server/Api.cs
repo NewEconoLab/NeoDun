@@ -23,6 +23,10 @@ namespace hhgate
 
         public driver_win.DriverControl driverControl;
 
+
+        //加一个锁 防止重复请求
+        bool doing = true;
+
         public async void HandleRequest(IOwinContext context, string rootpath, string relativePath)
         {
             try
@@ -79,6 +83,8 @@ namespace hhgate
                 }
                 else if (relativePath == "sign")
                 {
+                    if (doing)
+                        return;
                     if (formdata.mapParams.ContainsKey("address") == false || formdata.mapParams.ContainsKey("data") == false)
                     {
                         context.Response.Write("need param，address & data");
@@ -93,6 +99,7 @@ namespace hhgate
                     MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
                     json["msg"] = new MyJson.JsonNode_ValueString("0501");
                     driverControl.Sign(data, address);
+                    doing = true;
                     while (time <= 60000)
                     {
                         System.Threading.Thread.Sleep(100);
@@ -106,6 +113,7 @@ namespace hhgate
                         }
                         time += 100;
                     }
+                    doing = false;
                     //读出来，拼为http响应，发回去
                     context.Response.Write(json.ToString());
                 }

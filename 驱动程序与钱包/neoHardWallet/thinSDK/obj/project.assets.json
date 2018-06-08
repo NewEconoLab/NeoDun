@@ -2769,25 +2769,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\34771\\.nuget\\packages\\": {},
+    "C:\\Users\\viko\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\thinSDK.csproj",
+      "projectUniqueName": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\thinSDK.csproj",
       "projectName": "thinSDK",
-      "projectPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\thinSDK.csproj",
-      "packagesPath": "C:\\Users\\34771\\.nuget\\packages\\",
-      "outputPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\obj\\",
+      "projectPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\thinSDK.csproj",
+      "packagesPath": "C:\\Users\\viko\\.nuget\\packages\\",
+      "outputPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\34771\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\viko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
         "net47"
@@ -2799,11 +2802,11 @@
       "frameworks": {
         "net47": {
           "projectReferences": {
-            "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\llvm\\llvm.csproj": {
-              "projectPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\llvm\\llvm.csproj"
+            "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\llvm\\llvm.csproj": {
+              "projectPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\llvm\\llvm.csproj"
             },
-            "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj": {
-              "projectPath": "D:\\git\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj"
+            "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj": {
+              "projectPath": "D:\\work\\NeoDun\\驱动程序与钱包\\neoHardWallet\\thinSDK_neo\\thinSDK_neo.csproj"
             }
           }
         }

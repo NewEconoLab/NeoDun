@@ -29,7 +29,12 @@ namespace driver_win.dialogs
             InitializeComponent();
             DriverS.Init();
 
+            var words = "";
+            var password = "123123";
 
+            //seed
+
+            //root
 
             driverControl = new DriverControl();
 
