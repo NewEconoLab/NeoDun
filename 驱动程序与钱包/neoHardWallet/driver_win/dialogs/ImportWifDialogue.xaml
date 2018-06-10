@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:driver_win.dialogs"
         mc:Ignorable="d"
-        WindowStyle="None" Height="359" Width="628" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White"  MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        WindowStyle="None" Height="385" Width="628" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White"  MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Grid Background="Transparent">
-        <Border BorderThickness="5" CornerRadius="10,10,10,10">
+        <Border BorderThickness="5" CornerRadius="10,10,110,110">
             <Border.Effect>
                 <DropShadowEffect Direction="270" BlurRadius="6" ShadowDepth="0"/>
             </Border.Effect>
@@ -18,22 +18,55 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
-                <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="580,32,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue">
+                <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="580,20,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue" RenderTransformOrigin="0.595,-1.043">
                     <Button.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label Content="导入WIF私钥" IsEnabled="False" Width="70" Height="14" Margin="44,32,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
-                <TextBox Name="label_Wif"  Text="请输入您的WIF" Width="481" Height="16" Margin="74,126,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0" GotFocus="Action_GotFocus" LostFocus="Action_LostFocus"/>
-                <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,144,0,0" VerticalAlignment="Top" Width="500" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Width="108" Height="44" Click="btn_Add" Margin="260,203,0,0" >
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="导入" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
-                        </StackPanel>
-                    </Button.Content>
+
+                <Button Name="Btn_Wif" Style="{StaticResource MyWpfButton3}" Width="224" Height="44" Margin="218,5,0,0" BorderThickness="0" Click="Btn_ShowWif" Panel.ZIndex="1">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/底3.png" Stretch="UniformToFill"/>
+                    </Button.Background>
+                    <Label Content="使用WIF私钥导入" IsEnabled="False" Width="95" Height="14" Margin="0,0,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
                 </Button>
-                <Label Content="为了您的资产安全，Neodun不支持地址导出，请自行妥善备份！" IsEnabled="False" Width="345" Height="14" Margin="142,321,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                <Grid Name="bip"  Visibility="Visible"  Margin="-3,5,-3,-5">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/底1.png"/>
+                    </Grid.Background>
+                    <Label Content="使用助记词导入" IsEnabled="False" Width="95" Height="14" Margin="70,20,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                    <TextBox Name="Tb_wordlist" Style="{StaticResource TextBoxStyle1}" Text="请输入助记词，按空格分隔" Margin="60,78,60,187" Foreground="White" GotFocus="Action_GotFocus">
+                    </TextBox>
+                    <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr2" Width="108" Height="44" Click="btn_Add2" Margin="260,290,0,0" >
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="导入" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+                <Button Name="Btn_Bip" Visibility="Hidden" Style="{StaticResource MyWpfButton3}" BorderThickness="0" Panel.ZIndex="1" Click="Btn_ShowBip" Height="44" Width="224" Margin="-2,5,0,0">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/底3.png" Stretch="UniformToFill"/>
+                    </Button.Background>
+                    <Label Content="使用助记词导入" IsEnabled="False" Width="95" Height="14" Margin="0,0,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
+                </Button>
+                <Grid Name="wif" Visibility="Hidden"  Margin="-3,5,-3,-5">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/底2.png"/>
+                    </Grid.Background>
+                    <Label Content="使用WIF私钥导入" IsEnabled="False" Width="95" Height="14" Margin="282,20,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                    <TextBox Name="label_Wif"  Text="请输入您的WIF" Width="481" Height="16" Margin="74,126,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0" GotFocus="Action_GotFocus" LostFocus="Action_LostFocus"/>
+                    <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,144,0,0" VerticalAlignment="Top" Width="500" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
+                    <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Width="108" Height="44" Click="btn_Add" Margin="260,203,0,0" >
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="导入" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Label Content="为了您的资产安全，Neodun不支持地址导出，请自行妥善备份！" IsEnabled="False" Width="345" Height="14" Margin="142,321,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

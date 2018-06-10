@@ -1,4 +1,5 @@
-﻿using NeoDun;
+﻿using NBitcoin;
+using NeoDun;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,13 +29,6 @@ namespace driver_win.dialogs
         {
             InitializeComponent();
             DriverS.Init();
-
-            var words = "";
-            var password = "123123";
-
-            //seed
-
-            //root
 
             driverControl = new DriverControl();
 

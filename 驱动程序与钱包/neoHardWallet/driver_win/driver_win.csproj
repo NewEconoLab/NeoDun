@@ -341,5 +341,10 @@
   <ItemGroup>
     <Resource Include="res\确认.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\底1.png" />
+    <Resource Include="res\底2.png" />
+    <Resource Include="res\底3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
