@@ -25,7 +25,7 @@ namespace hhgate
 
 
         //加一个锁 防止重复请求
-        bool doing = true;
+        bool doing = false;
 
         public async void HandleRequest(IOwinContext context, string rootpath, string relativePath)
         {
