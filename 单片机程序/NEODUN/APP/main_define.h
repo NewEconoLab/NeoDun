@@ -30,7 +30,7 @@
 #define	VERSION_NEODUN_STR		"V1.0"
 #define VERSION_NEO_STR				"V1.0"
 //宏开关
-#define printf_debug
+//#define printf_debug
 #define HID_Delay
 //宏定义
 #define ADDR_XiaoYi 					0x0101
@@ -59,6 +59,7 @@
 #define ERR_UNKONW_ADD				0x0206
 #define ERR_UNKNOW_KEY				0x0301
 #define ERR_MULTI_SIGN				0x0302
+#define ERR_DATA_PACK					0x0303
 #define ERR_USER_REFUSE				0x0401
 #define ERR_TIME_OUT					0x0501
 
@@ -66,6 +67,14 @@
 #define COIN_NEO							"NEO"
 #define COIN_BTC							"BTC"
 #define COIN_ETH							"ETH"
+
+//返回值
+enum
+{
+		NEO_SUCCESS			= 0,
+		NEO_USER_REFUSE = 1,
+		NEO_TIME_OUT		= 2,
+};
 
 //按键标识
 typedef union
@@ -144,7 +153,7 @@ typedef struct
 		uint8_t	address[40];			//Base58后的字符地址数据
 }ADDRESS;
 
-//系统插件信息,缺省值为0
+//系统插件信息,缺省值为0xFFFF,
 typedef struct
 {
 		uint8_t  count;						
@@ -196,7 +205,7 @@ extern uint8_t gImage_Address_hide[512];
 extern uint8_t gImage_arrow_left[128];
 extern uint8_t gImage_arrow_right[128];
 extern uint8_t gImage_Usb[288];
-
+extern uint8_t gImage_delete[64];
 
 void Sys_Data_Init(void);
 

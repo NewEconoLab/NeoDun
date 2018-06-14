@@ -40,7 +40,7 @@ void my_main(void)
 {
 		//数据初始化
 		Sys_Data_Init();
-
+	
 		//开机更新系统标识、设置标识、地址、插件信息
 		if(Update_PowerOn_SYSFLAG(&Neo_System)==0)			
 		{
@@ -132,7 +132,7 @@ NEWWALLET:
 				Deal_Sign_Data_Restart();
 				Passport_Flag.flag.poweron = 1;
 		}
-
+		
 		while (1)
 		{
 				if(hid_flag == 1)						 		 						//收到HID数据包

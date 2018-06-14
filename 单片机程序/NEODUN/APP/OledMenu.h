@@ -19,7 +19,6 @@ void Display_MainPage_5Add(void);
 void Display_MainPage_judge(void);
 void Display_SetCode(void);
 uint8_t Display_VerifyCode(void);
-uint8_t Display_VerifyCode_GetPin(uint8_t Pin[8]);
 uint8_t Display_VerifyCode_PowerOn(void);
 
 void Display_Click_Add(uint8_t AddID);

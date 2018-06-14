@@ -49,9 +49,16 @@ uint8_t SetCode(uint8_t code_array[8])
 						Key_Flag.flag.left = 0;
             if(code_array[index] == '0')
             {
-								Asc8_16(124,52,"9");
-                code_array[index] = '9';
+								clearArea(124,52,8,16);
+								Show_Pattern(&gImage_delete[0],31,32,48,64);
+                code_array[index] = 0xFF;
             }
+						else if(code_array[index] == 0xFF)
+						{
+								clearArea(124,48,8,16);
+								Asc8_16(124,52,"9");
+                code_array[index] = '9';								
+						}
             else
             {
                 num[0] = --code_array[index];
@@ -63,9 +70,16 @@ uint8_t SetCode(uint8_t code_array[8])
 						Key_Flag.flag.right = 0;
             if(code_array[index] == '9')
             {
-								Asc8_16(124,52,"0");
-                code_array[index] = '0';
+								clearArea(124,52,8,16);
+								Show_Pattern(&gImage_delete[0],31,32,48,64);
+                code_array[index] = 0xFF;
             }
+						else if(code_array[index] == 0xFF)
+						{
+								clearArea(124,48,8,16);
+								Asc8_16(124,52,"0");
+                code_array[index] = '0';		
+						}
             else
             {
                 num[0] = ++code_array[index];
@@ -75,9 +89,21 @@ uint8_t SetCode(uint8_t code_array[8])
         if(Key_Flag.flag.middle)//中间建按下
         {
 						Key_Flag.flag.middle = 0;
-						Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
-						clearArea(58+index*24,38,16,1);					
-            index++;
+						if(code_array[index] == 0xFF)
+						{
+								code_array[index] = '5';
+								if(index>0)
+										index--;
+								code_array[index] = '5';
+								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,26,38);
+								clearArea(58+index*24,38,16,1);
+						}
+						else
+						{
+								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
+								clearArea(58+index*24,38,16,1);
+								index++;
+						}
             if(index == 6)
             {
 								break;
@@ -100,7 +126,7 @@ uint8_t SetCode(uint8_t code_array[8])
 uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 {
 		uint8_t num[2] = {'0','\0'};
-    unsigned char index = 0;
+    uint8_t index = 0;
     memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 
 		Fill_RAM(0x00);
@@ -153,9 +179,16 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 						Key_Flag.flag.left = 0;
             if(code_array[index] == '0')
             {
-								Asc8_16(124,52,"9");
-                code_array[index] = '9';
+								clearArea(124,52,8,16);
+								Show_Pattern(&gImage_delete[0],31,32,48,64);
+                code_array[index] = 0xFF;
             }
+						else if(code_array[index] == 0xFF)
+						{
+								clearArea(124,48,8,16);
+								Asc8_16(124,52,"9");
+                code_array[index] = '9';								
+						}
             else
             {
                 num[0] = --code_array[index];
@@ -167,9 +200,16 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 						Key_Flag.flag.right = 0;
             if(code_array[index] == '9')
             {
-								Asc8_16(124,52,"0");
-                code_array[index] = '0';
+								clearArea(124,52,8,16);
+								Show_Pattern(&gImage_delete[0],31,32,48,64);
+                code_array[index] = 0xFF;
             }
+						else if(code_array[index] == 0xFF)
+						{
+								clearArea(124,48,8,16);
+								Asc8_16(124,52,"0");
+                code_array[index] = '0';		
+						}
             else
             {
                 num[0] = ++code_array[index];
@@ -179,9 +219,21 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
         if(Key_Flag.flag.middle)//中间建按下
         {
 						Key_Flag.flag.middle = 0;
-						Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
-						clearArea(58+index*24,38,16,1);
-            index++;
+						if(code_array[index] == 0xFF)
+						{
+								code_array[index] = '5';
+								if(index>0)
+										index--;
+								code_array[index] = '5';
+								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,26,38);
+								clearArea(58+index*24,38,16,1);
+						}
+						else
+						{
+								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
+								clearArea(58+index*24,38,16,1);
+								index++;
+						}
             if(index == 6)
             {
 								break;
@@ -562,7 +614,7 @@ uint8_t DecryptData(uint8_t *data,int len,uint8_t Pin[8],uint8_t *Output)
 				return 1;
 		memmove(U,A,32);
 		memmove(U+32,B,32);
-		if(My_DES_Decrypt(U,64,Pin,AnWenAB,&Len_Out)) 
+		if(My_DES_Decrypt(U,64,Pin,AnWenAB,&Len_Out))
 		{
 				return 2;
 		}

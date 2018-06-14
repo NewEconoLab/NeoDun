@@ -25,7 +25,8 @@ void Sys_Data_Init(void)
 		Passport_Flag.data 	= 0;										//清除密码标识
 		memset(&Neo_System,0,sizeof(Neo_System));		//清除系统标识
 		memset(&showaddress,0,sizeof(showaddress)); //清除开辟地址内存空间
-		memset(&coinrecord,0,sizeof(COIN));					//清除插件信息记录
+		memset(&coinrecord,0xFF,sizeof(COIN));			//清除插件信息记录
+		coinrecord.count = 0;
 }
 
 

@@ -27,9 +27,9 @@
 #define N_THR0					0x2328			//S1 press thred setting
 #define N_THR1					0x2328			//S2 press thred setting
 //触摸按键灵敏度调节
-#define N_THR2					0x0a0a			//S3 press thred setting  0x0a0a
-#define N_THR3					0x0a0a			//S4 press thred setting
-#define N_THR4					0x0a0a			//S5 press thred setting
+#define N_THR2					0x2328			//S3 press thred setting  0x0a0a
+#define N_THR3					0x2328			//S4 press thred setting
+#define N_THR4					0x2328			//S5 press thred setting
 
 #define N_THR5					0x2328			//S6 press thred setting
 #define N_SETCNT				0x0202			// debounce

@@ -34,7 +34,7 @@ void Display_Triangle(uint8_t direction)
 void Display_arrow(uint8_t direction)
 {
 		if(direction)
-				Show_Pattern(&gImage_arrow_right[0],47,50,48,64);
+				Show_Pattern(&gImage_arrow_right[0],46,49,48,64);
 		else
 				Show_Pattern(&gImage_arrow_left[0],13,16,48,64);
 }
@@ -46,6 +46,28 @@ void Display_Usb(void)
 		clearArea(116,44,24,1);
 }
 
+void Display_Set(uint8_t state)
+{
+		if(state == 0)				//left
+		{
+				Show_Pattern(&gImage_Address[0],10,17,0,32);
+				clearArea(40,32,32,1);
+				Show_HZ12_12(40,32,2,3);//设置
+		}
+		else if(state ==1)		//midddle
+		{
+				Show_Pattern(&gImage_Address[0],28,35,0,32);
+				clearArea(112,32,32,1);
+				Show_HZ12_12(112,32,2,3);//设置
+		}
+		else if(state == 2)		//right
+		{
+				Show_Pattern(&gImage_Address[0],44,51,0,32);
+				clearArea(176,32,32,1);
+				Show_HZ12_12(176,32,2,3);//设置
+		}		
+}
+
 void Display_Address(uint8_t state,ADDRESS *address)
 {
 		if(address->len_name != 0)
@@ -53,11 +75,11 @@ void Display_Address(uint8_t state,ADDRESS *address)
 				if(state == 0)				//left
 				{
 						if(address->hide)
-								Show_Pattern(&gImage_Address_hide[0],11,18,0,32);
+								Show_Pattern(&gImage_Address_hide[0],10,17,0,32);
 						else
-								Show_Pattern(&gImage_Address[0],11,18,0,32);
-						clearArea(44,32,32,1);			
-						Asc8_16(60-address->len_name*4,32,(uint8_t*)address->name);
+								Show_Pattern(&gImage_Address[0],10,17,0,32);
+						clearArea(40,32,32,1);			
+						Asc8_16(56-address->len_name*4,32,(uint8_t*)address->name);
 				}
 				else if(state ==1)		//midddle
 				{
@@ -71,11 +93,11 @@ void Display_Address(uint8_t state,ADDRESS *address)
 				else if(state == 2)		//right
 				{
 						if(address->hide)
-								Show_Pattern(&gImage_Address_hide[0],45,52,0,32);
+								Show_Pattern(&gImage_Address_hide[0],44,51,0,32);
 						else
-								Show_Pattern(&gImage_Address[0],45,52,0,32);
-						clearArea(180,32,32,1);
-						Asc8_16(196-address->len_name*4,32,(uint8_t*)address->name);
+								Show_Pattern(&gImage_Address[0],44,51,0,32);
+						clearArea(176,32,32,1);
+						Asc8_16(192-address->len_name*4,32,(uint8_t*)address->name);
 				}
 		}
 		else
@@ -83,11 +105,11 @@ void Display_Address(uint8_t state,ADDRESS *address)
 				if(state == 0)				//left
 				{
 						if(address->hide)
-								Show_Pattern(&gImage_Address_hide[0],11,18,0,32);
+								Show_Pattern(&gImage_Address_hide[0],10,17,0,32);
 						else
-								Show_Pattern(&gImage_Address[0],11,18,0,32);
-						clearArea(44,32,32,1);			
-						Asc8_16(40,32,"uname");
+								Show_Pattern(&gImage_Address[0],10,17,0,32);
+						clearArea(40,32,32,1);			
+						Asc8_16(36,32,"uname");
 				}
 				else if(state ==1)		//midddle
 				{
@@ -101,11 +123,11 @@ void Display_Address(uint8_t state,ADDRESS *address)
 				else if(state == 2)		//right
 				{
 						if(address->hide)
-								Show_Pattern(&gImage_Address_hide[0],45,52,0,32);
+								Show_Pattern(&gImage_Address_hide[0],44,51,0,32);
 						else
-								Show_Pattern(&gImage_Address[0],45,52,0,32);
-						clearArea(180,32,32,1);	
-						Asc8_16(176,32,"uname");
+								Show_Pattern(&gImage_Address[0],44,51,0,32);
+						clearArea(176,32,32,1);	
+						Asc8_16(172,32,"uname");
 				}		
 		}
 }
@@ -183,9 +205,7 @@ void Display_MainPage_1Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_Address(0,&showaddress[0]);				
@@ -194,9 +214,7 @@ void Display_MainPage_1Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
+				Display_Set(2);
 				Display_Triangle(1);
 				Display_arrow(1);			
 				Display_Address(1,&showaddress[0]);
@@ -247,9 +265,7 @@ void Display_MainPage_2Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -260,9 +276,7 @@ void Display_MainPage_2Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);			
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
+				Display_Set(2);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -273,9 +287,7 @@ void Display_MainPage_2Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],12,19,0,32);
-				clearArea(48,32,32,1);
-				Show_HZ12_12(48,32,2,3);//设置
+				Display_Set(0);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -343,9 +355,7 @@ void Display_MainPage_3Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
@@ -356,9 +366,7 @@ void Display_MainPage_3Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
+				Display_Set(2);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -381,9 +389,7 @@ void Display_MainPage_3Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],12,19,0,32);
-				clearArea(48,32,32,1);
-				Show_HZ12_12(48,32,2,3);//设置
+				Display_Set(0);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
@@ -458,9 +464,7 @@ void Display_MainPage_4Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
@@ -471,9 +475,7 @@ void Display_MainPage_4Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
+				Display_Set(2);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -506,9 +508,7 @@ void Display_MainPage_4Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],12,19,0,32);
-				clearArea(48,32,32,1);
-				Show_HZ12_12(48,32,2,3);//设置
+				Display_Set(0);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);
@@ -589,9 +589,7 @@ void Display_MainPage_5Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
@@ -602,9 +600,7 @@ void Display_MainPage_5Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],47,54,0,32);
-				clearArea(188,32,32,1);
-				Show_HZ12_12(188,32,2,3);//设置
+				Display_Set(2);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);			
@@ -648,9 +644,7 @@ void Display_MainPage_5Add(void)
 		{
 				main_RefreshDisplay = 0;
 				Fill_RAM(0x00);
-				Show_Pattern(&gImage_Set[0],12,19,0,32);
-				clearArea(48,32,32,1);
-				Show_HZ12_12(48,32,2,3);//设置
+				Display_Set(0);
 				Display_Triangle(1);
 				Display_arrow(0);
 				Display_arrow(1);				
@@ -745,85 +739,7 @@ uint8_t Display_VerifyCode(void)
 		uint8_t count[2] = {'0','\0'};
 		while(1)
 		{
-				status = verifyCode(1);
-				if(status == 0)
-						return 0;
-				count[0]++;
-				if(status == 5) //超时控制
-				{
-						return 1;//超时返回1
-				}				
-				if(count[0] < '5')
-				{
-						Key_Control(1);
-						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,count);
-						Show_HZ12_12(156,8,39,39);//次
-						
-						Show_HZ12_12(60,28,38,38);//错
-						Show_HZ12_12(76,28,36,36);//误
-						Asc8_16(92,28,"5");
-						Show_HZ12_12(100,28,39,39);//次
-						Show_HZ12_12(116,28,32,32);//将
-						Show_HZ12_12(132,28,34,34);//重
-						Show_HZ12_12(148,28,3,3);//置					
-						Show_HZ12_12(164,28,2,2);//设
-						Show_HZ12_12(180,28,43,43);//备
-						Display_Triangle(0);
-						while(Key_Flag.flag.middle==0);
-						Key_Control(0);
-				}
-				else
-				{
-						Key_Control(1);
-						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,"5");
-						Show_HZ12_12(156,8,39,39);//次	
-
-						Show_HZ12_12(80,28,2,2);//设
-						Show_HZ12_12(96,28,43,43);//备
-						Show_HZ12_12(112,28,40,41);//已被
-						Show_HZ12_12(144,28,34,34);//重
-						Show_HZ12_12(160,28,3,3);//置
-						Display_Triangle(0);
-						EmptyWallet();						 										  //清空钱包数据
-						while(Key_Flag.flag.middle==0);
-						Key_Flag.flag.middle=0;
-						
-						Fill_RAM(0x00);
-						Show_HZ12_12(32,8,12,12);//请
-						Show_HZ12_12(48,8,34,34);//重
-						Show_HZ12_12(64,8,2,2);//设
-						Show_HZ12_12(80,8,4,5);//密码
-						Show_HZ12_12(112,8,42,42);//后
-						Show_HZ12_12(128,8,24,25);//导入
-						Show_HZ12_12(160,8,43,46);//备份文件
-					
-						Show_HZ12_12(16,28,47,50);//需要帮助
-						Show_HZ12_12(80,28,12,12);//请
-						Show_HZ12_12(96,28,51,52);//登陆
-						Asc8_16(128,28,"www.neodun.com");
-						Display_Triangle(0);
-						while(Key_Flag.flag.middle==0);
-						Key_Control(0);
-						System_Reset();//错误5次系统重启
-				}
-		}
-}
-
-uint8_t Display_VerifyCode_GetPin(uint8_t Pin[8])
-{
-		uint8_t status = 0; 
-		uint8_t count[2] = {'0','\0'};
-		while(1)
-		{
-				status = verifyCodeGetPin(1,Pin);
+				status = verifyCodeGetPin(1,Neo_System.pin);
 				if(status == 0)
 						return 0;
 				count[0]++;
@@ -1650,7 +1566,9 @@ void Display_Click_Set(void)
 						{
 								Fill_RAM(0x00);
 								Show_HZ12_12(120,24,91,91);//无
-								HAL_Delay(2000);
+								Display_Triangle(0);
+								while(Key_Flag.flag.middle==0);
+								Key_Control(1);
 								RefreshDisplay = 1;
 						}
 				}
@@ -1771,7 +1689,7 @@ uint8_t Display_AddAdd(char *address)
 						if(temp == 0)
 						{
 								Stop_TIM(OLED_INPUT_TIME);
-								return 0;//超时
+								return NEO_TIME_OUT;//超时
 						}
 						num[0] = temp/10+0x30;
 						Asc8_16(210,26,num);
@@ -1797,7 +1715,7 @@ uint8_t Display_AddAdd(char *address)
 										if(temp == 0)
 										{
 												Stop_TIM(OLED_INPUT_TIME);
-												return 0;//超时
+												return NEO_TIME_OUT;//超时
 										}
 										num[0] = temp/10+0x30;
 										Asc8_16(210,26,num);
@@ -1807,35 +1725,40 @@ uint8_t Display_AddAdd(char *address)
 								if(Key_Flag.flag.middle)
 								{
 										Key_Control(0);
-										return 1;				//添加地址成功
+										return NEO_SUCCESS;				//添加地址成功
 								}
 								if(Key_Flag.flag.left||Key_Flag.flag.right)
 								{
 										Key_Control(0);
-										return 0;				//添加地址失败
+										return NEO_USER_REFUSE;				//添加地址失败
 								}
 						}
 				}
 				if(Key_Flag.flag.left||Key_Flag.flag.right)
 				{
 						Key_Control(0);
-						return 0;
+						return NEO_USER_REFUSE;
 				}
 		}
 }
 
 uint8_t Display_DelAdd(uint8_t AddID)
 {
-		unsigned char num[2] = {'0','\0'};
+		uint8_t num[2] = {'0','\0'};
 		char temp = 0;
 		uint8_t value = 0;
+		uint8_t index = 128 - (8*showaddress[AddID].len_name + 136)/2;
 		Key_Control(1);
 		Fill_RAM(0x00);
-		Show_HZ12_12(28,7,53,56);//是否删除		
-		Asc8_16(92,7,(uint8_t*)showaddress[AddID].name);
-		Show_HZ12_12(92+8*showaddress[AddID].len_name,7,59,61);//及其私
-		Show_HZ12_12(140+8*showaddress[AddID].len_name,7,22,22);//钥
-		Asc8_16(156+8*showaddress[AddID].len_name,7,"?");
+		Show_HZ12_12(index,7,53,56);//是否删除
+		index += 64;
+		Asc8_16(index,7,(uint8_t*)showaddress[AddID].name);
+		index += 8*showaddress[AddID].len_name;
+		Show_HZ12_12(index,7,59,61);//及其私
+		index += 48;
+		Show_HZ12_12(index,7,22,22);//钥
+		index += 16;
+		Asc8_16(index,7,"?");
 		Show_HZ12_12(80,28,62,67);//该操作不可逆
 		Show_HZ12_12(58,47,54,54);//否
 		Show_HZ12_12(120,47,53,53);//是
@@ -1850,7 +1773,7 @@ uint8_t Display_DelAdd(uint8_t AddID)
 						if(temp == 0)
 						{
 								Stop_TIM(OLED_INPUT_TIME);
-								return 0;//超时
+								return NEO_TIME_OUT;//超时
 						}
 						num[0] = temp/10+0x30;
 						Asc8_16(210,26,num);
@@ -1859,12 +1782,12 @@ uint8_t Display_DelAdd(uint8_t AddID)
 				}
 				if(Key_Flag.flag.middle)
 				{
-						value = 1;
+						value = NEO_SUCCESS;
 						break;
 				}
 				if(Key_Flag.flag.left||Key_Flag.flag.right)
 				{
-						value = 0;
+						value = NEO_USER_REFUSE;
 						break;
 				}
 		}
@@ -1874,7 +1797,7 @@ uint8_t Display_DelAdd(uint8_t AddID)
 
 uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_index)
 {
-		unsigned char num[2] = {'0','\0'};	
+		uint8_t num[2] = {'0','\0'};	
 		uint8_t index = 0;
 		char temp = 0;
 		//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
@@ -1905,7 +1828,7 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 				else if(data->coin == 1)
 						Asc8_16(count_bit,0,"NEO");
 
-				Show_HZ12_12(count_bit+24,0,125,125);//到
+				Show_HZ12_12(count_bit+28,0,125,125);//到
 				Display_Triangle(0);
 				while(Key_Flag.flag.middle == 0);
 				Key_Flag.flag.middle = 0;
@@ -1920,9 +1843,10 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 		Fill_RAM(0x00);
 		Asc8_16(0,0,address->address);
 		Show_HZ12_12(46,47,111,112);//取消
-		Show_HZ12_12(112,47,113,114);//继续
+		Show_HZ12_12(112,47,134,135);//同意
 		Show_HZ12_12(184,47,111,112);//取消
 		Start_TIM(OLED_INPUT_TIME);
+		Key_Control(1);
 		while(1)
 		{
 				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
@@ -1931,7 +1855,7 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 						if(temp == 0)
 						{
 								Stop_TIM(OLED_INPUT_TIME);
-								return 0;//超时
+								return NEO_TIME_OUT;
 						}
 						num[0] = temp/10+0x30;
 						Asc8_16(210,26,num);
@@ -1943,17 +1867,17 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 						Key_Control(0);
 						if(Display_VerifyCode() == 0)//密码正确
 						{
-								return 1;//确定交易
+								return NEO_SUCCESS;
 						}
 						else
 						{
-								return 0;
+								return NEO_TIME_OUT;
 						}
 				}
 				if(Key_Flag.flag.left||Key_Flag.flag.right)
 				{
 						Key_Control(0);
-						return 0;	//取消
+						return NEO_USER_REFUSE;	//取消
 				}
 		}
 }
@@ -1985,7 +1909,7 @@ uint8_t Display_Sign_Data_Type_Identify(void)
 						if(temp == 0)
 						{
 								Stop_TIM(OLED_INPUT_TIME);
-								return 0;//超时
+								return NEO_TIME_OUT;//超时
 						}
 						num[0] = temp/10+0x30;
 						Asc8_16(210,26,num);
@@ -1994,12 +1918,12 @@ uint8_t Display_Sign_Data_Type_Identify(void)
 				}
 				if(Key_Flag.flag.middle)//确定
 				{
-						value = 1;
+						value = NEO_SUCCESS;
 						break;
 				}
 				else if(Key_Flag.flag.left || Key_Flag.flag.right)//取消
 				{
-						value = 0;
+						value = NEO_USER_REFUSE;
 						break;
 				}
 		}

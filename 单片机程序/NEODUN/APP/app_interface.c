@@ -9,7 +9,7 @@
 		X06：私钥4明文
 		X07：私钥5明文
 		X08：地址1			
-		X09：地址2			
+		X09：地址2	
 		X10：地址3
 		X11：地址4
 		X12：地址5
@@ -54,12 +54,10 @@ APP存储扇区（扇区7-扇区11）：
 #include <string.h>
 #include <stdio.h>
 #include "atsha204a.h"
-#include "main_define.h"
 #include "app_utils.h"
 #include "app_oled.h"
 #include "stmflash.h"
 #include "Algorithm.h"
-#include "app_utils.h"
 
 /***************************************************
 功能：开机更新系统标识
@@ -67,7 +65,7 @@ APP存储扇区（扇区7-扇区11）：
 					初始化后的系统标识结构体指针
 返回值：		1  成功
 					0  失败
-*****************	**********************************/
+***************************************************/
 uint8_t Update_PowerOn_SYSFLAG(SYSTEM_NEODUN *flag)
 {
 		uint8_t i = 0;
@@ -367,7 +365,7 @@ void Hide_address(uint8_t SlotID,uint8_t state)
 功能：
 		SlotID为地址所对应的槽号
 		得到地址所对应的私钥
-*****************	**********************************/
+***************************************************/
 uint8_t	Get_Privekey(uint8_t SlotID,uint8_t pin[8],uint8_t Privekey[32])
 {
 		uint8_t slot_data[32];
