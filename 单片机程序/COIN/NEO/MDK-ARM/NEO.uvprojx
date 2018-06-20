@@ -80,7 +80,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>C:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin -o .\NEO\neo.bin .\OBJ\neo.axf</UserProg1Name>
+            <UserProg1Name>C:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin -o .\NEO\NEO.bin .\OBJ\NEO.axf</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Algorithm;..\STM32_Cryptographic_Library\inc</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;..\Algorithm;..\STM32_Cryptographic_Library\inc;..\ATSHA204\Appatsha204;..\ATSHA204\Atsha204_hw;..\ATSHA204\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -453,10 +453,32 @@
               <FileType>4</FileType>
               <FilePath>..\Algorithm\Sha256.lib</FilePath>
             </File>
+            <File>
+              <FileName>app_aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Algorithm\app_aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_des.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Algorithm\app_des.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
+          <GroupName>APP</GroupName>
+          <Files>
+            <File>
+              <FileName>atsha204a.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Appatsha204\atsha204a.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\app_interface.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Drivers/CMSIS</GroupName>
@@ -577,6 +599,64 @@
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>CryptoAuthlib</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\atca_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_basic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\basic\atca_basic.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_crypto_sw_sha2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\crypto\atca_crypto_sw_sha2.c</FilePath>
+            </File>
+            <File>
+              <FileName>sha2_routines.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\crypto\hashes\sha2_routines.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\host\atca_host.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ATSHA204iface</GroupName>
+          <Files>
+            <File>
+              <FileName>atca_iface_stm32_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\iface\atca_iface_stm32_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_stm32_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\hal\hal_stm32_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>atca_iface_stm32_swi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\lib\iface\atca_iface_stm32_swi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bitBang_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ATSHA204\Atsha204_hw\bitBang_i2c.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

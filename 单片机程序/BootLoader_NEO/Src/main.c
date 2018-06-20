@@ -58,6 +58,10 @@ static volatile uint8_t 	hid_recv_flag = 0;
 
 int main(void)
 {
+		//清除程序跳转，残留的FLASH标识
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
+													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+	
 		uint8_t	slot_data_read[32];
 		
 		//数据初始化
@@ -98,15 +102,13 @@ int main(void)
 						{
 								Key_Flag.flag.middle = 0;
 								BootFlag.flag.update = 1;
-								MX_USB_DEVICE_Init();			//USB初始化
 								Key_Control(0);
 								break;
 						}
 						if(Key_Flag.flag.left||Key_Flag.flag.right)
 						{
 								Key_Flag.flag.left  = 0;
-								Key_Flag.flag.right = 0;
-								MX_USB_DEVICE_Init();			//USB初始化							
+								Key_Flag.flag.right = 0;					
 								if(NEO_Test())
 								{
 										Key_Control(0);
@@ -129,6 +131,7 @@ int main(void)
 		//升级处理
 		if(BootFlag.flag.update)//需要升级
 		{
+				//清除升级标志			
 				BootFlag.flag.update = 0;
 				ATSHA_read_data_slot(SLOT_FLAG,slot_data_read);
 				slot_data_read[1] = 0;
@@ -144,9 +147,12 @@ int main(void)
 				else
 				{
 						Asc8_16(100,24,"Waiting");
-				}
-				MX_USB_DEVICE_Init();							//USB初始化				
-				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);
+				}			
+				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);								
+				//清除扇区，并回复上位机请求更新
+				Hid_Need_Updata_Rp();
+				STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
+				STMFLASH_Erase_Sectors(FLASH_SECTOR_6);
 				while(1)
 				{
 						if(hid_recv_flag)			//接收数据则处理
@@ -174,12 +180,14 @@ static void BSP_Init(void)
 		MX_GPIO_Init();						//IO口初始化
 		MX_CRC_Init();						//CRC校验
 		MX_RNG_Init();						//RNG随机数
-		Center_button_init();			//中间按钮初始化
+		Center_button_init();			//中间按钮初始化	
+		MX_USART1_UART_Init();		//打印信息串口
+		ATSHA204_Init();					//加密芯片初始化
+		MX_USB_DEVICE_Init();			//USB初始化		
 		OLED_Init();							//OLED初始化	
 		Show_Pattern(&gImage_logo[0],26,37,8,56);//开机logo
 		clearArea(104,56,48,1);
-		MX_USART1_UART_Init();		//打印信息串口
-		ATSHA204_Init();
+		
 }
 
 /** System Clock Configuration

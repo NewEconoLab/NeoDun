@@ -336,16 +336,6 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								}
 								break;
 						}
-						case 0x0304:
-						{
-								//Çå¿Õ´æ´¢NEODUNµÄFLASHÉÈÇø
-								STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
-								STMFLASH_Erase_Sectors(FLASH_SECTOR_6);								
-								Hid_Recv_0304_Rp(SerialID);
-								HAL_Delay(50);
-								Hid_Need_Updata_Rp();							
-								break;
-						}
 						default:
 #ifdef Debug_Print								
 								printf("Unknow Cmd\n");

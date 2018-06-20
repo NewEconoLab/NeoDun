@@ -7,6 +7,9 @@
 #include "showsign.h"
 #include "getaddress.h" 
 #include "stmflash.h"
+#include "app_interface.h"
+#include "atsha204a.h"
+#include "bitBang_I2c.h"
 
 CRC_HandleTypeDef hcrc;
 RNG_HandleTypeDef hrng;
@@ -16,17 +19,12 @@ static void MX_CRC_Init(void);
 static void MX_RNG_Init(void);
 
 //#define Debug
-//为了调试
-//#define FLASH_NEODUN_ADDRESS			0x08000000
-//#define FLASH_PACK_ADDRESS				0x08080000
-//#define FLASH_RESULT_sign_ADDRESS	0x0808F000
-//#define FLASH_RESULT_alg_ADDRESS	0x0808F800
-
 #define FLASH_NEO_ADDRESS					0x08060000
 #define FLASH_NEODUN_ADDRESS			0x08020000
-#define FLASH_PACK_ADDRESS				0x08010000
+#define FLASH_ADDRESS_PACK				0x08010000
 #define FLASH_RESULT_sign_ADDRESS	0x0801F000
 #define FLASH_RESULT_alg_ADDRESS	0x0801F800
+#define	FLASH_ADDRESS_SCENE		  	0x0801FE00 //现场数据地址
 
 uint8_t privateKey_flash[32];
 uint8_t data_pack[512];
@@ -62,6 +60,8 @@ int main(void)
 		SIGN_Out_Para Sign;
 		uint8_t PublicKey_Flash[65];
 		uint8_t PubKey_Flash[33];
+		uint8_t	Pin_code[8];
+		uint8_t  AddressID;
 
 		//硬件初始化
 		HAL_Init();
@@ -70,22 +70,34 @@ int main(void)
 		MX_GPIO_Init();
 		MX_CRC_Init();
 		MX_RNG_Init();
+		ATSHA_I2c_Init();
 
 #ifdef Debug
-		Test_Ecc_Sign_Data();
+//		Test_Ecc_Sign_Data();
+		AddressID = 2;
+		Pin_code[0] = 0x35;
+		Pin_code[1] = 0x35;
+		Pin_code[2] = 0x35;
+		Pin_code[3] = 0x35;
+		Pin_code[4] = 0x35;
+		Pin_code[5] = 0x35;
+		Pin_code[6] = 0x36;
+		Pin_code[7] = 0x29;		
 #endif
 
 		//数据初始化
 		memset(&data_pack,0,512);
-		pack_len = STMFLASH_ReadWord(FLASH_PACK_ADDRESS);
+		pack_len = STMFLASH_ReadWord(FLASH_ADDRESS_PACK);
 		if(pack_len == 0xffffffff)
 		{
 				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
 				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP		
 		}
 	
-		STMFLASH_Read(FLASH_PACK_ADDRESS+4,(uint32_t*)privateKey_flash,32);
-		STMFLASH_Read(FLASH_PACK_ADDRESS+36,(uint32_t*)data_pack,pack_len);
+		//获得数据包
+		AddressID = STMFLASH_ReadWord(FLASH_ADDRESS_SCENE+4);
+		STMFLASH_Read_ByteArray(FLASH_ADDRESS_PACK+4,Pin_code,8);
+		STMFLASH_Read(FLASH_ADDRESS_PACK+12,(uint32_t*)data_pack,pack_len);
 		memset(&Sign,0,sizeof(Sign));
 		memset(&result_SignData,0,64);
 		memset(&resultsignRecord,0,98);
@@ -96,6 +108,14 @@ int main(void)
 				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
 				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
 		}
+
+		//解密私钥
+		if(Get_Privekey(AddressID+7,Pin_code,privateKey_flash) != 0)//出错
+		{
+				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
+		}
+
 		//签名数据包
 		if(Alg_ECDSASignData(data_pack,pack_len,result_SignData,&len_sign_alg,privateKey_flash))
 		{

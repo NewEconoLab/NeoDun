@@ -85,7 +85,7 @@ int main(void)
 		MX_USART2_UART_Init();//蓝牙
 		MX_USART1_UART_Init();//打印
 		ATSHA_I2c_Init();
-		MX_USB_DEVICE_Init();		
+		MX_USB_DEVICE_Init();
 		OLED281_Init();
 		AW9136_Init();
 		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
