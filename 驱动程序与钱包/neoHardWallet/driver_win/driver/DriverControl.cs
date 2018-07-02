@@ -152,7 +152,7 @@ namespace driver_win
                 signer.SendDataBlock(block);
 
                 var __block = signer.dataTable.getBlockBySha256(str_hash);
-                int remoteid = await __block.GetRemoteid();
+                uint remoteid = await __block.GetRemoteid();
                 if (remoteid == 0) return "suc";
                 __block.dataidRemote = 0;
 
@@ -346,7 +346,7 @@ namespace driver_win
                     signer.SendDataBlock(block);
 
                     var __block = signer.dataTable.getBlockBySha256(_str_hash);
-                    Int32 remoteid = await __block.GetRemoteid();
+                    uint remoteid = await __block.GetRemoteid();
                     if (remoteid == 0) return false;
                     remoteids.Add((uint)remoteid);
                     __block.dataidRemote = 0;
@@ -358,7 +358,7 @@ namespace driver_win
                 signMsg.writeUInt16(0, type);
                 signMsg.writeUInt16(2, content);
                 Array.Copy(hash, 0, signMsg.data, 4, hash.Length);
-                signMsg.writeUInt16(40, version);
+                signMsg.writeUInt16(36, version);
                 //这个dataid 要上一个block 传送完毕了才知道
                 //for (var i = 0; i < remoteids.Count; i++)
                 //{
@@ -487,11 +487,10 @@ namespace driver_win
             block.data = data;
             signer.SendDataBlock(block);
             var __block = signer.dataTable.getBlockBySha256(hashstr);
-            int remoteid = await __block.GetRemoteid();
+            uint remoteid = await __block.GetRemoteid();
             __block.dataidRemote = 0;
-            if (remoteid == 0) return 0;
-            else if (remoteid == -1) return await SendBlock(str_data);
-            else { return (uint)remoteid; }
+            if (!__block.Check()) return await SendBlock(str_data);
+            return (uint)remoteid;
         }
 
         #region 各种失败汇总
