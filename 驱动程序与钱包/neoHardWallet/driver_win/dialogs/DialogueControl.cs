@@ -20,6 +20,8 @@ namespace driver_win.dialogs
 
         public static void ShowMessageDialogue(string result, int time, Window window)
         {
+            if (!window.IsActive)
+                return;
             MessageDialogue messageDialogue = new MessageDialogue(result);
             messageDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             messageDialogue.Owner = window;
@@ -29,6 +31,8 @@ namespace driver_win.dialogs
 
         public static void ShowImportWalletDialogue(DriverControl driverControl,Window window)
         {
+            if (!window.IsActive)
+                return;
             ImportWalletDialogue importWalletDialogue = new ImportWalletDialogue(driverControl);
             list.Add(importWalletDialogue);
             importWalletDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -39,6 +43,8 @@ namespace driver_win.dialogs
 
         public static void ShowImportWifDialogue(DriverControl driverControl, Window window)
         {
+            if (!window.IsActive)
+                return;
             ImportWifDialogue importWifDialogue = new ImportWifDialogue(driverControl);
             list.Add(importWifDialogue);
             importWifDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -49,6 +55,8 @@ namespace driver_win.dialogs
 
         public static void ShowAddressListDialogue(DriverControl driverControl, Window window)
         {
+            if (!window.IsActive)
+                return;
             AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
             list.Add(addressListDialogue);
             addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -59,6 +67,8 @@ namespace driver_win.dialogs
 
         public static void ShowImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password, DriverControl driverControl, Window window)
         {
+            if (!window.IsActive)
+                return;
             ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue(driverControl);
             list.Add(importAddressListDialogue);
             importAddressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
