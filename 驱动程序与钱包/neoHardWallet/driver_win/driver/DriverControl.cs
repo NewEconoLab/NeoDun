@@ -388,12 +388,13 @@ namespace driver_win
             needLoop = false;
         }
 
-        public async Task<bool> UninstallApp(UInt16 content)
+        public async Task<bool> UninstallApp(UInt16 type)
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x03;
             msg.tag2 = 0x03;
             msg.msgid = NeoDun.SignTool.RandomShort();
+            msg.writeUInt16(0, type);
             signer.SendMessage(msg, true);
             applyResult = false;
             needLoop = true;

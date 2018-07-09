@@ -52,7 +52,6 @@ namespace driver_win.dialogs
             {
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e); 
             });
-            CreateSimHardware();
 
             this.list_btns.Add(this.Btn_gj_update);
             this.list_btns.Add(this.manageAddr);
@@ -61,6 +60,7 @@ namespace driver_win.dialogs
 
             LinkSinger();
 
+            //CreateSimHardware();
             //hhgate.CustomServer.BeginServer();
         }
 
