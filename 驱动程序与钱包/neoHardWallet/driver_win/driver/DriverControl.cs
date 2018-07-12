@@ -97,7 +97,7 @@ namespace driver_win
 
             Jo_PackageInfo = new MyJson.JsonNode_Object();
 
-            Jo_PackageInfo["gj"] = new MyJson.JsonNode_ValueString(appVersion);
+            Jo_PackageInfo["Framework"] = new MyJson.JsonNode_ValueString(appVersion);
             //获取有几种插件
             for (var i = 2; i < data.Length; i = i + 4)
             {

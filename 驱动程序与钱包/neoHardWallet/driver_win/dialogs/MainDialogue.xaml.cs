@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using driver_win.helper;
+using NBitcoin;
 using NeoDun;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace driver_win.dialogs
                 if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e); 
             });
 
-            this.list_btns.Add(this.Btn_gj_update);
+            this.list_btns.Add(this.Btn_Framework_update);
             this.list_btns.Add(this.manageAddr);
             this.list_btns.Add(this.importWif);
             this.list_btns.Add(this.importWallet);
@@ -156,53 +157,76 @@ namespace driver_win.dialogs
                 //关掉当前页面所打开的二级页面
             });
         }
-
+        MyJson.JsonNode_Object servicePackageInfo;
         private async void GetPackageInfo()
         {
             ForbidAllBtnClick();
 
+            byte[] postdata;
             //从服务器获取固件和插件的版本信息
-            MyJson.JsonNode_Object servicePackageInfo = new MyJson.JsonNode_Object();
-            servicePackageInfo["gj"] = new MyJson.JsonNode_ValueNumber(3.1);
-            servicePackageInfo["Neo"] = new MyJson.JsonNode_ValueNumber(9.1);
+            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "getneodunversion", out postdata);
+            var result = await HttpHelper.HttpPost(url, postdata);
+            var json = MyJson.Parse(result).AsDict()["result"].AsList();
 
+            servicePackageInfo = new MyJson.JsonNode_Object();
+            for (var i = 0; i < json.Count; i++)
+            {
+                servicePackageInfo[json[i].AsDict()["Name"].AsString()] = new MyJson.JsonNode_ValueString(json[i].AsDict()["Version"].AsString());
+            }
 
             //获取固件插件版本号
             MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
 
             if (JA_PackageInfo.Count > 0)
             {
-                this.label_gjversion.Content = "固件(V" +JA_PackageInfo["gj"].ToString()+")";
-                double nowgjversion = double.Parse(JA_PackageInfo["gj"].ToString());
+                this.label_FrameworkVersion.Content = "固件 " +JA_PackageInfo["Framework"].ToString();
+                double nowgjversion = double.Parse(JA_PackageInfo["Framework"].ToString());
                 //如果下位机固件版本低于服务器版本就显示升级按钮
-                this.Btn_gj_update.Visibility = nowgjversion < double.Parse(servicePackageInfo["gj"].ToString())? Visibility.Visible : Visibility.Hidden;
+                if (nowgjversion < double.Parse(servicePackageInfo["Framework"].ToString()))
+                {
+                    this.Btn_Framework_update.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.Btn_Framework_update.Visibility = Visibility.Hidden;
+                }
 
 
                 this.listbox.Items.Clear();
 
                 //现在只有neo 先这么搞
+                //初始化 neo的boxlist
                 var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
                 string xaml = System.Windows.Markup.XamlWriter.Save(demoItem);
                 ListBoxItem item = System.Windows.Markup.XamlReader.Parse(xaml) as ListBoxItem;
                 var img_icon = item.FindName("img_icon") as Image;
                 var label_version = item.FindName("label_version") as Label;
-                label_version.Content = "Neo(V0.00)";
+                label_version.Content = "Neo 0.00";
 
                 var btn_install = item.FindName("btn_install") as Button;
                 btn_install.Click += new RoutedEventHandler(Click_Install);
-                btn_install.Name = "Neo_" + btn_install.Name;
+                //btn_install.Name = "Neo_" + btn_install.Name;
+                if (this.FindName("Neo_" + btn_install.Name) != null)
+                    this.UnregisterName("Neo_" + btn_install.Name);
+                this.RegisterName("Neo_" + btn_install.Name, btn_install);
                 btn_install.Visibility = Visibility.Visible;
                 this.list_btns.Add(btn_install);
 
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
                 btn_uninstall.Click += new RoutedEventHandler(Click_Uninstall);
-                btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
+                //btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
+                if (this.FindName("Neo_" + btn_uninstall.Name) != null)
+                    this.UnregisterName("Neo_" + btn_uninstall.Name);
+                this.RegisterName("Neo_" + btn_uninstall.Name, btn_uninstall);
                 btn_uninstall.Visibility = Visibility.Collapsed;
                 this.list_btns.Add(btn_uninstall);
 
                 var btn_update = item.FindName("btn_update") as Button;
                 btn_update.Click += new RoutedEventHandler(Click_Install);
-                btn_update.Name = "Neo_" + btn_update.Name;
+                if (this.FindName("Neo_" + btn_update.Name) != null)
+                    this.UnregisterName("Neo_" + btn_update.Name);
+                this.RegisterName("Neo_" + btn_update.Name, btn_update);
+                //btn_update.Name = "Neo_" + btn_update.Name;
                 btn_update.Visibility = Visibility.Collapsed;
                 this.list_btns.Add(btn_update);
 
@@ -210,12 +234,12 @@ namespace driver_win.dialogs
                 if (this.FindName("Neo_" + git_loading.Name) != null)
                     this.UnregisterName("Neo_" + git_loading.Name);
                 this.RegisterName("Neo_" + git_loading.Name, git_loading);
-                git_loading.Visibility = Visibility.Hidden;
+                git_loading.Visibility = Visibility.Collapsed;
 
                 if (JA_PackageInfo.ContainsKey("Neo"))
                 {
                     var verson = float.Parse(JA_PackageInfo["Neo"].ToString());
-                    label_version.Content = "Neo(V" + verson.ToString("0.00") + ")";
+                    label_version.Content = "Neo " + verson.ToString("0.00");
                     if (verson < double.Parse(servicePackageInfo["Neo"].ToString()))
                     {
                         btn_update.Visibility = Visibility.Visible;
@@ -231,14 +255,14 @@ namespace driver_win.dialogs
                 }
                 else
                 {
-                    label_version.Content = "Neo(未安装)";
+                    label_version.Content = "Neo 未安装";
                     btn_install.Visibility = Visibility.Visible;
                 }
                 this.listbox.Items.Add(item);
             }
             else
             {
-                this.Btn_gj_update.Visibility = Visibility.Hidden;
+                this.Btn_Framework_update.Visibility = Visibility.Hidden;
             }
 
             await driverControl.GetAddressList();
@@ -266,14 +290,15 @@ namespace driver_win.dialogs
             Process.Start("https://wallet.nel.group/");
         }
 
-        private async void Click_update_gujian(object sender, RoutedEventArgs e)
+        private async void Click_update_Framework(object sender, RoutedEventArgs e)
         {
             Button btn = (sender as Button);
             ForbidAllBtnClick();
-            var str_content = btn.Name.Split('_')[0];
+            var pluginType = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split('_')[0];
+            var version = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split('_')[1];
 
             //安装按钮隐藏  等待按钮显示
-            Image img = this.FindName("gj_gif_loading") as Image;
+            Image img = this.FindName("gif_Framework_loading") as Image;
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
 
@@ -281,7 +306,15 @@ namespace driver_win.dialogs
             UInt16 content = 0x0000;
             //从本地获取需要安装的插件
             //获取最新的bin
-            byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
+            //byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
+            byte[] postdata;
+            //从服务器获取固件和插件的版本信息
+            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType+"_"+ version));
+            var res = await HttpHelper.HttpPost(url, postdata);
+            var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
+            byte[] data = UTF8Encoding.UTF8.GetBytes(str_plugin);
+
+
             bool result = await driverControl.ApplyForUpdate();
             if (result)
             {
@@ -312,19 +345,28 @@ namespace driver_win.dialogs
         private async void Click_Install(object sender, RoutedEventArgs e)
         {
             Button btn = (sender as Button);
+            var pluginType = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split(' ')[0];
+            var version = servicePackageInfo[pluginType].ToString();
             ForbidAllBtnClick();
-            var str_content = btn.Name.Split('_')[0];
 
             //安装按钮隐藏  等待按钮显示
-            Image img = this.FindName(str_content + "_gif_loading") as Image;
+            Image img = this.FindName(pluginType + "_gif_loading") as Image;
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
 
             UInt16 type = 0x0001;
-            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
+            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), pluginType);
             //从本地获取需要安装的插件
             //获取最新的bin
-            byte[] data = System.IO.File.ReadAllBytes("./neo.bin");
+
+            //byte[] data = System.IO.File.ReadAllBytes("./neo.bin");
+            byte[] postdata;
+            //从服务器获取固件或插件
+            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata,new MyJson.JsonNode_ValueString(pluginType+"_"+version));
+            var res = await HttpHelper.HttpPost(url, postdata);
+            var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
+            byte[] data = UTF8Encoding.UTF8.GetBytes(str_plugin);
+
             bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
             if (result)
             {
@@ -342,7 +384,7 @@ namespace driver_win.dialogs
 
         private async void Click_Uninstall(object sender, RoutedEventArgs e)
         {
-            var str_content = (sender as Button).Name.Split('_')[0];
+            var str_content = (sender as Button).Name.Split(' ')[0];
             UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
             bool result = await driverControl.UninstallApp(content);
             if (result)
