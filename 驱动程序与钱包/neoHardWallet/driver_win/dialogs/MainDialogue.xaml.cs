@@ -294,8 +294,8 @@ namespace driver_win.dialogs
         {
             Button btn = (sender as Button);
             ForbidAllBtnClick();
-            var pluginType = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split('_')[0];
-            var version = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split('_')[1];
+            var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
+            var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
 
             //安装按钮隐藏  等待按钮显示
             Image img = this.FindName("gif_Framework_loading") as Image;
@@ -312,7 +312,7 @@ namespace driver_win.dialogs
             var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType+"_"+ version));
             var res = await HttpHelper.HttpPost(url, postdata);
             var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
-            byte[] data = UTF8Encoding.UTF8.GetBytes(str_plugin);
+            byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
 
 
             bool result = await driverControl.ApplyForUpdate();
@@ -359,14 +359,14 @@ namespace driver_win.dialogs
             //从本地获取需要安装的插件
             //获取最新的bin
 
-            //byte[] data = System.IO.File.ReadAllBytes("./neo.bin");
+            //byte[] data2 = System.IO.File.ReadAllBytes("./neo.bin");
             byte[] postdata;
             //从服务器获取固件或插件
             var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata,new MyJson.JsonNode_ValueString(pluginType+"_"+version));
             var res = await HttpHelper.HttpPost(url, postdata);
             var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
-            byte[] data = UTF8Encoding.UTF8.GetBytes(str_plugin);
-
+            byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
+            
             bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
             if (result)
             {

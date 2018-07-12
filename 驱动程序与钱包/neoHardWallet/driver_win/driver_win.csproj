@@ -159,6 +159,7 @@
     <Compile Include="driver\DriverControl.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
+    <Compile Include="helper\Helper.cs" />
     <Compile Include="helper\PasswordBoxMonitor.cs" />
     <Compile Include="protocol\address.cs" />
     <Compile Include="protocol\datatable.cs" />
