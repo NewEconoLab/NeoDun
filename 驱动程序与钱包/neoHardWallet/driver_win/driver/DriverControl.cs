@@ -434,8 +434,10 @@ namespace driver_win
                     result["pubkey"] = new MyJson.JsonNode_ValueString("");
                     result["tag"] = new MyJson.JsonNode_ValueNumber(0);
                     result["msg"] = new MyJson.JsonNode_ValueString("0206");
+                    result["addrName"] = new MyJson.JsonNode_ValueString("");
                     return;
                 }
+                result["addrName"] = new MyJson.JsonNode_ValueString(add.name);
 
                 var addbytes = add.GetAddbytes();
                 signMsg.tag1 = 0x02;
@@ -464,8 +466,8 @@ namespace driver_win
             }
             else
             {
-                result["signdata"] = new MyJson.JsonNode_ValueString();
-                result["pubkey"] = new MyJson.JsonNode_ValueString();
+                result["signdata"] = new MyJson.JsonNode_ValueString("");
+                result["pubkey"] = new MyJson.JsonNode_ValueString("");
                 result["tag"] = new MyJson.JsonNode_ValueNumber(0);
                 result["msg"] = new MyJson.JsonNode_ValueNumber(resultcode);
             }
