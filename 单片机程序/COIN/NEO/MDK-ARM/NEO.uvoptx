@@ -206,66 +206,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>104</LineNumber>
+          <LineNumber>941</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134227168</Address>
+          <Address>134623490</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\git\NeoDun\鍗曠墖鏈虹▼搴?COIN\NEO\Src\app_interface.c</Filename>
+          <Filename>D:\git\NeoDun\鍗曠墖鏈虹▼搴?COIN\NEO\Algorithm\showsign.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NEO\../Src/app_interface.c\104</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>119</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134249514</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\git\NeoDun\鍗曠墖鏈虹▼搴?COIN\NEO\Src\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\NEO\../Src/main.c\119</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>370</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134224112</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\git\NeoDun\鍗曠墖鏈虹▼搴?COIN\NEO\ATSHA204\Appatsha204\atsha204a.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\NEO\../ATSHA204/Appatsha204/atsha204a.c\370</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>121</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134232696</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\git\NeoDun\鍗曠墖鏈虹▼搴?COIN\NEO\Src\app_interface.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\NEO\../Src/app_interface.c\121</Expression>
+          <Expression>\\NEO\../Algorithm/showsign.c\941</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -273,6 +225,31 @@
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>signature</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Sign</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>data_pack</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>index_type</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>nep5_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>SIGN_Out</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

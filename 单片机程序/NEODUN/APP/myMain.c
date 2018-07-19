@@ -22,6 +22,7 @@
 ** 4、修复底层OLED显示，参数传递出错的BUG，导致换行显示出问题
 ** 5、重构代码
 ** 6、修复FALSH操作BUG,清除程序跳转，残留的FLASH标识
+** 7、Windows轮询HID设备间隔，下位机连续上报，需加间隔，大于1ms
 ********************************************************************************************************/
 #include "stm32f4xx_hal.h"
 #include "myMain.h"
@@ -120,35 +121,44 @@ NEWWALLET:
 						if(Display_VerifyCode_PowerOn())//密码验证5次出错
 								goto NEWWALLET;
 				}
-
 				//此处，已进行过密码验证，置此位为1
 				Passport_Flag.flag.poweron = 1;
 				//显示主页面
 				Display_MainPage();
+				USB_Init();
 		}
 		else
 		{
+				USB_Init();
 				SysFlagType = 0;
 				Deal_Sign_Data_Restart();
 				Passport_Flag.flag.poweron = 1;
 		}
 		
+		//power on find usb status
+		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9))
+				Set_Flag.flag.usb_offline = 0;
+		
 		while (1)
 		{
-				if(hid_flag == 1)						 		 						//收到HID数据包
+				if(hid_index_read != hid_index_write)				//收到HID数据包
 				{
-						Hid_Data_Analysis(hid_data,len_hid);		//HID数据包解析
-						memset(hid_data,0,64);
-						hid_flag = 0;
+						Hid_Data_Analysis(hid_recv_data[hid_index_read].data,hid_recv_data[hid_index_read].len);
+						memset(hid_recv_data[hid_index_read].data,0,64);
+						hid_index_read++;
+						if(hid_index_read == hid_index_write)
+						{
+							hid_index_write = 0;
+							hid_index_read = 0;
+						}
 				}
 				if(task_1s_flag)														//1s任务
 				{
 						task_1s_flag = 0;
-						if(Scan_USB())													//扫描USB
+						if(Set_Flag.flag.usb_offline == 0)
 						{
 								if(Set_Flag.flag.usb_state_pre)			//表示从断开连接USB，到连上USB
 										Display_Usb();
-								Set_Flag.flag.usb_offline 	= 0;		//USB连上
 								Set_Flag.flag.usb_state_pre = 0;
 						}
 						else
@@ -158,7 +168,6 @@ NEWWALLET:
 										Fill_RAM(0x00);
 										Display_MainPage();
 								}
-								Set_Flag.flag.usb_offline 	= 1;		//USB断开
 								Set_Flag.flag.usb_state_pre = 1;
 						}
 						//电池电量较低做个提醒

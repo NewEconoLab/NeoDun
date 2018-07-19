@@ -7,6 +7,7 @@
 static uint8_t preallocated_buffer[ECC_STORE_SPACE]; 
 static uint8_t P_key[200];
 static uint8_t result1[128];
+static uint8_t digest_malloc[128];
 static uint8_t pub_x[50];
 static uint8_t pub_y[50];
 static uint8_t sign_r[50];
@@ -235,6 +236,43 @@ static int32_t HASH_DigestCompute(const uint8_t* InputMessage, uint32_t InputMes
 		return error_sta;
 }	 
 
+uint8_t Alg_ECDSASignVerify(uint8_t *public_key,uint8_t *signature,uint8_t *input_msg)
+{
+		int32_t error_sta = 0;
+	  EC_Para EC;
+	  Pub_Key_Para pub_key;
+	  Sign_Para sign;
+	  Digest_Para digest;
+	  InputMsg_Para inputMsg;
+	
+		Crypto_DeInit();	
+		EC_paraTestInit(&EC, &pub_key, &sign, &inputMsg, &digest);
+
+		pub_key.pub_xSize = 32;
+		pub_key.pub_ySize = 32;
+		pub_key.pub_x 		= public_key;
+		pub_key.pub_y 		= public_key + 32;
+
+		sign.sign_rSize 	= 32;
+		sign.sign_sSize 	= 32;
+		sign.sign_r 			= signature;
+		sign.sign_s 			= signature + 32;
+	
+		inputMsg.inputMsg_size = 32;
+		inputMsg.input_msg 		 = input_msg;
+			
+		digest.digt = digest_malloc;
+		error_sta 	= ECCSignVerify(&EC, &pub_key, &sign, &inputMsg, &digest);
+	
+		if (error_sta == AUTHENTICATION_SUCCESSFUL)
+		{
+				return 1;
+		}
+		else
+		{		
+				return 0;
+		}
+}
 /******************************************************************
 * 函数名：ECCSignVerify
 * 函数说明：ECDSA签名认证
@@ -715,7 +753,147 @@ int32_t Alg_GetPrivateFromWIF(char *wif,uint8_t *PrivKey)
 		return value;		
 }
 
+/******************************************************************
+*	函数名：	 Alg_ECCscalarMul
+*	函数说明：利用ECC进行标量乘法计算
+* 输入参数：PriKeyInput		: 作为私钥的输入数组
+						EccPointInput	: 作为椭圆点的输入数组
+						mode					: 为0时，使用内嵌的G点计算，为1时，使用输入的点(64)计算，为2时，使用输入的点(32)计算
+* 输出参数：dataOut	输出结果
+*******************************************************************/
+int32_t Alg_ECCscalarMul(uint8_t *PriKeyInput,uint8_t *EccPointInput,uint8_t *dataOut,uint8_t mode)
+{
+		int32_t value = ECC_SUCCESS;
+		int i;
+		//相关参数
+		RNGstate_stt RNGstate1;	
+		Pub_Key_Para pub_key1;
+		EC_stt ECctx1;	
+		membuf_stt ECCMem_ctx1;  		
+		ECpoint_stt *PubKey1 = NULL;
+		ECCprivKey_stt *PrivKey1 = NULL;
+		ECpoint_stt *G1 = NULL;
+	
+		memset(pub_x,0,50);
+		memset(pub_y,0,50);
+	  Crypto_DeInit();	
+	
+		pub_key1.pub_x = (uint8_t *)pub_x;
+		pub_key1.pub_y = (uint8_t *)pub_y;
+		
+		//初始随机数引擎
+		value = RNG_init_for_sign(&RNGstate1);
+		if (value != ECC_SUCCESS)
+    {
+			return RNG_SUCCESS;
+		}			
+		
+		//设置相关参数
+	  ECCMem_ctx1.pmBuf =  preallocated_buffer;
+		ECCMem_ctx1.mUsed = 0;
+		ECCMem_ctx1.mSize = sizeof(preallocated_buffer);	
+					
+		ECctx1.pmA = P_256_a;
+    ECctx1.pmB = P_256_b;
+    ECctx1.pmP = P_256_p;
+    ECctx1.pmN = P_256_n;
+    ECctx1.mAsize = sizeof(P_256_a);
+    ECctx1.mBsize = sizeof(P_256_b);
+		ECctx1.mNsize = sizeof(P_256_n);
+		ECctx1.mPsize = sizeof(P_256_p);
+		
+		if(mode == 1)
+		{
+			ECctx1.pmGx = EccPointInput;
+			ECctx1.pmGy = EccPointInput+32;		
+			ECctx1.mGxsize = 32;
+			ECctx1.mGysize = 32;
+		}
+		else if(mode == 0)
+		{
+			ECctx1.pmGx = P_256_Gx;
+			ECctx1.pmGy = P_256_Gy;
+			ECctx1.mGxsize = sizeof(P_256_Gx);
+			ECctx1.mGysize = sizeof(P_256_Gy);			
+		}
+		else 
+			return ECC_ERR_BAD_OPERATION;
+		//初始化参数
+		value = ECCinitEC(&ECctx1, &ECCMem_ctx1);	
+		if (value != ECC_SUCCESS)
+		{ 
+				goto ECCKeyGenPub_L1;
+		}
+		
+		//初始化G点
+		value = ECCinitPoint(&G1,  &ECctx1, &ECCMem_ctx1);	
+		if (value != 0)
+		{
+				goto ECCKeyGenPub_L2;
+		}
+		
+		//设置G点的坐标
+		value = ECCsetPointGenerator(G1, &ECctx1);
+		if (value != 0)
+		{
+				goto ECCKeyGenPub_L2;
+		}	
+		
+ 		//初始化公钥
+ 		value = ECCinitPoint(&PubKey1, &ECctx1, &ECCMem_ctx1);		
+		if (value != ECC_SUCCESS)
+		{ 
+			goto ECCKeyGenPub_L2;
+		}	
+		
+ 		//初始化私钥
+ 		value = ECCinitPrivKey(&PrivKey1, &ECctx1, &ECCMem_ctx1);		
+		if (value != ECC_SUCCESS)
+		{ 
+			goto ECCKeyGenPub_L3;
+		}	
+		
+		//设置私钥的值
+ 		value = ECCsetPrivKeyValue(PrivKey1, PriKeyInput,32);
+		if (value != ECC_SUCCESS)
+		{ 
+				goto ECCKeyGenPub_L4;
+		}			
+		
+		//加载参数，并计算公钥
+		value = ECCscalarMul(G1, PrivKey1, PubKey1, &ECctx1, &ECCMem_ctx1);		
+		if (value != ECC_SUCCESS)
+		{ 
+				goto ECCKeyGenPub_L4;
+		}
 
+		/* 导出信息 */	
+		value = ECCgetPointCoordinate(PubKey1, E_ECC_POINT_COORDINATE_X, pub_key1.pub_x, &pub_key1.pub_xSize);
+		value |= ECCgetPointCoordinate(PubKey1, E_ECC_POINT_COORDINATE_Y, pub_key1.pub_y, &pub_key1.pub_ySize);
+
+		//将公钥拷贝出来
+		if(value == 0)
+		{
+				for(i=0;i<32;i++)
+						dataOut[i] = *(pub_key1.pub_x + i);
+				for(i=0;i<32;i++)
+						dataOut[i+32] = *(pub_key1.pub_y+i);	
+		}
+		
+ECCKeyGenPub_L4:
+		ECCfreePrivKey(&PrivKey1, &ECCMem_ctx1);
+
+ECCKeyGenPub_L3:
+ 		ECCfreePoint(&PubKey1, &ECCMem_ctx1);
+		
+ECCKeyGenPub_L2:
+ 		ECCfreeEC(&ECctx1, &ECCMem_ctx1);
+
+ECCKeyGenPub_L1:
+ 		RNGfree(&RNGstate1);
+		
+		return value;
+}
 
 
 

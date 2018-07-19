@@ -776,33 +776,6 @@ uint8_t Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				}
 				case 0xd1://InvocationTransaction
 				{
-						if(Version > 1)
-						{
-								return 1;
-						}
-						//Script
-						fb = dataIn[2+index_type];
-						length = ReadByteLength(dataIn,3+index_type,65536,fb);
-						if(length == 0)	return 1;						
-						index_type += 1 + ReadByteLengthIndex(fb);		
-						index_type += length;													
-						if(Version == 1)
-						{
-								sign_data.Gas = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
-											+(dataIn[index_type+4]/16)*pow(16,11) + (dataIn[index_type+4]%16)*pow(16,10) + (dataIn[index_type+5]/16)*pow(16,9) + (dataIn[index_type+5]%16)*pow(16,8)
-											+(dataIn[index_type+6]/16)*pow(16,7) + (dataIn[index_type+6]%16)*pow(16,6) + (dataIn[index_type+7]/16)*pow(16,5) + (dataIn[index_type+7]%16)*pow(16,4)
-											+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);
-#ifdef	Printf				
-								printf("Gas:%lld\r\n",sign_data.Gas);	
-#endif								
-								index_type += 8;	
-								if(sign_data.Gas < 0) return 1;															
-						}
-						else
-						{
-								sign_data.Gas = 0;// Fixed.Zero 表示为0
-						}						
-						break;
 				}
 				default:				
 						return 1;

@@ -50,22 +50,41 @@ void Display_Set(uint8_t state)
 {
 		if(state == 0)				//left
 		{
-				Show_Pattern(&gImage_Address[0],10,17,0,32);
+				Show_Pattern(&gImage_Set[0],10,17,0,32);
 				clearArea(40,32,32,1);
 				Show_HZ12_12(40,32,2,3);//设置
 		}
 		else if(state ==1)		//midddle
 		{
-				Show_Pattern(&gImage_Address[0],28,35,0,32);
+				Show_Pattern(&gImage_Set[0],28,35,0,32);
 				clearArea(112,32,32,1);
 				Show_HZ12_12(112,32,2,3);//设置
 		}
 		else if(state == 2)		//right
 		{
-				Show_Pattern(&gImage_Address[0],44,51,0,32);
+				Show_Pattern(&gImage_Set[0],44,51,0,32);
 				clearArea(176,32,32,1);
 				Show_HZ12_12(176,32,2,3);//设置
 		}		
+}
+
+uint8_t Display_Time_count(void)
+{
+		static uint8_t num[2] = {'0','\0'};
+		if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
+		{
+				unsigned char temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
+				if(temp == 0)
+				{
+						Stop_TIM(OLED_INPUT_TIME);
+						return 0;//超时
+				}
+				num[0] = temp/10+0x30;
+				Asc8_16(210,26,num);
+				num[0] = temp%10+0x30;
+				Asc8_16(218,26,num);
+		}
+		return 1;
 }
 
 void Display_Address(uint8_t state,ADDRESS *address)
@@ -894,13 +913,19 @@ void Display_Click_Add(uint8_t AddID)
 		Key_Control(1);
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;					
 						Fill_RAM(0x00);
 						Asc8_16(0,16,showaddress[AddID-1].address);
 						Display_Triangle(0);
-						while(Key_Flag.flag.middle == 0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;
+						}
 						Key_Control(1);
 						RefreshDisplay = 1;
 				}
@@ -969,6 +994,8 @@ void Display_Click_Add(uint8_t AddID)
 										RefreshDisplay = 1;
 										break;
 								}
+								if(Set_Flag.flag.usb_offline == 0)
+										return;
 						}
 				}
 				if((Key_Flag.flag.middle)&&(page_index == 2))
@@ -1083,6 +1110,8 @@ void Display_Set_Coin_NEO(void)
 		uint8_t page_index = 0;		//页面ID
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1092,7 +1121,11 @@ void Display_Set_Coin_NEO(void)
 						Show_HZ12_12(120,16,98,98);//号
 						Asc8_16(136,16,VERSION_NEO_STR);
 						Display_Triangle(0);
-						while(Key_Flag.flag.middle == 0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;
+						}
 						Key_Flag.flag.middle = 0;
 						RefreshDisplay = 1;						
 				}
@@ -1188,6 +1221,8 @@ void Display_Set_Coin(void)
 		Key_Control(1);
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1256,6 +1291,8 @@ void Display_Set_About(void)
 		uint8_t page_index = 0;		//页面ID
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1265,7 +1302,11 @@ void Display_Set_About(void)
 						Show_HZ12_12(120,16,98,98);//号
 						Asc8_16(136,16,VERSION_NEODUN_STR);
 						Display_Triangle(0);
-						while(Key_Flag.flag.middle == 0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;
+						}
 						Key_Flag.flag.middle = 0;
 						RefreshDisplay = 1;
 				}
@@ -1279,7 +1320,11 @@ void Display_Set_About(void)
 						Show_HZ12_12(168,8,104,105);//官网
 						Asc8_16(72,28,"www.neodun.com");
 						Display_Triangle(0);
-						while(Key_Flag.flag.middle == 0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;
+						}
 						Key_Flag.flag.middle = 0;
 						RefreshDisplay = 1;
 				}			
@@ -1449,6 +1494,8 @@ void Display_Set_Security(void)
 		uint8_t page_index = 0;		//页面ID
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1554,6 +1601,8 @@ void Display_Click_Set(void)
 		Key_Control(1);
 		while(1)
 		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
 				if((Key_Flag.flag.middle)&&(page_index == 0))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1567,7 +1616,11 @@ void Display_Click_Set(void)
 								Fill_RAM(0x00);
 								Show_HZ12_12(120,24,91,91);//无
 								Display_Triangle(0);
-								while(Key_Flag.flag.middle==0);
+								while(Key_Flag.flag.middle==0)
+								{
+										if(Set_Flag.flag.usb_offline == 0)
+												return;
+								}
 								Key_Control(1);
 								RefreshDisplay = 1;
 						}
@@ -1664,8 +1717,6 @@ void Display_Click_Set(void)
 
 uint8_t Display_AddAdd(char *address)
 {
-		uint8_t num[2] = {'0','\0'};
-		char temp = 0;
 		Key_Control(1);
 		Fill_RAM(0x00);
 		Show_HZ12_12(0,7,53,54);//是否
@@ -1683,19 +1734,8 @@ uint8_t Display_AddAdd(char *address)
 		Start_TIM(OLED_INPUT_TIME);
 		while(1)
 		{
-				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-				{		
-						temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-						if(temp == 0)
-						{
-								Stop_TIM(OLED_INPUT_TIME);
-								return NEO_TIME_OUT;//超时
-						}
-						num[0] = temp/10+0x30;
-						Asc8_16(210,26,num);
-						num[0] = temp%10+0x30;
-						Asc8_16(218,26,num);
-				}
+				if(Display_Time_count() == 0)
+						return NEO_TIME_OUT;//超时
 				if(Key_Flag.flag.middle)
 				{
 						Key_Flag.flag.middle = 0;
@@ -1704,24 +1744,11 @@ uint8_t Display_AddAdd(char *address)
 						Show_HZ12_12(54,47,54,54);//否
 						Show_HZ12_12(120,47,53,53);//是
 						Show_HZ12_12(192,47,54,54);//否
-						temp = 0;
-						num[0] = '0';
 						Start_TIM(OLED_INPUT_TIME);
 						while(1)
 						{
-								if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-								{		
-										temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-										if(temp == 0)
-										{
-												Stop_TIM(OLED_INPUT_TIME);
-												return NEO_TIME_OUT;//超时
-										}
-										num[0] = temp/10+0x30;
-										Asc8_16(210,26,num);
-										num[0] = temp%10+0x30;
-										Asc8_16(218,26,num);
-								}								
+								if(Display_Time_count() == 0)
+										return NEO_TIME_OUT;//超时
 								if(Key_Flag.flag.middle)
 								{
 										Key_Control(0);
@@ -1744,8 +1771,6 @@ uint8_t Display_AddAdd(char *address)
 
 uint8_t Display_DelAdd(uint8_t AddID)
 {
-		uint8_t num[2] = {'0','\0'};
-		char temp = 0;
 		uint8_t value = 0;
 		uint8_t index = 128 - (8*showaddress[AddID].len_name + 136)/2;
 		Key_Control(1);
@@ -1767,19 +1792,8 @@ uint8_t Display_DelAdd(uint8_t AddID)
 		Start_TIM(OLED_INPUT_TIME);
 		while(1)
 		{
-				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-				{
-						temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-						if(temp == 0)
-						{
-								Stop_TIM(OLED_INPUT_TIME);
-								return NEO_TIME_OUT;//超时
-						}
-						num[0] = temp/10+0x30;
-						Asc8_16(210,26,num);
-						num[0] = temp%10+0x30;
-						Asc8_16(218,26,num);
-				}
+				if(Display_Time_count() == 0)
+						return NEO_TIME_OUT;//超时
 				if(Key_Flag.flag.middle)
 				{
 						value = NEO_SUCCESS;
@@ -1795,11 +1809,9 @@ uint8_t Display_DelAdd(uint8_t AddID)
 		return value;
 }
 
-uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_index)
+uint8_t Display_Sign_ContractTran(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_index,char *dst_address)
 {
-		uint8_t num[2] = {'0','\0'};	
 		uint8_t index = 0;
-		char temp = 0;
 		//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
 		int count_bit=0;
 		int count_int = 0;//表示整数部分占用的显示位数
@@ -1811,7 +1823,6 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 		index = 16 + 8*address->len_name;
 		Show_HZ12_12(index,0,123,124);//发送
 		index += 32;
-		if(signdata_index != 0xff)
 		{
 				count_int = drawNumber(index,0,data->money[signdata_index]/100000000,8);
 				if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
@@ -1833,15 +1844,8 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 				while(Key_Flag.flag.middle == 0);
 				Key_Flag.flag.middle = 0;
 		}
-		else
-		{
-				if(data->coin == 0)
-						Asc8_16(index,0,"GAS");
-				else if(data->coin == 1)
-						Asc8_16(index,0,"NEO");
-		}
 		Fill_RAM(0x00);
-		Asc8_16(0,0,address->address);
+		Asc8_16(0,0,(uint8_t*)dst_address);
 		Show_HZ12_12(46,47,111,112);//取消
 		Show_HZ12_12(112,47,134,135);//同意
 		Show_HZ12_12(184,47,111,112);//取消
@@ -1849,19 +1853,74 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 		Key_Control(1);
 		while(1)
 		{
-				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
+				if(Display_Time_count() == 0)
+						return NEO_TIME_OUT;//超时
+				if(Key_Flag.flag.middle)
 				{
-						temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-						if(temp == 0)
+						Key_Control(0);
+						if(Display_VerifyCode() == 0)//密码正确
 						{
-								Stop_TIM(OLED_INPUT_TIME);
+								return NEO_SUCCESS;
+						}
+						else
+						{
 								return NEO_TIME_OUT;
 						}
-						num[0] = temp/10+0x30;
-						Asc8_16(210,26,num);
-						num[0] = temp%10+0x30;
-						Asc8_16(218,26,num);
 				}
+				if(Key_Flag.flag.left||Key_Flag.flag.right)
+				{
+						Key_Control(0);
+						return NEO_USER_REFUSE;	//取消
+				}
+		}
+}
+
+uint8_t Display_Sign_Nep5(SIGN_Out_Para *data,ADDRESS *address,char *dst_address)
+{
+		uint8_t index = 0;
+		//显示数目   该值为一个long long型  对应的十进制数的后八位数为小数
+		int count_bit=0;
+		int count_int = 0;//表示整数部分占用的显示位数
+		int count_dec = 8;//表示小数部分后缀的零的个数
+		Key_Control(1);
+		Fill_RAM(0x00);		
+		Show_HZ12_12(0,0,122,122);//从
+		Asc8_16(16,0,(uint8_t*)address->name);
+		index = 16 + 8*address->len_name;
+		Show_HZ12_12(index,0,123,124);//发送
+		index += 32;
+		{
+				count_int = drawNumber(index,0,data->money[1]/100000000,8);
+				if(data->money[1]%100000000)//消除值正好为100000000的显示BUG
+				{
+						Asc8_16(index+count_int*8,0,".");
+						count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[1]%100000000,8) - 1;//-1是把小数点算进去
+				}
+				if(data->money[1] == 0)//值为0的情况
+						count_dec = 8;
+				count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
+
+				if(data->coin == 2)
+						Asc8_16(count_bit,0,"NNC");
+				else if(data->coin == 3)
+						Asc8_16(count_bit,0,"CPX");
+
+				Show_HZ12_12(count_bit+28,0,125,125);//到
+				Display_Triangle(0);
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
+		}
+		Fill_RAM(0x00);
+		Asc8_16(0,0,(uint8_t*)dst_address);
+		Show_HZ12_12(46,47,111,112);//取消
+		Show_HZ12_12(112,47,134,135);//同意
+		Show_HZ12_12(184,47,111,112);//取消
+		Start_TIM(OLED_INPUT_TIME);
+		Key_Control(1);
+		while(1)
+		{
+				if(Display_Time_count() == 0)
+						return NEO_TIME_OUT;//超时
 				if(Key_Flag.flag.middle)
 				{
 						Key_Control(0);
@@ -1884,8 +1943,6 @@ uint8_t Display_SignData(SIGN_Out_Para *data,ADDRESS *address,uint8_t signdata_i
 
 uint8_t Display_Sign_Data_Type_Identify(void)
 {
-		uint8_t num[2] = {'0','\0'};
-		char temp = 0;
 		uint8_t value = 0;
 		Fill_RAM(0x00);
 		Show_HZ12_12(40,20,65,65);//不
@@ -1903,19 +1960,8 @@ uint8_t Display_Sign_Data_Type_Identify(void)
 		Start_TIM(OLED_INPUT_TIME);
 		while(1)
 		{
-				if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-				{		
-						temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-						if(temp == 0)
-						{
-								Stop_TIM(OLED_INPUT_TIME);
-								return NEO_TIME_OUT;//超时
-						}
-						num[0] = temp/10+0x30;
-						Asc8_16(210,26,num);
-						num[0] = temp%10+0x30;
-						Asc8_16(218,26,num);
-				}
+				if(Display_Time_count() == 0)
+						return NEO_TIME_OUT;//超时
 				if(Key_Flag.flag.middle)//确定
 				{
 						value = NEO_SUCCESS;

@@ -1,14 +1,20 @@
 #include "app_hal.h"
+#include "usb_device.h"
 #include "usbd_customhid.h"
 
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
+void USB_Init(void)
+{
+		MX_USB_DEVICE_Init();
+}
+
 void USB_DataReceiveHander(uint8_t * data, int len) //USB HID 接收处理函数
-{		
-		len_hid = len;
-		memmove(hid_data,data,len_hid);
-		hid_flag = 1;
+{
+		memmove(&hid_recv_data[hid_index_write].data,data,len);
+		hid_recv_data[hid_index_write].len = len;
+		hid_index_write++;
 }
 
 void SendUSBData(uint8_t *data ,int len)

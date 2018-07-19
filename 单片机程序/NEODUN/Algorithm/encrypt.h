@@ -127,5 +127,6 @@ int32_t ECCKeyPairSignGenerate(const EC_Para *ec,const InputMsg_Para *inputMsg, 
 //打印输出信息
 void prinfInfo(Sign_Para *sign, Priv_Key_Para *priv_key,Digest_Para *digest);
 
+uint8_t Alg_ECDSASignVerify(uint8_t *public_key,uint8_t *signature,uint8_t *input_msg);
 
 #endif

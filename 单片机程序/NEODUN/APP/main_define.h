@@ -4,6 +4,8 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
+#define HID_QUEUE_DEPTH					50
+
 #define FLASH_ADDRESS_SIGN_DATA	0x0801F000 //签名结果地址
 #define	FLASH_ADDRESS_SCENE		  0x0801FE00 //现场数据地址
 #define FLASH_ADDRESS_PACK		  0x08010000 //扇区4
@@ -51,6 +53,7 @@
 #define ERR_NO_SPACE_INSTALL	0x0101
 #define ERR_COIN_RUNNING			0x0102
 #define ERR_COIN_TYPE					0x0103
+#define ERR_VERIFY_FAIED			0x0104
 #define ERR_KEY_MAX_COUNT			0x0201
 #define	ERR_EXIST_KEY					0x0202
 #define	ERR_SAME_ADD_NAME			0x0203
@@ -111,15 +114,22 @@ typedef union
 {
 		struct
 		{
-				uint8_t poweron:1;				//开机密码验证标志位
+				uint8_t poweron:1;				//开机密码验证
 				uint8_t sign_data:1;			//交易签名验证标志位
-				uint8_t set_system:1;			//设置密码验证标志位
 				uint8_t add_address:1;		//增加地址验证标志位
 				uint8_t del_address:1;		//删除地址验证标志位
-				uint8_t backup_address:1;	//备份地址验证标志位
+
 		}flag;
 		uint8_t data;
 }PASSPORT_FLAG;
+
+//时间控制
+typedef struct
+{
+		uint8_t ready;								//是否需要计时
+		uint8_t time;									//计时时间
+		uint8_t timeout;							//是否超时
+}TIME_CONTROL;
 
 //系统标识
 typedef struct
@@ -135,11 +145,12 @@ typedef struct
 //HID数据解析结构体
 typedef struct
 {
-		uint32_t	dataLen;				
-		uint16_t 	packIndex;			
-		uint16_t  packCount;			
+		uint32_t	dataLen;			
+		uint16_t 	packIndex;
+		uint16_t  packCount;
 		uint16_t 	notifySerial;		
-		uint16_t	reqSerial;			
+		uint16_t	reqSerial;
+		uint8_t	  Pack_ID;
 		uint8_t 	hashRecord[32];	
 }DATA_HID_RECORD;
 
@@ -156,7 +167,7 @@ typedef struct
 //系统插件信息,缺省值为0xFFFF,
 typedef struct
 {
-		uint8_t  count;						
+		uint16_t count;						
 		uint16_t coin1;						//类型
 		uint16_t version1;				//版本
 		uint16_t coin2;
@@ -169,11 +180,31 @@ typedef struct
 		uint16_t version5;
 }COIN;
 
+typedef struct
+{
+		uint8_t randoma[32];
+		uint8_t pubkeyA[64];
+		uint8_t hashA[2];
+		uint8_t pubkeyB[64];		
+		uint8_t keyM[32];
+}SECURE_PIPE;
+
+typedef struct
+{
+	uint8_t data[64];
+	uint8_t len;
+}HID_RECV_DATA;
+
 enum TimerFunction
 {
 		OLED_INPUT_TIME = 0,
 		KEY_TIME 				= 1,
 };
+
+//HID数据
+extern volatile uint32_t hid_index_read;
+extern volatile uint32_t hid_index_write;
+extern HID_RECV_DATA hid_recv_data[HID_QUEUE_DEPTH];
 
 extern volatile 	uint32_t 	system_base_time;
 extern uint8_t					SysFlagType;
@@ -184,12 +215,9 @@ extern PASSPORT_FLAG 		Passport_Flag;
 extern DATA_HID_RECORD	HidData;
 extern ADDRESS					showaddress[5];
 extern COIN							coinrecord;
+extern SECURE_PIPE			secure_pipe;
 extern volatile 	uint32_t 	moter_delay;
 extern volatile 	uint8_t 	task_1s_flag;
-
-extern volatile int hid_flag;
-extern uint8_t hid_data[64];
-extern int len_hid;
 
 //声明ASCII库
 extern uint8_t ASC8X16[];
