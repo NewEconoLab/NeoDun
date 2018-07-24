@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using driver_win.control;
+using driver_win.helper;
 using NBitcoin;
 
 namespace driver_win.dialogs
@@ -35,8 +37,9 @@ namespace driver_win.dialogs
 
         private async void btn_Add(object sender, RoutedEventArgs e)
         {
-            string result = await driverControl.AddAddressByWif(this.label_Wif.Text.ToString());
-            if (result == "suc")
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
+            //string result = await driverControl.AddAddressByWif(this.label_Wif.Text.ToString());
+            if (result.errorCode == EnumError.AddAddressSuc)
             {
                 this.Close();
 
@@ -48,7 +51,7 @@ namespace driver_win.dialogs
             }
             else
             {
-                DialogueControl.ShowMessageDialogue(result,2,this);
+                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2,this);
             }
         }
 
@@ -89,8 +92,18 @@ namespace driver_win.dialogs
 
         private async void btn_Add2(object sender, RoutedEventArgs e)
         {
-            //var wordlist = "bleak version runway tell hour unfold donkey defy digital abuse glide please omit much cement sea sweet tenant demise taste emerge inject cause link";
-            var wordlist = this.Tb_wordlist.Text;
+            var wordlist = "cancel okay bulk depth blame hospital veteran angle method estate immense expire ball cycle sauce sheriff funny strike play among parrot hen include scale";
+
+            var a = ThinNeo.Helper.HexString2Bytes("fbcd88deffda644507dd650347918df0d2452350d3a320c0ea089c3655bd22bb090856ff72f02b0c48cd49be652df63e5e370bfbbf03798b82f9c4c6855f783d");
+            var s = System.Text.UTF8Encoding.UTF8.GetBytes("mnemonic");
+
+            s = s.Concat(new byte[] { 0,0,0,1}).ToArray();
+
+            a = UTF8Encoding.UTF8.GetBytes(wordlist);
+
+            var ss = new byte[] { 0x04,0x88,0xB2,0x1E };
+
+            //var wordlist = this.Tb_wordlist.Text;
             var words = wordlist.Split(' ');
             if (words.Length != 24)
             {
@@ -98,16 +111,17 @@ namespace driver_win.dialogs
                 return;
             }
             var mn = new NBitcoin.Mnemonic(wordlist);
-            var ext = mn.DeriveExtKey("bitcoin");
-            KeyPath kp = new KeyPath("m/888'/0'/0'/0/0");
+            var ext = mn.DeriveExtKey();
+            var sc = ext.ScriptPubKey.ToHex();
+            var root = ext.GetWif(Network.Main);
+            KeyPath kp = new KeyPath("m/44'/0'/0'/0/0");
             ext = kp.Indexes.Aggregate(ext, (current, index) => current.Derive(index));
-            //var bitcoinExtKey = ext.GetWif(Network.Main);
-            var wif = ext.PrivateKey.GetWif(Network.Main).ToString();
-            //var pk = ThinNeo.Helper.GetPrivateKeyFromWIF(wif2);
-            //var pb = ThinNeo.Helper.GetPublicKeyFromPrivateKey(pk);
+            var prk = ext.PrivateKey.GetWif(Network.Main).ToString();
+            var pk = ThinNeo.Helper.GetPrivateKeyFromWIF(prk);
+            var pb = ThinNeo.Helper.GetPublicKeyFromPrivateKey(pk);
             //var addr = ThinNeo.Helper.GetAddressFromPublicKey(pb);
 
-            string result = await driverControl.AddAddressByWif(wif);
+            string result = await driverControl.AddAddressByWif(prk);
             if (result == "suc")
             {
                 this.Close();

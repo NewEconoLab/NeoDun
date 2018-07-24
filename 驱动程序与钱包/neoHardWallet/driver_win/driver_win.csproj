@@ -136,6 +136,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="control\AddAddress.cs" />
+    <Compile Include="control\Control.cs" />
+    <Compile Include="control\DelAddress.cs" />
+    <Compile Include="control\GetAddress.cs" />
+    <Compile Include="control\GetPackageInfo.cs" />
+    <Compile Include="control\ManagerControl.cs" />
+    <Compile Include="control\SetName.cs" />
     <Compile Include="dialogs\AddressListDialogue.xaml.cs">
       <DependentUpon>AddressListDialogue.xaml</DependentUpon>
     </Compile>

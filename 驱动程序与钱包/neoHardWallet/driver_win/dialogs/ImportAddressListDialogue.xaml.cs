@@ -1,4 +1,6 @@
-﻿using System;
+﻿using driver_win.control;
+using driver_win.helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -98,8 +100,9 @@ namespace driver_win.dialogs
                 var wif = wifs[i];
                 if (this.Visibility != Visibility.Visible)
                     return;
-                var result =await driverControl.AddAddressByWif(wif);
-                if (result == "suc")
+                //var result =await driverControl.AddAddressByWif(wif);
+                Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, wif);
+                if (result.errorCode == EnumError.AddAddressSuc)
                 {
                     img_state.Visibility = Visibility.Visible;
                     BitmapImage myBitmapImage = new BitmapImage();

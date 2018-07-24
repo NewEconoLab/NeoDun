@@ -71,8 +71,6 @@ class USBHIDDriver : IDriver
                                 }
                                 else
                                 {
-                                    var epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-                                    Console.WriteLine("~~"+ epoch);
                                     _onRead(buf.Skip(1).ToArray());
                                     read = 0;
 

@@ -1,4 +1,5 @@
-﻿using driver_win.helper;
+﻿using driver_win.control;
+using driver_win.helper;
 using NBitcoin;
 using NeoDun;
 using System;
@@ -88,6 +89,7 @@ namespace driver_win.dialogs
                         ShowBalloonTip("NeoDun已经拔出");
                         _islinking = false;
                     }
+                    ManagerControl.Ins.Release();
                     ShowUnlinkPage(false);
                     DialogueControl.CloseAllWindow();
                 }
@@ -165,8 +167,8 @@ namespace driver_win.dialogs
             byte[] postdata;
             //从服务器获取固件和插件的版本信息
             var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "getneodunversion", out postdata);
-            var result = await HttpHelper.HttpPost(url, postdata);
-            var json = MyJson.Parse(result).AsDict()["result"].AsList();
+            var res = await HttpHelper.HttpPost(url, postdata);
+            var json = MyJson.Parse(res).AsDict()["result"].AsList();
 
             servicePackageInfo = new MyJson.JsonNode_Object();
             for (var i = 0; i < json.Count; i++)
@@ -175,7 +177,9 @@ namespace driver_win.dialogs
             }
 
             //获取固件插件版本号
-            MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
+            //MyJson.JsonNode_Object JA_PackageInfo = await driverControl.GetPackageInfo();
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.GetPackage);
+            MyJson.JsonNode_Object JA_PackageInfo = (MyJson.JsonNode_Object)result.data;
 
             if (JA_PackageInfo.Count > 0)
             {
@@ -264,8 +268,7 @@ namespace driver_win.dialogs
             {
                 this.Btn_Framework_update.Visibility = Visibility.Hidden;
             }
-
-            await driverControl.GetAddressList();
+            Result addressList = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
 
             AllowAllBtnClick();
         }

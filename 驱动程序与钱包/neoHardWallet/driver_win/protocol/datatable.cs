@@ -89,19 +89,16 @@ namespace NeoDun
 
         public async Task<UInt32> GetRemoteid()
         {
-            int time = 0;
             while (true)
             {
                 await Task.Delay(10);
-                time += 10;
-                if (time >= 60000)
-                    return 0;
                 if (this.dataidRemote > 0 && this.Check())
                 {
                     return this.dataidRemote;
                 }
             }
         }
+
     }
 
     public class DataTable

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using driver_win.control;
+using driver_win.helper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,15 +55,11 @@ namespace driver_win.dialogs
         private async void GetAddressList()
         {
             this.listbox.Items.Clear();
-            var address = await driverControl.GetAddressList();
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
-            //address.Add(address.ToList()[0]);
+            //var address = await driverControl.GetAddressList();
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
+            if (result.errorCode != EnumError.CommonSuc)
+                return;
+            var address = (System.Collections.Concurrent.ConcurrentBag<NeoDun.Address>)result.data;
             var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
             for (var i =0;i<address.Count;i++)
             {
@@ -76,6 +74,7 @@ namespace driver_win.dialogs
                 var btn_delete = item.FindName("delete") as Button;
                 var btn_setName = item.FindName("setName") as Button;
                 label_address.Content = add.AddressText;
+
                 if (!string.IsNullOrEmpty(add.name))
                 {
                     label_name.Text = add.name;
@@ -119,10 +118,13 @@ namespace driver_win.dialogs
             lb_msg_addr.Text = address.ToString();
             this.message.Visibility = Visibility.Visible;
 
-            string result = await driverControl.DeleteAddress(type.ToString(),address.ToString());
+            //string result = await driverControl.DeleteAddress(type.ToString(),address.ToString());
 
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.DelAddress, type.ToString(), address.ToString());
+            if (result.errorCode == EnumError.Doing)
+                return;
             this.message.Visibility = Visibility.Collapsed;
-            DialogueControl.ShowMessageDialogue(result, 1, this);
+            DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 1, this);
             GetAddressList();
         }
 
@@ -135,18 +137,14 @@ namespace driver_win.dialogs
             var name = tb.Text;
             var address = lb.Content.ToString();
             byte[] bytes_name = System.Text.Encoding.UTF8.GetBytes(name);
-            if (bytes_name.Length > 6)
-            {
-                DialogueControl.ShowMessageDialogue("名字太长",2,this);
-                return;
-            }
 
-            string result = await driverControl.SetName(address, bytes_name);
+            //string result = await driverControl.SetName(address, bytes_name);
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.SetName, address, bytes_name);
             this.gif_loading.Visibility = Visibility.Hidden;
             setName.Focus();
             setName.Visibility = Visibility.Hidden;
 
-            DialogueControl.ShowMessageDialogue(result,2,this);
+            DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2,this);
         }
 
         Button cur_setName;

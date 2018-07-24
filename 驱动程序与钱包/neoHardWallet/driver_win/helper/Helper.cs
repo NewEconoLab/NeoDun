@@ -7,8 +7,50 @@ using System.Threading.Tasks;
 
 namespace driver_win.helper
 {
-    class Helper
+    interface IControl
     {
+        Task<Result> ToDo(params object[] _params);
+        void Done(params object[] _params);
+        void Release();
+        void sendMsg(params object[] _params);
+    }
+
+    struct Result
+    {
+        public EnumError errorCode;
+        public object data;
+    }
+
+    enum EnumControl
+    {
+        GetAddress,
+        AddAddress,
+        DelAddress,
+        SetName,
+        GetPackage,
+    }
+
+
+    enum EnumError
+    {
+        Doing = 0x0000,
+
+        CommonSuc = 0x0001,
+        CommonFailed = 0x0002,
+
+        AddAddressSuc=0x02a4,
+        DelAddressSuc=0x02a3,
+        SetNameSuc = 0x2a2,
+
+        AddAddressFailed = 0x02e4,
+        DelAddressFailed = 0x02e3,
+        SetNameFailed = 0x02e2,
+
+        IncorrectWif = 0x0205,
+        DuplicateWif = 0x0203,
+
+        LongName = 0x0601,
+
     }
 
     public class HttpHelper

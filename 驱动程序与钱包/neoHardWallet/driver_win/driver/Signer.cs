@@ -1,4 +1,5 @@
-﻿using System;
+﻿using driver_win.helper;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,10 @@ namespace NeoDun
 
         public delegate void ErrorEventHandler(string _str,string _header);
         public ErrorEventHandler errorEventHandler;
+
+
+        public delegate void EventHandler(params object[] args);
+        public EventHandler eventHandler;
 
         public WatcherColl watcherColl = new WatcherColl();
 
@@ -275,19 +280,24 @@ namespace NeoDun
                 //设置地址名称失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
-                    setNameEventHandler("失败");
+                    //setNameEventHandler("失败");
+                    eventHandler(EnumError.SetNameFailed);
                 }
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
-                    if (errorEventHandler != null)
-                        delAddressEventHandler(false);
+                    eventHandler(EnumError.DelAddressFailed);
+
+                    //if (errorEventHandler != null)
+                    //    delAddressEventHandler(false);
                 }
                 //增加地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe4)
                 {
-                    if (addAddressEventHandler != null)
-                        addAddressEventHandler(false);
+                    eventHandler(EnumError.AddAddressFailed);
+
+                    //if (addAddressEventHandler != null)
+                    //    addAddressEventHandler(false);
                 }
                 //签名失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
@@ -326,43 +336,30 @@ namespace NeoDun
                 //地址接受完毕
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
-                    if (getAddressListEventHandler != null)
-                        getAddressListEventHandler();
-                    //var count = msg.readUInt16(0);
-                    //if (count == 0 && addressPool.addresses.Count != 0)
-                    //{
-                     //   InitAddressPool();
-                    //    return;
-                    //}
-                    //else if (count == 0 && addressPool.addresses.Count == 0)
-                    //{
-                    //    return;
-                    //}
-                    //while (true)
-                    //{
-                    //    if (count <= addressPool.addresses.Count)
-                    //    {
-                    //        addressUpdate = true;
-                    //        break;
-                    //    }
-                    //}
+                    eventHandler();
+                    //if (getAddressListEventHandler != null)
+                    //    getAddressListEventHandler();
                 }
                 //设置地址名称成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa2)
                 {
-                    setNameEventHandler("成功");
+                    eventHandler(EnumError.SetNameSuc);
+                    //setNameEventHandler("成功");
                 }
                 //删除地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)
                 {
-                    if (delAddressEventHandler != null)
-                        delAddressEventHandler(true);
+                    eventHandler(EnumError.DelAddressSuc);
+
+                    //if (delAddressEventHandler != null)
+                    //    delAddressEventHandler(true);
                 }
                 //增加地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
-                    if (addAddressEventHandler != null)
-                        addAddressEventHandler(true);
+                    eventHandler(EnumError.AddAddressSuc);
+                    //if (addAddressEventHandler != null)
+                    //    addAddressEventHandler(true);
                 }
                 //签名成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa5)
@@ -404,8 +401,10 @@ namespace NeoDun
                 {
                     byte[] outdata = null;
                     outdata = msg.data;
-                    if (getPackageInfoEventHandler != null)
-                        getPackageInfoEventHandler(outdata);
+
+                    eventHandler(outdata);
+                    //if (getPackageInfoEventHandler != null)
+                    //    getPackageInfoEventHandler(outdata);
                 }
                 //下位机请求更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0x11)

@@ -192,6 +192,7 @@ namespace driver_win
         #region 查询地址
         public async Task<System.Collections.Concurrent.ConcurrentBag<Address>> GetAddressList()
         {
+            Console.WriteLine(3);
             signer.InitAddressPool();
 
             NeoDun.Message msg = new NeoDun.Message();
@@ -201,7 +202,7 @@ namespace driver_win
             signer.SendMessage(msg, true);
             needLoop = true;
             int time = 0;
-            while (needLoop && time <= waitTime)
+            while (needLoop)
             {
                 await Task.Delay(100);
                 time += 100;
@@ -421,7 +422,16 @@ namespace driver_win
         public async void Sign(string str_data, string str_address)
         {
             result = new MyJson.JsonNode_Object();
-            var remoteid = await SendBlock(str_data);
+            var data = NeoDun.SignTool.HexString2Bytes(str_data);
+            var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
+            var hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
+
+            //发送待签名数据块
+            var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
+            block.data = data;
+            signer.SendDataBlock(block);
+            var __block = signer.dataTable.getBlockBySha256(hashstr);
+            uint remoteid = await __block.GetRemoteid();
  
             NeoDun.Message signMsg = new NeoDun.Message();
 
@@ -475,26 +485,6 @@ namespace driver_win
 
         }
         #endregion
-
-
-
-
-        private async Task<uint> SendBlock(string str_data)
-        {
-            var data = NeoDun.SignTool.HexString2Bytes(str_data);
-            var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
-            var hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
-
-            //发送待签名数据块
-            var block = signer.dataTable.newOrGet(hashstr, (UInt32)data.Length, NeoDun.DataBlockFrom.FromDriver);
-            block.data = data;
-            signer.SendDataBlock(block);
-            var __block = signer.dataTable.getBlockBySha256(hashstr);
-            uint remoteid = await __block.GetRemoteid();
-            __block.dataidRemote = 0;
-            if (!__block.Check()) return await SendBlock(str_data);
-            return (uint)remoteid;
-        }
 
         #region 各种失败汇总
         public delegate void ErrorEventHandlerCallBack(string msg, string header = "警告");
