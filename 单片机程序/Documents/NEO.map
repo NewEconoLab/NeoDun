@@ -133,12 +133,13 @@ Section Cross References
     showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.ReadByteLength) for ReadByteLength
     showsign.o(i.Alg_ShowSignData) refers to showsign.o(.constdata) for .constdata
     showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.ReadByteLengthIndex) for ReadByteLengthIndex
-    showsign.o(i.Alg_ShowSignData) refers to dfixl.o(.text) for __aeabi_d2lz
+    showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.Nep5CountMoney) for Nep5CountMoney
+    showsign.o(i.Alg_ShowSignData) refers to getaddress.o(i.Base58_25Bytes) for Base58_25Bytes
+    showsign.o(i.Alg_ShowSignData) refers to memmovea.o(.text) for __aeabi_memmove
+    showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.Nep5GetAssetID) for Nep5GetAssetID
     showsign.o(i.Alg_ShowSignData) refers to printf5.o(i.__0printf$5) for __2printf
     showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.GetAssetID) for GetAssetID
     showsign.o(i.Alg_ShowSignData) refers to showsign.o(i.CountMoney) for CountMoney
-    showsign.o(i.Alg_ShowSignData) refers to getaddress.o(i.Base58_25Bytes) for Base58_25Bytes
-    showsign.o(i.Alg_ShowSignData) refers to memmovea.o(.text) for __aeabi_memmove
     showsign.o(i.Ascii2Dec) refers to printf5.o(i.__0printf$5) for __2printf
     showsign.o(i.Convert2address) refers to printf5.o(i.__0printf$5) for __2printf
     showsign.o(i.Convert2address) refers to showsign.o(i.HexToDec) for HexToDec
@@ -177,6 +178,7 @@ Section Cross References
     showsign.o(i.HexToDec) refers to showsign.o(i.strupr) for strupr
     showsign.o(i.HexToDec) refers to showsign.o(i.ReverseArray) for ReverseArray
     showsign.o(i.HexToDec) refers to showsign.o(.conststring) for .conststring
+    showsign.o(i.Nep5GetAssetID) refers to memmovea.o(.text) for __aeabi_memcpy4
     showsign.o(i.ReadByteLength) refers to pow.o(i.__hardfp_pow) for __hardfp_pow
     showsign.o(i.ReadByteLength) refers to dflti.o(.text) for __aeabi_i2d
     showsign.o(i.ReadByteLength) refers to dmul.o(.text) for __aeabi_dmul
@@ -2034,63 +2036,63 @@ Image Symbol Table
     ../Src/stm32f4xx_hal_msp.c               0x00000000   Number         0  stm32f4xx_hal_msp.o ABSOLUTE
     ../Src/stm32f4xx_it.c                    0x00000000   Number         0  stm32f4xx_it.o ABSOLUTE
     ../Src/system_stm32f4xx.c                0x00000000   Number         0  system_stm32f4xx.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isprint_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isdigit_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isprint_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isblank_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalpha_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalpha_o.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
+    ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
     ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
     ../clib/microlib/stdio/fputc.c           0x00000000   Number         0  fputc.o ABSOLUTE
     ../clib/microlib/stdio/semi.s            0x00000000   Number         0  semi.o ABSOLUTE
     ../clib/microlib/stdio/streams.c         0x00000000   Number         0  stdout.o ABSOLUTE
     ../clib/microlib/string/memcmp.c         0x00000000   Number         0  memcmp.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmovea.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/string/strcmp.c         0x00000000   Number         0  strcmp.o ABSOLUTE
     ../clib/microlib/string/strcpy.c         0x00000000   Number         0  strcpy.o ABSOLUTE
@@ -2100,8 +2102,8 @@ Image Symbol Table
     ../fplib/microlib/fpadd.c                0x00000000   Number         0  dadd.o ABSOLUTE
     ../fplib/microlib/fpdiv.c                0x00000000   Number         0  ddiv.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  depilogue.o ABSOLUTE
-    ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixul.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixl.o ABSOLUTE
+    ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixul.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dflti.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dfltl.o ABSOLUTE
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  dmul.o ABSOLUTE
@@ -2112,11 +2114,11 @@ Image Symbol Table
     ../mathlib/fabs.c                        0x00000000   Number         0  fabs.o ABSOLUTE
     ../mathlib/fpclassify.c                  0x00000000   Number         0  fpclassify.o ABSOLUTE
     ../mathlib/poly.c                        0x00000000   Number         0  poly.o ABSOLUTE
-    ../mathlib/pow.c                         0x00000000   Number         0  pow_x.o ABSOLUTE
     ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
+    ../mathlib/pow.c                         0x00000000   Number         0  pow_x.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
-    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
+    ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
     ..\ATSHA204\Appatsha204\atsha204a.c      0x00000000   Number         0  atsha204a.o ABSOLUTE
     ..\ATSHA204\Atsha204_hw\bitBang_i2c.c    0x00000000   Number         0  bitbang_i2c.o ABSOLUTE
     ..\ATSHA204\lib\atca_command.c           0x00000000   Number         0  atca_command.o ABSOLUTE
@@ -2217,8 +2219,8 @@ Image Symbol Table
     .text                                    0x080607d0   Section       48  cdrcmple.o(.text)
     .text                                    0x08060800   Section       36  init.o(.text)
     .text                                    0x08060824   Section        0  dsqrt.o(.text)
-    .text                                    0x08060824   Section        0  iusesemip.o(.text)
     .text                                    0x08060824   Section        0  semi.o(.text)
+    .text                                    0x08060824   Section        0  iusesemip.o(.text)
     i.AES128_decrypt                         0x080608c8   Section        0  crypto.o(i.AES128_decrypt)
     i.AES128_encrypt                         0x08060bcc   Section        0  crypto.o(i.AES128_encrypt)
     i.AES128_keyschedule_dec                 0x08060ee0   Section        0  crypto.o(i.AES128_keyschedule_dec)
@@ -2249,233 +2251,236 @@ Image Symbol Table
     i.Alg_GetPublicFromPrivate               0x0806227c   Section        0  ecdsa.o(i.Alg_GetPublicFromPrivate)
     i.Alg_HashData                           0x080622b8   Section        0  ecdsa.o(i.Alg_HashData)
     i.Alg_ShowSignData                       0x080622dc   Section        0  showsign.o(i.Alg_ShowSignData)
-    i.Ascii2Dec                              0x08063810   Section        0  showsign.o(i.Ascii2Dec)
-    i.Base58_25Bytes                         0x080638e0   Section        0  getaddress.o(i.Base58_25Bytes)
-    i.Big_to_W8                              0x08063930   Section        0  crypto.o(i.Big_to_W8)
-    i.Big_to_fixedW8                         0x080639e4   Section        0  crypto.o(i.Big_to_fixedW8)
-    i.BusFault_Handler                       0x08063a70   Section        0  stm32f4xx_it.o(i.BusFault_Handler)
-    i.CompareBig                             0x08063a74   Section        0  crypto.o(i.CompareBig)
-    i.CopyBig                                0x08063b1c   Section        0  crypto.o(i.CopyBig)
-    i.CountBits                              0x08063bba   Section        0  crypto.o(i.CountBits)
-    i.CountMoney                             0x08063bec   Section        0  showsign.o(i.CountMoney)
-    i.Crypto_DeInit                          0x08063c8c   Section        0  crypto.o(i.Crypto_DeInit)
-    i.DES_CBC_Decrypt_Append                 0x08063c94   Section        0  crypto.o(i.DES_CBC_Decrypt_Append)
-    i.DES_CBC_Decrypt_Finish                 0x08063d58   Section        0  crypto.o(i.DES_CBC_Decrypt_Finish)
-    i.DES_CBC_Decrypt_Init                   0x08063d72   Section        0  crypto.o(i.DES_CBC_Decrypt_Init)
-    i.DESstdInit                             0x08063d78   Section        0  crypto.o(i.DESstdInit)
-    DESstdInit                               0x08063d79   Thumb Code   248  crypto.o(i.DESstdInit)
-    i.DRBG_AES128_Block_cipher_df            0x08063e70   Section        0  crypto.o(i.DRBG_AES128_Block_cipher_df)
-    DRBG_AES128_Block_cipher_df              0x08063e71   Thumb Code   378  crypto.o(i.DRBG_AES128_Block_cipher_df)
-    i.DRBG_AES128_Update                     0x08063ff0   Section        0  crypto.o(i.DRBG_AES128_Update)
-    DRBG_AES128_Update                       0x08063ff1   Thumb Code   134  crypto.o(i.DRBG_AES128_Update)
-    i.DebugMon_Handler                       0x08064076   Section        0  stm32f4xx_it.o(i.DebugMon_Handler)
-    i.DecryptData                            0x08064078   Section        0  app_interface.o(i.DecryptData)
-    i.ECCGetPublickeyFromPrivateKey_OLD      0x080641ac   Section        0  ecdsa.o(i.ECCGetPublickeyFromPrivateKey_OLD)
-    i.ECCSignGenerate                        0x08064330   Section        0  ecdsa.o(i.ECCSignGenerate)
-    i.ECCcopyPoint                           0x0806446c   Section        0  crypto.o(i.ECCcopyPoint)
-    i.ECCfreeEC                              0x080644d2   Section        0  crypto.o(i.ECCfreeEC)
-    i.ECCfreePoint                           0x0806454e   Section        0  crypto.o(i.ECCfreePoint)
-    i.ECCfreePrivKey                         0x08064590   Section        0  crypto.o(i.ECCfreePrivKey)
-    i.ECCgetPointCoordinate                  0x080645c0   Section        0  crypto.o(i.ECCgetPointCoordinate)
-    i.ECCinitEC                              0x0806467c   Section        0  crypto.o(i.ECCinitEC)
-    i.ECCinitPoint                           0x08064834   Section        0  crypto.o(i.ECCinitPoint)
-    i.ECCinitPrivKey                         0x08064904   Section        0  crypto.o(i.ECCinitPrivKey)
-    i.ECCscalarMul                           0x08064974   Section        0  crypto.o(i.ECCscalarMul)
-    i.ECCsetPointGenerator                   0x08064a60   Section        0  crypto.o(i.ECCsetPointGenerator)
-    i.ECCsetPrivKeyValue                     0x08064ae0   Section        0  crypto.o(i.ECCsetPrivKeyValue)
-    i.ECCvalidatePubKey                      0x08064b04   Section        0  crypto.o(i.ECCvalidatePubKey)
-    i.ECDSAfreeSign                          0x08064d64   Section        0  crypto.o(i.ECDSAfreeSign)
-    i.ECDSAgetSignature                      0x08064d9c   Section        0  crypto.o(i.ECDSAgetSignature)
-    i.ECDSAinitSign                          0x08064e40   Section        0  crypto.o(i.ECDSAinitSign)
-    i.ECDSAsign                              0x08064ebc   Section        0  crypto.o(i.ECDSAsign)
-    i.EC_ParaInit                            0x080654b8   Section        0  ecdsa.o(i.EC_ParaInit)
-    i.FLASH_Program_Byte                     0x08065518   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_Byte)
-    FLASH_Program_Byte                       0x08065519   Thumb Code    32  stm32f4xx_hal_flash.o(i.FLASH_Program_Byte)
-    i.FLASH_Program_DoubleWord               0x0806553c   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_DoubleWord)
-    FLASH_Program_DoubleWord                 0x0806553d   Thumb Code    40  stm32f4xx_hal_flash.o(i.FLASH_Program_DoubleWord)
-    i.FLASH_Program_HalfWord                 0x08065568   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_HalfWord)
-    FLASH_Program_HalfWord                   0x08065569   Thumb Code    36  stm32f4xx_hal_flash.o(i.FLASH_Program_HalfWord)
-    i.FLASH_Program_Word                     0x08065590   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_Word)
-    FLASH_Program_Word                       0x08065591   Thumb Code    36  stm32f4xx_hal_flash.o(i.FLASH_Program_Word)
-    i.FLASH_SetErrorCode                     0x080655b8   Section        0  stm32f4xx_hal_flash.o(i.FLASH_SetErrorCode)
-    FLASH_SetErrorCode                       0x080655b9   Thumb Code   142  stm32f4xx_hal_flash.o(i.FLASH_SetErrorCode)
-    i.FLASH_WaitForLastOperation             0x08065650   Section        0  stm32f4xx_hal_flash.o(i.FLASH_WaitForLastOperation)
-    i.FastDiv2                               0x080656b4   Section        0  crypto.o(i.FastDiv2)
-    i.GetAssetID                             0x08065718   Section        0  showsign.o(i.GetAssetID)
-    GetAssetID                               0x08065719   Thumb Code    96  showsign.o(i.GetAssetID)
-    i.Get_Privekey                           0x080657b8   Section        0  app_interface.o(i.Get_Privekey)
-    i.HAL_CRC_Init                           0x080657de   Section        0  stm32f4xx_hal_crc.o(i.HAL_CRC_Init)
-    i.HAL_CRC_MspInit                        0x08065804   Section        0  stm32f4xx_hal_msp.o(i.HAL_CRC_MspInit)
-    i.HAL_DeInit                             0x08065838   Section        0  stm32f4xx_hal.o(i.HAL_DeInit)
-    i.HAL_Delay                              0x0806587c   Section        0  stm32f4xx_hal.o(i.HAL_Delay)
-    i.HAL_FLASH_Lock                         0x0806589c   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Lock)
-    i.HAL_FLASH_Program                      0x080658b0   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Program)
-    i.HAL_FLASH_Unlock                       0x08065948   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Unlock)
-    i.HAL_GPIO_Init                          0x0806597c   Section        0  stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init)
-    i.HAL_GetTick                            0x08065b7c   Section        0  stm32f4xx_hal.o(i.HAL_GetTick)
-    i.HAL_IncTick                            0x08065b88   Section        0  stm32f4xx_hal.o(i.HAL_IncTick)
-    i.HAL_Init                               0x08065b98   Section        0  stm32f4xx_hal.o(i.HAL_Init)
-    i.HAL_InitTick                           0x08065bd4   Section        0  stm32f4xx_hal.o(i.HAL_InitTick)
-    i.HAL_MspDeInit                          0x08065bfc   Section        0  stm32f4xx_hal.o(i.HAL_MspDeInit)
-    i.HAL_MspInit                            0x08065bfe   Section        0  stm32f4xx_hal_msp.o(i.HAL_MspInit)
-    i.HAL_NVIC_DisableIRQ                    0x08065c54   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_DisableIRQ)
-    i.HAL_NVIC_SetPriority                   0x08065c70   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriority)
-    i.HAL_NVIC_SetPriorityGrouping           0x08065cec   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping)
-    i.HAL_RCC_ClockConfig                    0x08065d14   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_ClockConfig)
-    i.HAL_RCC_GetHCLKFreq                    0x08065e94   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetHCLKFreq)
-    i.HAL_RCC_GetSysClockFreq                0x08065ea0   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetSysClockFreq)
-    i.HAL_RCC_OscConfig                      0x08065f50   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig)
-    i.HAL_RNG_Init                           0x08066360   Section        0  stm32f4xx_hal_rng.o(i.HAL_RNG_Init)
-    i.HAL_RNG_MspInit                        0x08066390   Section        0  stm32f4xx_hal_msp.o(i.HAL_RNG_MspInit)
-    i.HAL_SYSTICK_CLKSourceConfig            0x080663c4   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_CLKSourceConfig)
-    i.HAL_SYSTICK_Callback                   0x080663ec   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Callback)
-    i.HAL_SYSTICK_Config                     0x080663ee   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Config)
-    i.HAL_SYSTICK_IRQHandler                 0x08066422   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_IRQHandler)
-    i.HASH_DigestCompute                     0x0806642a   Section        0  ecdsa.o(i.HASH_DigestCompute)
-    HASH_DigestCompute                       0x0806642b   Thumb Code    84  ecdsa.o(i.HASH_DigestCompute)
-    i.HardFault_Handler                      0x0806647e   Section        0  stm32f4xx_it.o(i.HardFault_Handler)
-    i.HexToString                            0x08066482   Section        0  showsign.o(i.HexToString)
-    i.InitBig                                0x080664e8   Section        0  crypto.o(i.InitBig)
-    i.LeftShift                              0x08066550   Section        0  crypto.o(i.LeftShift)
-    i.MX_CRC_Init                            0x080665e0   Section        0  main.o(i.MX_CRC_Init)
-    MX_CRC_Init                              0x080665e1   Thumb Code    26  main.o(i.MX_CRC_Init)
-    i.MX_GPIO_Init                           0x08066614   Section        0  main.o(i.MX_GPIO_Init)
-    MX_GPIO_Init                             0x08066615   Thumb Code    96  main.o(i.MX_GPIO_Init)
-    i.MX_RNG_Init                            0x08066678   Section        0  main.o(i.MX_RNG_Init)
-    MX_RNG_Init                              0x08066679   Thumb Code    26  main.o(i.MX_RNG_Init)
-    i.MemManage_Handler                      0x080666ac   Section        0  stm32f4xx_it.o(i.MemManage_Handler)
-    i.ModularAddBig                          0x080666b0   Section        0  crypto.o(i.ModularAddBig)
-    i.ModularFastMul2                        0x080666f4   Section        0  crypto.o(i.ModularFastMul2)
-    i.ModularInvBig                          0x0806677e   Section        0  crypto.o(i.ModularInvBig)
-    i.MontyExit                              0x0806699a   Section        0  crypto.o(i.MontyExit)
-    i.MontyInit                              0x080669f4   Section        0  crypto.o(i.MontyInit)
-    i.MontyJacProjAddPoints                  0x08066d5e   Section        0  crypto.o(i.MontyJacProjAddPoints)
-    i.MontyJacProjDoublePoint                0x080670dc   Section        0  crypto.o(i.MontyJacProjDoublePoint)
-    i.MontyKillAll                           0x080673e6   Section        0  crypto.o(i.MontyKillAll)
-    i.MontyMul                               0x08067418   Section        0  crypto.o(i.MontyMul)
-    i.My_DES_Decrypt                         0x08067624   Section        0  app_des.o(i.My_DES_Decrypt)
-    i.NAF_Binary_PointMul                    0x08067668   Section        0  crypto.o(i.NAF_Binary_PointMul)
-    i.NMI_Handler                            0x080679ac   Section        0  stm32f4xx_it.o(i.NMI_Handler)
-    i.NVIC_GetPriorityGrouping               0x080679b0   Section        0  stm32f4xx_hal_cortex.o(i.NVIC_GetPriorityGrouping)
-    NVIC_GetPriorityGrouping                 0x080679b1   Thumb Code    10  stm32f4xx_hal_cortex.o(i.NVIC_GetPriorityGrouping)
-    i.NVIC_SetPriority                       0x080679c0   Section        0  stm32f4xx_hal_cortex.o(i.NVIC_SetPriority)
-    NVIC_SetPriority                         0x080679c1   Thumb Code    32  stm32f4xx_hal_cortex.o(i.NVIC_SetPriority)
-    i.Normalize                              0x080679e8   Section        0  crypto.o(i.Normalize)
-    i.PendSV_Handler                         0x08067b58   Section        0  stm32f4xx_it.o(i.PendSV_Handler)
-    i.RCC_AHB1PeriphClockCmd                 0x08067b5c   Section        0  stm32f4xx_rcc.o(i.RCC_AHB1PeriphClockCmd)
-    i.RCC_AHB2PeriphClockCmd                 0x08067b7c   Section        0  stm32f4xx_rcc.o(i.RCC_AHB2PeriphClockCmd)
-    i.RCC_AHB2PeriphResetCmd                 0x08067b9c   Section        0  stm32f4xx_rcc.o(i.RCC_AHB2PeriphResetCmd)
-    i.RNG_Cmd                                0x08067bbc   Section        0  stm32f4xx_rng.o(i.RNG_Cmd)
-    i.RNG_DeInit                             0x08067be0   Section        0  stm32f4xx_rng.o(i.RNG_DeInit)
-    i.RNG_init_for_sign                      0x08067bf4   Section        0  ecdsa.o(i.RNG_init_for_sign)
-    RNG_init_for_sign                        0x08067bf5   Thumb Code    72  ecdsa.o(i.RNG_init_for_sign)
-    i.RNGfree                                0x08067c60   Section        0  crypto.o(i.RNGfree)
-    i.RNGgenBytes                            0x08067ca8   Section        0  crypto.o(i.RNGgenBytes)
-    i.RNGinit                                0x08067e7c   Section        0  crypto.o(i.RNGinit)
-    i.RcvByte                                0x08067f84   Section        0  bitbang_i2c.o(i.RcvByte)
-    RcvByte                                  0x08067f85   Thumb Code    94  bitbang_i2c.o(i.RcvByte)
-    i.ReadByteLength                         0x08067fec   Section        0  showsign.o(i.ReadByteLength)
-    i.ReadByteLengthIndex                    0x08068b24   Section        0  showsign.o(i.ReadByteLengthIndex)
-    i.SHA256Final                            0x08068b44   Section        0  crypto.o(i.SHA256Final)
-    i.SHA256Transform                        0x08068ccc   Section        0  crypto.o(i.SHA256Transform)
-    SHA256Transform                          0x08068ccd   Thumb Code   588  crypto.o(i.SHA256Transform)
-    i.SHA256Update                           0x08068f24   Section        0  crypto.o(i.SHA256Update)
-    i.SHA256_Append                          0x08068fbe   Section        0  crypto.o(i.SHA256_Append)
-    i.SHA256_Finish                          0x08068fe8   Section        0  crypto.o(i.SHA256_Finish)
-    i.SHA256_Init                            0x08069078   Section        0  crypto.o(i.SHA256_Init)
-    i.STM32_AES_ECB_Decrypt                  0x080690d4   Section        0  app_aes.o(i.STM32_AES_ECB_Decrypt)
-    i.STM32_DES_CBC_Decrypt                  0x08069138   Section        0  app_des.o(i.STM32_DES_CBC_Decrypt)
-    i.STMFLASH_Read                          0x080691a0   Section        0  stmflash.o(i.STMFLASH_Read)
-    i.STMFLASH_ReadByte                      0x080691c0   Section        0  stmflash.o(i.STMFLASH_ReadByte)
-    i.STMFLASH_ReadWord                      0x080691c6   Section        0  stmflash.o(i.STMFLASH_ReadWord)
-    i.STMFLASH_Read_ByteArray                0x080691cc   Section        0  stmflash.o(i.STMFLASH_Read_ByteArray)
-    i.STMFLASH_WriteByte                     0x080691ea   Section        0  stmflash.o(i.STMFLASH_WriteByte)
-    i.STMFLASH_WriteWord                     0x08069206   Section        0  stmflash.o(i.STMFLASH_WriteWord)
-    i.STMFLASH_Write_ByteArray               0x08069224   Section        0  stmflash.o(i.STMFLASH_Write_ByteArray)
-    i.SVC_Handler                            0x08069278   Section        0  stm32f4xx_it.o(i.SVC_Handler)
-    i.SendByte                               0x0806927c   Section        0  bitbang_i2c.o(i.SendByte)
-    SendByte                                 0x0806927d   Thumb Code   142  bitbang_i2c.o(i.SendByte)
-    i.SetZeroBig                             0x08069318   Section        0  crypto.o(i.SetZeroBig)
-    i.StAllocBig                             0x0806935e   Section        0  crypto.o(i.StAllocBig)
-    i.StFreeBig                              0x080693a0   Section        0  crypto.o(i.StFreeBig)
-    i.Start_I2c                              0x080693c4   Section        0  bitbang_i2c.o(i.Start_I2c)
-    Start_I2c                                0x080693c5   Thumb Code    54  bitbang_i2c.o(i.Start_I2c)
-    i.Stop_I2c                               0x08069404   Section        0  bitbang_i2c.o(i.Stop_I2c)
-    Stop_I2c                                 0x08069405   Thumb Code    42  bitbang_i2c.o(i.Stop_I2c)
-    i.SubBig                                 0x08069438   Section        0  crypto.o(i.SubBig)
-    i.Sub_Moduli_Big                         0x08069522   Section        0  crypto.o(i.Sub_Moduli_Big)
-    i.SysTick_Handler                        0x080696d6   Section        0  stm32f4xx_it.o(i.SysTick_Handler)
-    i.SystemClock_Config                     0x080696e4   Section        0  main.o(i.SystemClock_Config)
-    i.SystemInit                             0x080697c4   Section        0  system_stm32f4xx.o(i.SystemInit)
-    i.UsageFault_Handler                     0x08069828   Section        0  stm32f4xx_it.o(i.UsageFault_Handler)
-    i.Utils_crc32                            0x0806982c   Section        0  app_interface.o(i.Utils_crc32)
-    i.Utils_verifycrc                        0x08069868   Section        0  app_interface.o(i.Utils_verifycrc)
-    i.W8_to_Big                              0x08069898   Section        0  crypto.o(i.W8_to_Big)
-    i._Error_Handler                         0x080699de   Section        0  main.o(i._Error_Handler)
-    i.__0printf$5                            0x080699e4   Section        0  printf5.o(i.__0printf$5)
-    i.__ARM_fpclassify                       0x08069a04   Section        0  fpclassify.o(i.__ARM_fpclassify)
-    i.__delay_us                             0x08069a34   Section        0  hal_stm32_timer.o(i.__delay_us)
-    i.__hardfp_pow                           0x08069a80   Section        0  pow.o(i.__hardfp_pow)
-    i.__kernel_poly                          0x0806a6b8   Section        0  poly.o(i.__kernel_poly)
-    i.__mathlib_dbl_divzero                  0x0806a7b0   Section        0  dunder.o(i.__mathlib_dbl_divzero)
-    i.__mathlib_dbl_infnan2                  0x0806a7e0   Section        0  dunder.o(i.__mathlib_dbl_infnan2)
-    i.__mathlib_dbl_invalid                  0x0806a7f8   Section        0  dunder.o(i.__mathlib_dbl_invalid)
-    i.__mathlib_dbl_overflow                 0x0806a818   Section        0  dunder.o(i.__mathlib_dbl_overflow)
-    i.__mathlib_dbl_underflow                0x0806a838   Section        0  dunder.o(i.__mathlib_dbl_underflow)
-    i.__scatterload_copy                     0x0806a858   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x0806a866   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x0806a868   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.__set_errno                            0x0806a878   Section        0  errno.o(i.__set_errno)
-    i._atcab_exit                            0x0806a884   Section        0  atca_basic.o(i._atcab_exit)
-    _atcab_exit                              0x0806a885   Thumb Code     8  atca_basic.o(i._atcab_exit)
-    i._printf_core                           0x0806a88c   Section        0  printf5.o(i._printf_core)
-    _printf_core                             0x0806a88d   Thumb Code   658  printf5.o(i._printf_core)
-    i.atCRC                                  0x0806ab4c   Section        0  atca_command.o(i.atCRC)
-    i.atCalcCrc                              0x0806abac   Section        0  atca_command.o(i.atCalcCrc)
-    i.atGetExecTime                          0x0806abc8   Section        0  atca_command.o(i.atGetExecTime)
-    i.atMAC                                  0x0806abd8   Section        0  atca_command.o(i.atMAC)
-    i.atRead                                 0x0806ac02   Section        0  atca_command.o(i.atRead)
-    i.atca_delay_ms                          0x0806ac2e   Section        0  hal_stm32_timer.o(i.atca_delay_ms)
-    i.atcab_get_addr                         0x0806ac3a   Section        0  atca_basic.o(i.atcab_get_addr)
-    i.atcab_idle                             0x0806ac96   Section        0  atca_basic.o(i.atcab_idle)
-    i.atcab_is_locked                        0x0806ac9e   Section        0  atca_basic.o(i.atcab_is_locked)
-    i.atcab_mac                              0x0806ad02   Section        0  atca_basic.o(i.atcab_mac)
-    i.atcab_read_serial_number               0x0806addc   Section        0  atca_basic.o(i.atcab_read_serial_number)
-    i.atcab_read_zone                        0x0806ae1e   Section        0  atca_basic.o(i.atcab_read_zone)
-    i.atcab_wakeup                           0x0806af0a   Section        0  atca_basic.o(i.atcab_wakeup)
-    i.atidle                                 0x0806af12   Section        0  atca_iface_stm32_i2c.o(i.atidle)
-    i.atreceive                              0x0806af2e   Section        0  atca_iface_stm32_i2c.o(i.atreceive)
-    i.atsend                                 0x0806af44   Section        0  atca_iface_stm32_i2c.o(i.atsend)
-    i.atwake                                 0x0806af60   Section        0  atca_iface_stm32_i2c.o(i.atwake)
-    i.crl_DRBG_AES128_Generate               0x0806afa0   Section        0  crypto.o(i.crl_DRBG_AES128_Generate)
-    i.desfunc                                0x0806b164   Section        0  crypto.o(i.desfunc)
-    desfunc                                  0x0806b165   Thumb Code   464  crypto.o(i.desfunc)
-    i.deskey                                 0x0806b340   Section        0  crypto.o(i.deskey)
-    deskey                                   0x0806b341   Thumb Code   480  crypto.o(i.deskey)
-    i.fabs                                   0x0806b5a0   Section        0  fabs.o(i.fabs)
-    i.fputc                                  0x0806b5b8   Section        0  fputc.o(i.fputc)
-    i.isATCAError                            0x0806b5cc   Section        0  atca_command.o(i.isATCAError)
-    i.jump_to_app                            0x0806b628   Section        0  main.o(i.jump_to_app)
-    i.main                                   0x0806b660   Section        0  main.o(i.main)
-    i.make_table                             0x0806b934   Section        0  app_interface.o(i.make_table)
-    make_table                               0x0806b935   Thumb Code    68  app_interface.o(i.make_table)
-    i.sqrt                                   0x0806b984   Section        0  sqrt.o(i.sqrt)
-    i.test_assert_data_is_locked             0x0806b9f2   Section        0  atsha204a.o(i.test_assert_data_is_locked)
-    test_assert_data_is_locked               0x0806b9f3   Thumb Code    36  atsha204a.o(i.test_assert_data_is_locked)
-    .constdata                               0x0806ba18   Section      291  ecdsa.o(.constdata)
-    .constdata                               0x0806bb3c   Section      516  showsign.o(.constdata)
-    .constdata                               0x0806bd40   Section       24  system_stm32f4xx.o(.constdata)
-    .constdata                               0x0806bd58   Section     6040  crypto.o(.constdata)
-    table_reduction8                         0x0806c780   Data         512  crypto.o(.constdata)
-    table_reduction4                         0x0806c980   Data          32  crypto.o(.constdata)
-    pad                                      0x0806d310   Data          64  crypto.o(.constdata)
-    .constdata                               0x0806d4f0   Section      136  pow.o(.constdata)
-    bp                                       0x0806d4f0   Data          16  pow.o(.constdata)
-    dp_h                                     0x0806d500   Data          16  pow.o(.constdata)
-    dp_l                                     0x0806d510   Data          16  pow.o(.constdata)
-    L                                        0x0806d520   Data          48  pow.o(.constdata)
-    P                                        0x0806d550   Data          40  pow.o(.constdata)
-    .constdata                               0x0806d578   Section        8  qnan.o(.constdata)
+    i.Ascii2Dec                              0x080632d8   Section        0  showsign.o(i.Ascii2Dec)
+    i.Base58_25Bytes                         0x080633a8   Section        0  getaddress.o(i.Base58_25Bytes)
+    i.Big_to_W8                              0x080633f8   Section        0  crypto.o(i.Big_to_W8)
+    i.Big_to_fixedW8                         0x080634ac   Section        0  crypto.o(i.Big_to_fixedW8)
+    i.BusFault_Handler                       0x08063538   Section        0  stm32f4xx_it.o(i.BusFault_Handler)
+    i.CompareBig                             0x0806353c   Section        0  crypto.o(i.CompareBig)
+    i.CopyBig                                0x080635e4   Section        0  crypto.o(i.CopyBig)
+    i.CountBits                              0x08063682   Section        0  crypto.o(i.CountBits)
+    i.CountMoney                             0x080636b4   Section        0  showsign.o(i.CountMoney)
+    i.Crypto_DeInit                          0x08063754   Section        0  crypto.o(i.Crypto_DeInit)
+    i.DES_CBC_Decrypt_Append                 0x0806375c   Section        0  crypto.o(i.DES_CBC_Decrypt_Append)
+    i.DES_CBC_Decrypt_Finish                 0x08063820   Section        0  crypto.o(i.DES_CBC_Decrypt_Finish)
+    i.DES_CBC_Decrypt_Init                   0x0806383a   Section        0  crypto.o(i.DES_CBC_Decrypt_Init)
+    i.DESstdInit                             0x08063840   Section        0  crypto.o(i.DESstdInit)
+    DESstdInit                               0x08063841   Thumb Code   248  crypto.o(i.DESstdInit)
+    i.DRBG_AES128_Block_cipher_df            0x08063938   Section        0  crypto.o(i.DRBG_AES128_Block_cipher_df)
+    DRBG_AES128_Block_cipher_df              0x08063939   Thumb Code   378  crypto.o(i.DRBG_AES128_Block_cipher_df)
+    i.DRBG_AES128_Update                     0x08063ab8   Section        0  crypto.o(i.DRBG_AES128_Update)
+    DRBG_AES128_Update                       0x08063ab9   Thumb Code   134  crypto.o(i.DRBG_AES128_Update)
+    i.DebugMon_Handler                       0x08063b3e   Section        0  stm32f4xx_it.o(i.DebugMon_Handler)
+    i.DecryptData                            0x08063b40   Section        0  app_interface.o(i.DecryptData)
+    i.ECCGetPublickeyFromPrivateKey_OLD      0x08063c74   Section        0  ecdsa.o(i.ECCGetPublickeyFromPrivateKey_OLD)
+    i.ECCSignGenerate                        0x08063df8   Section        0  ecdsa.o(i.ECCSignGenerate)
+    i.ECCcopyPoint                           0x08063f34   Section        0  crypto.o(i.ECCcopyPoint)
+    i.ECCfreeEC                              0x08063f9a   Section        0  crypto.o(i.ECCfreeEC)
+    i.ECCfreePoint                           0x08064016   Section        0  crypto.o(i.ECCfreePoint)
+    i.ECCfreePrivKey                         0x08064058   Section        0  crypto.o(i.ECCfreePrivKey)
+    i.ECCgetPointCoordinate                  0x08064088   Section        0  crypto.o(i.ECCgetPointCoordinate)
+    i.ECCinitEC                              0x08064144   Section        0  crypto.o(i.ECCinitEC)
+    i.ECCinitPoint                           0x080642fc   Section        0  crypto.o(i.ECCinitPoint)
+    i.ECCinitPrivKey                         0x080643cc   Section        0  crypto.o(i.ECCinitPrivKey)
+    i.ECCscalarMul                           0x0806443c   Section        0  crypto.o(i.ECCscalarMul)
+    i.ECCsetPointGenerator                   0x08064528   Section        0  crypto.o(i.ECCsetPointGenerator)
+    i.ECCsetPrivKeyValue                     0x080645a8   Section        0  crypto.o(i.ECCsetPrivKeyValue)
+    i.ECCvalidatePubKey                      0x080645cc   Section        0  crypto.o(i.ECCvalidatePubKey)
+    i.ECDSAfreeSign                          0x0806482c   Section        0  crypto.o(i.ECDSAfreeSign)
+    i.ECDSAgetSignature                      0x08064864   Section        0  crypto.o(i.ECDSAgetSignature)
+    i.ECDSAinitSign                          0x08064908   Section        0  crypto.o(i.ECDSAinitSign)
+    i.ECDSAsign                              0x08064984   Section        0  crypto.o(i.ECDSAsign)
+    i.EC_ParaInit                            0x08064f80   Section        0  ecdsa.o(i.EC_ParaInit)
+    i.FLASH_Program_Byte                     0x08064fe0   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_Byte)
+    FLASH_Program_Byte                       0x08064fe1   Thumb Code    32  stm32f4xx_hal_flash.o(i.FLASH_Program_Byte)
+    i.FLASH_Program_DoubleWord               0x08065004   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_DoubleWord)
+    FLASH_Program_DoubleWord                 0x08065005   Thumb Code    40  stm32f4xx_hal_flash.o(i.FLASH_Program_DoubleWord)
+    i.FLASH_Program_HalfWord                 0x08065030   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_HalfWord)
+    FLASH_Program_HalfWord                   0x08065031   Thumb Code    36  stm32f4xx_hal_flash.o(i.FLASH_Program_HalfWord)
+    i.FLASH_Program_Word                     0x08065058   Section        0  stm32f4xx_hal_flash.o(i.FLASH_Program_Word)
+    FLASH_Program_Word                       0x08065059   Thumb Code    36  stm32f4xx_hal_flash.o(i.FLASH_Program_Word)
+    i.FLASH_SetErrorCode                     0x08065080   Section        0  stm32f4xx_hal_flash.o(i.FLASH_SetErrorCode)
+    FLASH_SetErrorCode                       0x08065081   Thumb Code   142  stm32f4xx_hal_flash.o(i.FLASH_SetErrorCode)
+    i.FLASH_WaitForLastOperation             0x08065118   Section        0  stm32f4xx_hal_flash.o(i.FLASH_WaitForLastOperation)
+    i.FastDiv2                               0x0806517c   Section        0  crypto.o(i.FastDiv2)
+    i.GetAssetID                             0x080651e0   Section        0  showsign.o(i.GetAssetID)
+    GetAssetID                               0x080651e1   Thumb Code    96  showsign.o(i.GetAssetID)
+    i.Get_Privekey                           0x08065280   Section        0  app_interface.o(i.Get_Privekey)
+    i.HAL_CRC_Init                           0x080652a6   Section        0  stm32f4xx_hal_crc.o(i.HAL_CRC_Init)
+    i.HAL_CRC_MspInit                        0x080652cc   Section        0  stm32f4xx_hal_msp.o(i.HAL_CRC_MspInit)
+    i.HAL_DeInit                             0x08065300   Section        0  stm32f4xx_hal.o(i.HAL_DeInit)
+    i.HAL_Delay                              0x08065344   Section        0  stm32f4xx_hal.o(i.HAL_Delay)
+    i.HAL_FLASH_Lock                         0x08065364   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Lock)
+    i.HAL_FLASH_Program                      0x08065378   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Program)
+    i.HAL_FLASH_Unlock                       0x08065410   Section        0  stm32f4xx_hal_flash.o(i.HAL_FLASH_Unlock)
+    i.HAL_GPIO_Init                          0x08065444   Section        0  stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init)
+    i.HAL_GetTick                            0x08065644   Section        0  stm32f4xx_hal.o(i.HAL_GetTick)
+    i.HAL_IncTick                            0x08065650   Section        0  stm32f4xx_hal.o(i.HAL_IncTick)
+    i.HAL_Init                               0x08065660   Section        0  stm32f4xx_hal.o(i.HAL_Init)
+    i.HAL_InitTick                           0x0806569c   Section        0  stm32f4xx_hal.o(i.HAL_InitTick)
+    i.HAL_MspDeInit                          0x080656c4   Section        0  stm32f4xx_hal.o(i.HAL_MspDeInit)
+    i.HAL_MspInit                            0x080656c6   Section        0  stm32f4xx_hal_msp.o(i.HAL_MspInit)
+    i.HAL_NVIC_DisableIRQ                    0x0806571c   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_DisableIRQ)
+    i.HAL_NVIC_SetPriority                   0x08065738   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriority)
+    i.HAL_NVIC_SetPriorityGrouping           0x080657b4   Section        0  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping)
+    i.HAL_RCC_ClockConfig                    0x080657dc   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_ClockConfig)
+    i.HAL_RCC_GetHCLKFreq                    0x0806595c   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetHCLKFreq)
+    i.HAL_RCC_GetSysClockFreq                0x08065968   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetSysClockFreq)
+    i.HAL_RCC_OscConfig                      0x08065a18   Section        0  stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig)
+    i.HAL_RNG_Init                           0x08065e28   Section        0  stm32f4xx_hal_rng.o(i.HAL_RNG_Init)
+    i.HAL_RNG_MspInit                        0x08065e58   Section        0  stm32f4xx_hal_msp.o(i.HAL_RNG_MspInit)
+    i.HAL_SYSTICK_CLKSourceConfig            0x08065e8c   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_CLKSourceConfig)
+    i.HAL_SYSTICK_Callback                   0x08065eb4   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Callback)
+    i.HAL_SYSTICK_Config                     0x08065eb6   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Config)
+    i.HAL_SYSTICK_IRQHandler                 0x08065eea   Section        0  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_IRQHandler)
+    i.HASH_DigestCompute                     0x08065ef2   Section        0  ecdsa.o(i.HASH_DigestCompute)
+    HASH_DigestCompute                       0x08065ef3   Thumb Code    84  ecdsa.o(i.HASH_DigestCompute)
+    i.HardFault_Handler                      0x08065f46   Section        0  stm32f4xx_it.o(i.HardFault_Handler)
+    i.HexToString                            0x08065f4a   Section        0  showsign.o(i.HexToString)
+    i.InitBig                                0x08065fb0   Section        0  crypto.o(i.InitBig)
+    i.LeftShift                              0x08066018   Section        0  crypto.o(i.LeftShift)
+    i.MX_CRC_Init                            0x080660a8   Section        0  main.o(i.MX_CRC_Init)
+    MX_CRC_Init                              0x080660a9   Thumb Code    26  main.o(i.MX_CRC_Init)
+    i.MX_GPIO_Init                           0x080660dc   Section        0  main.o(i.MX_GPIO_Init)
+    MX_GPIO_Init                             0x080660dd   Thumb Code    96  main.o(i.MX_GPIO_Init)
+    i.MX_RNG_Init                            0x08066140   Section        0  main.o(i.MX_RNG_Init)
+    MX_RNG_Init                              0x08066141   Thumb Code    26  main.o(i.MX_RNG_Init)
+    i.MemManage_Handler                      0x08066174   Section        0  stm32f4xx_it.o(i.MemManage_Handler)
+    i.ModularAddBig                          0x08066178   Section        0  crypto.o(i.ModularAddBig)
+    i.ModularFastMul2                        0x080661bc   Section        0  crypto.o(i.ModularFastMul2)
+    i.ModularInvBig                          0x08066246   Section        0  crypto.o(i.ModularInvBig)
+    i.MontyExit                              0x08066462   Section        0  crypto.o(i.MontyExit)
+    i.MontyInit                              0x080664bc   Section        0  crypto.o(i.MontyInit)
+    i.MontyJacProjAddPoints                  0x08066826   Section        0  crypto.o(i.MontyJacProjAddPoints)
+    i.MontyJacProjDoublePoint                0x08066ba4   Section        0  crypto.o(i.MontyJacProjDoublePoint)
+    i.MontyKillAll                           0x08066eae   Section        0  crypto.o(i.MontyKillAll)
+    i.MontyMul                               0x08066ee0   Section        0  crypto.o(i.MontyMul)
+    i.My_DES_Decrypt                         0x080670ec   Section        0  app_des.o(i.My_DES_Decrypt)
+    i.NAF_Binary_PointMul                    0x08067130   Section        0  crypto.o(i.NAF_Binary_PointMul)
+    i.NMI_Handler                            0x08067474   Section        0  stm32f4xx_it.o(i.NMI_Handler)
+    i.NVIC_GetPriorityGrouping               0x08067478   Section        0  stm32f4xx_hal_cortex.o(i.NVIC_GetPriorityGrouping)
+    NVIC_GetPriorityGrouping                 0x08067479   Thumb Code    10  stm32f4xx_hal_cortex.o(i.NVIC_GetPriorityGrouping)
+    i.NVIC_SetPriority                       0x08067488   Section        0  stm32f4xx_hal_cortex.o(i.NVIC_SetPriority)
+    NVIC_SetPriority                         0x08067489   Thumb Code    32  stm32f4xx_hal_cortex.o(i.NVIC_SetPriority)
+    i.Nep5CountMoney                         0x080674b0   Section        0  showsign.o(i.Nep5CountMoney)
+    i.Nep5GetAssetID                         0x080674d8   Section        0  showsign.o(i.Nep5GetAssetID)
+    Nep5GetAssetID                           0x080674d9   Thumb Code   104  showsign.o(i.Nep5GetAssetID)
+    i.Normalize                              0x08067568   Section        0  crypto.o(i.Normalize)
+    i.PendSV_Handler                         0x080676d8   Section        0  stm32f4xx_it.o(i.PendSV_Handler)
+    i.RCC_AHB1PeriphClockCmd                 0x080676dc   Section        0  stm32f4xx_rcc.o(i.RCC_AHB1PeriphClockCmd)
+    i.RCC_AHB2PeriphClockCmd                 0x080676fc   Section        0  stm32f4xx_rcc.o(i.RCC_AHB2PeriphClockCmd)
+    i.RCC_AHB2PeriphResetCmd                 0x0806771c   Section        0  stm32f4xx_rcc.o(i.RCC_AHB2PeriphResetCmd)
+    i.RNG_Cmd                                0x0806773c   Section        0  stm32f4xx_rng.o(i.RNG_Cmd)
+    i.RNG_DeInit                             0x08067760   Section        0  stm32f4xx_rng.o(i.RNG_DeInit)
+    i.RNG_init_for_sign                      0x08067774   Section        0  ecdsa.o(i.RNG_init_for_sign)
+    RNG_init_for_sign                        0x08067775   Thumb Code    72  ecdsa.o(i.RNG_init_for_sign)
+    i.RNGfree                                0x080677e0   Section        0  crypto.o(i.RNGfree)
+    i.RNGgenBytes                            0x08067828   Section        0  crypto.o(i.RNGgenBytes)
+    i.RNGinit                                0x080679fc   Section        0  crypto.o(i.RNGinit)
+    i.RcvByte                                0x08067b04   Section        0  bitbang_i2c.o(i.RcvByte)
+    RcvByte                                  0x08067b05   Thumb Code    94  bitbang_i2c.o(i.RcvByte)
+    i.ReadByteLength                         0x08067b6c   Section        0  showsign.o(i.ReadByteLength)
+    i.ReadByteLengthIndex                    0x080686a4   Section        0  showsign.o(i.ReadByteLengthIndex)
+    i.SHA256Final                            0x080686c4   Section        0  crypto.o(i.SHA256Final)
+    i.SHA256Transform                        0x0806884c   Section        0  crypto.o(i.SHA256Transform)
+    SHA256Transform                          0x0806884d   Thumb Code   588  crypto.o(i.SHA256Transform)
+    i.SHA256Update                           0x08068aa4   Section        0  crypto.o(i.SHA256Update)
+    i.SHA256_Append                          0x08068b3e   Section        0  crypto.o(i.SHA256_Append)
+    i.SHA256_Finish                          0x08068b68   Section        0  crypto.o(i.SHA256_Finish)
+    i.SHA256_Init                            0x08068bf8   Section        0  crypto.o(i.SHA256_Init)
+    i.STM32_AES_ECB_Decrypt                  0x08068c54   Section        0  app_aes.o(i.STM32_AES_ECB_Decrypt)
+    i.STM32_DES_CBC_Decrypt                  0x08068cb8   Section        0  app_des.o(i.STM32_DES_CBC_Decrypt)
+    i.STMFLASH_Read                          0x08068d20   Section        0  stmflash.o(i.STMFLASH_Read)
+    i.STMFLASH_ReadByte                      0x08068d40   Section        0  stmflash.o(i.STMFLASH_ReadByte)
+    i.STMFLASH_ReadWord                      0x08068d46   Section        0  stmflash.o(i.STMFLASH_ReadWord)
+    i.STMFLASH_Read_ByteArray                0x08068d4c   Section        0  stmflash.o(i.STMFLASH_Read_ByteArray)
+    i.STMFLASH_WriteByte                     0x08068d6a   Section        0  stmflash.o(i.STMFLASH_WriteByte)
+    i.STMFLASH_WriteWord                     0x08068d86   Section        0  stmflash.o(i.STMFLASH_WriteWord)
+    i.STMFLASH_Write_ByteArray               0x08068da4   Section        0  stmflash.o(i.STMFLASH_Write_ByteArray)
+    i.SVC_Handler                            0x08068df8   Section        0  stm32f4xx_it.o(i.SVC_Handler)
+    i.SendByte                               0x08068dfc   Section        0  bitbang_i2c.o(i.SendByte)
+    SendByte                                 0x08068dfd   Thumb Code   142  bitbang_i2c.o(i.SendByte)
+    i.SetZeroBig                             0x08068e98   Section        0  crypto.o(i.SetZeroBig)
+    i.StAllocBig                             0x08068ede   Section        0  crypto.o(i.StAllocBig)
+    i.StFreeBig                              0x08068f20   Section        0  crypto.o(i.StFreeBig)
+    i.Start_I2c                              0x08068f44   Section        0  bitbang_i2c.o(i.Start_I2c)
+    Start_I2c                                0x08068f45   Thumb Code    54  bitbang_i2c.o(i.Start_I2c)
+    i.Stop_I2c                               0x08068f84   Section        0  bitbang_i2c.o(i.Stop_I2c)
+    Stop_I2c                                 0x08068f85   Thumb Code    42  bitbang_i2c.o(i.Stop_I2c)
+    i.SubBig                                 0x08068fb8   Section        0  crypto.o(i.SubBig)
+    i.Sub_Moduli_Big                         0x080690a2   Section        0  crypto.o(i.Sub_Moduli_Big)
+    i.SysTick_Handler                        0x08069256   Section        0  stm32f4xx_it.o(i.SysTick_Handler)
+    i.SystemClock_Config                     0x08069264   Section        0  main.o(i.SystemClock_Config)
+    i.SystemInit                             0x08069344   Section        0  system_stm32f4xx.o(i.SystemInit)
+    i.UsageFault_Handler                     0x080693a8   Section        0  stm32f4xx_it.o(i.UsageFault_Handler)
+    i.Utils_crc32                            0x080693ac   Section        0  app_interface.o(i.Utils_crc32)
+    i.Utils_verifycrc                        0x080693e8   Section        0  app_interface.o(i.Utils_verifycrc)
+    i.W8_to_Big                              0x08069418   Section        0  crypto.o(i.W8_to_Big)
+    i._Error_Handler                         0x0806955e   Section        0  main.o(i._Error_Handler)
+    i.__0printf$5                            0x08069564   Section        0  printf5.o(i.__0printf$5)
+    i.__ARM_fpclassify                       0x08069584   Section        0  fpclassify.o(i.__ARM_fpclassify)
+    i.__delay_us                             0x080695b4   Section        0  hal_stm32_timer.o(i.__delay_us)
+    i.__hardfp_pow                           0x08069600   Section        0  pow.o(i.__hardfp_pow)
+    i.__kernel_poly                          0x0806a238   Section        0  poly.o(i.__kernel_poly)
+    i.__mathlib_dbl_divzero                  0x0806a330   Section        0  dunder.o(i.__mathlib_dbl_divzero)
+    i.__mathlib_dbl_infnan2                  0x0806a360   Section        0  dunder.o(i.__mathlib_dbl_infnan2)
+    i.__mathlib_dbl_invalid                  0x0806a378   Section        0  dunder.o(i.__mathlib_dbl_invalid)
+    i.__mathlib_dbl_overflow                 0x0806a398   Section        0  dunder.o(i.__mathlib_dbl_overflow)
+    i.__mathlib_dbl_underflow                0x0806a3b8   Section        0  dunder.o(i.__mathlib_dbl_underflow)
+    i.__scatterload_copy                     0x0806a3d8   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x0806a3e6   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x0806a3e8   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.__set_errno                            0x0806a3f8   Section        0  errno.o(i.__set_errno)
+    i._atcab_exit                            0x0806a404   Section        0  atca_basic.o(i._atcab_exit)
+    _atcab_exit                              0x0806a405   Thumb Code     8  atca_basic.o(i._atcab_exit)
+    i._printf_core                           0x0806a40c   Section        0  printf5.o(i._printf_core)
+    _printf_core                             0x0806a40d   Thumb Code   658  printf5.o(i._printf_core)
+    i.atCRC                                  0x0806a6cc   Section        0  atca_command.o(i.atCRC)
+    i.atCalcCrc                              0x0806a72c   Section        0  atca_command.o(i.atCalcCrc)
+    i.atGetExecTime                          0x0806a748   Section        0  atca_command.o(i.atGetExecTime)
+    i.atMAC                                  0x0806a758   Section        0  atca_command.o(i.atMAC)
+    i.atRead                                 0x0806a782   Section        0  atca_command.o(i.atRead)
+    i.atca_delay_ms                          0x0806a7ae   Section        0  hal_stm32_timer.o(i.atca_delay_ms)
+    i.atcab_get_addr                         0x0806a7ba   Section        0  atca_basic.o(i.atcab_get_addr)
+    i.atcab_idle                             0x0806a816   Section        0  atca_basic.o(i.atcab_idle)
+    i.atcab_is_locked                        0x0806a81e   Section        0  atca_basic.o(i.atcab_is_locked)
+    i.atcab_mac                              0x0806a882   Section        0  atca_basic.o(i.atcab_mac)
+    i.atcab_read_serial_number               0x0806a95c   Section        0  atca_basic.o(i.atcab_read_serial_number)
+    i.atcab_read_zone                        0x0806a99e   Section        0  atca_basic.o(i.atcab_read_zone)
+    i.atcab_wakeup                           0x0806aa8a   Section        0  atca_basic.o(i.atcab_wakeup)
+    i.atidle                                 0x0806aa92   Section        0  atca_iface_stm32_i2c.o(i.atidle)
+    i.atreceive                              0x0806aaae   Section        0  atca_iface_stm32_i2c.o(i.atreceive)
+    i.atsend                                 0x0806aac4   Section        0  atca_iface_stm32_i2c.o(i.atsend)
+    i.atwake                                 0x0806aae0   Section        0  atca_iface_stm32_i2c.o(i.atwake)
+    i.crl_DRBG_AES128_Generate               0x0806ab20   Section        0  crypto.o(i.crl_DRBG_AES128_Generate)
+    i.desfunc                                0x0806ace4   Section        0  crypto.o(i.desfunc)
+    desfunc                                  0x0806ace5   Thumb Code   464  crypto.o(i.desfunc)
+    i.deskey                                 0x0806aec0   Section        0  crypto.o(i.deskey)
+    deskey                                   0x0806aec1   Thumb Code   480  crypto.o(i.deskey)
+    i.fabs                                   0x0806b120   Section        0  fabs.o(i.fabs)
+    i.fputc                                  0x0806b138   Section        0  fputc.o(i.fputc)
+    i.isATCAError                            0x0806b14c   Section        0  atca_command.o(i.isATCAError)
+    i.jump_to_app                            0x0806b1a8   Section        0  main.o(i.jump_to_app)
+    i.main                                   0x0806b1e0   Section        0  main.o(i.main)
+    i.make_table                             0x0806b4b4   Section        0  app_interface.o(i.make_table)
+    make_table                               0x0806b4b5   Thumb Code    68  app_interface.o(i.make_table)
+    i.sqrt                                   0x0806b504   Section        0  sqrt.o(i.sqrt)
+    i.test_assert_data_is_locked             0x0806b572   Section        0  atsha204a.o(i.test_assert_data_is_locked)
+    test_assert_data_is_locked               0x0806b573   Thumb Code    36  atsha204a.o(i.test_assert_data_is_locked)
+    .constdata                               0x0806b598   Section      291  ecdsa.o(.constdata)
+    .constdata                               0x0806b6bc   Section      516  showsign.o(.constdata)
+    .constdata                               0x0806b8c0   Section       24  system_stm32f4xx.o(.constdata)
+    .constdata                               0x0806b8d8   Section     6040  crypto.o(.constdata)
+    table_reduction8                         0x0806c300   Data         512  crypto.o(.constdata)
+    table_reduction4                         0x0806c500   Data          32  crypto.o(.constdata)
+    pad                                      0x0806ce90   Data          64  crypto.o(.constdata)
+    .constdata                               0x0806d070   Section      136  pow.o(.constdata)
+    bp                                       0x0806d070   Data          16  pow.o(.constdata)
+    dp_h                                     0x0806d080   Data          16  pow.o(.constdata)
+    dp_l                                     0x0806d090   Data          16  pow.o(.constdata)
+    L                                        0x0806d0a0   Data          48  pow.o(.constdata)
+    P                                        0x0806d0d0   Data          40  pow.o(.constdata)
+    .constdata                               0x0806d0f8   Section        8  qnan.o(.constdata)
     .data                                    0x20000000   Section        1  app_interface.o(.data)
     have_table                               0x20000000   Data           1  app_interface.o(.data)
     .data                                    0x20000004   Section        4  system_stm32f4xx.o(.data)
@@ -2708,193 +2713,194 @@ Image Symbol Table
     Alg_ECDSASignData                        0x080621f5   Thumb Code   126  ecdsa.o(i.Alg_ECDSASignData)
     Alg_GetPublicFromPrivate                 0x0806227d   Thumb Code    60  ecdsa.o(i.Alg_GetPublicFromPrivate)
     Alg_HashData                             0x080622b9   Thumb Code    36  ecdsa.o(i.Alg_HashData)
-    Alg_ShowSignData                         0x080622dd   Thumb Code  5404  showsign.o(i.Alg_ShowSignData)
-    Ascii2Dec                                0x08063811   Thumb Code   184  showsign.o(i.Ascii2Dec)
-    Base58_25Bytes                           0x080638e1   Thumb Code    80  getaddress.o(i.Base58_25Bytes)
-    Big_to_W8                                0x08063931   Thumb Code   180  crypto.o(i.Big_to_W8)
-    Big_to_fixedW8                           0x080639e5   Thumb Code   140  crypto.o(i.Big_to_fixedW8)
-    BusFault_Handler                         0x08063a71   Thumb Code     4  stm32f4xx_it.o(i.BusFault_Handler)
-    CompareBig                               0x08063a75   Thumb Code   166  crypto.o(i.CompareBig)
-    CopyBig                                  0x08063b1d   Thumb Code   158  crypto.o(i.CopyBig)
-    CountBits                                0x08063bbb   Thumb Code    48  crypto.o(i.CountBits)
-    CountMoney                               0x08063bed   Thumb Code   150  showsign.o(i.CountMoney)
-    Crypto_DeInit                            0x08063c8d   Thumb Code     8  crypto.o(i.Crypto_DeInit)
-    DES_CBC_Decrypt_Append                   0x08063c95   Thumb Code   196  crypto.o(i.DES_CBC_Decrypt_Append)
-    DES_CBC_Decrypt_Finish                   0x08063d59   Thumb Code    26  crypto.o(i.DES_CBC_Decrypt_Finish)
-    DES_CBC_Decrypt_Init                     0x08063d73   Thumb Code     6  crypto.o(i.DES_CBC_Decrypt_Init)
-    DebugMon_Handler                         0x08064077   Thumb Code     2  stm32f4xx_it.o(i.DebugMon_Handler)
-    DecryptData                              0x08064079   Thumb Code   308  app_interface.o(i.DecryptData)
-    ECCGetPublickeyFromPrivateKey_OLD        0x080641ad   Thumb Code   350  ecdsa.o(i.ECCGetPublickeyFromPrivateKey_OLD)
-    ECCSignGenerate                          0x08064331   Thumb Code   310  ecdsa.o(i.ECCSignGenerate)
-    ECCcopyPoint                             0x0806446d   Thumb Code   102  crypto.o(i.ECCcopyPoint)
-    ECCfreeEC                                0x080644d3   Thumb Code   124  crypto.o(i.ECCfreeEC)
-    ECCfreePoint                             0x0806454f   Thumb Code    66  crypto.o(i.ECCfreePoint)
-    ECCfreePrivKey                           0x08064591   Thumb Code    46  crypto.o(i.ECCfreePrivKey)
-    ECCgetPointCoordinate                    0x080645c1   Thumb Code   182  crypto.o(i.ECCgetPointCoordinate)
-    ECCinitEC                                0x0806467d   Thumb Code   440  crypto.o(i.ECCinitEC)
-    ECCinitPoint                             0x08064835   Thumb Code   208  crypto.o(i.ECCinitPoint)
-    ECCinitPrivKey                           0x08064905   Thumb Code   110  crypto.o(i.ECCinitPrivKey)
-    ECCscalarMul                             0x08064975   Thumb Code   230  crypto.o(i.ECCscalarMul)
-    ECCsetPointGenerator                     0x08064a61   Thumb Code   122  crypto.o(i.ECCsetPointGenerator)
-    ECCsetPrivKeyValue                       0x08064ae1   Thumb Code    36  crypto.o(i.ECCsetPrivKeyValue)
-    ECCvalidatePubKey                        0x08064b05   Thumb Code   602  crypto.o(i.ECCvalidatePubKey)
-    ECDSAfreeSign                            0x08064d65   Thumb Code    56  crypto.o(i.ECDSAfreeSign)
-    ECDSAgetSignature                        0x08064d9d   Thumb Code   160  crypto.o(i.ECDSAgetSignature)
-    ECDSAinitSign                            0x08064e41   Thumb Code   124  crypto.o(i.ECDSAinitSign)
-    ECDSAsign                                0x08064ebd   Thumb Code  1530  crypto.o(i.ECDSAsign)
-    EC_ParaInit                              0x080654b9   Thumb Code    56  ecdsa.o(i.EC_ParaInit)
-    FLASH_WaitForLastOperation               0x08065651   Thumb Code    90  stm32f4xx_hal_flash.o(i.FLASH_WaitForLastOperation)
-    FastDiv2                                 0x080656b5   Thumb Code    98  crypto.o(i.FastDiv2)
-    Get_Privekey                             0x080657b9   Thumb Code    38  app_interface.o(i.Get_Privekey)
-    HAL_CRC_Init                             0x080657df   Thumb Code    36  stm32f4xx_hal_crc.o(i.HAL_CRC_Init)
-    HAL_CRC_MspInit                          0x08065805   Thumb Code    44  stm32f4xx_hal_msp.o(i.HAL_CRC_MspInit)
-    HAL_DeInit                               0x08065839   Thumb Code    64  stm32f4xx_hal.o(i.HAL_DeInit)
-    HAL_Delay                                0x0806587d   Thumb Code    30  stm32f4xx_hal.o(i.HAL_Delay)
-    HAL_FLASH_Lock                           0x0806589d   Thumb Code    16  stm32f4xx_hal_flash.o(i.HAL_FLASH_Lock)
-    HAL_FLASH_Program                        0x080658b1   Thumb Code   142  stm32f4xx_hal_flash.o(i.HAL_FLASH_Program)
-    HAL_FLASH_Unlock                         0x08065949   Thumb Code    38  stm32f4xx_hal_flash.o(i.HAL_FLASH_Unlock)
-    HAL_GPIO_Init                            0x0806597d   Thumb Code   466  stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init)
-    HAL_GetTick                              0x08065b7d   Thumb Code     6  stm32f4xx_hal.o(i.HAL_GetTick)
-    HAL_IncTick                              0x08065b89   Thumb Code    12  stm32f4xx_hal.o(i.HAL_IncTick)
-    HAL_Init                                 0x08065b99   Thumb Code    54  stm32f4xx_hal.o(i.HAL_Init)
-    HAL_InitTick                             0x08065bd5   Thumb Code    36  stm32f4xx_hal.o(i.HAL_InitTick)
-    HAL_MspDeInit                            0x08065bfd   Thumb Code     2  stm32f4xx_hal.o(i.HAL_MspDeInit)
-    HAL_MspInit                              0x08065bff   Thumb Code    86  stm32f4xx_hal_msp.o(i.HAL_MspInit)
-    HAL_NVIC_DisableIRQ                      0x08065c55   Thumb Code    22  stm32f4xx_hal_cortex.o(i.HAL_NVIC_DisableIRQ)
-    HAL_NVIC_SetPriority                     0x08065c71   Thumb Code   124  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriority)
-    HAL_NVIC_SetPriorityGrouping             0x08065ced   Thumb Code    32  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping)
-    HAL_RCC_ClockConfig                      0x08065d15   Thumb Code   366  stm32f4xx_hal_rcc.o(i.HAL_RCC_ClockConfig)
-    HAL_RCC_GetHCLKFreq                      0x08065e95   Thumb Code     6  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetHCLKFreq)
-    HAL_RCC_GetSysClockFreq                  0x08065ea1   Thumb Code   162  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetSysClockFreq)
-    HAL_RCC_OscConfig                        0x08065f51   Thumb Code  1040  stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig)
-    HAL_RNG_Init                             0x08066361   Thumb Code    48  stm32f4xx_hal_rng.o(i.HAL_RNG_Init)
-    HAL_RNG_MspInit                          0x08066391   Thumb Code    44  stm32f4xx_hal_msp.o(i.HAL_RNG_MspInit)
-    HAL_SYSTICK_CLKSourceConfig              0x080663c5   Thumb Code    40  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_CLKSourceConfig)
-    HAL_SYSTICK_Callback                     0x080663ed   Thumb Code     2  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Callback)
-    HAL_SYSTICK_Config                       0x080663ef   Thumb Code    52  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Config)
-    HAL_SYSTICK_IRQHandler                   0x08066423   Thumb Code     8  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_IRQHandler)
-    HardFault_Handler                        0x0806647f   Thumb Code     4  stm32f4xx_it.o(i.HardFault_Handler)
-    HexToString                              0x08066483   Thumb Code   102  showsign.o(i.HexToString)
-    InitBig                                  0x080664e9   Thumb Code   104  crypto.o(i.InitBig)
-    LeftShift                                0x08066551   Thumb Code   144  crypto.o(i.LeftShift)
-    MemManage_Handler                        0x080666ad   Thumb Code     4  stm32f4xx_it.o(i.MemManage_Handler)
-    ModularAddBig                            0x080666b1   Thumb Code    68  crypto.o(i.ModularAddBig)
-    ModularFastMul2                          0x080666f5   Thumb Code   138  crypto.o(i.ModularFastMul2)
-    ModularInvBig                            0x0806677f   Thumb Code   540  crypto.o(i.ModularInvBig)
-    MontyExit                                0x0806699b   Thumb Code    88  crypto.o(i.MontyExit)
-    MontyInit                                0x080669f5   Thumb Code   874  crypto.o(i.MontyInit)
-    MontyJacProjAddPoints                    0x08066d5f   Thumb Code   894  crypto.o(i.MontyJacProjAddPoints)
-    MontyJacProjDoublePoint                  0x080670dd   Thumb Code   778  crypto.o(i.MontyJacProjDoublePoint)
-    MontyKillAll                             0x080673e7   Thumb Code    48  crypto.o(i.MontyKillAll)
-    MontyMul                                 0x08067419   Thumb Code   524  crypto.o(i.MontyMul)
-    My_DES_Decrypt                           0x08067625   Thumb Code    58  app_des.o(i.My_DES_Decrypt)
-    NAF_Binary_PointMul                      0x08067669   Thumb Code   832  crypto.o(i.NAF_Binary_PointMul)
-    NMI_Handler                              0x080679ad   Thumb Code     2  stm32f4xx_it.o(i.NMI_Handler)
-    Normalize                                0x080679e9   Thumb Code   368  crypto.o(i.Normalize)
-    PendSV_Handler                           0x08067b59   Thumb Code     2  stm32f4xx_it.o(i.PendSV_Handler)
-    RCC_AHB1PeriphClockCmd                   0x08067b5d   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB1PeriphClockCmd)
-    RCC_AHB2PeriphClockCmd                   0x08067b7d   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB2PeriphClockCmd)
-    RCC_AHB2PeriphResetCmd                   0x08067b9d   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB2PeriphResetCmd)
-    RNG_Cmd                                  0x08067bbd   Thumb Code    30  stm32f4xx_rng.o(i.RNG_Cmd)
-    RNG_DeInit                               0x08067be1   Thumb Code    20  stm32f4xx_rng.o(i.RNG_DeInit)
-    RNGfree                                  0x08067c61   Thumb Code    72  crypto.o(i.RNGfree)
-    RNGgenBytes                              0x08067ca9   Thumb Code   464  crypto.o(i.RNGgenBytes)
-    RNGinit                                  0x08067e7d   Thumb Code   260  crypto.o(i.RNGinit)
-    ReadByteLength                           0x08067fed   Thumb Code  2872  showsign.o(i.ReadByteLength)
-    ReadByteLengthIndex                      0x08068b25   Thumb Code    32  showsign.o(i.ReadByteLengthIndex)
-    SHA256Final                              0x08068b45   Thumb Code   390  crypto.o(i.SHA256Final)
-    SHA256Update                             0x08068f25   Thumb Code   154  crypto.o(i.SHA256Update)
-    SHA256_Append                            0x08068fbf   Thumb Code    42  crypto.o(i.SHA256_Append)
-    SHA256_Finish                            0x08068fe9   Thumb Code   144  crypto.o(i.SHA256_Finish)
-    SHA256_Init                              0x08069079   Thumb Code    60  crypto.o(i.SHA256_Init)
-    STM32_AES_ECB_Decrypt                    0x080690d5   Thumb Code   100  app_aes.o(i.STM32_AES_ECB_Decrypt)
-    STM32_DES_CBC_Decrypt                    0x08069139   Thumb Code   104  app_des.o(i.STM32_DES_CBC_Decrypt)
-    STMFLASH_Read                            0x080691a1   Thumb Code    32  stmflash.o(i.STMFLASH_Read)
-    STMFLASH_ReadByte                        0x080691c1   Thumb Code     6  stmflash.o(i.STMFLASH_ReadByte)
-    STMFLASH_ReadWord                        0x080691c7   Thumb Code     6  stmflash.o(i.STMFLASH_ReadWord)
-    STMFLASH_Read_ByteArray                  0x080691cd   Thumb Code    30  stmflash.o(i.STMFLASH_Read_ByteArray)
-    STMFLASH_WriteByte                       0x080691eb   Thumb Code    28  stmflash.o(i.STMFLASH_WriteByte)
-    STMFLASH_WriteWord                       0x08069207   Thumb Code    28  stmflash.o(i.STMFLASH_WriteWord)
-    STMFLASH_Write_ByteArray                 0x08069225   Thumb Code    80  stmflash.o(i.STMFLASH_Write_ByteArray)
-    SVC_Handler                              0x08069279   Thumb Code     2  stm32f4xx_it.o(i.SVC_Handler)
-    SetZeroBig                               0x08069319   Thumb Code    70  crypto.o(i.SetZeroBig)
-    StAllocBig                               0x0806935f   Thumb Code    66  crypto.o(i.StAllocBig)
-    StFreeBig                                0x080693a1   Thumb Code    36  crypto.o(i.StFreeBig)
-    SubBig                                   0x08069439   Thumb Code   234  crypto.o(i.SubBig)
-    Sub_Moduli_Big                           0x08069523   Thumb Code   436  crypto.o(i.Sub_Moduli_Big)
-    SysTick_Handler                          0x080696d7   Thumb Code    12  stm32f4xx_it.o(i.SysTick_Handler)
-    SystemClock_Config                       0x080696e5   Thumb Code   198  main.o(i.SystemClock_Config)
-    SystemInit                               0x080697c5   Thumb Code    82  system_stm32f4xx.o(i.SystemInit)
-    UsageFault_Handler                       0x08069829   Thumb Code     4  stm32f4xx_it.o(i.UsageFault_Handler)
-    Utils_crc32                              0x0806982d   Thumb Code    50  app_interface.o(i.Utils_crc32)
-    Utils_verifycrc                          0x08069869   Thumb Code    48  app_interface.o(i.Utils_verifycrc)
-    W8_to_Big                                0x08069899   Thumb Code   326  crypto.o(i.W8_to_Big)
-    _Error_Handler                           0x080699df   Thumb Code     4  main.o(i._Error_Handler)
-    __0printf$5                              0x080699e5   Thumb Code    22  printf5.o(i.__0printf$5)
-    __1printf$5                              0x080699e5   Thumb Code     0  printf5.o(i.__0printf$5)
-    __2printf                                0x080699e5   Thumb Code     0  printf5.o(i.__0printf$5)
-    __ARM_fpclassify                         0x08069a05   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
-    __delay_us                               0x08069a35   Thumb Code    66  hal_stm32_timer.o(i.__delay_us)
-    __hardfp_pow                             0x08069a81   Thumb Code  3044  pow.o(i.__hardfp_pow)
-    __kernel_poly                            0x0806a6b9   Thumb Code   248  poly.o(i.__kernel_poly)
-    __mathlib_dbl_divzero                    0x0806a7b1   Thumb Code    28  dunder.o(i.__mathlib_dbl_divzero)
-    __mathlib_dbl_infnan2                    0x0806a7e1   Thumb Code    20  dunder.o(i.__mathlib_dbl_infnan2)
-    __mathlib_dbl_invalid                    0x0806a7f9   Thumb Code    24  dunder.o(i.__mathlib_dbl_invalid)
-    __mathlib_dbl_overflow                   0x0806a819   Thumb Code    24  dunder.o(i.__mathlib_dbl_overflow)
-    __mathlib_dbl_underflow                  0x0806a839   Thumb Code    24  dunder.o(i.__mathlib_dbl_underflow)
-    __scatterload_copy                       0x0806a859   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x0806a867   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x0806a869   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    __set_errno                              0x0806a879   Thumb Code     6  errno.o(i.__set_errno)
-    atCRC                                    0x0806ab4d   Thumb Code    96  atca_command.o(i.atCRC)
-    atCalcCrc                                0x0806abad   Thumb Code    26  atca_command.o(i.atCalcCrc)
-    atGetExecTime                            0x0806abc9   Thumb Code    10  atca_command.o(i.atGetExecTime)
-    atMAC                                    0x0806abd9   Thumb Code    42  atca_command.o(i.atMAC)
-    atRead                                   0x0806ac03   Thumb Code    44  atca_command.o(i.atRead)
-    atca_delay_ms                            0x0806ac2f   Thumb Code    12  hal_stm32_timer.o(i.atca_delay_ms)
-    atcab_get_addr                           0x0806ac3b   Thumb Code    92  atca_basic.o(i.atcab_get_addr)
-    atcab_idle                               0x0806ac97   Thumb Code     8  atca_basic.o(i.atcab_idle)
-    atcab_is_locked                          0x0806ac9f   Thumb Code   100  atca_basic.o(i.atcab_is_locked)
-    atcab_mac                                0x0806ad03   Thumb Code   218  atca_basic.o(i.atcab_mac)
-    atcab_read_serial_number                 0x0806addd   Thumb Code    66  atca_basic.o(i.atcab_read_serial_number)
-    atcab_read_zone                          0x0806ae1f   Thumb Code   236  atca_basic.o(i.atcab_read_zone)
-    atcab_wakeup                             0x0806af0b   Thumb Code     8  atca_basic.o(i.atcab_wakeup)
-    atidle                                   0x0806af13   Thumb Code    28  atca_iface_stm32_i2c.o(i.atidle)
-    atreceive                                0x0806af2f   Thumb Code    22  atca_iface_stm32_i2c.o(i.atreceive)
-    atsend                                   0x0806af45   Thumb Code    28  atca_iface_stm32_i2c.o(i.atsend)
-    atwake                                   0x0806af61   Thumb Code    58  atca_iface_stm32_i2c.o(i.atwake)
-    crl_DRBG_AES128_Generate                 0x0806afa1   Thumb Code   450  crypto.o(i.crl_DRBG_AES128_Generate)
-    fabs                                     0x0806b5a1   Thumb Code    24  fabs.o(i.fabs)
-    fputc                                    0x0806b5b9   Thumb Code    18  fputc.o(i.fputc)
-    isATCAError                              0x0806b5cd   Thumb Code    88  atca_command.o(i.isATCAError)
-    jump_to_app                              0x0806b629   Thumb Code    48  main.o(i.jump_to_app)
-    main                                     0x0806b661   Thumb Code   680  main.o(i.main)
-    sqrt                                     0x0806b985   Thumb Code   110  sqrt.o(i.sqrt)
-    P_256_a                                  0x0806ba18   Data          32  ecdsa.o(.constdata)
-    P_256_b                                  0x0806ba38   Data          32  ecdsa.o(.constdata)
-    P_256_p                                  0x0806ba58   Data          32  ecdsa.o(.constdata)
-    P_256_n                                  0x0806ba78   Data          32  ecdsa.o(.constdata)
-    P_256_Gx                                 0x0806ba98   Data          32  ecdsa.o(.constdata)
-    P_256_Gy                                 0x0806bab8   Data          32  ecdsa.o(.constdata)
-    AHBPrescTable                            0x0806bd40   Data          16  system_stm32f4xx.o(.constdata)
-    APBPrescTable                            0x0806bd50   Data           8  system_stm32f4xx.o(.constdata)
-    Sbox                                     0x0806bd58   Data         256  crypto.o(.constdata)
-    InvSbox                                  0x0806be58   Data         256  crypto.o(.constdata)
-    rcon                                     0x0806bf58   Data          40  crypto.o(.constdata)
-    enc_table                                0x0806bf80   Data        1024  crypto.o(.constdata)
-    dec_table                                0x0806c380   Data        1024  crypto.o(.constdata)
-    SP1                                      0x0806c9a0   Data         256  crypto.o(.constdata)
-    SP2                                      0x0806caa0   Data         256  crypto.o(.constdata)
-    SP3                                      0x0806cba0   Data         256  crypto.o(.constdata)
-    SP4                                      0x0806cca0   Data         256  crypto.o(.constdata)
-    SP5                                      0x0806cda0   Data         256  crypto.o(.constdata)
-    SP6                                      0x0806cea0   Data         256  crypto.o(.constdata)
-    SP7                                      0x0806cfa0   Data         256  crypto.o(.constdata)
-    SP8                                      0x0806d0a0   Data         256  crypto.o(.constdata)
-    K256                                     0x0806d1a0   Data         256  crypto.o(.constdata)
-    __mathlib_zero                           0x0806d578   Data           8  qnan.o(.constdata)
-    Region$$Table$$Base                      0x0806d580   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0806d5a0   Number         0  anon$$obj.o(Region$$Table)
+    Alg_ShowSignData                         0x080622dd   Thumb Code  4076  showsign.o(i.Alg_ShowSignData)
+    Ascii2Dec                                0x080632d9   Thumb Code   184  showsign.o(i.Ascii2Dec)
+    Base58_25Bytes                           0x080633a9   Thumb Code    80  getaddress.o(i.Base58_25Bytes)
+    Big_to_W8                                0x080633f9   Thumb Code   180  crypto.o(i.Big_to_W8)
+    Big_to_fixedW8                           0x080634ad   Thumb Code   140  crypto.o(i.Big_to_fixedW8)
+    BusFault_Handler                         0x08063539   Thumb Code     4  stm32f4xx_it.o(i.BusFault_Handler)
+    CompareBig                               0x0806353d   Thumb Code   166  crypto.o(i.CompareBig)
+    CopyBig                                  0x080635e5   Thumb Code   158  crypto.o(i.CopyBig)
+    CountBits                                0x08063683   Thumb Code    48  crypto.o(i.CountBits)
+    CountMoney                               0x080636b5   Thumb Code   150  showsign.o(i.CountMoney)
+    Crypto_DeInit                            0x08063755   Thumb Code     8  crypto.o(i.Crypto_DeInit)
+    DES_CBC_Decrypt_Append                   0x0806375d   Thumb Code   196  crypto.o(i.DES_CBC_Decrypt_Append)
+    DES_CBC_Decrypt_Finish                   0x08063821   Thumb Code    26  crypto.o(i.DES_CBC_Decrypt_Finish)
+    DES_CBC_Decrypt_Init                     0x0806383b   Thumb Code     6  crypto.o(i.DES_CBC_Decrypt_Init)
+    DebugMon_Handler                         0x08063b3f   Thumb Code     2  stm32f4xx_it.o(i.DebugMon_Handler)
+    DecryptData                              0x08063b41   Thumb Code   308  app_interface.o(i.DecryptData)
+    ECCGetPublickeyFromPrivateKey_OLD        0x08063c75   Thumb Code   350  ecdsa.o(i.ECCGetPublickeyFromPrivateKey_OLD)
+    ECCSignGenerate                          0x08063df9   Thumb Code   310  ecdsa.o(i.ECCSignGenerate)
+    ECCcopyPoint                             0x08063f35   Thumb Code   102  crypto.o(i.ECCcopyPoint)
+    ECCfreeEC                                0x08063f9b   Thumb Code   124  crypto.o(i.ECCfreeEC)
+    ECCfreePoint                             0x08064017   Thumb Code    66  crypto.o(i.ECCfreePoint)
+    ECCfreePrivKey                           0x08064059   Thumb Code    46  crypto.o(i.ECCfreePrivKey)
+    ECCgetPointCoordinate                    0x08064089   Thumb Code   182  crypto.o(i.ECCgetPointCoordinate)
+    ECCinitEC                                0x08064145   Thumb Code   440  crypto.o(i.ECCinitEC)
+    ECCinitPoint                             0x080642fd   Thumb Code   208  crypto.o(i.ECCinitPoint)
+    ECCinitPrivKey                           0x080643cd   Thumb Code   110  crypto.o(i.ECCinitPrivKey)
+    ECCscalarMul                             0x0806443d   Thumb Code   230  crypto.o(i.ECCscalarMul)
+    ECCsetPointGenerator                     0x08064529   Thumb Code   122  crypto.o(i.ECCsetPointGenerator)
+    ECCsetPrivKeyValue                       0x080645a9   Thumb Code    36  crypto.o(i.ECCsetPrivKeyValue)
+    ECCvalidatePubKey                        0x080645cd   Thumb Code   602  crypto.o(i.ECCvalidatePubKey)
+    ECDSAfreeSign                            0x0806482d   Thumb Code    56  crypto.o(i.ECDSAfreeSign)
+    ECDSAgetSignature                        0x08064865   Thumb Code   160  crypto.o(i.ECDSAgetSignature)
+    ECDSAinitSign                            0x08064909   Thumb Code   124  crypto.o(i.ECDSAinitSign)
+    ECDSAsign                                0x08064985   Thumb Code  1530  crypto.o(i.ECDSAsign)
+    EC_ParaInit                              0x08064f81   Thumb Code    56  ecdsa.o(i.EC_ParaInit)
+    FLASH_WaitForLastOperation               0x08065119   Thumb Code    90  stm32f4xx_hal_flash.o(i.FLASH_WaitForLastOperation)
+    FastDiv2                                 0x0806517d   Thumb Code    98  crypto.o(i.FastDiv2)
+    Get_Privekey                             0x08065281   Thumb Code    38  app_interface.o(i.Get_Privekey)
+    HAL_CRC_Init                             0x080652a7   Thumb Code    36  stm32f4xx_hal_crc.o(i.HAL_CRC_Init)
+    HAL_CRC_MspInit                          0x080652cd   Thumb Code    44  stm32f4xx_hal_msp.o(i.HAL_CRC_MspInit)
+    HAL_DeInit                               0x08065301   Thumb Code    64  stm32f4xx_hal.o(i.HAL_DeInit)
+    HAL_Delay                                0x08065345   Thumb Code    30  stm32f4xx_hal.o(i.HAL_Delay)
+    HAL_FLASH_Lock                           0x08065365   Thumb Code    16  stm32f4xx_hal_flash.o(i.HAL_FLASH_Lock)
+    HAL_FLASH_Program                        0x08065379   Thumb Code   142  stm32f4xx_hal_flash.o(i.HAL_FLASH_Program)
+    HAL_FLASH_Unlock                         0x08065411   Thumb Code    38  stm32f4xx_hal_flash.o(i.HAL_FLASH_Unlock)
+    HAL_GPIO_Init                            0x08065445   Thumb Code   466  stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init)
+    HAL_GetTick                              0x08065645   Thumb Code     6  stm32f4xx_hal.o(i.HAL_GetTick)
+    HAL_IncTick                              0x08065651   Thumb Code    12  stm32f4xx_hal.o(i.HAL_IncTick)
+    HAL_Init                                 0x08065661   Thumb Code    54  stm32f4xx_hal.o(i.HAL_Init)
+    HAL_InitTick                             0x0806569d   Thumb Code    36  stm32f4xx_hal.o(i.HAL_InitTick)
+    HAL_MspDeInit                            0x080656c5   Thumb Code     2  stm32f4xx_hal.o(i.HAL_MspDeInit)
+    HAL_MspInit                              0x080656c7   Thumb Code    86  stm32f4xx_hal_msp.o(i.HAL_MspInit)
+    HAL_NVIC_DisableIRQ                      0x0806571d   Thumb Code    22  stm32f4xx_hal_cortex.o(i.HAL_NVIC_DisableIRQ)
+    HAL_NVIC_SetPriority                     0x08065739   Thumb Code   124  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriority)
+    HAL_NVIC_SetPriorityGrouping             0x080657b5   Thumb Code    32  stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping)
+    HAL_RCC_ClockConfig                      0x080657dd   Thumb Code   366  stm32f4xx_hal_rcc.o(i.HAL_RCC_ClockConfig)
+    HAL_RCC_GetHCLKFreq                      0x0806595d   Thumb Code     6  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetHCLKFreq)
+    HAL_RCC_GetSysClockFreq                  0x08065969   Thumb Code   162  stm32f4xx_hal_rcc.o(i.HAL_RCC_GetSysClockFreq)
+    HAL_RCC_OscConfig                        0x08065a19   Thumb Code  1040  stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig)
+    HAL_RNG_Init                             0x08065e29   Thumb Code    48  stm32f4xx_hal_rng.o(i.HAL_RNG_Init)
+    HAL_RNG_MspInit                          0x08065e59   Thumb Code    44  stm32f4xx_hal_msp.o(i.HAL_RNG_MspInit)
+    HAL_SYSTICK_CLKSourceConfig              0x08065e8d   Thumb Code    40  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_CLKSourceConfig)
+    HAL_SYSTICK_Callback                     0x08065eb5   Thumb Code     2  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Callback)
+    HAL_SYSTICK_Config                       0x08065eb7   Thumb Code    52  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_Config)
+    HAL_SYSTICK_IRQHandler                   0x08065eeb   Thumb Code     8  stm32f4xx_hal_cortex.o(i.HAL_SYSTICK_IRQHandler)
+    HardFault_Handler                        0x08065f47   Thumb Code     4  stm32f4xx_it.o(i.HardFault_Handler)
+    HexToString                              0x08065f4b   Thumb Code   102  showsign.o(i.HexToString)
+    InitBig                                  0x08065fb1   Thumb Code   104  crypto.o(i.InitBig)
+    LeftShift                                0x08066019   Thumb Code   144  crypto.o(i.LeftShift)
+    MemManage_Handler                        0x08066175   Thumb Code     4  stm32f4xx_it.o(i.MemManage_Handler)
+    ModularAddBig                            0x08066179   Thumb Code    68  crypto.o(i.ModularAddBig)
+    ModularFastMul2                          0x080661bd   Thumb Code   138  crypto.o(i.ModularFastMul2)
+    ModularInvBig                            0x08066247   Thumb Code   540  crypto.o(i.ModularInvBig)
+    MontyExit                                0x08066463   Thumb Code    88  crypto.o(i.MontyExit)
+    MontyInit                                0x080664bd   Thumb Code   874  crypto.o(i.MontyInit)
+    MontyJacProjAddPoints                    0x08066827   Thumb Code   894  crypto.o(i.MontyJacProjAddPoints)
+    MontyJacProjDoublePoint                  0x08066ba5   Thumb Code   778  crypto.o(i.MontyJacProjDoublePoint)
+    MontyKillAll                             0x08066eaf   Thumb Code    48  crypto.o(i.MontyKillAll)
+    MontyMul                                 0x08066ee1   Thumb Code   524  crypto.o(i.MontyMul)
+    My_DES_Decrypt                           0x080670ed   Thumb Code    58  app_des.o(i.My_DES_Decrypt)
+    NAF_Binary_PointMul                      0x08067131   Thumb Code   832  crypto.o(i.NAF_Binary_PointMul)
+    NMI_Handler                              0x08067475   Thumb Code     2  stm32f4xx_it.o(i.NMI_Handler)
+    Nep5CountMoney                           0x080674b1   Thumb Code    38  showsign.o(i.Nep5CountMoney)
+    Normalize                                0x08067569   Thumb Code   368  crypto.o(i.Normalize)
+    PendSV_Handler                           0x080676d9   Thumb Code     2  stm32f4xx_it.o(i.PendSV_Handler)
+    RCC_AHB1PeriphClockCmd                   0x080676dd   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB1PeriphClockCmd)
+    RCC_AHB2PeriphClockCmd                   0x080676fd   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB2PeriphClockCmd)
+    RCC_AHB2PeriphResetCmd                   0x0806771d   Thumb Code    26  stm32f4xx_rcc.o(i.RCC_AHB2PeriphResetCmd)
+    RNG_Cmd                                  0x0806773d   Thumb Code    30  stm32f4xx_rng.o(i.RNG_Cmd)
+    RNG_DeInit                               0x08067761   Thumb Code    20  stm32f4xx_rng.o(i.RNG_DeInit)
+    RNGfree                                  0x080677e1   Thumb Code    72  crypto.o(i.RNGfree)
+    RNGgenBytes                              0x08067829   Thumb Code   464  crypto.o(i.RNGgenBytes)
+    RNGinit                                  0x080679fd   Thumb Code   260  crypto.o(i.RNGinit)
+    ReadByteLength                           0x08067b6d   Thumb Code  2872  showsign.o(i.ReadByteLength)
+    ReadByteLengthIndex                      0x080686a5   Thumb Code    32  showsign.o(i.ReadByteLengthIndex)
+    SHA256Final                              0x080686c5   Thumb Code   390  crypto.o(i.SHA256Final)
+    SHA256Update                             0x08068aa5   Thumb Code   154  crypto.o(i.SHA256Update)
+    SHA256_Append                            0x08068b3f   Thumb Code    42  crypto.o(i.SHA256_Append)
+    SHA256_Finish                            0x08068b69   Thumb Code   144  crypto.o(i.SHA256_Finish)
+    SHA256_Init                              0x08068bf9   Thumb Code    60  crypto.o(i.SHA256_Init)
+    STM32_AES_ECB_Decrypt                    0x08068c55   Thumb Code   100  app_aes.o(i.STM32_AES_ECB_Decrypt)
+    STM32_DES_CBC_Decrypt                    0x08068cb9   Thumb Code   104  app_des.o(i.STM32_DES_CBC_Decrypt)
+    STMFLASH_Read                            0x08068d21   Thumb Code    32  stmflash.o(i.STMFLASH_Read)
+    STMFLASH_ReadByte                        0x08068d41   Thumb Code     6  stmflash.o(i.STMFLASH_ReadByte)
+    STMFLASH_ReadWord                        0x08068d47   Thumb Code     6  stmflash.o(i.STMFLASH_ReadWord)
+    STMFLASH_Read_ByteArray                  0x08068d4d   Thumb Code    30  stmflash.o(i.STMFLASH_Read_ByteArray)
+    STMFLASH_WriteByte                       0x08068d6b   Thumb Code    28  stmflash.o(i.STMFLASH_WriteByte)
+    STMFLASH_WriteWord                       0x08068d87   Thumb Code    28  stmflash.o(i.STMFLASH_WriteWord)
+    STMFLASH_Write_ByteArray                 0x08068da5   Thumb Code    80  stmflash.o(i.STMFLASH_Write_ByteArray)
+    SVC_Handler                              0x08068df9   Thumb Code     2  stm32f4xx_it.o(i.SVC_Handler)
+    SetZeroBig                               0x08068e99   Thumb Code    70  crypto.o(i.SetZeroBig)
+    StAllocBig                               0x08068edf   Thumb Code    66  crypto.o(i.StAllocBig)
+    StFreeBig                                0x08068f21   Thumb Code    36  crypto.o(i.StFreeBig)
+    SubBig                                   0x08068fb9   Thumb Code   234  crypto.o(i.SubBig)
+    Sub_Moduli_Big                           0x080690a3   Thumb Code   436  crypto.o(i.Sub_Moduli_Big)
+    SysTick_Handler                          0x08069257   Thumb Code    12  stm32f4xx_it.o(i.SysTick_Handler)
+    SystemClock_Config                       0x08069265   Thumb Code   198  main.o(i.SystemClock_Config)
+    SystemInit                               0x08069345   Thumb Code    82  system_stm32f4xx.o(i.SystemInit)
+    UsageFault_Handler                       0x080693a9   Thumb Code     4  stm32f4xx_it.o(i.UsageFault_Handler)
+    Utils_crc32                              0x080693ad   Thumb Code    50  app_interface.o(i.Utils_crc32)
+    Utils_verifycrc                          0x080693e9   Thumb Code    48  app_interface.o(i.Utils_verifycrc)
+    W8_to_Big                                0x08069419   Thumb Code   326  crypto.o(i.W8_to_Big)
+    _Error_Handler                           0x0806955f   Thumb Code     4  main.o(i._Error_Handler)
+    __0printf$5                              0x08069565   Thumb Code    22  printf5.o(i.__0printf$5)
+    __1printf$5                              0x08069565   Thumb Code     0  printf5.o(i.__0printf$5)
+    __2printf                                0x08069565   Thumb Code     0  printf5.o(i.__0printf$5)
+    __ARM_fpclassify                         0x08069585   Thumb Code    48  fpclassify.o(i.__ARM_fpclassify)
+    __delay_us                               0x080695b5   Thumb Code    66  hal_stm32_timer.o(i.__delay_us)
+    __hardfp_pow                             0x08069601   Thumb Code  3044  pow.o(i.__hardfp_pow)
+    __kernel_poly                            0x0806a239   Thumb Code   248  poly.o(i.__kernel_poly)
+    __mathlib_dbl_divzero                    0x0806a331   Thumb Code    28  dunder.o(i.__mathlib_dbl_divzero)
+    __mathlib_dbl_infnan2                    0x0806a361   Thumb Code    20  dunder.o(i.__mathlib_dbl_infnan2)
+    __mathlib_dbl_invalid                    0x0806a379   Thumb Code    24  dunder.o(i.__mathlib_dbl_invalid)
+    __mathlib_dbl_overflow                   0x0806a399   Thumb Code    24  dunder.o(i.__mathlib_dbl_overflow)
+    __mathlib_dbl_underflow                  0x0806a3b9   Thumb Code    24  dunder.o(i.__mathlib_dbl_underflow)
+    __scatterload_copy                       0x0806a3d9   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x0806a3e7   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x0806a3e9   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    __set_errno                              0x0806a3f9   Thumb Code     6  errno.o(i.__set_errno)
+    atCRC                                    0x0806a6cd   Thumb Code    96  atca_command.o(i.atCRC)
+    atCalcCrc                                0x0806a72d   Thumb Code    26  atca_command.o(i.atCalcCrc)
+    atGetExecTime                            0x0806a749   Thumb Code    10  atca_command.o(i.atGetExecTime)
+    atMAC                                    0x0806a759   Thumb Code    42  atca_command.o(i.atMAC)
+    atRead                                   0x0806a783   Thumb Code    44  atca_command.o(i.atRead)
+    atca_delay_ms                            0x0806a7af   Thumb Code    12  hal_stm32_timer.o(i.atca_delay_ms)
+    atcab_get_addr                           0x0806a7bb   Thumb Code    92  atca_basic.o(i.atcab_get_addr)
+    atcab_idle                               0x0806a817   Thumb Code     8  atca_basic.o(i.atcab_idle)
+    atcab_is_locked                          0x0806a81f   Thumb Code   100  atca_basic.o(i.atcab_is_locked)
+    atcab_mac                                0x0806a883   Thumb Code   218  atca_basic.o(i.atcab_mac)
+    atcab_read_serial_number                 0x0806a95d   Thumb Code    66  atca_basic.o(i.atcab_read_serial_number)
+    atcab_read_zone                          0x0806a99f   Thumb Code   236  atca_basic.o(i.atcab_read_zone)
+    atcab_wakeup                             0x0806aa8b   Thumb Code     8  atca_basic.o(i.atcab_wakeup)
+    atidle                                   0x0806aa93   Thumb Code    28  atca_iface_stm32_i2c.o(i.atidle)
+    atreceive                                0x0806aaaf   Thumb Code    22  atca_iface_stm32_i2c.o(i.atreceive)
+    atsend                                   0x0806aac5   Thumb Code    28  atca_iface_stm32_i2c.o(i.atsend)
+    atwake                                   0x0806aae1   Thumb Code    58  atca_iface_stm32_i2c.o(i.atwake)
+    crl_DRBG_AES128_Generate                 0x0806ab21   Thumb Code   450  crypto.o(i.crl_DRBG_AES128_Generate)
+    fabs                                     0x0806b121   Thumb Code    24  fabs.o(i.fabs)
+    fputc                                    0x0806b139   Thumb Code    18  fputc.o(i.fputc)
+    isATCAError                              0x0806b14d   Thumb Code    88  atca_command.o(i.isATCAError)
+    jump_to_app                              0x0806b1a9   Thumb Code    48  main.o(i.jump_to_app)
+    main                                     0x0806b1e1   Thumb Code   680  main.o(i.main)
+    sqrt                                     0x0806b505   Thumb Code   110  sqrt.o(i.sqrt)
+    P_256_a                                  0x0806b598   Data          32  ecdsa.o(.constdata)
+    P_256_b                                  0x0806b5b8   Data          32  ecdsa.o(.constdata)
+    P_256_p                                  0x0806b5d8   Data          32  ecdsa.o(.constdata)
+    P_256_n                                  0x0806b5f8   Data          32  ecdsa.o(.constdata)
+    P_256_Gx                                 0x0806b618   Data          32  ecdsa.o(.constdata)
+    P_256_Gy                                 0x0806b638   Data          32  ecdsa.o(.constdata)
+    AHBPrescTable                            0x0806b8c0   Data          16  system_stm32f4xx.o(.constdata)
+    APBPrescTable                            0x0806b8d0   Data           8  system_stm32f4xx.o(.constdata)
+    Sbox                                     0x0806b8d8   Data         256  crypto.o(.constdata)
+    InvSbox                                  0x0806b9d8   Data         256  crypto.o(.constdata)
+    rcon                                     0x0806bad8   Data          40  crypto.o(.constdata)
+    enc_table                                0x0806bb00   Data        1024  crypto.o(.constdata)
+    dec_table                                0x0806bf00   Data        1024  crypto.o(.constdata)
+    SP1                                      0x0806c520   Data         256  crypto.o(.constdata)
+    SP2                                      0x0806c620   Data         256  crypto.o(.constdata)
+    SP3                                      0x0806c720   Data         256  crypto.o(.constdata)
+    SP4                                      0x0806c820   Data         256  crypto.o(.constdata)
+    SP5                                      0x0806c920   Data         256  crypto.o(.constdata)
+    SP6                                      0x0806ca20   Data         256  crypto.o(.constdata)
+    SP7                                      0x0806cb20   Data         256  crypto.o(.constdata)
+    SP8                                      0x0806cc20   Data         256  crypto.o(.constdata)
+    K256                                     0x0806cd20   Data         256  crypto.o(.constdata)
+    __mathlib_zero                           0x0806d0f8   Data           8  qnan.o(.constdata)
+    Region$$Table$$Base                      0x0806d100   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0806d120   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000004   Data           4  system_stm32f4xx.o(.data)
     hcrc                                     0x20000008   Data           8  main.o(.data)
     pack_len                                 0x20000010   Data           4  main.o(.data)
@@ -2923,316 +2929,319 @@ Memory Map of the image
 
   Image Entry point : 0x08060189
 
-  Load Region LR_IROM1 (Base: 0x08060000, Size: 0x0000d5f4, Max: 0x000a0000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08060000, Size: 0x0000d174, Max: 0x000a0000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x08060000, Size: 0x0000d5a0, Max: 0x000a0000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08060000, Size: 0x0000d120, Max: 0x000a0000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08060000   0x00000188   Data   RO            3    RESET               startup_stm32f407xx.o
-    0x08060188   0x00000000   Code   RO         4111  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08060188   0x00000004   Code   RO         4500    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0806018c   0x00000004   Code   RO         4503    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x08060190   0x00000000   Code   RO         4505    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x08060190   0x00000000   Code   RO         4507    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x08060190   0x00000008   Code   RO         4508    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x08060198   0x00000000   Code   RO         4510    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x08060198   0x00000000   Code   RO         4512    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x08060198   0x00000004   Code   RO         4501    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
-    0x0806019c   0x00000010   Code   RO         1282    .emb_text           sys.o
+    0x08060188   0x00000000   Code   RO         4122  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08060188   0x00000004   Code   RO         4511    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0806018c   0x00000004   Code   RO         4514    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x08060190   0x00000000   Code   RO         4516    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x08060190   0x00000000   Code   RO         4518    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x08060190   0x00000008   Code   RO         4519    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x08060198   0x00000000   Code   RO         4521    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x08060198   0x00000000   Code   RO         4523    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x08060198   0x00000004   Code   RO         4512    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x0806019c   0x00000010   Code   RO         1293    .emb_text           sys.o
     0x080601ac   0x00000024   Code   RO            4    .text               startup_stm32f407xx.o
-    0x080601d0   0x00000062   Code   RO         4114    .text               mc_w.l(uldiv.o)
-    0x08060232   0x00000040   Code   RO         4146    .text               mc_w.l(memmovea.o)
-    0x08060272   0x00000024   Code   RO         4148    .text               mc_w.l(memseta.o)
-    0x08060296   0x0000001a   Code   RO         4154    .text               mc_w.l(memcmp.o)
-    0x080602b0   0x0000014e   Code   RO         4451    .text               mf_w.l(dadd.o)
-    0x080603fe   0x000000e4   Code   RO         4453    .text               mf_w.l(dmul.o)
-    0x080604e2   0x00000022   Code   RO         4455    .text               mf_w.l(dflti.o)
-    0x08060504   0x00000028   Code   RO         4457    .text               mf_w.l(dfltl.o)
-    0x0806052c   0x0000004a   Code   RO         4459    .text               mf_w.l(dfixl.o)
-    0x08060576   0x00000030   Code   RO         4461    .text               mf_w.l(dfixul.o)
-    0x080605a6   0x0000001e   Code   RO         4519    .text               mc_w.l(llshl.o)
-    0x080605c4   0x00000020   Code   RO         4521    .text               mc_w.l(llushr.o)
-    0x080605e4   0x00000024   Code   RO         4523    .text               mc_w.l(llsshr.o)
-    0x08060608   0x00000000   Code   RO         4534    .text               mc_w.l(iusefp.o)
-    0x08060608   0x000000ba   Code   RO         4535    .text               mf_w.l(depilogue.o)
-    0x080606c2   0x000000de   Code   RO         4537    .text               mf_w.l(ddiv.o)
-    0x080607a0   0x0000002e   Code   RO         4541    .text               mf_w.l(dscalb.o)
+    0x080601d0   0x00000062   Code   RO         4125    .text               mc_w.l(uldiv.o)
+    0x08060232   0x00000040   Code   RO         4157    .text               mc_w.l(memmovea.o)
+    0x08060272   0x00000024   Code   RO         4159    .text               mc_w.l(memseta.o)
+    0x08060296   0x0000001a   Code   RO         4165    .text               mc_w.l(memcmp.o)
+    0x080602b0   0x0000014e   Code   RO         4462    .text               mf_w.l(dadd.o)
+    0x080603fe   0x000000e4   Code   RO         4464    .text               mf_w.l(dmul.o)
+    0x080604e2   0x00000022   Code   RO         4466    .text               mf_w.l(dflti.o)
+    0x08060504   0x00000028   Code   RO         4468    .text               mf_w.l(dfltl.o)
+    0x0806052c   0x0000004a   Code   RO         4470    .text               mf_w.l(dfixl.o)
+    0x08060576   0x00000030   Code   RO         4472    .text               mf_w.l(dfixul.o)
+    0x080605a6   0x0000001e   Code   RO         4530    .text               mc_w.l(llshl.o)
+    0x080605c4   0x00000020   Code   RO         4532    .text               mc_w.l(llushr.o)
+    0x080605e4   0x00000024   Code   RO         4534    .text               mc_w.l(llsshr.o)
+    0x08060608   0x00000000   Code   RO         4545    .text               mc_w.l(iusefp.o)
+    0x08060608   0x000000ba   Code   RO         4546    .text               mf_w.l(depilogue.o)
+    0x080606c2   0x000000de   Code   RO         4548    .text               mf_w.l(ddiv.o)
+    0x080607a0   0x0000002e   Code   RO         4552    .text               mf_w.l(dscalb.o)
     0x080607ce   0x00000002   PAD
-    0x080607d0   0x00000030   Code   RO         4543    .text               mf_w.l(cdrcmple.o)
-    0x08060800   0x00000024   Code   RO         4545    .text               mc_w.l(init.o)
-    0x08060824   0x00000000   Code   RO         4547    .text               mc_w.l(semi.o)
-    0x08060824   0x00000000   Code   RO         4548    .text               mc_w.l(iusesemip.o)
-    0x08060824   0x000000a2   Code   RO         4549    .text               mf_w.l(dsqrt.o)
+    0x080607d0   0x00000030   Code   RO         4554    .text               mf_w.l(cdrcmple.o)
+    0x08060800   0x00000024   Code   RO         4556    .text               mc_w.l(init.o)
+    0x08060824   0x00000000   Code   RO         4558    .text               mc_w.l(semi.o)
+    0x08060824   0x00000000   Code   RO         4559    .text               mc_w.l(iusesemip.o)
+    0x08060824   0x000000a2   Code   RO         4560    .text               mf_w.l(dsqrt.o)
     0x080608c6   0x00000002   PAD
-    0x080608c8   0x00000304   Code   RO         3160    i.AES128_decrypt    Sha256.lib(crypto.o)
-    0x08060bcc   0x00000314   Code   RO         3161    i.AES128_encrypt    Sha256.lib(crypto.o)
-    0x08060ee0   0x00000134   Code   RO         3162    i.AES128_keyschedule_dec  Sha256.lib(crypto.o)
-    0x08061014   0x00000074   Code   RO         3163    i.AES128_keyschedule_enc  Sha256.lib(crypto.o)
-    0x08061088   0x00000300   Code   RO         3164    i.AES192_decrypt    Sha256.lib(crypto.o)
-    0x08061388   0x00000120   Code   RO         3166    i.AES192_keyschedule_dec  Sha256.lib(crypto.o)
-    0x080614a8   0x00000098   Code   RO         3167    i.AES192_keyschedule_enc  Sha256.lib(crypto.o)
-    0x08061540   0x00000304   Code   RO         3168    i.AES256_decrypt    Sha256.lib(crypto.o)
-    0x08061844   0x00000120   Code   RO         3170    i.AES256_keyschedule_dec  Sha256.lib(crypto.o)
-    0x08061964   0x000000dc   Code   RO         3171    i.AES256_keyschedule_enc  Sha256.lib(crypto.o)
-    0x08061a40   0x000000c4   Code   RO         3197    i.AES_ECB_Decrypt_Append  Sha256.lib(crypto.o)
-    0x08061b04   0x0000001a   Code   RO         3198    i.AES_ECB_Decrypt_Finish  Sha256.lib(crypto.o)
-    0x08061b1e   0x00000006   Code   RO         3199    i.AES_ECB_Decrypt_Init  Sha256.lib(crypto.o)
-    0x08061b24   0x000001a4   Code   RO         3218    i.AESstdInit        Sha256.lib(crypto.o)
-    0x08061cc8   0x00000060   Code   RO         3089    i.ATSHA_I2c_Init    bitbang_i2c.o
-    0x08061d28   0x00000070   Code   RO         3090    i.ATSHA_IRcvNBytes  bitbang_i2c.o
-    0x08061d98   0x00000044   Code   RO         3091    i.ATSHA_ISendNBytes  bitbang_i2c.o
-    0x08061ddc   0x00000020   Code   RO         3092    i.ATSHA_i2c_send_wake_token  bitbang_i2c.o
-    0x08061dfc   0x0000007c   Code   RO          865    i.ATSHA_mac         atsha204a.o
-    0x08061e78   0x0000003e   Code   RO          868    i.ATSHA_read_data_slot  atsha204a.o
+    0x080608c8   0x00000304   Code   RO         3171    i.AES128_decrypt    Sha256.lib(crypto.o)
+    0x08060bcc   0x00000314   Code   RO         3172    i.AES128_encrypt    Sha256.lib(crypto.o)
+    0x08060ee0   0x00000134   Code   RO         3173    i.AES128_keyschedule_dec  Sha256.lib(crypto.o)
+    0x08061014   0x00000074   Code   RO         3174    i.AES128_keyschedule_enc  Sha256.lib(crypto.o)
+    0x08061088   0x00000300   Code   RO         3175    i.AES192_decrypt    Sha256.lib(crypto.o)
+    0x08061388   0x00000120   Code   RO         3177    i.AES192_keyschedule_dec  Sha256.lib(crypto.o)
+    0x080614a8   0x00000098   Code   RO         3178    i.AES192_keyschedule_enc  Sha256.lib(crypto.o)
+    0x08061540   0x00000304   Code   RO         3179    i.AES256_decrypt    Sha256.lib(crypto.o)
+    0x08061844   0x00000120   Code   RO         3181    i.AES256_keyschedule_dec  Sha256.lib(crypto.o)
+    0x08061964   0x000000dc   Code   RO         3182    i.AES256_keyschedule_enc  Sha256.lib(crypto.o)
+    0x08061a40   0x000000c4   Code   RO         3208    i.AES_ECB_Decrypt_Append  Sha256.lib(crypto.o)
+    0x08061b04   0x0000001a   Code   RO         3209    i.AES_ECB_Decrypt_Finish  Sha256.lib(crypto.o)
+    0x08061b1e   0x00000006   Code   RO         3210    i.AES_ECB_Decrypt_Init  Sha256.lib(crypto.o)
+    0x08061b24   0x000001a4   Code   RO         3229    i.AESstdInit        Sha256.lib(crypto.o)
+    0x08061cc8   0x00000060   Code   RO         3100    i.ATSHA_I2c_Init    bitbang_i2c.o
+    0x08061d28   0x00000070   Code   RO         3101    i.ATSHA_IRcvNBytes  bitbang_i2c.o
+    0x08061d98   0x00000044   Code   RO         3102    i.ATSHA_ISendNBytes  bitbang_i2c.o
+    0x08061ddc   0x00000020   Code   RO         3103    i.ATSHA_i2c_send_wake_token  bitbang_i2c.o
+    0x08061dfc   0x0000007c   Code   RO          876    i.ATSHA_mac         atsha204a.o
+    0x08061e78   0x0000003e   Code   RO          879    i.ATSHA_read_data_slot  atsha204a.o
     0x08061eb6   0x00000002   PAD
-    0x08061eb8   0x00000034   Code   RO         3093    i.Ack_I2c           bitbang_i2c.o
-    0x08061eec   0x0000013e   Code   RO         3225    i.AddBig            Sha256.lib(crypto.o)
+    0x08061eb8   0x00000034   Code   RO         3104    i.Ack_I2c           bitbang_i2c.o
+    0x08061eec   0x0000013e   Code   RO         3236    i.AddBig            Sha256.lib(crypto.o)
     0x0806202a   0x00000002   PAD
-    0x0806202c   0x000001c6   Code   RO         3226    i.Add_Moduli_Big    Sha256.lib(crypto.o)
+    0x0806202c   0x000001c6   Code   RO         3237    i.Add_Moduli_Big    Sha256.lib(crypto.o)
     0x080621f2   0x00000002   PAD
     0x080621f4   0x00000088   Code   RO          155    i.Alg_ECDSASignData  ecdsa.o
     0x0806227c   0x0000003c   Code   RO          156    i.Alg_GetPublicFromPrivate  ecdsa.o
     0x080622b8   0x00000024   Code   RO          157    i.Alg_HashData      ecdsa.o
-    0x080622dc   0x00001534   Code   RO          541    i.Alg_ShowSignData  showsign.o
-    0x08063810   0x000000d0   Code   RO          542    i.Ascii2Dec         showsign.o
-    0x080638e0   0x00000050   Code   RO          395    i.Base58_25Bytes    getaddress.o
-    0x08063930   0x000000b4   Code   RO         3227    i.Big_to_W8         Sha256.lib(crypto.o)
-    0x080639e4   0x0000008c   Code   RO         3228    i.Big_to_fixedW8    Sha256.lib(crypto.o)
-    0x08063a70   0x00000004   Code   RO         1095    i.BusFault_Handler  stm32f4xx_it.o
-    0x08063a74   0x000000a6   Code   RO         3229    i.CompareBig        Sha256.lib(crypto.o)
-    0x08063b1a   0x00000002   PAD
-    0x08063b1c   0x0000009e   Code   RO         3230    i.CopyBig           Sha256.lib(crypto.o)
-    0x08063bba   0x00000030   Code   RO         3231    i.CountBits         Sha256.lib(crypto.o)
-    0x08063bea   0x00000002   PAD
-    0x08063bec   0x000000a0   Code   RO          544    i.CountMoney        showsign.o
-    0x08063c8c   0x00000008   Code   RO         3233    i.Crypto_DeInit     Sha256.lib(crypto.o)
-    0x08063c94   0x000000c4   Code   RO         3234    i.DES_CBC_Decrypt_Append  Sha256.lib(crypto.o)
-    0x08063d58   0x0000001a   Code   RO         3235    i.DES_CBC_Decrypt_Finish  Sha256.lib(crypto.o)
-    0x08063d72   0x00000006   Code   RO         3236    i.DES_CBC_Decrypt_Init  Sha256.lib(crypto.o)
-    0x08063d78   0x000000f8   Code   RO         3246    i.DESstdInit        Sha256.lib(crypto.o)
-    0x08063e70   0x00000180   Code   RO         3247    i.DRBG_AES128_Block_cipher_df  Sha256.lib(crypto.o)
-    0x08063ff0   0x00000086   Code   RO         3248    i.DRBG_AES128_Update  Sha256.lib(crypto.o)
-    0x08064076   0x00000002   Code   RO         1096    i.DebugMon_Handler  stm32f4xx_it.o
-    0x08064078   0x00000134   Code   RO         1005    i.DecryptData       app_interface.o
-    0x080641ac   0x00000184   Code   RO          158    i.ECCGetPublickeyFromPrivateKey_OLD  ecdsa.o
-    0x08064330   0x0000013c   Code   RO          159    i.ECCSignGenerate   ecdsa.o
-    0x0806446c   0x00000066   Code   RO         3249    i.ECCcopyPoint      Sha256.lib(crypto.o)
-    0x080644d2   0x0000007c   Code   RO         3250    i.ECCfreeEC         Sha256.lib(crypto.o)
-    0x0806454e   0x00000042   Code   RO         3251    i.ECCfreePoint      Sha256.lib(crypto.o)
-    0x08064590   0x0000002e   Code   RO         3252    i.ECCfreePrivKey    Sha256.lib(crypto.o)
-    0x080645be   0x00000002   PAD
-    0x080645c0   0x000000bc   Code   RO         3253    i.ECCgetPointCoordinate  Sha256.lib(crypto.o)
-    0x0806467c   0x000001b8   Code   RO         3256    i.ECCinitEC         Sha256.lib(crypto.o)
-    0x08064834   0x000000d0   Code   RO         3257    i.ECCinitPoint      Sha256.lib(crypto.o)
-    0x08064904   0x0000006e   Code   RO         3258    i.ECCinitPrivKey    Sha256.lib(crypto.o)
-    0x08064972   0x00000002   PAD
-    0x08064974   0x000000ec   Code   RO         3262    i.ECCscalarMul      Sha256.lib(crypto.o)
-    0x08064a60   0x00000080   Code   RO         3265    i.ECCsetPointGenerator  Sha256.lib(crypto.o)
-    0x08064ae0   0x00000024   Code   RO         3266    i.ECCsetPrivKeyValue  Sha256.lib(crypto.o)
-    0x08064b04   0x00000260   Code   RO         3268    i.ECCvalidatePubKey  Sha256.lib(crypto.o)
-    0x08064d64   0x00000038   Code   RO         3269    i.ECDSAfreeSign     Sha256.lib(crypto.o)
-    0x08064d9c   0x000000a4   Code   RO         3270    i.ECDSAgetSignature  Sha256.lib(crypto.o)
-    0x08064e40   0x0000007c   Code   RO         3271    i.ECDSAinitSign     Sha256.lib(crypto.o)
-    0x08064ebc   0x000005fa   Code   RO         3273    i.ECDSAsign         Sha256.lib(crypto.o)
-    0x080654b6   0x00000002   PAD
-    0x080654b8   0x00000060   Code   RO          160    i.EC_ParaInit       ecdsa.o
-    0x08065518   0x00000024   Code   RO         1304    i.FLASH_Program_Byte  stm32f4xx_hal_flash.o
-    0x0806553c   0x0000002c   Code   RO         1305    i.FLASH_Program_DoubleWord  stm32f4xx_hal_flash.o
-    0x08065568   0x00000028   Code   RO         1306    i.FLASH_Program_HalfWord  stm32f4xx_hal_flash.o
-    0x08065590   0x00000028   Code   RO         1307    i.FLASH_Program_Word  stm32f4xx_hal_flash.o
-    0x080655b8   0x00000098   Code   RO         1308    i.FLASH_SetErrorCode  stm32f4xx_hal_flash.o
-    0x08065650   0x00000064   Code   RO         1309    i.FLASH_WaitForLastOperation  stm32f4xx_hal_flash.o
-    0x080656b4   0x00000062   Code   RO         3276    i.FastDiv2          Sha256.lib(crypto.o)
-    0x08065716   0x00000002   PAD
-    0x08065718   0x000000a0   Code   RO          548    i.GetAssetID        showsign.o
-    0x080657b8   0x00000026   Code   RO         1006    i.Get_Privekey      app_interface.o
-    0x080657de   0x00000024   Code   RO         2298    i.HAL_CRC_Init      stm32f4xx_hal_crc.o
-    0x08065802   0x00000002   PAD
-    0x08065804   0x00000034   Code   RO         1235    i.HAL_CRC_MspInit   stm32f4xx_hal_msp.o
-    0x08065838   0x00000044   Code   RO         2414    i.HAL_DeInit        stm32f4xx_hal.o
-    0x0806587c   0x0000001e   Code   RO         2415    i.HAL_Delay         stm32f4xx_hal.o
-    0x0806589a   0x00000002   PAD
-    0x0806589c   0x00000014   Code   RO         1313    i.HAL_FLASH_Lock    stm32f4xx_hal_flash.o
-    0x080658b0   0x00000098   Code   RO         1318    i.HAL_FLASH_Program  stm32f4xx_hal_flash.o
-    0x08065948   0x00000034   Code   RO         1320    i.HAL_FLASH_Unlock  stm32f4xx_hal_flash.o
-    0x0806597c   0x00000200   Code   RO         1779    i.HAL_GPIO_Init     stm32f4xx_hal_gpio.o
-    0x08065b7c   0x0000000c   Code   RO         2421    i.HAL_GetTick       stm32f4xx_hal.o
-    0x08065b88   0x00000010   Code   RO         2423    i.HAL_IncTick       stm32f4xx_hal.o
-    0x08065b98   0x0000003c   Code   RO         2424    i.HAL_Init          stm32f4xx_hal.o
-    0x08065bd4   0x00000028   Code   RO         2425    i.HAL_InitTick      stm32f4xx_hal.o
-    0x08065bfc   0x00000002   Code   RO         2426    i.HAL_MspDeInit     stm32f4xx_hal.o
-    0x08065bfe   0x00000056   Code   RO         1236    i.HAL_MspInit       stm32f4xx_hal_msp.o
-    0x08065c54   0x0000001c   Code   RO         2026    i.HAL_NVIC_DisableIRQ  stm32f4xx_hal_cortex.o
-    0x08065c70   0x0000007c   Code   RO         2033    i.HAL_NVIC_SetPriority  stm32f4xx_hal_cortex.o
-    0x08065cec   0x00000028   Code   RO         2034    i.HAL_NVIC_SetPriorityGrouping  stm32f4xx_hal_cortex.o
-    0x08065d14   0x00000180   Code   RO         1675    i.HAL_RCC_ClockConfig  stm32f4xx_hal_rcc.o
-    0x08065e94   0x0000000c   Code   RO         1680    i.HAL_RCC_GetHCLKFreq  stm32f4xx_hal_rcc.o
-    0x08065ea0   0x000000b0   Code   RO         1684    i.HAL_RCC_GetSysClockFreq  stm32f4xx_hal_rcc.o
-    0x08065f50   0x00000410   Code   RO         1687    i.HAL_RCC_OscConfig  stm32f4xx_hal_rcc.o
-    0x08066360   0x00000030   Code   RO         2170    i.HAL_RNG_Init      stm32f4xx_hal_rng.o
-    0x08066390   0x00000034   Code   RO         1238    i.HAL_RNG_MspInit   stm32f4xx_hal_msp.o
-    0x080663c4   0x00000028   Code   RO         2036    i.HAL_SYSTICK_CLKSourceConfig  stm32f4xx_hal_cortex.o
-    0x080663ec   0x00000002   Code   RO         2037    i.HAL_SYSTICK_Callback  stm32f4xx_hal_cortex.o
-    0x080663ee   0x00000034   Code   RO         2038    i.HAL_SYSTICK_Config  stm32f4xx_hal_cortex.o
-    0x08066422   0x00000008   Code   RO         2039    i.HAL_SYSTICK_IRQHandler  stm32f4xx_hal_cortex.o
-    0x0806642a   0x00000054   Code   RO          161    i.HASH_DigestCompute  ecdsa.o
-    0x0806647e   0x00000004   Code   RO         1097    i.HardFault_Handler  stm32f4xx_it.o
-    0x08066482   0x00000066   Code   RO          551    i.HexToString       showsign.o
-    0x080664e8   0x00000068   Code   RO         3295    i.InitBig           Sha256.lib(crypto.o)
-    0x08066550   0x00000090   Code   RO         3297    i.LeftShift         Sha256.lib(crypto.o)
-    0x080665e0   0x00000034   Code   RO         1170    i.MX_CRC_Init       main.o
-    0x08066614   0x00000064   Code   RO         1171    i.MX_GPIO_Init      main.o
-    0x08066678   0x00000034   Code   RO         1172    i.MX_RNG_Init       main.o
-    0x080666ac   0x00000004   Code   RO         1098    i.MemManage_Handler  stm32f4xx_it.o
-    0x080666b0   0x00000044   Code   RO         3301    i.ModularAddBig     Sha256.lib(crypto.o)
-    0x080666f4   0x0000008a   Code   RO         3303    i.ModularFastMul2   Sha256.lib(crypto.o)
-    0x0806677e   0x0000021c   Code   RO         3304    i.ModularInvBig     Sha256.lib(crypto.o)
-    0x0806699a   0x00000058   Code   RO         3306    i.MontyExit         Sha256.lib(crypto.o)
-    0x080669f2   0x00000002   PAD
-    0x080669f4   0x0000036a   Code   RO         3307    i.MontyInit         Sha256.lib(crypto.o)
-    0x08066d5e   0x0000037e   Code   RO         3308    i.MontyJacProjAddPoints  Sha256.lib(crypto.o)
-    0x080670dc   0x0000030a   Code   RO         3309    i.MontyJacProjDoublePoint  Sha256.lib(crypto.o)
-    0x080673e6   0x00000030   Code   RO         3310    i.MontyKillAll      Sha256.lib(crypto.o)
-    0x08067416   0x00000002   PAD
-    0x08067418   0x0000020c   Code   RO         3312    i.MontyMul          Sha256.lib(crypto.o)
-    0x08067624   0x00000044   Code   RO          820    i.My_DES_Decrypt    app_des.o
-    0x08067668   0x00000344   Code   RO         3314    i.NAF_Binary_PointMul  Sha256.lib(crypto.o)
-    0x080679ac   0x00000002   Code   RO         1099    i.NMI_Handler       stm32f4xx_it.o
-    0x080679ae   0x00000002   PAD
-    0x080679b0   0x00000010   Code   RO         2040    i.NVIC_GetPriorityGrouping  stm32f4xx_hal_cortex.o
-    0x080679c0   0x00000028   Code   RO         2041    i.NVIC_SetPriority  stm32f4xx_hal_cortex.o
-    0x080679e8   0x00000170   Code   RO         3315    i.Normalize         Sha256.lib(crypto.o)
-    0x08067b58   0x00000002   Code   RO         1100    i.PendSV_Handler    stm32f4xx_it.o
-    0x08067b5a   0x00000002   PAD
-    0x08067b5c   0x00000020   Code   RO         3599    i.RCC_AHB1PeriphClockCmd  Sha256.lib(stm32f4xx_rcc.o)
-    0x08067b7c   0x00000020   Code   RO         3602    i.RCC_AHB2PeriphClockCmd  Sha256.lib(stm32f4xx_rcc.o)
-    0x08067b9c   0x00000020   Code   RO         3604    i.RCC_AHB2PeriphResetCmd  Sha256.lib(stm32f4xx_rcc.o)
-    0x08067bbc   0x00000024   Code   RO         4039    i.RNG_Cmd           Sha256.lib(stm32f4xx_rng.o)
-    0x08067be0   0x00000014   Code   RO         4040    i.RNG_DeInit        Sha256.lib(stm32f4xx_rng.o)
-    0x08067bf4   0x0000006c   Code   RO          162    i.RNG_init_for_sign  ecdsa.o
-    0x08067c60   0x00000048   Code   RO         3316    i.RNGfree           Sha256.lib(crypto.o)
-    0x08067ca8   0x000001d4   Code   RO         3317    i.RNGgenBytes       Sha256.lib(crypto.o)
-    0x08067e7c   0x00000108   Code   RO         3319    i.RNGinit           Sha256.lib(crypto.o)
-    0x08067f84   0x00000068   Code   RO         3094    i.RcvByte           bitbang_i2c.o
-    0x08067fec   0x00000b38   Code   RO          552    i.ReadByteLength    showsign.o
-    0x08068b24   0x00000020   Code   RO          553    i.ReadByteLengthIndex  showsign.o
-    0x08068b44   0x00000186   Code   RO         3338    i.SHA256Final       Sha256.lib(crypto.o)
-    0x08068cca   0x00000002   PAD
-    0x08068ccc   0x00000258   Code   RO         3340    i.SHA256Transform   Sha256.lib(crypto.o)
-    0x08068f24   0x0000009a   Code   RO         3341    i.SHA256Update      Sha256.lib(crypto.o)
-    0x08068fbe   0x0000002a   Code   RO         3342    i.SHA256_Append     Sha256.lib(crypto.o)
-    0x08068fe8   0x00000090   Code   RO         3343    i.SHA256_Finish     Sha256.lib(crypto.o)
-    0x08069078   0x0000005c   Code   RO         3344    i.SHA256_Init       Sha256.lib(crypto.o)
-    0x080690d4   0x00000064   Code   RO          787    i.STM32_AES_ECB_Decrypt  app_aes.o
-    0x08069138   0x00000068   Code   RO          822    i.STM32_DES_CBC_Decrypt  app_des.o
-    0x080691a0   0x00000020   Code   RO          693    i.STMFLASH_Read     stmflash.o
-    0x080691c0   0x00000006   Code   RO          694    i.STMFLASH_ReadByte  stmflash.o
-    0x080691c6   0x00000006   Code   RO          696    i.STMFLASH_ReadWord  stmflash.o
-    0x080691cc   0x0000001e   Code   RO          697    i.STMFLASH_Read_ByteArray  stmflash.o
-    0x080691ea   0x0000001c   Code   RO          699    i.STMFLASH_WriteByte  stmflash.o
-    0x08069206   0x0000001c   Code   RO          701    i.STMFLASH_WriteWord  stmflash.o
-    0x08069222   0x00000002   PAD
-    0x08069224   0x00000054   Code   RO          702    i.STMFLASH_Write_ByteArray  stmflash.o
-    0x08069278   0x00000002   Code   RO         1101    i.SVC_Handler       stm32f4xx_it.o
-    0x0806927a   0x00000002   PAD
-    0x0806927c   0x0000009c   Code   RO         3095    i.SendByte          bitbang_i2c.o
-    0x08069318   0x00000046   Code   RO         3345    i.SetZeroBig        Sha256.lib(crypto.o)
-    0x0806935e   0x00000042   Code   RO         3347    i.StAllocBig        Sha256.lib(crypto.o)
-    0x080693a0   0x00000024   Code   RO         3348    i.StFreeBig         Sha256.lib(crypto.o)
-    0x080693c4   0x00000040   Code   RO         3096    i.Start_I2c         bitbang_i2c.o
-    0x08069404   0x00000034   Code   RO         3097    i.Stop_I2c          bitbang_i2c.o
-    0x08069438   0x000000ea   Code   RO         3349    i.SubBig            Sha256.lib(crypto.o)
-    0x08069522   0x000001b4   Code   RO         3350    i.Sub_Moduli_Big    Sha256.lib(crypto.o)
-    0x080696d6   0x0000000c   Code   RO         1102    i.SysTick_Handler   stm32f4xx_it.o
-    0x080696e2   0x00000002   PAD
-    0x080696e4   0x000000e0   Code   RO         1173    i.SystemClock_Config  main.o
-    0x080697c4   0x00000064   Code   RO         1059    i.SystemInit        system_stm32f4xx.o
-    0x08069828   0x00000004   Code   RO         1103    i.UsageFault_Handler  stm32f4xx_it.o
-    0x0806982c   0x0000003c   Code   RO         1007    i.Utils_crc32       app_interface.o
-    0x08069868   0x00000030   Code   RO         1008    i.Utils_verifycrc   app_interface.o
-    0x08069898   0x00000146   Code   RO         3365    i.W8_to_Big         Sha256.lib(crypto.o)
-    0x080699de   0x00000004   Code   RO         1174    i._Error_Handler    main.o
-    0x080699e2   0x00000002   PAD
-    0x080699e4   0x00000020   Code   RO         4295    i.__0printf$5       mc_w.l(printf5.o)
-    0x08069a04   0x00000030   Code   RO         4483    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
-    0x08069a34   0x00000048   Code   RO         3050    i.__delay_us        hal_stm32_timer.o
-    0x08069a7c   0x00000004   PAD
-    0x08069a80   0x00000c38   Code   RO         4097    i.__hardfp_pow      m_wm.l(pow.o)
-    0x0806a6b8   0x000000f8   Code   RO         4485    i.__kernel_poly     m_wm.l(poly.o)
-    0x0806a7b0   0x00000030   Code   RO         4463    i.__mathlib_dbl_divzero  m_wm.l(dunder.o)
-    0x0806a7e0   0x00000014   Code   RO         4465    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
-    0x0806a7f4   0x00000004   PAD
-    0x0806a7f8   0x00000020   Code   RO         4466    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
-    0x0806a818   0x00000020   Code   RO         4467    i.__mathlib_dbl_overflow  m_wm.l(dunder.o)
-    0x0806a838   0x00000020   Code   RO         4469    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
-    0x0806a858   0x0000000e   Code   RO         4555    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x0806a866   0x00000002   Code   RO         4556    i.__scatterload_null  mc_w.l(handlers.o)
-    0x0806a868   0x0000000e   Code   RO         4557    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x0806a876   0x00000002   PAD
-    0x0806a878   0x0000000c   Code   RO         4529    i.__set_errno       mc_w.l(errno.o)
-    0x0806a884   0x00000008   Code   RO         2681    i._atcab_exit       atca_basic.o
-    0x0806a88c   0x000002c0   Code   RO         4302    i._printf_core      mc_w.l(printf5.o)
-    0x0806ab4c   0x00000060   Code   RO         2558    i.atCRC             atca_command.o
-    0x0806abac   0x0000001a   Code   RO         2559    i.atCalcCrc         atca_command.o
-    0x0806abc6   0x00000002   PAD
-    0x0806abc8   0x00000010   Code   RO         2564    i.atGetExecTime     atca_command.o
-    0x0806abd8   0x0000002a   Code   RO         2568    i.atMAC             atca_command.o
-    0x0806ac02   0x0000002c   Code   RO         2572    i.atRead            atca_command.o
-    0x0806ac2e   0x0000000c   Code   RO         3051    i.atca_delay_ms     hal_stm32_timer.o
-    0x0806ac3a   0x0000005c   Code   RO         2686    i.atcab_get_addr    atca_basic.o
-    0x0806ac96   0x00000008   Code   RO         2688    i.atcab_idle        atca_basic.o
-    0x0806ac9e   0x00000064   Code   RO         2690    i.atcab_is_locked   atca_basic.o
-    0x0806ad02   0x000000da   Code   RO         2691    i.atcab_mac         atca_basic.o
-    0x0806addc   0x00000042   Code   RO         2698    i.atcab_read_serial_number  atca_basic.o
-    0x0806ae1e   0x000000ec   Code   RO         2699    i.atcab_read_zone   atca_basic.o
-    0x0806af0a   0x00000008   Code   RO         2702    i.atcab_wakeup      atca_basic.o
-    0x0806af12   0x0000001c   Code   RO         2998    i.atidle            atca_iface_stm32_i2c.o
-    0x0806af2e   0x00000016   Code   RO         2999    i.atreceive         atca_iface_stm32_i2c.o
-    0x0806af44   0x0000001c   Code   RO         3000    i.atsend            atca_iface_stm32_i2c.o
-    0x0806af60   0x00000040   Code   RO         3002    i.atwake            atca_iface_stm32_i2c.o
-    0x0806afa0   0x000001c2   Code   RO         3366    i.crl_DRBG_AES128_Generate  Sha256.lib(crypto.o)
-    0x0806b162   0x00000002   PAD
-    0x0806b164   0x000001dc   Code   RO         3373    i.desfunc           Sha256.lib(crypto.o)
-    0x0806b340   0x00000260   Code   RO         3374    i.deskey            Sha256.lib(crypto.o)
-    0x0806b5a0   0x00000018   Code   RO         4479    i.fabs              m_wm.l(fabs.o)
-    0x0806b5b8   0x00000012   Code   RO         4514    i.fputc             mc_w.l(fputc.o)
-    0x0806b5ca   0x00000002   PAD
-    0x0806b5cc   0x0000005c   Code   RO         2576    i.isATCAError       atca_command.o
-    0x0806b628   0x00000038   Code   RO         1175    i.jump_to_app       main.o
-    0x0806b660   0x000002d4   Code   RO         1176    i.main              main.o
-    0x0806b934   0x00000050   Code   RO         1009    i.make_table        app_interface.o
-    0x0806b984   0x0000006e   Code   RO         4490    i.sqrt              m_wm.l(sqrt.o)
-    0x0806b9f2   0x00000024   Code   RO          876    i.test_assert_data_is_locked  atsha204a.o
-    0x0806ba16   0x00000002   PAD
-    0x0806ba18   0x00000123   Data   RO          167    .constdata          ecdsa.o
-    0x0806bb3b   0x00000001   PAD
-    0x0806bb3c   0x00000204   Data   RO          562    .constdata          showsign.o
-    0x0806bd40   0x00000018   Data   RO         1060    .constdata          system_stm32f4xx.o
-    0x0806bd58   0x00001798   Data   RO         3377    .constdata          Sha256.lib(crypto.o)
-    0x0806d4f0   0x00000088   Data   RO         4100    .constdata          m_wm.l(pow.o)
-    0x0806d578   0x00000008   Data   RO         4487    .constdata          m_wm.l(qnan.o)
-    0x0806d580   0x00000020   Data   RO         4553    Region$$Table       anon$$obj.o
+    0x080622dc   0x00000ffc   Code   RO          541    i.Alg_ShowSignData  showsign.o
+    0x080632d8   0x000000d0   Code   RO          542    i.Ascii2Dec         showsign.o
+    0x080633a8   0x00000050   Code   RO          395    i.Base58_25Bytes    getaddress.o
+    0x080633f8   0x000000b4   Code   RO         3238    i.Big_to_W8         Sha256.lib(crypto.o)
+    0x080634ac   0x0000008c   Code   RO         3239    i.Big_to_fixedW8    Sha256.lib(crypto.o)
+    0x08063538   0x00000004   Code   RO         1106    i.BusFault_Handler  stm32f4xx_it.o
+    0x0806353c   0x000000a6   Code   RO         3240    i.CompareBig        Sha256.lib(crypto.o)
+    0x080635e2   0x00000002   PAD
+    0x080635e4   0x0000009e   Code   RO         3241    i.CopyBig           Sha256.lib(crypto.o)
+    0x08063682   0x00000030   Code   RO         3242    i.CountBits         Sha256.lib(crypto.o)
+    0x080636b2   0x00000002   PAD
+    0x080636b4   0x000000a0   Code   RO          544    i.CountMoney        showsign.o
+    0x08063754   0x00000008   Code   RO         3244    i.Crypto_DeInit     Sha256.lib(crypto.o)
+    0x0806375c   0x000000c4   Code   RO         3245    i.DES_CBC_Decrypt_Append  Sha256.lib(crypto.o)
+    0x08063820   0x0000001a   Code   RO         3246    i.DES_CBC_Decrypt_Finish  Sha256.lib(crypto.o)
+    0x0806383a   0x00000006   Code   RO         3247    i.DES_CBC_Decrypt_Init  Sha256.lib(crypto.o)
+    0x08063840   0x000000f8   Code   RO         3257    i.DESstdInit        Sha256.lib(crypto.o)
+    0x08063938   0x00000180   Code   RO         3258    i.DRBG_AES128_Block_cipher_df  Sha256.lib(crypto.o)
+    0x08063ab8   0x00000086   Code   RO         3259    i.DRBG_AES128_Update  Sha256.lib(crypto.o)
+    0x08063b3e   0x00000002   Code   RO         1107    i.DebugMon_Handler  stm32f4xx_it.o
+    0x08063b40   0x00000134   Code   RO         1016    i.DecryptData       app_interface.o
+    0x08063c74   0x00000184   Code   RO          158    i.ECCGetPublickeyFromPrivateKey_OLD  ecdsa.o
+    0x08063df8   0x0000013c   Code   RO          159    i.ECCSignGenerate   ecdsa.o
+    0x08063f34   0x00000066   Code   RO         3260    i.ECCcopyPoint      Sha256.lib(crypto.o)
+    0x08063f9a   0x0000007c   Code   RO         3261    i.ECCfreeEC         Sha256.lib(crypto.o)
+    0x08064016   0x00000042   Code   RO         3262    i.ECCfreePoint      Sha256.lib(crypto.o)
+    0x08064058   0x0000002e   Code   RO         3263    i.ECCfreePrivKey    Sha256.lib(crypto.o)
+    0x08064086   0x00000002   PAD
+    0x08064088   0x000000bc   Code   RO         3264    i.ECCgetPointCoordinate  Sha256.lib(crypto.o)
+    0x08064144   0x000001b8   Code   RO         3267    i.ECCinitEC         Sha256.lib(crypto.o)
+    0x080642fc   0x000000d0   Code   RO         3268    i.ECCinitPoint      Sha256.lib(crypto.o)
+    0x080643cc   0x0000006e   Code   RO         3269    i.ECCinitPrivKey    Sha256.lib(crypto.o)
+    0x0806443a   0x00000002   PAD
+    0x0806443c   0x000000ec   Code   RO         3273    i.ECCscalarMul      Sha256.lib(crypto.o)
+    0x08064528   0x00000080   Code   RO         3276    i.ECCsetPointGenerator  Sha256.lib(crypto.o)
+    0x080645a8   0x00000024   Code   RO         3277    i.ECCsetPrivKeyValue  Sha256.lib(crypto.o)
+    0x080645cc   0x00000260   Code   RO         3279    i.ECCvalidatePubKey  Sha256.lib(crypto.o)
+    0x0806482c   0x00000038   Code   RO         3280    i.ECDSAfreeSign     Sha256.lib(crypto.o)
+    0x08064864   0x000000a4   Code   RO         3281    i.ECDSAgetSignature  Sha256.lib(crypto.o)
+    0x08064908   0x0000007c   Code   RO         3282    i.ECDSAinitSign     Sha256.lib(crypto.o)
+    0x08064984   0x000005fa   Code   RO         3284    i.ECDSAsign         Sha256.lib(crypto.o)
+    0x08064f7e   0x00000002   PAD
+    0x08064f80   0x00000060   Code   RO          160    i.EC_ParaInit       ecdsa.o
+    0x08064fe0   0x00000024   Code   RO         1315    i.FLASH_Program_Byte  stm32f4xx_hal_flash.o
+    0x08065004   0x0000002c   Code   RO         1316    i.FLASH_Program_DoubleWord  stm32f4xx_hal_flash.o
+    0x08065030   0x00000028   Code   RO         1317    i.FLASH_Program_HalfWord  stm32f4xx_hal_flash.o
+    0x08065058   0x00000028   Code   RO         1318    i.FLASH_Program_Word  stm32f4xx_hal_flash.o
+    0x08065080   0x00000098   Code   RO         1319    i.FLASH_SetErrorCode  stm32f4xx_hal_flash.o
+    0x08065118   0x00000064   Code   RO         1320    i.FLASH_WaitForLastOperation  stm32f4xx_hal_flash.o
+    0x0806517c   0x00000062   Code   RO         3287    i.FastDiv2          Sha256.lib(crypto.o)
+    0x080651de   0x00000002   PAD
+    0x080651e0   0x000000a0   Code   RO          548    i.GetAssetID        showsign.o
+    0x08065280   0x00000026   Code   RO         1017    i.Get_Privekey      app_interface.o
+    0x080652a6   0x00000024   Code   RO         2309    i.HAL_CRC_Init      stm32f4xx_hal_crc.o
+    0x080652ca   0x00000002   PAD
+    0x080652cc   0x00000034   Code   RO         1246    i.HAL_CRC_MspInit   stm32f4xx_hal_msp.o
+    0x08065300   0x00000044   Code   RO         2425    i.HAL_DeInit        stm32f4xx_hal.o
+    0x08065344   0x0000001e   Code   RO         2426    i.HAL_Delay         stm32f4xx_hal.o
+    0x08065362   0x00000002   PAD
+    0x08065364   0x00000014   Code   RO         1324    i.HAL_FLASH_Lock    stm32f4xx_hal_flash.o
+    0x08065378   0x00000098   Code   RO         1329    i.HAL_FLASH_Program  stm32f4xx_hal_flash.o
+    0x08065410   0x00000034   Code   RO         1331    i.HAL_FLASH_Unlock  stm32f4xx_hal_flash.o
+    0x08065444   0x00000200   Code   RO         1790    i.HAL_GPIO_Init     stm32f4xx_hal_gpio.o
+    0x08065644   0x0000000c   Code   RO         2432    i.HAL_GetTick       stm32f4xx_hal.o
+    0x08065650   0x00000010   Code   RO         2434    i.HAL_IncTick       stm32f4xx_hal.o
+    0x08065660   0x0000003c   Code   RO         2435    i.HAL_Init          stm32f4xx_hal.o
+    0x0806569c   0x00000028   Code   RO         2436    i.HAL_InitTick      stm32f4xx_hal.o
+    0x080656c4   0x00000002   Code   RO         2437    i.HAL_MspDeInit     stm32f4xx_hal.o
+    0x080656c6   0x00000056   Code   RO         1247    i.HAL_MspInit       stm32f4xx_hal_msp.o
+    0x0806571c   0x0000001c   Code   RO         2037    i.HAL_NVIC_DisableIRQ  stm32f4xx_hal_cortex.o
+    0x08065738   0x0000007c   Code   RO         2044    i.HAL_NVIC_SetPriority  stm32f4xx_hal_cortex.o
+    0x080657b4   0x00000028   Code   RO         2045    i.HAL_NVIC_SetPriorityGrouping  stm32f4xx_hal_cortex.o
+    0x080657dc   0x00000180   Code   RO         1686    i.HAL_RCC_ClockConfig  stm32f4xx_hal_rcc.o
+    0x0806595c   0x0000000c   Code   RO         1691    i.HAL_RCC_GetHCLKFreq  stm32f4xx_hal_rcc.o
+    0x08065968   0x000000b0   Code   RO         1695    i.HAL_RCC_GetSysClockFreq  stm32f4xx_hal_rcc.o
+    0x08065a18   0x00000410   Code   RO         1698    i.HAL_RCC_OscConfig  stm32f4xx_hal_rcc.o
+    0x08065e28   0x00000030   Code   RO         2181    i.HAL_RNG_Init      stm32f4xx_hal_rng.o
+    0x08065e58   0x00000034   Code   RO         1249    i.HAL_RNG_MspInit   stm32f4xx_hal_msp.o
+    0x08065e8c   0x00000028   Code   RO         2047    i.HAL_SYSTICK_CLKSourceConfig  stm32f4xx_hal_cortex.o
+    0x08065eb4   0x00000002   Code   RO         2048    i.HAL_SYSTICK_Callback  stm32f4xx_hal_cortex.o
+    0x08065eb6   0x00000034   Code   RO         2049    i.HAL_SYSTICK_Config  stm32f4xx_hal_cortex.o
+    0x08065eea   0x00000008   Code   RO         2050    i.HAL_SYSTICK_IRQHandler  stm32f4xx_hal_cortex.o
+    0x08065ef2   0x00000054   Code   RO          161    i.HASH_DigestCompute  ecdsa.o
+    0x08065f46   0x00000004   Code   RO         1108    i.HardFault_Handler  stm32f4xx_it.o
+    0x08065f4a   0x00000066   Code   RO          551    i.HexToString       showsign.o
+    0x08065fb0   0x00000068   Code   RO         3306    i.InitBig           Sha256.lib(crypto.o)
+    0x08066018   0x00000090   Code   RO         3308    i.LeftShift         Sha256.lib(crypto.o)
+    0x080660a8   0x00000034   Code   RO         1181    i.MX_CRC_Init       main.o
+    0x080660dc   0x00000064   Code   RO         1182    i.MX_GPIO_Init      main.o
+    0x08066140   0x00000034   Code   RO         1183    i.MX_RNG_Init       main.o
+    0x08066174   0x00000004   Code   RO         1109    i.MemManage_Handler  stm32f4xx_it.o
+    0x08066178   0x00000044   Code   RO         3312    i.ModularAddBig     Sha256.lib(crypto.o)
+    0x080661bc   0x0000008a   Code   RO         3314    i.ModularFastMul2   Sha256.lib(crypto.o)
+    0x08066246   0x0000021c   Code   RO         3315    i.ModularInvBig     Sha256.lib(crypto.o)
+    0x08066462   0x00000058   Code   RO         3317    i.MontyExit         Sha256.lib(crypto.o)
+    0x080664ba   0x00000002   PAD
+    0x080664bc   0x0000036a   Code   RO         3318    i.MontyInit         Sha256.lib(crypto.o)
+    0x08066826   0x0000037e   Code   RO         3319    i.MontyJacProjAddPoints  Sha256.lib(crypto.o)
+    0x08066ba4   0x0000030a   Code   RO         3320    i.MontyJacProjDoublePoint  Sha256.lib(crypto.o)
+    0x08066eae   0x00000030   Code   RO         3321    i.MontyKillAll      Sha256.lib(crypto.o)
+    0x08066ede   0x00000002   PAD
+    0x08066ee0   0x0000020c   Code   RO         3323    i.MontyMul          Sha256.lib(crypto.o)
+    0x080670ec   0x00000044   Code   RO          831    i.My_DES_Decrypt    app_des.o
+    0x08067130   0x00000344   Code   RO         3325    i.NAF_Binary_PointMul  Sha256.lib(crypto.o)
+    0x08067474   0x00000002   Code   RO         1110    i.NMI_Handler       stm32f4xx_it.o
+    0x08067476   0x00000002   PAD
+    0x08067478   0x00000010   Code   RO         2051    i.NVIC_GetPriorityGrouping  stm32f4xx_hal_cortex.o
+    0x08067488   0x00000028   Code   RO         2052    i.NVIC_SetPriority  stm32f4xx_hal_cortex.o
+    0x080674b0   0x00000026   Code   RO          552    i.Nep5CountMoney    showsign.o
+    0x080674d6   0x00000002   PAD
+    0x080674d8   0x00000090   Code   RO          553    i.Nep5GetAssetID    showsign.o
+    0x08067568   0x00000170   Code   RO         3326    i.Normalize         Sha256.lib(crypto.o)
+    0x080676d8   0x00000002   Code   RO         1111    i.PendSV_Handler    stm32f4xx_it.o
+    0x080676da   0x00000002   PAD
+    0x080676dc   0x00000020   Code   RO         3610    i.RCC_AHB1PeriphClockCmd  Sha256.lib(stm32f4xx_rcc.o)
+    0x080676fc   0x00000020   Code   RO         3613    i.RCC_AHB2PeriphClockCmd  Sha256.lib(stm32f4xx_rcc.o)
+    0x0806771c   0x00000020   Code   RO         3615    i.RCC_AHB2PeriphResetCmd  Sha256.lib(stm32f4xx_rcc.o)
+    0x0806773c   0x00000024   Code   RO         4050    i.RNG_Cmd           Sha256.lib(stm32f4xx_rng.o)
+    0x08067760   0x00000014   Code   RO         4051    i.RNG_DeInit        Sha256.lib(stm32f4xx_rng.o)
+    0x08067774   0x0000006c   Code   RO          162    i.RNG_init_for_sign  ecdsa.o
+    0x080677e0   0x00000048   Code   RO         3327    i.RNGfree           Sha256.lib(crypto.o)
+    0x08067828   0x000001d4   Code   RO         3328    i.RNGgenBytes       Sha256.lib(crypto.o)
+    0x080679fc   0x00000108   Code   RO         3330    i.RNGinit           Sha256.lib(crypto.o)
+    0x08067b04   0x00000068   Code   RO         3105    i.RcvByte           bitbang_i2c.o
+    0x08067b6c   0x00000b38   Code   RO          554    i.ReadByteLength    showsign.o
+    0x080686a4   0x00000020   Code   RO          555    i.ReadByteLengthIndex  showsign.o
+    0x080686c4   0x00000186   Code   RO         3349    i.SHA256Final       Sha256.lib(crypto.o)
+    0x0806884a   0x00000002   PAD
+    0x0806884c   0x00000258   Code   RO         3351    i.SHA256Transform   Sha256.lib(crypto.o)
+    0x08068aa4   0x0000009a   Code   RO         3352    i.SHA256Update      Sha256.lib(crypto.o)
+    0x08068b3e   0x0000002a   Code   RO         3353    i.SHA256_Append     Sha256.lib(crypto.o)
+    0x08068b68   0x00000090   Code   RO         3354    i.SHA256_Finish     Sha256.lib(crypto.o)
+    0x08068bf8   0x0000005c   Code   RO         3355    i.SHA256_Init       Sha256.lib(crypto.o)
+    0x08068c54   0x00000064   Code   RO          798    i.STM32_AES_ECB_Decrypt  app_aes.o
+    0x08068cb8   0x00000068   Code   RO          833    i.STM32_DES_CBC_Decrypt  app_des.o
+    0x08068d20   0x00000020   Code   RO          704    i.STMFLASH_Read     stmflash.o
+    0x08068d40   0x00000006   Code   RO          705    i.STMFLASH_ReadByte  stmflash.o
+    0x08068d46   0x00000006   Code   RO          707    i.STMFLASH_ReadWord  stmflash.o
+    0x08068d4c   0x0000001e   Code   RO          708    i.STMFLASH_Read_ByteArray  stmflash.o
+    0x08068d6a   0x0000001c   Code   RO          710    i.STMFLASH_WriteByte  stmflash.o
+    0x08068d86   0x0000001c   Code   RO          712    i.STMFLASH_WriteWord  stmflash.o
+    0x08068da2   0x00000002   PAD
+    0x08068da4   0x00000054   Code   RO          713    i.STMFLASH_Write_ByteArray  stmflash.o
+    0x08068df8   0x00000002   Code   RO         1112    i.SVC_Handler       stm32f4xx_it.o
+    0x08068dfa   0x00000002   PAD
+    0x08068dfc   0x0000009c   Code   RO         3106    i.SendByte          bitbang_i2c.o
+    0x08068e98   0x00000046   Code   RO         3356    i.SetZeroBig        Sha256.lib(crypto.o)
+    0x08068ede   0x00000042   Code   RO         3358    i.StAllocBig        Sha256.lib(crypto.o)
+    0x08068f20   0x00000024   Code   RO         3359    i.StFreeBig         Sha256.lib(crypto.o)
+    0x08068f44   0x00000040   Code   RO         3107    i.Start_I2c         bitbang_i2c.o
+    0x08068f84   0x00000034   Code   RO         3108    i.Stop_I2c          bitbang_i2c.o
+    0x08068fb8   0x000000ea   Code   RO         3360    i.SubBig            Sha256.lib(crypto.o)
+    0x080690a2   0x000001b4   Code   RO         3361    i.Sub_Moduli_Big    Sha256.lib(crypto.o)
+    0x08069256   0x0000000c   Code   RO         1113    i.SysTick_Handler   stm32f4xx_it.o
+    0x08069262   0x00000002   PAD
+    0x08069264   0x000000e0   Code   RO         1184    i.SystemClock_Config  main.o
+    0x08069344   0x00000064   Code   RO         1070    i.SystemInit        system_stm32f4xx.o
+    0x080693a8   0x00000004   Code   RO         1114    i.UsageFault_Handler  stm32f4xx_it.o
+    0x080693ac   0x0000003c   Code   RO         1018    i.Utils_crc32       app_interface.o
+    0x080693e8   0x00000030   Code   RO         1019    i.Utils_verifycrc   app_interface.o
+    0x08069418   0x00000146   Code   RO         3376    i.W8_to_Big         Sha256.lib(crypto.o)
+    0x0806955e   0x00000004   Code   RO         1185    i._Error_Handler    main.o
+    0x08069562   0x00000002   PAD
+    0x08069564   0x00000020   Code   RO         4306    i.__0printf$5       mc_w.l(printf5.o)
+    0x08069584   0x00000030   Code   RO         4494    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
+    0x080695b4   0x00000048   Code   RO         3061    i.__delay_us        hal_stm32_timer.o
+    0x080695fc   0x00000004   PAD
+    0x08069600   0x00000c38   Code   RO         4108    i.__hardfp_pow      m_wm.l(pow.o)
+    0x0806a238   0x000000f8   Code   RO         4496    i.__kernel_poly     m_wm.l(poly.o)
+    0x0806a330   0x00000030   Code   RO         4474    i.__mathlib_dbl_divzero  m_wm.l(dunder.o)
+    0x0806a360   0x00000014   Code   RO         4476    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
+    0x0806a374   0x00000004   PAD
+    0x0806a378   0x00000020   Code   RO         4477    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
+    0x0806a398   0x00000020   Code   RO         4478    i.__mathlib_dbl_overflow  m_wm.l(dunder.o)
+    0x0806a3b8   0x00000020   Code   RO         4480    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
+    0x0806a3d8   0x0000000e   Code   RO         4566    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x0806a3e6   0x00000002   Code   RO         4567    i.__scatterload_null  mc_w.l(handlers.o)
+    0x0806a3e8   0x0000000e   Code   RO         4568    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x0806a3f6   0x00000002   PAD
+    0x0806a3f8   0x0000000c   Code   RO         4540    i.__set_errno       mc_w.l(errno.o)
+    0x0806a404   0x00000008   Code   RO         2692    i._atcab_exit       atca_basic.o
+    0x0806a40c   0x000002c0   Code   RO         4313    i._printf_core      mc_w.l(printf5.o)
+    0x0806a6cc   0x00000060   Code   RO         2569    i.atCRC             atca_command.o
+    0x0806a72c   0x0000001a   Code   RO         2570    i.atCalcCrc         atca_command.o
+    0x0806a746   0x00000002   PAD
+    0x0806a748   0x00000010   Code   RO         2575    i.atGetExecTime     atca_command.o
+    0x0806a758   0x0000002a   Code   RO         2579    i.atMAC             atca_command.o
+    0x0806a782   0x0000002c   Code   RO         2583    i.atRead            atca_command.o
+    0x0806a7ae   0x0000000c   Code   RO         3062    i.atca_delay_ms     hal_stm32_timer.o
+    0x0806a7ba   0x0000005c   Code   RO         2697    i.atcab_get_addr    atca_basic.o
+    0x0806a816   0x00000008   Code   RO         2699    i.atcab_idle        atca_basic.o
+    0x0806a81e   0x00000064   Code   RO         2701    i.atcab_is_locked   atca_basic.o
+    0x0806a882   0x000000da   Code   RO         2702    i.atcab_mac         atca_basic.o
+    0x0806a95c   0x00000042   Code   RO         2709    i.atcab_read_serial_number  atca_basic.o
+    0x0806a99e   0x000000ec   Code   RO         2710    i.atcab_read_zone   atca_basic.o
+    0x0806aa8a   0x00000008   Code   RO         2713    i.atcab_wakeup      atca_basic.o
+    0x0806aa92   0x0000001c   Code   RO         3009    i.atidle            atca_iface_stm32_i2c.o
+    0x0806aaae   0x00000016   Code   RO         3010    i.atreceive         atca_iface_stm32_i2c.o
+    0x0806aac4   0x0000001c   Code   RO         3011    i.atsend            atca_iface_stm32_i2c.o
+    0x0806aae0   0x00000040   Code   RO         3013    i.atwake            atca_iface_stm32_i2c.o
+    0x0806ab20   0x000001c2   Code   RO         3377    i.crl_DRBG_AES128_Generate  Sha256.lib(crypto.o)
+    0x0806ace2   0x00000002   PAD
+    0x0806ace4   0x000001dc   Code   RO         3384    i.desfunc           Sha256.lib(crypto.o)
+    0x0806aec0   0x00000260   Code   RO         3385    i.deskey            Sha256.lib(crypto.o)
+    0x0806b120   0x00000018   Code   RO         4490    i.fabs              m_wm.l(fabs.o)
+    0x0806b138   0x00000012   Code   RO         4525    i.fputc             mc_w.l(fputc.o)
+    0x0806b14a   0x00000002   PAD
+    0x0806b14c   0x0000005c   Code   RO         2587    i.isATCAError       atca_command.o
+    0x0806b1a8   0x00000038   Code   RO         1186    i.jump_to_app       main.o
+    0x0806b1e0   0x000002d4   Code   RO         1187    i.main              main.o
+    0x0806b4b4   0x00000050   Code   RO         1020    i.make_table        app_interface.o
+    0x0806b504   0x0000006e   Code   RO         4501    i.sqrt              m_wm.l(sqrt.o)
+    0x0806b572   0x00000024   Code   RO          887    i.test_assert_data_is_locked  atsha204a.o
+    0x0806b596   0x00000002   PAD
+    0x0806b598   0x00000123   Data   RO          167    .constdata          ecdsa.o
+    0x0806b6bb   0x00000001   PAD
+    0x0806b6bc   0x00000204   Data   RO          564    .constdata          showsign.o
+    0x0806b8c0   0x00000018   Data   RO         1071    .constdata          system_stm32f4xx.o
+    0x0806b8d8   0x00001798   Data   RO         3388    .constdata          Sha256.lib(crypto.o)
+    0x0806d070   0x00000088   Data   RO         4111    .constdata          m_wm.l(pow.o)
+    0x0806d0f8   0x00000008   Data   RO         4498    .constdata          m_wm.l(qnan.o)
+    0x0806d100   0x00000020   Data   RO         4564    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x000036b0, Max: 0x00020000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00000001   Data   RW         1011    .data               app_interface.o
+    0x20000000   0x00000001   Data   RW         1022    .data               app_interface.o
     0x20000001   0x00000003   PAD
-    0x20000004   0x00000004   Data   RW         1061    .data               system_stm32f4xx.o
-    0x20000008   0x00000010   Data   RW         1178    .data               main.o
-    0x20000018   0x00000004   Data   RW         2430    .data               stm32f4xx_hal.o
-    0x2000001c   0x0000002a   Data   RW         2577    .data               atca_command.o
+    0x20000004   0x00000004   Data   RW         1072    .data               system_stm32f4xx.o
+    0x20000008   0x00000010   Data   RW         1189    .data               main.o
+    0x20000018   0x00000004   Data   RW         2441    .data               stm32f4xx_hal.o
+    0x2000001c   0x0000002a   Data   RW         2588    .data               atca_command.o
     0x20000046   0x00000002   PAD
-    0x20000048   0x00000004   Data   RW         3098    .data               bitbang_i2c.o
-    0x2000004c   0x00000004   Data   RW         4516    .data               mc_w.l(stdout.o)
-    0x20000050   0x00000004   Data   RW         4530    .data               mc_w.l(errno.o)
+    0x20000048   0x00000004   Data   RW         3109    .data               bitbang_i2c.o
+    0x2000004c   0x00000004   Data   RW         4527    .data               mc_w.l(stdout.o)
+    0x20000050   0x00000004   Data   RW         4541    .data               mc_w.l(errno.o)
     0x20000054   0x00001010   Zero   RW          166    .bss                ecdsa.o
-    0x20001064   0x00000400   Zero   RW         1010    .bss                app_interface.o
-    0x20001464   0x0000022c   Zero   RW         1177    .bss                main.o
-    0x20001690   0x00000020   Zero   RW         1321    .bss                stm32f4xx_hal_flash.o
+    0x20001064   0x00000400   Zero   RW         1021    .bss                app_interface.o
+    0x20001464   0x0000022c   Zero   RW         1188    .bss                main.o
+    0x20001690   0x00000020   Zero   RW         1332    .bss                stm32f4xx_hal_flash.o
     0x200016b0   0x00002000   Zero   RW            1    STACK               startup_stm32f407xx.o
 
 
@@ -3243,38 +3252,38 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       100          0          0          0          0       1312   app_aes.o
-       172         10          0          0          0       2229   app_des.o
-       534         22          0          1       1024       4401   app_interface.o
-       736          0          0          0          0       7080   atca_basic.o
-       316         10          0         42          0       4484   atca_command.o
-       142          6          0          0          0       3059   atca_iface_stm32_i2c.o
-       222          0          0          0          0      18831   atsha204a.o
-         0          0          0          0          0     629212   bignum.o
-       736         90          0          4          0       6436   bitbang_i2c.o
-      1224        130        291          0       4112      17217   ecdsa.o
-        80          0          0          0          0       2201   getaddress.o
-        84          6          0          0          0       1213   hal_stm32_timer.o
-      1212        134          0         16        556       5452   main.o
-      8962        560        516          0          0       7197   showsign.o
-        36          8        392          0       8192        840   startup_stm32f407xx.o
-       228         24          0          4          0       5588   stm32f4xx_hal.o
-       350         28          0          0          0      32678   stm32f4xx_hal_cortex.o
-        36          0          0          0          0       1047   stm32f4xx_hal_crc.o
-       636         64          0          0         32       6038   stm32f4xx_hal_flash.o
-       512         46          0          0          0       1660   stm32f4xx_hal_gpio.o
-       190         16          0          0          0       2022   stm32f4xx_hal_msp.o
-      1612         54          0          0          0       4290   stm32f4xx_hal_rcc.o
-        48          0          0          0          0       1071   stm32f4xx_hal_rng.o
-        36          0          0          0          0       4214   stm32f4xx_it.o
-       214          4          0          0          0       4639   stmflash.o
-        16          0          0          0          0        480   sys.o
-       100         18         24          4          0       1187   system_stm32f4xx.o
+       100          0          0          0          0       1292   app_aes.o
+       172         10          0          0          0       2205   app_des.o
+       534         22          0          1       1024       4333   app_interface.o
+       736          0          0          0          0       6996   atca_basic.o
+       316         10          0         42          0       4420   atca_command.o
+       142          6          0          0          0       3019   atca_iface_stm32_i2c.o
+       222          0          0          0          0      18775   atsha204a.o
+         0          0          0          0          0     629132   bignum.o
+       736         90          0          4          0       6332   bitbang_i2c.o
+      1224        130        291          0       4112      17017   ecdsa.o
+        80          0          0          0          0       3213   getaddress.o
+        84          6          0          0          0       1197   hal_stm32_timer.o
+      1212        134          0         16        556       5380   main.o
+      7808        464        516          0          0       8906   showsign.o
+        36          8        392          0       8192        832   startup_stm32f407xx.o
+       228         24          0          4          0       5512   stm32f4xx_hal.o
+       350         28          0          0          0      32594   stm32f4xx_hal_cortex.o
+        36          0          0          0          0       1031   stm32f4xx_hal_crc.o
+       636         64          0          0         32       5942   stm32f4xx_hal_flash.o
+       512         46          0          0          0       1644   stm32f4xx_hal_gpio.o
+       190         16          0          0          0       1982   stm32f4xx_hal_msp.o
+      1612         54          0          0          0       4250   stm32f4xx_hal_rcc.o
+        48          0          0          0          0       1055   stm32f4xx_hal_rng.o
+        36          0          0          0          0       4134   stm32f4xx_it.o
+       214          4          0          0          0       4563   stmflash.o
+        16          0          0          0          0        468   sys.o
+       100         18         24          4          0       1155   system_stm32f4xx.o
 
     ----------------------------------------------------------------------
-     18560       1234       1256         76      13916     776078   Object Totals
+     17408       1138       1256         76      13916     777379   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        26          4          1          5          0          0   (incl. Padding)
+        28          4          1          5          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -3349,15 +3358,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     47248       2014       7440         84      13916    1001980   Grand Totals
-     47248       2014       7440         84      13916    1001980   ELF Image Totals
-     47248       2014       7440         84          0          0   ROM Totals
+     46096       1918       7440         84      13916    1003081   Grand Totals
+     46096       1918       7440         84      13916    1003081   ELF Image Totals
+     46096       1918       7440         84          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                54688 (  53.41kB)
+    Total RO  Size (Code + RO Data)                53536 (  52.28kB)
     Total RW  Size (RW Data + ZI Data)             14000 (  13.67kB)
-    Total ROM Size (Code + RO Data + RW Data)      54772 (  53.49kB)
+    Total ROM Size (Code + RO Data + RW Data)      53620 (  52.36kB)
 
 ==============================================================================
 

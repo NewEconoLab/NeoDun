@@ -140,6 +140,12 @@ void EXTI2_IRQHandler(void)
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);//调用中断处理公用函数
 }
 
+//中断服务函数
+void EXTI9_5_IRQHandler(void)
+{
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);//调用中断处理公用函数
+}
+
 /**********************************************************
 //中断服务程序中需要做的事情
 //在HAL库中所有的外部中断服务函数都会调用此函数
@@ -152,6 +158,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			case GPIO_PIN_2:
 					AW9136_eint_work();
 					break;
+			case GPIO_PIN_9:
+			{
+					if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9))//rising
+					{
+							Set_Flag.flag.usb_offline 	= 0;		//USB连上		
+					}
+					else//failing
+					{
+							Set_Flag.flag.usb_offline 	= 1;		//USB断开		
+					}					
+			}
+			break;
 			default:
 					break;
 		}	

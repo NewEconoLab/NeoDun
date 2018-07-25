@@ -50,6 +50,7 @@ static void MX_CRC_Init(void);
 static void MX_RNG_Init(void);
 static void MX_USART1_UART_Init(void);
 
+static uint8_t	usb_init_flag = 0;
 static uint8_t	aw9136_init_flag = 0;
 //HID数据处理变量
 static volatile uint8_t 	HID_PAGE_RECV[64];
@@ -82,6 +83,11 @@ int main(void)
 		//调试和升级选择
 		if(Have_App() == 0)       			//不存在APP程序
 		{
+				if(usb_init_flag == 0)
+				{
+						usb_init_flag = 1;
+						MX_USB_DEVICE_Init();			//USB初始化			
+				}			
 				if(aw9136_init_flag == 0)					
 				{
 						aw9136_init_flag = 1;
@@ -131,6 +137,11 @@ int main(void)
 		//升级处理
 		if(BootFlag.flag.update)//需要升级
 		{
+				if(usb_init_flag == 0)
+				{
+						usb_init_flag = 1;
+						MX_USB_DEVICE_Init();			//USB初始化			
+				}			
 				//清除升级标志			
 				BootFlag.flag.update = 0;
 				ATSHA_read_data_slot(SLOT_FLAG,slot_data_read);
@@ -150,9 +161,10 @@ int main(void)
 				}			
 				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);								
 				//清除扇区，并回复上位机请求更新
-				Hid_Need_Updata_Rp();
 				STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
 				STMFLASH_Erase_Sectors(FLASH_SECTOR_6);
+				HAL_Delay(3000);
+				Hid_Need_Updata_Rp();
 				while(1)
 				{
 						if(hid_recv_flag)			//接收数据则处理
@@ -183,7 +195,7 @@ static void BSP_Init(void)
 		Center_button_init();			//中间按钮初始化	
 		MX_USART1_UART_Init();		//打印信息串口
 		ATSHA204_Init();					//加密芯片初始化
-		MX_USB_DEVICE_Init();			//USB初始化		
+//		MX_USB_DEVICE_Init();			//USB初始化		
 		OLED_Init();							//OLED初始化	
 		Show_Pattern(&gImage_logo[0],26,37,8,56);//开机logo
 		clearArea(104,56,48,1);

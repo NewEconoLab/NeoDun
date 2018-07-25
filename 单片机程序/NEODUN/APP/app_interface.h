@@ -17,7 +17,7 @@ void 		 Update_Flag_ATSHA(SET_FLAG *Flag,SYSTEM_NEODUN *flag);
 void 		 EmptyWallet(void);
 uint8_t  Get_Address_ID(uint8_t array_address[25]);
 uint8_t  Get_Empty_SlotID(void);
-uint32_t Get_Empty_Sector(void);
+uint32_t Get_Plugin_Write_Flash_Sector(uint16_t type);
 void		 Hide_address(uint8_t SlotID,uint8_t state);
 uint8_t	 Get_Privekey(uint8_t SlotID,uint8_t pin[8],uint8_t Privekey[32]);
 

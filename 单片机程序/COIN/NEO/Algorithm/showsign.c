@@ -566,6 +566,27 @@ uint64_t CountMoney(uint8_t *buff)
 	
 		return num;
 }
+
+/******************************************************************
+*	函数名：	CountMoney
+*	函数说明：解析数组字符串对应的钱的数额
+* 输入参数：buff 输入数组
+* 输出参数：value 浮点数类型的钱
+*******************************************************************/
+uint64_t Nep5CountMoney(uint8_t *buff,int len)
+{
+		int i;
+	  uint64_t num=0;
+
+	
+		for(i=0;i<len;i++)
+		{
+				num += buff[i]<<(8*i);
+		}
+	
+		return num;
+}
+
 /******************************************************************
 *	函数名：	ReadByteLengthIndex
 *	函数说明：计算长度标识符fd不同类型占用的字节长度
@@ -647,6 +668,33 @@ static unsigned char GetAssetID(unsigned char *assetID)
 				return 0xff;
 }
 
+static unsigned char Nep5GetAssetID(unsigned char *assetID)
+{
+		unsigned char nnc[20] = {0xfc,0x73,0x2e,0xde,0xe1,0xef,0xdf,0x96,0x8c,0x23,
+														 0xc2,0x0a,0x96,0x28,0xea,0xa5,0xa6,0xcc,0xb9,0x34};
+		unsigned char cpx[20] = {0xc8,0x8a,0xca,0xae,0x8a,0x03,0x62,0xcd,0xbd,0xed,
+														 0xdd,0xf0,0x08,0x3c,0x45,0x2a,0x3a,0x8b,0xb7,0xb8};		
+		
+		int i;
+		
+		for(i=0;i<20;i++)
+		{
+				if(assetID[19-i] != nnc[i])
+						break;
+		}
+		if(i == 20)
+				return 2;
+		
+		for(i=0;i<20;i++)
+		{
+				if(assetID[19-i] != cpx[i])
+						break;
+		}
+		if(i == 20)
+				return 3;
+		
+		return 0xff;
+}
 /******************************************************************
 *	函数名：	Alg_ShowSignData
 *	函数说明：解释签名函数
@@ -659,6 +707,11 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 		int i,j,index=0,index_type=0,length=0,fb=0;
 		//通用的数据结构，数组和变量定义
 		int type,Version,countAttributes,countInputs,countOutputs;
+		//nep5 局部变量
+		DATA_NODE nep5_data[20];
+		int nep5_index,extra_len,nep5_temp_len;
+		uint8_t nep5assetid[20];
+	
 		uint8_t Input[32];
 		uint8_t buff_money[8];
 		uint8_t address_data[21] = {0x17};
@@ -833,30 +886,62 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 						}
 						case 0xd1://InvocationTransaction
 						{
-										if(Version > 1)
+								nep5_index = 0;
+								index_type += 2;
+								extra_len = dataIn[index_type];
+								index_type += 1;
+								while(extra_len>0)
+								{
+										nep5_temp_len = dataIn[index_type];
+										if((nep5_temp_len>PUSH0)&&(nep5_temp_len<PUSHBYTES75))
 										{
-														return 1;
+												index_type += 1;
+												nep5_data[nep5_index].len = nep5_temp_len;
+												nep5_data[nep5_index].data = dataIn + index_type;
+												index_type += nep5_temp_len;
+												nep5_index += 1;
+												extra_len -=  nep5_temp_len + 1;
 										}
-										//Script
-										fb = dataIn[2+index_type];
-										length = ReadByteLength(dataIn,3+index_type,65536,fb);
-										if(length == 0)	return 1;
-										index_type += 1 + ReadByteLengthIndex(fb);
-										index_type += length;
-										if(Version == 1)
+										else if(nep5_temp_len == APPCALL)
 										{
-														sign_data.Gas = (dataIn[index_type+2]/16)*pow(16,15) + (dataIn[index_type+2]%16)*pow(16,14) + (dataIn[index_type+3]/16)*pow(16,13) + (dataIn[index_type+3]%16)*pow(16,12)
-																				+(dataIn[index_type+4]/16)*pow(16,11) + (dataIn[index_type+4]%16)*pow(16,10) + (dataIn[index_type+5]/16)*pow(16,9) + (dataIn[index_type+5]%16)*pow(16,8)
-																				+(dataIn[index_type+6]/16)*pow(16,7) + (dataIn[index_type+6]%16)*pow(16,6) + (dataIn[index_type+7]/16)*pow(16,5) + (dataIn[index_type+7]%16)*pow(16,4)
-																				+(dataIn[index_type+8]/16)*pow(16,3) + (dataIn[index_type+8]%16)*pow(16,2) + (dataIn[index_type+9]/16)*pow(16,1) + (dataIn[index_type+9]%16)*pow(16,0);
-														index_type += 8;
-														if(sign_data.Gas < 0) return 1;
+												index_type += 1;
+												nep5_data[nep5_index].len = 20;
+												nep5_data[nep5_index].data = dataIn + index_type;		
+												index_type += 20;
+												nep5_index += 1;
+												extra_len -=  20 + 1;
 										}
 										else
 										{
-												sign_data.Gas = 0;// Fixed.Zero 表示为0
-										}
-										break;
+												index_type += 1;
+												nep5_data[nep5_index].len = 1;
+												nep5_data[nep5_index].data = dataIn + index_type;									
+												nep5_index += 1;
+												extra_len -= 1;
+										}		
+								}
+								//money
+								SIGN_Out->money[1] = Nep5CountMoney(nep5_data[nep5_index-7].data,nep5_data[nep5_index-7].len);
+								//address
+								for(j=0;j<20;j++)
+								{
+										address_data[1+j] = nep5_data[nep5_index-6].data[j];
+								}
+								Base58_25Bytes(address_data,21,result_address);
+								memmove(SIGN_Out->address[1],result_address,25);
+								for(j=0;j<20;j++)
+								{
+										address_data[1+j] = nep5_data[nep5_index-5].data[j];
+								}
+								Base58_25Bytes(address_data,21,result_address);
+								memmove(SIGN_Out->address[0],result_address,25);
+								//assetid
+								memmove(nep5assetid,nep5_data[nep5_index-1].data,20);
+								SIGN_Out->coin = Nep5GetAssetID(nep5assetid);
+								if(SIGN_Out->coin == 0xff)
+										return 1;
+								index_type -= 2;
+								return 0;
 						}
 						default:
 										printf("Type Error!!!");
@@ -890,7 +975,8 @@ int Alg_ShowSignData(uint8_t *dataIn,int dataInLen,SIGN_Out_Para *SIGN_Out)
 				for(j=0;j<32;j++)
 						SIGN_Out->assetid[i][31-j] = dataIn[index+j+60*i];
 				//判断assetID
-				SIGN_Out->coin = GetAssetID(SIGN_Out->assetid[i]);
+				if(type == 0x80)
+						SIGN_Out->coin = GetAssetID(SIGN_Out->assetid[i]);
 				//计算money
 				for(j=0;j<8;j++)
 				{

@@ -111,7 +111,7 @@ iapfun jump2app;
 //跳转到指定应用程序段
 //appxaddr:用户代码起始地址.
 void jump_to_app(uint32_t appxaddr)
-{	
+{
 		//跳转之前失能所有的时钟和中断
 		HAL_DeInit();
 		HAL_NVIC_DisableIRQ(SysTick_IRQn);
@@ -128,3 +128,16 @@ void jump_to_app(uint32_t appxaddr)
 		}
 }
 
+void Power_ON_BLE(void)
+{
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+}
+
+void Power_OFF_BLE(void)
+{
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+}

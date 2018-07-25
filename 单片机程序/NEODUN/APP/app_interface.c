@@ -192,23 +192,43 @@ void PowerOn_PACKInfo_To_Ram(void)
 				coinrecord.coin1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+COIN_TYPE_OFFSET);
 				coinrecord.version1 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP1+COIN_VERSION_OFFSET);
 		}
+		else
+		{
+				coinrecord.coin1 = 0xffff;
+				coinrecord.version1 = 0xffff;
+		}
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2) != 0xFFFF)
 		{
 				coinrecord.count++;
 				coinrecord.coin2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+COIN_TYPE_OFFSET);
 				coinrecord.version2 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP2+COIN_VERSION_OFFSET);
 		}
+		else
+		{
+				coinrecord.coin2 = 0xffff;
+				coinrecord.version2 = 0xffff;
+		}		
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3) != 0xFFFF)
 		{
 				coinrecord.count++;
 				coinrecord.coin3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+COIN_TYPE_OFFSET);
 				coinrecord.version3 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP3+COIN_VERSION_OFFSET);
 		}
+		else
+		{
+				coinrecord.coin3 = 0xffff;
+				coinrecord.version3 = 0xffff;
+		}		
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4) != 0xFFFF)
 		{
 				coinrecord.count++;
 				coinrecord.coin4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+COIN_TYPE_OFFSET);
 				coinrecord.version4 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP4+COIN_VERSION_OFFSET);
+		}		
+		else
+		{
+				coinrecord.coin4 = 0xffff;
+				coinrecord.version4 = 0xffff;
 		}		
 		if(STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5) != 0xFFFF)
 		{
@@ -216,6 +236,11 @@ void PowerOn_PACKInfo_To_Ram(void)
 				coinrecord.coin5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+COIN_TYPE_OFFSET);
 				coinrecord.version5 = STMFLASH_ReadHalfWord(FLASH_ADDRESS_APP5+COIN_VERSION_OFFSET);
 		}	
+		else
+		{
+				coinrecord.coin5 = 0xffff;
+				coinrecord.version5 = 0xffff;
+		}		
 }
 
 /***************************************************
@@ -329,8 +354,19 @@ uint8_t Get_Empty_SlotID(void)
 Êä³ö£º
 		ÉÈÇøµØÖ·
 *****************	**********************************/
-uint32_t Get_Empty_Sector(void)
+uint32_t Get_Plugin_Write_Flash_Sector(uint16_t type)
 {
+		if(type == coinrecord.coin1)
+				return FLASH_ADDRESS_APP1;
+		if(type == coinrecord.coin2)
+				return FLASH_ADDRESS_APP2;
+		if(type == coinrecord.coin3)
+				return FLASH_ADDRESS_APP3;
+		if(type == coinrecord.coin4)
+				return FLASH_ADDRESS_APP4;
+		if(type == coinrecord.coin5)
+				return FLASH_ADDRESS_APP5;
+		
 		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP1) == 0xFFFFFFFF)
 				return FLASH_ADDRESS_APP1;
 		if(STMFLASH_ReadWord(FLASH_ADDRESS_APP2) == 0xFFFFFFFF)

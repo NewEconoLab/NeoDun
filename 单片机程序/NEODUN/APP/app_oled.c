@@ -152,27 +152,15 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 		Display_arrow(1);
 		Asc8_16(124,52,"5");
 		if(state)
-				Asc8_16(226,26,"s");
-		
+				Asc8_16(226,26,"s");		
 		Key_Control(1);//清空按键标志位，开启按键有效
-		Start_TIM(OLED_INPUT_TIME);
+		Start_TIM(OLED_INPUT_TIME);		
     while(1)
     {
 				if(state)
 				{
-						if((Get_TIM(OLED_INPUT_TIME))%INPUT_TIME_DIV == 0)
-						{		
-								unsigned char temp = 30 - Get_TIM(OLED_INPUT_TIME)/INPUT_TIME_DIV;
-								if(temp == 0)
-								{
-										Stop_TIM(OLED_INPUT_TIME);
-										return 0;//超时
-								}
-								num[0] = temp/10+0x30;
-								Asc8_16(210,26,num);
-								num[0] = temp%10+0x30;
-								Asc8_16(218,26,num);
-						}
+						if(Display_Time_count() == 0)
+							  return 0;
 				}
         if(Key_Flag.flag.left)//左键按下
         {

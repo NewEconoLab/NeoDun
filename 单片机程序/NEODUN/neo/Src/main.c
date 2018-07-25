@@ -45,6 +45,7 @@
 #include "timer.h"
 #include "main_define.h"
 #include "stmflash.h"
+#include "app_hal.h"
 
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
@@ -67,16 +68,18 @@ extern void my_main(void);
 int main(void)
 {
 		SCB->VTOR = FLASH_BASE | 0x20000;//设置偏移量
-		if(STMFLASH_ReadWord(0x0801F000) == 0xffffffff)
-				SysFlagType = 0;
-		else
-				SysFlagType = 1;
-		
+
 		//清除程序跳转，残留的FLASH标识
 		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
 													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+
+		if(STMFLASH_ReadWord(0x0801F000) == 0xffffffff)
+				SysFlagType = 0;
+		else
+				SysFlagType = 1;	
 		
 		HAL_Init();//设置中断优先级，中断分组2
+		Deal_USB_ERROR();		
 		SystemClock_Config();
 		MX_GPIO_Init();
 		MX_CRC_Init();
@@ -85,7 +88,6 @@ int main(void)
 		MX_USART2_UART_Init();//蓝牙
 		MX_USART1_UART_Init();//打印
 		ATSHA_I2c_Init();
-		MX_USB_DEVICE_Init();
 		OLED281_Init();
 		AW9136_Init();
 		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
@@ -205,25 +207,31 @@ void MX_GPIO_Init(void)
   __GPIOC_CLK_ENABLE();
 
 	//蓝牙GPIO
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);	
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6 | GPIO_PIN_7, GPIO_PIN_SET);	
 	
-	/*Configure GPIO pin : PC9    RTS  */
+	/*Configure GPIO pin : PC9    SDA  */
   GPIO_InitStruct.Pin = GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA8    CTS  */
+  /*Configure GPIO pin : PA8    SCL  */
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+	//蓝牙控制IO
+  GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
 	
 	//OLED GPIO
   /*Configure GPIO pin Output Level */
@@ -266,10 +274,11 @@ void MX_GPIO_Init(void)
 	
 	//USB插入检测
 	GPIO_InitStruct.Pin=GPIO_PIN_9;      
-	GPIO_InitStruct.Mode=GPIO_MODE_INPUT;      
-	GPIO_InitStruct.Pull=GPIO_PULLDOWN;        
-	GPIO_InitStruct.Speed=GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Mode=GPIO_MODE_IT_RISING_FALLING;      
+	GPIO_InitStruct.Pull=GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA,&GPIO_InitStruct);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn,2,0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 
 /* USER CODE BEGIN 4 */

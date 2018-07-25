@@ -42,7 +42,7 @@ uint8_t Alg_Base58Encode(uint8_t *dataIn , int dataInLen , char *dataOut , int *
 //Base58 解码 字符串转二进制数组
 void Alg_Base58Decode(char    *dataIn , int dataInLen , uint8_t *dataOut , int *dataoutLen );
 
-
+int32_t Alg_ECCscalarMul(uint8_t *PriKeyInput,uint8_t *EccPointInput,uint8_t *dataOut,uint8_t mode);
 
 
 ////测试函数

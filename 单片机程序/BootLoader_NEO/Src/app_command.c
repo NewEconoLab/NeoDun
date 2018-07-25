@@ -22,6 +22,7 @@ static uint8_t public_key[64] =
 		207,161, 33,103,143, 62,232, 68,114, 49, 10,111, 24,242,187,216
 };
 
+// my public key
 //static uint8_t public_key[64] =
 //{
 //		220,114,233,198,133,184, 81,202,202, 10, 23,234, 25,144, 45,196,
@@ -181,7 +182,7 @@ void Hid_Recv_0304_Rp(uint16_t serialID)
 		memset(data_rp,0,64);
 		
 		data_rp[0] = 0x03;
-		data_rp[1] = 0xa4;
+		data_rp[1] = 0x11;
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
 		
@@ -212,7 +213,6 @@ void Hid_Need_Updata_Rp(void)
 void Hid_Data_Analysis(uint8_t data[],int len)
 {
 		uint8_t 	datasharesult[32];
-	
 		if(command_verifycrc(data,len))
 		{
 				uint16_t cmd 			= (data[0] << 8) | data[1];
@@ -334,6 +334,11 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 										Hid_Recv_0301_Rp(0,SerialID);
 										Update_Error_Deal(PAGE_SIGNATURE_ERROR);
 								}
+								break;
+						}
+						case 0x0304:
+						{
+								Hid_Recv_0304_Rp(SerialID);
 								break;
 						}
 						default:

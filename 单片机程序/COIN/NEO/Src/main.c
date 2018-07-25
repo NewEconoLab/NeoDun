@@ -101,7 +101,7 @@ int main(void)
 		memset(&Sign,0,sizeof(Sign));
 		memset(&result_SignData,0,64);
 		memset(&resultsignRecord,0,98);
-		
+				
 		//解析数据包
 		if(Alg_ShowSignData(data_pack,pack_len,&Sign))
 		{
@@ -265,10 +265,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
 }
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
 
 /**
   * @brief  This function is executed in case of error occurrence.

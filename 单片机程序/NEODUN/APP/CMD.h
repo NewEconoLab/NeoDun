@@ -50,6 +50,13 @@
 
 //特殊操作
 #define CMD_SECU_PIPE								0x0401		//请求安全通道公钥
-#define CMD_SECU_PIPE_REP						0x04a0		//回复安全通道公钥
+#define CMD_SECU_PIPE_REP						0x04a1		//回复安全通道公钥
+#define CMD_SECU_GET_PUBKEY					0x0402
+#define CMD_SECU_GET_PUBKEY_REP			0x04a2
+
+//蓝牙测试
+#define CMD_POWERON_BLE							0x0801
+#define CMD_POWEROFF_BLE						0x0802
+
 
 #endif /* CPP_CMD_H_ */
