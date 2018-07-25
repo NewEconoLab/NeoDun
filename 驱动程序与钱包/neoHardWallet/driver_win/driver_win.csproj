@@ -141,8 +141,10 @@
     <Compile Include="control\DelAddress.cs" />
     <Compile Include="control\GetAddress.cs" />
     <Compile Include="control\GetPackageInfo.cs" />
+    <Compile Include="control\Mgr_Package.cs" />
     <Compile Include="control\ManagerControl.cs" />
     <Compile Include="control\SetName.cs" />
+    <Compile Include="control\SignData.cs" />
     <Compile Include="dialogs\AddressListDialogue.xaml.cs">
       <DependentUpon>AddressListDialogue.xaml</DependentUpon>
     </Compile>
@@ -163,7 +165,6 @@
       <DependentUpon>MessageDialogue.xaml</DependentUpon>
     </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
-    <Compile Include="driver\DriverControl.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
     <Compile Include="helper\Helper.cs" />

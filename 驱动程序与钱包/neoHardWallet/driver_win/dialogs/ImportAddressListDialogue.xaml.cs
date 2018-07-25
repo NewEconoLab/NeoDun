@@ -21,11 +21,9 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class ImportAddressListDialogue : Window
     {
-        private DriverControl driverControl;
-        public ImportAddressListDialogue(DriverControl _driverControl)
+        public ImportAddressListDialogue()
         {
             InitializeComponent();
-            driverControl = _driverControl;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -85,7 +83,7 @@ namespace driver_win.dialogs
         private async void AddAddress(List<string> wifs)
         {
             //先获取一下地址，可以提前避免重复添加
-            await driverControl.GetAddressList();
+            await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
 
             for (var i = 0; i < wifs.Count; i++)
             {

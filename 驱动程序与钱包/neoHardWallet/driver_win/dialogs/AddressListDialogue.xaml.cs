@@ -22,12 +22,9 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class AddressListDialogue : Window
     {
-        private DriverControl driverControl;
-        public AddressListDialogue(DriverControl _driverControl)
+        public AddressListDialogue()
         {
             InitializeComponent();
-            driverControl = _driverControl;
-
             GetAddressList();
         }
 

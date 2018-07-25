@@ -19,12 +19,9 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class ImportWalletDialogue : Window
     {
-        private DriverControl driverControl;
-        public ImportWalletDialogue(DriverControl _driverControl)
+        public ImportWalletDialogue()
         {
             InitializeComponent();
-
-            driverControl = _driverControl;
 
         }
 
@@ -77,7 +74,7 @@ namespace driver_win.dialogs
                 DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
                 return;
             }
-            DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, driverControl, this.Owner);
+            DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
         }
 
         private void Action_PwGotFouces(object sender, RoutedEventArgs e)

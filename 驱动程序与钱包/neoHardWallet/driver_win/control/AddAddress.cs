@@ -10,13 +10,12 @@ namespace driver_win.control
 {
     class AddAddress:Control
     {
-        public override void Done(params object[] _params)
+        public override void HandleMsg(params object[] _params)
         {
             result.errorCode = (EnumError)_params[0];
-            base.Done();
         }
 
-        public async override void sendMsg(params object[] _params)
+        public async override void SendMsg(params object[] _params)
         {
             string wif = (string)_params[0];
             byte[] privateKey;

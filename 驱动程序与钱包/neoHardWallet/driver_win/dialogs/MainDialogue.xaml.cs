@@ -26,17 +26,29 @@ namespace driver_win.dialogs
     public partial class MainDialogue : Window
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
-        public DriverControl driverControl;
+        bool _islinking = false;
+
         public MainDialogue()
         {
             InitializeComponent();
             DriverS.Init();
 
-            driverControl = new DriverControl();
-
             hhgate.CustomServer.BeginServer();
-            hhgate.Api.Ins.driverControl = driverControl;
 
+            this.list_btns.Add(this.Btn_Framework_update);
+            this.list_btns.Add(this.manageAddr);
+            this.list_btns.Add(this.importWif);
+            this.list_btns.Add(this.importWallet);
+            Notify();
+            Signer.Ins.deleInstallFramework += InstallFramework;
+            Signer.Ins.Start();
+
+            LinkSinger();
+        }
+
+        //托盤相關操作
+        private void Notify()
+        {
             this.notifyIcon = new System.Windows.Forms.NotifyIcon();
             this.notifyIcon.Icon = new System.Drawing.Icon(@"Neodun.ico");
             this.notifyIcon.Visible = true;
@@ -52,27 +64,16 @@ namespace driver_win.dialogs
 
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler((o, e) =>
             {
-                if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e); 
+                if (e.Button == System.Windows.Forms.MouseButtons.Left) this.Show(o, e);
             });
-
-            this.list_btns.Add(this.Btn_Framework_update);
-            this.list_btns.Add(this.manageAddr);
-            this.list_btns.Add(this.importWif);
-            this.list_btns.Add(this.importWallet);
-
-            LinkSinger();
-
-            //CreateSimHardware();
-            //hhgate.CustomServer.BeginServer();
         }
 
-        bool _islinking = false;
         private void LinkSinger()
         {
             System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1.0);
             timer.Tick += new EventHandler(async (_s, _e) => {
-                if (!string.IsNullOrEmpty(driverControl.CheckDevice()))//有签名机连接了
+                if (!string.IsNullOrEmpty(Signer.Ins.CheckDevice()))//有签名机连接了
                 {
                     if (!_islinking)
                     {
@@ -96,16 +97,6 @@ namespace driver_win.dialogs
                 await Task.Delay(1000);
             });
             timer.Start();
-        }
-
-
-        //模拟插入钱包
-        WindowSimHardware hard = new WindowSimHardware();
-        private async void CreateSimHardware()
-        {
-            DriverS.simdriver.bActive = true;
-            hard.Show();
-            await Task.Delay(2000);
         }
 
         private void Show(object sender, EventArgs e)
@@ -149,7 +140,7 @@ namespace driver_win.dialogs
             System.Windows.Forms.ToolTipIcon type = System.Windows.Forms.ToolTipIcon.Info;
             this.notifyIcon.ShowBalloonTip(1000, "通知", content, type);
         }
-
+        //顯示斷綫頁面
         private void ShowUnlinkPage(bool islink)
         {
             Dispatcher.Invoke((Action)delegate ()
@@ -160,6 +151,7 @@ namespace driver_win.dialogs
             });
         }
         MyJson.JsonNode_Object servicePackageInfo;
+        //獲取下位機的固件和插件的版本信息
         private async void GetPackageInfo()
         {
             ForbidAllBtnClick();
@@ -181,7 +173,7 @@ namespace driver_win.dialogs
             Result result = await ManagerControl.Ins.ToDo(EnumControl.GetPackage);
             MyJson.JsonNode_Object JA_PackageInfo = (MyJson.JsonNode_Object)result.data;
 
-            if (JA_PackageInfo.Count > 0)
+            if (JA_PackageInfo!= null && JA_PackageInfo.Count > 0)
             {
                 this.label_FrameworkVersion.Content = "固件 " +JA_PackageInfo["Framework"].ToString();
                 double nowgjversion = double.Parse(JA_PackageInfo["Framework"].ToString());
@@ -209,7 +201,6 @@ namespace driver_win.dialogs
 
                 var btn_install = item.FindName("btn_install") as Button;
                 btn_install.Click += new RoutedEventHandler(Click_Install);
-                //btn_install.Name = "Neo_" + btn_install.Name;
                 if (this.FindName("Neo_" + btn_install.Name) != null)
                     this.UnregisterName("Neo_" + btn_install.Name);
                 this.RegisterName("Neo_" + btn_install.Name, btn_install);
@@ -218,7 +209,6 @@ namespace driver_win.dialogs
 
                 var btn_uninstall = item.FindName("btn_uninstall") as Button;
                 btn_uninstall.Click += new RoutedEventHandler(Click_Uninstall);
-                //btn_uninstall.Name = "Neo_" + btn_uninstall.Name;
                 if (this.FindName("Neo_" + btn_uninstall.Name) != null)
                     this.UnregisterName("Neo_" + btn_uninstall.Name);
                 this.RegisterName("Neo_" + btn_uninstall.Name, btn_uninstall);
@@ -230,7 +220,6 @@ namespace driver_win.dialogs
                 if (this.FindName("Neo_" + btn_update.Name) != null)
                     this.UnregisterName("Neo_" + btn_update.Name);
                 this.RegisterName("Neo_" + btn_update.Name, btn_update);
-                //btn_update.Name = "Neo_" + btn_update.Name;
                 btn_update.Visibility = Visibility.Collapsed;
                 this.list_btns.Add(btn_update);
 
@@ -272,71 +261,48 @@ namespace driver_win.dialogs
 
             AllowAllBtnClick();
         }
-
+        //點擊打開地址管理頁面
         private void Btn_ManageAddr(object sender, RoutedEventArgs e)
         {
-            DialogueControl.ShowAddressListDialogue(driverControl, this);
+            DialogueControl.ShowAddressListDialogue(this);
         }
-
+        //點擊開打導入私鑰頁面
         private void Btn_ImportWif(object sender, RoutedEventArgs e)
         {
-            DialogueControl.ShowImportWifDialogue(driverControl,this);
+            DialogueControl.ShowImportWifDialogue(this);
         }
-
+        //點擊打開導入錢包頁面
         private void Btn_ImportWallet(object sender, RoutedEventArgs e)
         {
-            DialogueControl.ShowImportWalletDialogue(driverControl,this);
+            DialogueControl.ShowImportWalletDialogue(this);
         }
-
+        //點擊打開網頁
         private void Window_ShowWebWallet(object sender, RoutedEventArgs e)
         {
             Process.Start("https://wallet.nel.group/");
         }
 
-        private async void Click_update_Framework(object sender, RoutedEventArgs e)
+        //申請更新固件
+        private async void Click_ApplyInstall_Framework(object sender, RoutedEventArgs e)
         {
             Button btn = (sender as Button);
             ForbidAllBtnClick();
-            var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
-            var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
 
             //安装按钮隐藏  等待按钮显示
             Image img = this.FindName("gif_Framework_loading") as Image;
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
 
-            UInt16 type = 0x0000;
-            UInt16 content = 0x0000;
-            //从本地获取需要安装的插件
-            //获取最新的bin
-            //byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
-            byte[] postdata;
-            //从服务器获取固件和插件的版本信息
-            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType+"_"+ version));
-            var res = await HttpHelper.HttpPost(url, postdata);
-            var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
-            byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
-
-
-            bool result = await driverControl.ApplyForUpdate();
-            if (result)
+            //bool result = await driverControl.ApplyForUpdate();
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.ApplyInstallFramework);
+            if (result.errorCode == EnumError.AgreeInstallFramework)
             {
-                DialogueControl.ShowMessageDialogue("同意更新固件", 2, this);
-
-                result = await driverControl.Update();
-                if (result)
-                {
-                    DialogueControl.ShowMessageDialogue("安装成功", 2, this);
-                }
-                else
-                {
-                    DialogueControl.ShowMessageDialogue("安装失败", 2, this);
-                }
+                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
 
             }
-            else
+            else //拒絕  後續要加一些特殊的提示處理等流程
             {
-                DialogueControl.ShowMessageDialogue("拒绝更新固件", 2, this);
+                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
             }
 
             img.Visibility = Visibility.Hidden;
@@ -345,6 +311,37 @@ namespace driver_win.dialogs
             AllowAllBtnClick();
         }
 
+        //更新固件
+        public async void InstallFramework()
+        {
+            var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
+            var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
+
+            byte[] postdata;
+            //从服务器获取固件和插件的版本信息
+            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType + "_" + version));
+            var res = await HttpHelper.HttpPost(url, postdata);
+            var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
+            byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
+
+
+            EnumInstallType type = EnumInstallType.Framework;
+            EnumPluginType content = EnumPluginType.Unknow;
+
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type,content);
+            //result = await driverControl.Update();
+            //if (result)
+            //{
+            //    DialogueControl.ShowMessageDialogue("安装成功", 2, this);
+            //}
+            //else
+            //{
+            //    DialogueControl.ShowMessageDialogue("安装失败", 2, this);
+            //}
+
+        }
+
+        //點擊安裝插件
         private async void Click_Install(object sender, RoutedEventArgs e)
         {
             Button btn = (sender as Button);
@@ -357,12 +354,9 @@ namespace driver_win.dialogs
             img.Visibility = Visibility.Visible;
             btn.Visibility = Visibility.Hidden;
 
-            UInt16 type = 0x0001;
-            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), pluginType);
-            //从本地获取需要安装的插件
-            //获取最新的bin
+            EnumInstallType type = EnumInstallType.Plugin;
+            EnumPluginType content = (EnumPluginType)Enum.Parse(typeof(EnumPluginType), pluginType);
 
-            //byte[] data2 = System.IO.File.ReadAllBytes("./neo.bin");
             byte[] postdata;
             //从服务器获取固件或插件
             var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata,new MyJson.JsonNode_ValueString(pluginType+"_"+version));
@@ -370,8 +364,8 @@ namespace driver_win.dialogs
             var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
             byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
             
-            bool result = await driverControl.UpdateApp(data, type, content, 0x0001);
-            if (result)
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin,data, type, content);
+            if (result.errorCode == EnumError.InstallSuc)
             {
                 DialogueControl.ShowMessageDialogue("安装成功",2, this);
                 GetPackageInfo();
@@ -384,13 +378,14 @@ namespace driver_win.dialogs
 
             AllowAllBtnClick();
         }
-
+        //點擊卸載插件
         private async void Click_Uninstall(object sender, RoutedEventArgs e)
         {
-            var str_content = (sender as Button).Name.Split(' ')[0];
-            UInt16 content = (UInt16)Enum.Parse(typeof(AddressType), str_content);
-            bool result = await driverControl.UninstallApp(content);
-            if (result)
+            Button btn = (sender as Button);
+            var pluginType = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split(' ')[0];
+            EnumPluginType content = (EnumPluginType)Enum.Parse(typeof(EnumPluginType), pluginType);
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, content);
+            if (result.errorCode == EnumError.UninstallSuc)
             {
                 DialogueControl.ShowMessageDialogue("卸载成功",2, this);
                 GetPackageInfo();

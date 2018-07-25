@@ -10,13 +10,12 @@ namespace driver_win.control
 {
     class DelAddress:Control
     {
-        public override void Done(params object[] _params)
+        public override void HandleMsg(params object[] _params)
         {
             result.errorCode = (EnumError)_params[0];
-            base.Done();
         }
 
-        public override void sendMsg(params object[] _params)
+        public override void SendMsg(params object[] _params)
         {
             string _addressType = (string)_params[0];
             string _addressText = (string)_params[1];

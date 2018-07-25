@@ -89,8 +89,11 @@ namespace NeoDun
         public ErrorEventHandler errorEventHandler;
 
 
-        public delegate void EventHandler(params object[] args);
+        public delegate void EventHandler(Object enumControl, params object[] args);
         public EventHandler eventHandler;
+
+        public delegate void DeleInstallFramework();
+        public DeleInstallFramework deleInstallFramework;
 
         public WatcherColl watcherColl = new WatcherColl();
 
@@ -281,12 +284,12 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
                     //setNameEventHandler("失败");
-                    eventHandler(EnumError.SetNameFailed);
+                    eventHandler( EnumControl.SetName,EnumError.SetNameFailed);
                 }
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
-                    eventHandler(EnumError.DelAddressFailed);
+                    eventHandler(EnumControl.DelAddress,EnumError.DelAddressFailed);
 
                     //if (errorEventHandler != null)
                     //    delAddressEventHandler(false);
@@ -294,7 +297,7 @@ namespace NeoDun
                 //增加地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe4)
                 {
-                    eventHandler(EnumError.AddAddressFailed);
+                    eventHandler(EnumControl.AddAddress,EnumError.AddAddressFailed);
 
                     //if (addAddressEventHandler != null)
                     //    addAddressEventHandler(false);
@@ -307,17 +310,20 @@ namespace NeoDun
                 //安装失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe1)
                 {
-                    updateAppEventHandler(false);
+                    //updateAppEventHandler(false);
+                    eventHandler(EnumControl.Common, EnumError.InstallFailed);
                 }
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
-                    applyUpdateEventHandler(false);
+                    eventHandler(EnumControl.ApplyInstallFramework,EnumError.RefuseInstallFramework);
+                    //applyUpdateEventHandler(false);
                 }
                 //卸载失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)
                 {
-                    uninstallAppEventHandler(false);
+                    eventHandler(EnumControl.UninstallPlugin, EnumError.UninstallFailed);
+                    //uninstallAppEventHandler(false);
                 }
                 //收到地址,//加进地址池子里
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
@@ -336,20 +342,20 @@ namespace NeoDun
                 //地址接受完毕
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
-                    eventHandler();
+                    eventHandler(EnumControl.GetAddress);
                     //if (getAddressListEventHandler != null)
                     //    getAddressListEventHandler();
                 }
                 //设置地址名称成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa2)
                 {
-                    eventHandler(EnumError.SetNameSuc);
+                    eventHandler(EnumControl.SetName,EnumError.SetNameSuc);
                     //setNameEventHandler("成功");
                 }
                 //删除地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)
                 {
-                    eventHandler(EnumError.DelAddressSuc);
+                    eventHandler(EnumControl.DelAddress,EnumError.DelAddressSuc);
 
                     //if (delAddressEventHandler != null)
                     //    delAddressEventHandler(true);
@@ -357,7 +363,7 @@ namespace NeoDun
                 //增加地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
-                    eventHandler(EnumError.AddAddressSuc);
+                    eventHandler(EnumControl.AddAddress,EnumError.AddAddressSuc);
                     //if (addAddressEventHandler != null)
                     //    addAddressEventHandler(true);
                 }
@@ -378,23 +384,27 @@ namespace NeoDun
                             break;
                         }
                     }
-                    if (signEventHandler != null)
-                        signEventHandler(outdata, 0x0001);
+                    eventHandler(EnumControl.SignData,EnumError.CommonSuc,outdata);
+                    //if (signEventHandler != null)
+                    //    signEventHandler(outdata, 0x0001);
                 }
                 //安装成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
                 {
-                    updateAppEventHandler(true);
+                    eventHandler(EnumControl.Common,EnumError.InstallSuc);
+                    //updateAppEventHandler(true);
                 }
                 //同意更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
-                    applyUpdateEventHandler(true);
+                    eventHandler(EnumControl.ApplyInstallFramework,EnumError.AgreeInstallFramework);
+                    //applyUpdateEventHandler(true);
                 }
                 //卸载成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
                 {
-                    uninstallAppEventHandler(true);
+                    eventHandler(EnumControl.UninstallPlugin,EnumError.UninstallSuc);
+                    //uninstallAppEventHandler(true);
                 }
                 //查询固件插件版本回复
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
@@ -402,17 +412,18 @@ namespace NeoDun
                     byte[] outdata = null;
                     outdata = msg.data;
 
-                    eventHandler(outdata);
+                    eventHandler(EnumControl.GetPackage,outdata);
                     //if (getPackageInfoEventHandler != null)
                     //    getPackageInfoEventHandler(outdata);
                 }
                 //下位机请求更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0x11)
                 {
-                    //获取最新的bin
-                    byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
-
-                    await updateApp(data,0x0000,0x0000,0x0001);
+                    deleInstallFramework();
+                    ////获取最新的bin
+                    //byte[] data = System.IO.File.ReadAllBytes("./gujian.bin");
+                    //
+                    //await updateApp(data,0x0000,0x0000,0x0001);
                 }
             });
             watcherColl.OnRecv(msg, srcmsg);

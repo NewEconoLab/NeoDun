@@ -12,7 +12,8 @@ namespace driver_win.helper
         Task<Result> ToDo(params object[] _params);
         void Done(params object[] _params);
         void Release();
-        void sendMsg(params object[] _params);
+        void SendMsg(params object[] _params);
+        void HandleMsg(params object[] _params);
     }
 
     struct Result
@@ -21,35 +22,61 @@ namespace driver_win.helper
         public object data;
     }
 
+    enum EnumInstallType
+    {
+        Framework = 0x0000,
+        Plugin = 0x0001,
+    }
+
+    enum EnumPluginType
+    {
+        Unknow = 0x0000,
+        Neo = 0x0101,
+    }
+
     enum EnumControl
     {
+        Common,
         GetAddress,
         AddAddress,
         DelAddress,
         SetName,
         GetPackage,
+        ApplyInstallFramework,
+        InstallFramework,
+        SignData,
+        InstallPlugin,
+        UninstallPlugin
     }
 
 
     enum EnumError
     {
-        Doing = 0x0000,
+        Doing = 0x0000,   //正在执行
 
-        CommonSuc = 0x0001,
-        CommonFailed = 0x0002,
+        CommonSuc = 0x0001, //常规成功
+        CommonFailed = 0x0002,//常规失败
 
-        AddAddressSuc=0x02a4,
-        DelAddressSuc=0x02a3,
-        SetNameSuc = 0x2a2,
+        AddAddressSuc=0x02a4,//增加地址成功
+        DelAddressSuc=0x02a3,//删除地址成功
+        SetNameSuc = 0x02a2,//设置名字成功
+        SignSuc=0x02a5,//签名成功
+        AgreeInstallFramework = 0x03a2,//同意更新固件
+        InstallSuc=0x03a1,//成功安裝固件或插件
+        UninstallSuc = 0x03a3, //卸載插件成功
 
-        AddAddressFailed = 0x02e4,
-        DelAddressFailed = 0x02e3,
-        SetNameFailed = 0x02e2,
+        AddAddressFailed = 0x02e4,//增加地址失败
+        DelAddressFailed = 0x02e3,//删除地址失败
+        SetNameFailed = 0x02e2,//设置名字失败
+        SignFailed = 0x02e5,//签名失败
+        InstallFailed = 0x03e1,//安裝固件或插件失敗
+        RefuseInstallFramework = 0x03e2,//拒絕更新固件
+        UninstallFailed = 0x03e3,//卸載插件失敗
 
-        IncorrectWif = 0x0205,
-        DuplicateWif = 0x0203,
+        IncorrectWif = 0x0205,//错误的wif
+        DuplicateWif = 0x0203,//重复导入了wif
 
-        LongName = 0x0601,
+        LongName = 0x0601,//名字太长
 
     }
 

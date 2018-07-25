@@ -29,11 +29,11 @@ namespace driver_win.dialogs
         }
 
 
-        public static void ShowImportWalletDialogue(DriverControl driverControl,Window window)
+        public static void ShowImportWalletDialogue(Window window)
         {
             if (!window.IsActive)
                 return;
-            ImportWalletDialogue importWalletDialogue = new ImportWalletDialogue(driverControl);
+            ImportWalletDialogue importWalletDialogue = new ImportWalletDialogue();
             list.Add(importWalletDialogue);
             importWalletDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importWalletDialogue.Owner = window;
@@ -41,11 +41,11 @@ namespace driver_win.dialogs
             list.Remove(importWalletDialogue);
         }
 
-        public static void ShowImportWifDialogue(DriverControl driverControl, Window window)
+        public static void ShowImportWifDialogue(Window window)
         {
             if (!window.IsActive)
                 return;
-            ImportWifDialogue importWifDialogue = new ImportWifDialogue(driverControl);
+            ImportWifDialogue importWifDialogue = new ImportWifDialogue();
             list.Add(importWifDialogue);
             importWifDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importWifDialogue.Owner = window;
@@ -53,11 +53,11 @@ namespace driver_win.dialogs
             list.Remove(importWifDialogue);
         }
 
-        public static void ShowAddressListDialogue(DriverControl driverControl, Window window)
+        public static void ShowAddressListDialogue(Window window)
         {
             if (!window.IsActive)
                 return;
-            AddressListDialogue addressListDialogue = new AddressListDialogue(driverControl);
+            AddressListDialogue addressListDialogue = new AddressListDialogue();
             list.Add(addressListDialogue);
             addressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             addressListDialogue.Owner = window;
@@ -65,11 +65,11 @@ namespace driver_win.dialogs
             list.Remove(addressListDialogue);
         }
 
-        public static void ShowImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password, DriverControl driverControl, Window window)
+        public static void ShowImportAddressListDialogue(ThinNeo.NEP6.NEP6Wallet nep6wallet,string password, Window window)
         {
             if (!window.IsActive)
                 return;
-            ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue(driverControl);
+            ImportAddressListDialogue importAddressListDialogue = new ImportAddressListDialogue();
             list.Add(importAddressListDialogue);
             importAddressListDialogue.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             importAddressListDialogue.Owner = window;

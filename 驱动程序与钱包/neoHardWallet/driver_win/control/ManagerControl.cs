@@ -1,4 +1,5 @@
 ﻿using driver_win.helper;
+using NeoDun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace driver_win.control
     {
         private Dictionary<EnumControl, IControl> dic = new Dictionary<EnumControl, IControl>();
         private IControl curControl;
+        private EnumControl curEnumControl;
         private bool Lock = false;
 
         public static ManagerControl Ins
@@ -32,6 +34,11 @@ namespace driver_win.control
             dic.Add(EnumControl.DelAddress, new DelAddress());
             dic.Add(EnumControl.SetName, new SetName());
             dic.Add(EnumControl.GetPackage, new GetPackageInfo());
+            dic.Add(EnumControl.SignData, new SignData());
+            dic.Add(EnumControl.ApplyInstallFramework,new ApplyUpdateFramework());
+            dic.Add(EnumControl.InstallFramework, new InstallFramework());
+            dic.Add(EnumControl.InstallPlugin, new InstallPlugin());
+            dic.Add(EnumControl.UninstallPlugin, new UninstallPlugin());
         }
 
         public async Task<Result> ToDo(EnumControl enumControl, params object[] _params)
@@ -45,6 +52,9 @@ namespace driver_win.control
             Lock = true;
             try
             {
+                Signer.Ins.eventHandler = null;
+                Signer.Ins.eventHandler += Done;
+                curEnumControl = enumControl;
                 curControl = dic[enumControl];
                 var result =await curControl.ToDo(_params);
                 Lock = false;
@@ -53,6 +63,17 @@ namespace driver_win.control
             catch (Exception e)
             {
                 throw new NotImplementedException(e.Message);
+            }
+        }
+
+
+        public void Done(Object _enumControl, params object[] _params)
+        {
+            EnumControl enumControl = (EnumControl)_enumControl;
+            if (enumControl == EnumControl.Common || enumControl == curEnumControl)
+            {
+                if (curControl != null)
+                    curControl.Done(_params);
             }
         }
 

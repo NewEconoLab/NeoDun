@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using driver_win.control;
 using Microsoft.Owin;
 
 namespace hhgate
@@ -20,9 +21,6 @@ namespace hhgate
         }
 
         private static Api ins;
-
-        public driver_win.DriverControl driverControl;
-
 
         //加一个锁 防止重复请求
         bool doing = false;
@@ -92,29 +90,22 @@ namespace hhgate
                     }
                     var address = formdata.mapParams["address"];
                     var data = formdata.mapParams["data"];
-                    var time = 0;
+
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
                     json["tag"] = new MyJson.JsonNode_ValueNumber(0);
                     json["data"] = new MyJson.JsonNode_ValueString(data);
                     MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
                     json["msg"] = new MyJson.JsonNode_ValueString("0501");
                     json["addrName"] = result[""];
-                    driverControl.Sign(data, address);
+
                     doing = true;
-                    while (time <= 60000)
-                    {
-                        System.Threading.Thread.Sleep(100);
-                        result = driverControl.result;
-                        if (result.Count > 0)
-                        {
-                            json["msg"] = result["msg"];
-                            json["signdata"] = result["signdata"];
-                            json["pubkey"] = result["pubkey"];
-                            json["addrName"] = result["addrName"];
-                            break;
-                        }
-                        time += 100;
-                    }
+                    driver_win.helper.Result _result = await ManagerControl.Ins.ToDo(driver_win.helper.EnumControl.SignData, data, address);
+                    result = (MyJson.JsonNode_Object)_result.data;
+                    json["msg"] = result["msg"];
+                    json["signdata"] = result["signdata"];
+                    json["pubkey"] = result["pubkey"];
+                    json["addrName"] = result["addrName"];
+
                     doing = false;
                     //读出来，拼为http响应，发回去
                     context.Response.Write(json.ToString());

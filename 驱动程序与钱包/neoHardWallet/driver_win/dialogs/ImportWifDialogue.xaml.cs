@@ -22,12 +22,9 @@ namespace driver_win.dialogs
     /// </summary>
     public partial class ImportWifDialogue : Window
     {
-        private DriverControl driverControl;
-        public ImportWifDialogue(DriverControl _driverControl)
+        public ImportWifDialogue()
         {
             InitializeComponent();
-
-            driverControl = _driverControl;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -47,7 +44,7 @@ namespace driver_win.dialogs
 
                 await Task.Delay(2000);
 
-                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
+                DialogueControl.ShowAddressListDialogue(this.Owner);
             }
             else
             {
@@ -90,8 +87,10 @@ namespace driver_win.dialogs
             this.Btn_Wif.Visibility = Visibility.Hidden;
         }
 
+
         private async void btn_Add2(object sender, RoutedEventArgs e)
         {
+            /*
             var wordlist = "cancel okay bulk depth blame hospital veteran angle method estate immense expire ball cycle sauce sheriff funny strike play among parrot hen include scale";
 
             var a = ThinNeo.Helper.HexString2Bytes("fbcd88deffda644507dd650347918df0d2452350d3a320c0ea089c3655bd22bb090856ff72f02b0c48cd49be652df63e5e370bfbbf03798b82f9c4c6855f783d");
@@ -130,12 +129,13 @@ namespace driver_win.dialogs
 
                 await Task.Delay(2000);
 
-                DialogueControl.ShowAddressListDialogue(driverControl, this.Owner);
+                DialogueControl.ShowAddressListDialogue(this.Owner);
             }
             else
             {
                 DialogueControl.ShowMessageDialogue(result, 2, this);
             }
+            */
         }
     }
 }

@@ -10,13 +10,12 @@ namespace driver_win.control
     class SetName : Control
     {
 
-        public override void Done(params object[] _params)
+        public override void HandleMsg(params object[] _params)
         {
             result.errorCode = (EnumError)_params[0];
-            base.Done(_params);
         }
 
-        public override void sendMsg(params object[] _params)
+        public override void SendMsg(params object[] _params)
         {
             string address = (string)_params[0];
             byte[] bytes_name = (byte[])_params[1];
@@ -37,6 +36,7 @@ namespace driver_win.control
             msg.writeUInt16(26, (ushort)bytes_name.Length);
             Array.Copy(bytes_name, 0, msg.data, 28, bytes_name.Length);
             signer.SendMessage(msg, true);
+
         }
     }
 }

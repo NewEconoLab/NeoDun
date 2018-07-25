@@ -12,14 +12,13 @@ namespace driver_win.control
     class GetAddress : Control
     {
 
-        public override void Done(params object[] _params)
+        public override void HandleMsg(params object[] _params)
         {
             result.errorCode = EnumError.CommonSuc;
             result.data = (object)signer.addressPool.addresses;
-            base.Done(_params);
         }
 
-        public override void sendMsg(params object[] _params)
+        public override void SendMsg(params object[] _params)
         {
 
             signer.InitAddressPool();

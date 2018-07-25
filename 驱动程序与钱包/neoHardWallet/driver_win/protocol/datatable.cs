@@ -150,22 +150,4 @@ namespace NeoDun
         }
 
     }
-
-
-    public enum ESignerStateOfNew: byte
-    {
-        Unkonw = 0,
-        New = 1,
-        Old = 2
-    }
-
-    public enum Enum_DriverFun
-    {
-        连接钱包后是否自动弹出驱动界面 = 0,
-        开机时是否自动检查更新 = 1,
-        新增地址时是否要密码验证 = 2,
-        删除地址是否要密码验证 = 3,
-        备份地址是否要密码验证 = 4,
-        备份钱包时进行是否要加密 = 5,
-    }
 }

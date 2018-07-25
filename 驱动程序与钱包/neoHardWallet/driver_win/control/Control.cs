@@ -17,8 +17,9 @@ namespace driver_win.control
 
         protected bool wait;
 
-        public virtual void Done(params object[] _params)
+        public void Done(params object[] _params)
         {
+            HandleMsg(_params);
             wait = false;
         }
 
@@ -29,17 +30,15 @@ namespace driver_win.control
 
         public void Init()
         {
-            signer.eventHandler = null;
-            signer.eventHandler += Done;
             result.data = null;
-            result.errorCode = EnumError.CommonSuc;
+            result.errorCode = EnumError.CommonFailed;
         }
 
         public async Task<Result> ToDo(params object[] _params)
         {
             Init();
 
-            sendMsg(_params);
+            SendMsg(_params);
 
             wait = true;
 
@@ -51,6 +50,7 @@ namespace driver_win.control
             return result;
         }
 
-        public abstract void sendMsg(params object[] _params);
+        public abstract void SendMsg(params object[] _params);
+        public abstract void HandleMsg(params object[] _params);
     }
 }
