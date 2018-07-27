@@ -21,6 +21,8 @@ namespace hhgate
         }
 
         private static Api ins;
+        System.Threading.AutoResetEvent autoReset = new System.Threading.AutoResetEvent(false);
+
 
         //加一个锁 防止重复请求
         bool doing = false;
@@ -75,6 +77,7 @@ namespace hhgate
                             adds.Add(item);
                             item["type"] = new MyJson.JsonNode_ValueString(add.type.ToString());
                             item["address"] = new MyJson.JsonNode_ValueString(add.AddressText);
+                            item["name"] = new MyJson.JsonNode_ValueString(add.name);
                         }
                     }
                     context.Response.Write(jsonr.ToString());
@@ -92,23 +95,22 @@ namespace hhgate
                     var data = formdata.mapParams["data"];
 
                     MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-                    json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                    json["data"] = new MyJson.JsonNode_ValueString(data);
-                    MyJson.JsonNode_Object result = new MyJson.JsonNode_Object();
-                    json["msg"] = new MyJson.JsonNode_ValueString("0501");
-                    json["addrName"] = result[""];
 
                     doing = true;
-                    driver_win.helper.Result _result = await ManagerControl.Ins.ToDo(driver_win.helper.EnumControl.SignData, data, address);
-                    result = (MyJson.JsonNode_Object)_result.data;
-                    json["msg"] = result["msg"];
-                    json["signdata"] = result["signdata"];
-                    json["pubkey"] = result["pubkey"];
-                    json["addrName"] = result["addrName"];
 
-                    doing = false;
-                    //读出来，拼为http响应，发回去
-                    context.Response.Write(json.ToString());
+                    sign(json,address,data);
+
+                    while (true)
+                    {
+                        if (json.Keys.Count > 0)
+                        {
+                            doing = false;
+                            //读出来，拼为http响应，发回去
+                            context.Response.Write(json.ToString());
+                            break;
+                        }
+
+                    }
                 }
                 else
                 {
@@ -123,6 +125,21 @@ namespace hhgate
             {
                 context.Response.Write(e.ToString());
             }
+
+            async void sign(MyJson.JsonNode_Object json,string address,string data)
+            {
+                driver_win.helper.Result _result = await ManagerControl.Ins.ToDo(driver_win.helper.EnumControl.SignData, data, address);
+                var result = (MyJson.JsonNode_Object)_result.data;
+                var enumError = _result.errorCode;
+                json["msg"] = new MyJson.JsonNode_ValueString(((UInt16)enumError).ToString("x4"));
+                if (result != null)
+                {
+                    json["signdata"] = result.ContainsKey("signdata") ? result["signdata"] : new MyJson.JsonNode_ValueString("");
+                    json["pubkey"] = result.ContainsKey("pubkey") ? result["pubkey"] : new MyJson.JsonNode_ValueString("");
+                }
+
+            }
+
 
         }
 

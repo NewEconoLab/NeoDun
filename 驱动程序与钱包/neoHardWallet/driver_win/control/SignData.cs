@@ -13,10 +13,10 @@ namespace driver_win.control
         public override void HandleMsg(params object[] _params)
         {
             EnumError enumError = (EnumError)_params[0];
-            byte[] _outdata = (byte[])_params[1];
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
             if (enumError == EnumError.SignSuc)
             {
+                byte[] _outdata = (byte[])_params[1];
                 var pubkeylen = _outdata[0];
                 var pubkey = new byte[pubkeylen];
                 Array.Copy(_outdata, 1, pubkey, 0, pubkeylen);
@@ -24,14 +24,12 @@ namespace driver_win.control
                 json["signdata"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(signdata, 0, signdata.Length));
                 json["pubkey"] = new MyJson.JsonNode_ValueString(SignTool.Bytes2HexString(pubkey, 0, pubkey.Length));
                 json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                json["msg"] = new MyJson.JsonNode_ValueNumber((UInt16)enumError);
             }
             else
             {
                 json["signdata"] = new MyJson.JsonNode_ValueString("");
                 json["pubkey"] = new MyJson.JsonNode_ValueString("");
                 json["tag"] = new MyJson.JsonNode_ValueNumber(0);
-                json["msg"] = new MyJson.JsonNode_ValueNumber((UInt32)EnumError.SignSuc);
             }
             result.errorCode = enumError;
             result.data = json;
@@ -59,15 +57,14 @@ namespace driver_win.control
             {//发送签名报文
                 var add = signer.addressPool.getAddress(NeoDun.AddressType.Neo, str_address);
                 MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-                json["addrName"] = new MyJson.JsonNode_ValueString(add.name);
                 if (add == null)
                 {
                     json["signdata"] = new MyJson.JsonNode_ValueString("");
                     json["pubkey"] = new MyJson.JsonNode_ValueString("");
                     json["tag"] = new MyJson.JsonNode_ValueNumber(0);
                     json["msg"] = new MyJson.JsonNode_ValueString("0206");
-                    json["addrName"] = new MyJson.JsonNode_ValueString("");
                     result.data = result;
+                    Release();
                     return;
                 }
 

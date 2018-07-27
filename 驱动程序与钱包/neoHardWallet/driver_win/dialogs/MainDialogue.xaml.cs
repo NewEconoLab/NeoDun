@@ -33,7 +33,6 @@ namespace driver_win.dialogs
             InitializeComponent();
             DriverS.Init();
 
-            hhgate.CustomServer.BeginServer();
 
             this.list_btns.Add(this.Btn_Framework_update);
             this.list_btns.Add(this.manageAddr);
@@ -44,6 +43,8 @@ namespace driver_win.dialogs
             Signer.Ins.Start();
 
             LinkSinger();
+
+
         }
 
         //托盤相關操作
@@ -81,6 +82,7 @@ namespace driver_win.dialogs
                         GetPackageInfo();
                         ShowUnlinkPage(true);
                         ShowBalloonTip("NeoDun已经连接");
+                        hhgate.CustomServer.BeginServer();
                     }
                 }
                 else
