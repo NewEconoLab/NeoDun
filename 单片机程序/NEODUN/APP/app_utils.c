@@ -118,6 +118,7 @@ void jump_to_app(uint32_t appxaddr)
 		HAL_NVIC_DisableIRQ(USART2_IRQn);
 		HAL_NVIC_DisableIRQ(TIM3_IRQn);
 		HAL_NVIC_DisableIRQ(EXTI2_IRQn);
+		HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
 		HAL_NVIC_DisableIRQ(OTG_FS_IRQn);
 	
 		if(((*(vu32*)appxaddr)&0x2FFE0000)==0x20000000)	//检查栈顶地址是否合法.
@@ -130,7 +131,7 @@ void jump_to_app(uint32_t appxaddr)
 
 void Power_ON_BLE(void)
 {
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
 	HAL_Delay(100);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
 }
@@ -138,6 +139,6 @@ void Power_ON_BLE(void)
 void Power_OFF_BLE(void)
 {
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-	HAL_Delay(100);
+	HAL_Delay(100);	
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 }

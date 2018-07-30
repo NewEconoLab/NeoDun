@@ -7,6 +7,10 @@
 #include "OLED281/oled281.h"
 #include "app_hal.h"
 #include "app_oled.h"
+/********************************
+	左基准   60
+	右基准		192
+********************************/
 
 static uint8_t main_RefreshDisplay = 0;//是否重新刷新界面标志
 static uint8_t main_page_index = 0;		 //页面ID
@@ -48,24 +52,48 @@ void Display_Usb(void)
 
 void Display_Set(uint8_t state)
 {
-		if(state == 0)				//left
+		if(Neo_System.language == Chinese)
 		{
-				Show_Pattern(&gImage_Set[0],10,17,0,32);
-				clearArea(40,32,32,1);
-				Show_HZ12_12(40,32,2,3);//设置
+				if(state == 0)				//left
+				{
+						Show_Pattern(&gImage_Set[0],10,17,0,32);
+						clearArea(40,32,32,1);
+						Show_HZ12_12(40,32,2,3);//设置
+				}
+				else if(state ==1)		//midddle
+				{
+						Show_Pattern(&gImage_Set[0],28,35,0,32);
+						clearArea(112,32,32,1);
+						Show_HZ12_12(112,32,2,3);//设置
+				}
+				else if(state == 2)		//right
+				{
+						Show_Pattern(&gImage_Set[0],44,51,0,32);
+						clearArea(176,32,32,1);
+						Show_HZ12_12(176,32,2,3);//设置
+				}		
 		}
-		else if(state ==1)		//midddle
+		else if(Neo_System.language == English)
 		{
-				Show_Pattern(&gImage_Set[0],28,35,0,32);
-				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				if(state == 0)				//left
+				{
+						Show_Pattern(&gImage_Set[0],10,17,0,32);
+						clearArea(40,32,32,1);
+						Asc8_16(28,32,"setting");
+				}
+				else if(state ==1)		//midddle
+				{
+						Show_Pattern(&gImage_Set[0],28,35,0,32);
+						clearArea(112,32,32,1);
+						Asc8_16(100,32,"setting");
+				}
+				else if(state == 2)		//right
+				{
+						Show_Pattern(&gImage_Set[0],44,51,0,32);
+						clearArea(176,32,32,1);
+						Asc8_16(164,32,"setting");
+				}			
 		}
-		else if(state == 2)		//right
-		{
-				Show_Pattern(&gImage_Set[0],44,51,0,32);
-				clearArea(176,32,32,1);
-				Show_HZ12_12(176,32,2,3);//设置
-		}		
 }
 
 uint8_t Display_Time_count(void)
@@ -193,7 +221,7 @@ void Display_MainPage_0Add(void)
 				Fill_RAM(0x00);
 				Show_Pattern(&gImage_Set[0],28,35,0,32);
 				clearArea(112,32,32,1);
-				Show_HZ12_12(112,32,2,3);//设置
+				Display_Set(1);
 				Display_Triangle(1);				
 		}
 		if(Key_Flag.flag.right)//右键有效时，ID加1
@@ -737,12 +765,20 @@ void Display_SetCode(void)
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(56,16,4,5);//密码
-						Show_HZ12_12(88,16,2,3);//设置
-						Show_HZ12_12(120,16,35,36);//有误
-						Show_HZ12_12(152,16,12,12);//请
-						Show_HZ12_12(168,16,34,34);//重
-						Show_HZ12_12(184,16,37,37);//试
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(56,16,4,5);//密码
+								Show_HZ12_12(88,16,2,3);//设置
+								Show_HZ12_12(120,16,35,36);//有误
+								Show_HZ12_12(152,16,12,12);//请
+								Show_HZ12_12(168,16,34,34);//重
+								Show_HZ12_12(184,16,37,37);//试
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(56,8,"Incorrect password");
+								Asc8_16(76,28,"pls try again");							
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle==0);
 						Key_Control(0);
@@ -750,12 +786,33 @@ void Display_SetCode(void)
 				else
 						break;
 		}
+		
+		Fill_RAM(0x00);
+		Display_Triangle(0);
+		if(Neo_System.language == Chinese)
+		{
+				Show_HZ12_12(80,16,4,5);//密码
+				Show_HZ12_12(112,16,34,34);//重
+				Show_HZ12_12(128,16,2,2);//设
+				Show_HZ12_12(144,16,27,27);//成
+				Show_HZ12_12(160,16,115,115);//功
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(36,16,"PIN resetting completed");
+		}
+		while(Key_Flag.flag.middle==0)
+		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;				
+		}
 }
 
 uint8_t Display_VerifyCode(void)
 {
 		uint8_t status = 0; 
 		uint8_t count[2] = {'0','\0'};
+		uint8_t temp = 0; 
 		while(1)
 		{
 				status = verifyCodeGetPin(1,Neo_System.pin);
@@ -770,56 +827,86 @@ uint8_t Display_VerifyCode(void)
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,count);
-						Show_HZ12_12(156,8,39,39);//次
-						
-						Show_HZ12_12(60,28,38,38);//错
-						Show_HZ12_12(76,28,36,36);//误
-						Asc8_16(92,28,"5");
-						Show_HZ12_12(100,28,39,39);//次
-						Show_HZ12_12(116,28,32,32);//将
-						Show_HZ12_12(132,28,34,34);//重
-						Show_HZ12_12(148,28,3,3);//置
-						Show_HZ12_12(164,28,17,18);//钱包
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(84,8,4,5);//密码
+								Show_HZ12_12(116,8,38,38);//错
+								Show_HZ12_12(132,8,36,36);//误
+								Asc8_16(148,8,count);
+								Show_HZ12_12(156,8,39,39);//次
+								
+								Show_HZ12_12(60,28,38,38);//错
+								Show_HZ12_12(76,28,36,36);//误
+								Asc8_16(92,28,"5");
+								Show_HZ12_12(100,28,39,39);//次
+								Show_HZ12_12(116,28,32,32);//将
+								Show_HZ12_12(132,28,34,34);//重
+								Show_HZ12_12(148,28,3,3);//置
+								Show_HZ12_12(164,28,17,18);//钱包
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(52,8,"Incorrect PIN (");
+								Asc8_16(172,8,count);
+								Asc8_16(180,8,"/5)");
+								temp = count[0];
+								count[0] = '5' - count[0] + 0x30;
+								Asc8_16(68,28,count);
+								Asc8_16(76,28," try(ies) left");
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle==0);
 						Key_Control(0);
+						count[0] = temp;
 				}
 				else
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,"5");
-						Show_HZ12_12(156,8,39,39);//次					
-						
-						Show_HZ12_12(80,28,17,18);//钱包
-						Show_HZ12_12(112,28,40,41);//已被
-						Show_HZ12_12(144,28,34,34);//重
-						Show_HZ12_12(160,28,3,3);//置
+						if(Neo_System.language == Chinese)					
+						{
+								Show_HZ12_12(84,8,4,5);//密码
+								Show_HZ12_12(116,8,38,38);//错
+								Show_HZ12_12(132,8,36,36);//误
+								Asc8_16(148,8,"5");
+								Show_HZ12_12(156,8,39,39);//次					
+								
+								Show_HZ12_12(80,28,17,18);//钱包
+								Show_HZ12_12(112,28,40,41);//已被
+								Show_HZ12_12(144,28,34,34);//重
+								Show_HZ12_12(160,28,3,3);//置
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(52,8,"Incorrect PIN (5/5)");
+								Asc8_16(44,28,"NEODUN has been reset");
+						}
 						Display_Triangle(0);
 						EmptyWallet();						 										  //清空钱包数据
 						while(Key_Flag.flag.middle==0);
 						Key_Flag.flag.middle=0;
 						
 						Fill_RAM(0x00);
-						Show_HZ12_12(32,8,12,12);//请
-						Show_HZ12_12(48,8,34,34);//重
-						Show_HZ12_12(64,8,2,2);//设
-						Show_HZ12_12(80,8,4,5);//密码
-						Show_HZ12_12(112,8,42,42);//后
-						Show_HZ12_12(128,8,24,25);//导入
-						Show_HZ12_12(160,8,43,46);//备份文件
-					
-						Show_HZ12_12(16,28,47,50);//需要帮助
-						Show_HZ12_12(80,28,12,12);//请
-						Show_HZ12_12(96,28,51,52);//登陆
-						Asc8_16(128,28,"www.neodun.com");
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(32,8,12,12);//请
+								Show_HZ12_12(48,8,34,34);//重
+								Show_HZ12_12(64,8,2,2);//设
+								Show_HZ12_12(80,8,4,5);//密码
+								Show_HZ12_12(112,8,42,42);//后
+								Show_HZ12_12(128,8,24,25);//导入
+								Show_HZ12_12(160,8,43,46);//备份文件
+							
+								Show_HZ12_12(16,28,47,50);//需要帮助
+								Show_HZ12_12(80,28,12,12);//请
+								Show_HZ12_12(96,28,51,52);//登陆
+								Asc8_16(128,28,"www.neodun.com");
+						}
+						else if(Neo_System.language == English)	
+						{
+								Asc8_16(8,8,"Pls reset pin and reimport keys");
+								Asc8_16(12,28,"Visit www.neodun.com for help");						
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle==0);
 						Key_Control(0);
@@ -838,21 +925,34 @@ uint8_t Display_VerifyCode_PowerOn(void)
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,count);
-						Show_HZ12_12(156,8,39,39);//次
-						
-						Show_HZ12_12(60,28,38,38);//错
-						Show_HZ12_12(76,28,36,36);//误
-						Asc8_16(92,28,"5");
-						Show_HZ12_12(100,28,39,39);//次
-						Show_HZ12_12(116,28,32,32);//将
-						Show_HZ12_12(132,28,34,34);//重
-						Show_HZ12_12(148,28,3,3);//置
-						Show_HZ12_12(164,28,2,2);//设
-						Show_HZ12_12(180,28,43,43);//备
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(84,8,4,5);//密码
+								Show_HZ12_12(116,8,38,38);//错
+								Show_HZ12_12(132,8,36,36);//误
+								Asc8_16(148,8,count);
+								Show_HZ12_12(156,8,39,39);//次
+								
+								Show_HZ12_12(60,28,38,38);//错
+								Show_HZ12_12(76,28,36,36);//误
+								Asc8_16(92,28,"5");
+								Show_HZ12_12(100,28,39,39);//次
+								Show_HZ12_12(116,28,32,32);//将
+								Show_HZ12_12(132,28,34,34);//重
+								Show_HZ12_12(148,28,3,3);//置
+								Show_HZ12_12(164,28,2,2);//设
+								Show_HZ12_12(180,28,43,43);//备
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(52,8,"Incorrect PIN (");
+								Asc8_16(172,8,count);
+								Asc8_16(180,8,"/5)");
+								
+								count[0] = '5' - count[0] + 0x30;
+								Asc8_16(68,28,count);
+								Asc8_16(76,28," try(ies) left");
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle==0);
 						Key_Control(0);
@@ -861,17 +961,25 @@ uint8_t Display_VerifyCode_PowerOn(void)
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(84,8,4,5);//密码
-						Show_HZ12_12(116,8,38,38);//错
-						Show_HZ12_12(132,8,36,36);//误
-						Asc8_16(148,8,"5");
-						Show_HZ12_12(156,8,39,39);//次					
-						
-						Show_HZ12_12(80,28,2,2);//设
-						Show_HZ12_12(96,28,43,43);//备
-						Show_HZ12_12(112,28,40,41);//已被
-						Show_HZ12_12(144,28,34,34);//重
-						Show_HZ12_12(160,28,3,3);//置
+						if(Neo_System.language == Chinese)					
+						{					
+								Show_HZ12_12(84,8,4,5);//密码
+								Show_HZ12_12(116,8,38,38);//错
+								Show_HZ12_12(132,8,36,36);//误
+								Asc8_16(148,8,"5");
+								Show_HZ12_12(156,8,39,39);//次					
+								
+								Show_HZ12_12(80,28,2,2);//设
+								Show_HZ12_12(96,28,43,43);//备
+								Show_HZ12_12(112,28,40,41);//已被
+								Show_HZ12_12(144,28,34,34);//重
+								Show_HZ12_12(160,28,3,3);//置
+						}
+						else if(Neo_System.language == English)					
+						{
+								Asc8_16(52,8,"Incorrect PIN (5/5)");
+								Asc8_16(44,28,"NEODUN has been reset");						
+						}
 						Display_Triangle(0);
 						Neo_System.new_wallet = 1;										  //更改为新钱包
 						EmptyWallet();						 										  //清空钱包数据
@@ -880,18 +988,26 @@ uint8_t Display_VerifyCode_PowerOn(void)
 						Key_Flag.flag.middle=0;
 						
 						Fill_RAM(0x00);
-						Show_HZ12_12(32,8,12,12);//请
-						Show_HZ12_12(48,8,34,34);//重
-						Show_HZ12_12(64,8,2,2);//设
-						Show_HZ12_12(80,8,4,5);//密码
-						Show_HZ12_12(112,8,42,42);//后
-						Show_HZ12_12(128,8,24,25);//导入
-						Show_HZ12_12(160,8,43,46);//备份文件
-					
-						Show_HZ12_12(16,28,47,50);//需要帮助
-						Show_HZ12_12(80,28,12,12);//请
-						Show_HZ12_12(96,28,51,52);//登陆
-						Asc8_16(128,28,"www.neodun.com");
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(32,8,12,12);//请
+								Show_HZ12_12(48,8,34,34);//重
+								Show_HZ12_12(64,8,2,2);//设
+								Show_HZ12_12(80,8,4,5);//密码
+								Show_HZ12_12(112,8,42,42);//后
+								Show_HZ12_12(128,8,24,25);//导入
+								Show_HZ12_12(160,8,43,46);//备份文件
+							
+								Show_HZ12_12(16,28,47,50);//需要帮助
+								Show_HZ12_12(80,28,12,12);//请
+								Show_HZ12_12(96,28,51,52);//登陆
+								Asc8_16(128,28,"www.neodun.com");
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(8,8,"Pls reset pin and reimport keys");
+								Asc8_16(12,28,"Visit www.neodun.com for help");						
+						}						
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle==0);
 						Key_Control(0);
@@ -935,36 +1051,60 @@ void Display_Click_Add(uint8_t AddID)
 						Fill_RAM(0x00);
 						if(showaddress[AddID-1].hide == 0)
 						{
-								Show_HZ12_12(72,7,84,85);//隔离
-								Show_HZ12_12(104,7,23,23);//并
-								Show_HZ12_12(120,7,86,87);//冻结
-								Show_HZ12_12(152,7,17,18);//钱包
-							
-								Show_HZ12_12(32,28,88,90);//外部软
-								Show_HZ12_12(80,28,46,46);//件
-								Show_HZ12_12(96,28,32,32);//将
-								Show_HZ12_12(112,28,91,92);//无法
-								Show_HZ12_12(144,28,63,64);//操作
-								Show_HZ12_12(176,28,73,73);//本
-								Show_HZ12_12(192,28,17,18);//钱包							
+								if(Neo_System.language == Chinese)	
+								{
+										Show_HZ12_12(72,7,84,85);//隔离
+										Show_HZ12_12(104,7,23,23);//并
+										Show_HZ12_12(120,7,86,87);//冻结
+										Show_HZ12_12(152,7,17,18);//钱包
+									
+										Show_HZ12_12(32,28,88,90);//外部软
+										Show_HZ12_12(80,28,46,46);//件
+										Show_HZ12_12(96,28,32,32);//将
+										Show_HZ12_12(112,28,91,92);//无法
+										Show_HZ12_12(144,28,63,64);//操作
+										Show_HZ12_12(176,28,73,73);//本
+										Show_HZ12_12(192,28,17,18);//钱包
+								}
+								else if(Neo_System.language == English)	
+								{
+										Asc8_16(20,8,"Isolate and hide the wallet");
+										Asc8_16(12,28,"It only can be seen in NEODUN");
+								}
 						}
 						else
 						{
-								Show_HZ12_12(80,7,65,65);//不
-								Show_HZ12_12(96,7,130,130);//再
-								Show_HZ12_12(112,7,84,85);//隔离
-								Show_HZ12_12(144,7,17,18);//钱包	
-								
-								Show_HZ12_12(40,28,131,132);//允许
-								Show_HZ12_12(72,28,88,90);//外部软
-								Show_HZ12_12(120,28,46,46);//件
-								Show_HZ12_12(136,28,63,64);//操作
-								Show_HZ12_12(168,28,73,73);//本
-								Show_HZ12_12(184,28,17,18);//钱包								
+								if(Neo_System.language == Chinese)	
+								{
+										Show_HZ12_12(80,7,65,65);//不
+										Show_HZ12_12(96,7,130,130);//再
+										Show_HZ12_12(112,7,84,85);//隔离
+										Show_HZ12_12(144,7,17,18);//钱包
+										
+										Show_HZ12_12(40,28,131,132);//允许
+										Show_HZ12_12(72,28,88,90);//外部软
+										Show_HZ12_12(120,28,46,46);//件
+										Show_HZ12_12(136,28,63,64);//操作
+										Show_HZ12_12(168,28,73,73);//本
+										Show_HZ12_12(184,28,17,18);//钱包
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(16,16,"Do not hide the wallet again");
+								}
 						}
-						Show_HZ12_12(58,47,54,54);//否
-						Show_HZ12_12(120,47,53,53);//是
-						Show_HZ12_12(182,47,54,54);//否						
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(58,47,54,54);//否
+								Show_HZ12_12(120,47,53,53);//是
+								Show_HZ12_12(182,47,54,54);//否
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(58,47,"NO");
+								Asc8_16(116,47,"YES");
+								Asc8_16(182,47,"NO");
+						}
 						while(1)
 						{
 								if(Key_Flag.flag.middle)
@@ -1008,17 +1148,38 @@ void Display_Click_Add(uint8_t AddID)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(96,16,78,79);//查看
-						Show_HZ12_12(128,16,8,9);//地址
+						if(Neo_System.language == Chinese)
+						{					
+								Show_HZ12_12(96,16,78,79);//查看
+								Show_HZ12_12(128,16,8,9);//地址
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(100,16,"address");
+						}
 						if(showaddress[AddID-1].hide)
 						{
-								Show_HZ12_12(178,16,111,112);//取消
-								Show_HZ12_12(210,16,80,81);//隐藏
+								if(Neo_System.language == Chinese)
+								{										
+										Show_HZ12_12(178,16,111,112);//取消
+										Show_HZ12_12(210,16,80,81);//隐藏
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(168,16,"unhide");
+								}		
 						}
 						else
 						{
-								Show_HZ12_12(178,16,80,81);//隐藏
-								Show_HZ12_12(210,16,17,18);//钱包
+								if(Neo_System.language == Chinese)
+								{	
+										Show_HZ12_12(178,16,80,81);//隐藏
+										Show_HZ12_12(210,16,17,18);//钱包
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(176,16,"hide");
+								}	
 						}
 						Display_Triangle(1);
 						Display_arrow(1);
@@ -1026,20 +1187,44 @@ void Display_Click_Add(uint8_t AddID)
 				if((page_index == 1)&&(RefreshDisplay == 1))
 				{
 						RefreshDisplay = 0;
-						Fill_RAM(0x00);
-						Show_HZ12_12(15,16,78,79);//查看
-						Show_HZ12_12(47,16,8,9);//地址
-						if(showaddress[AddID-1].hide)
+						Fill_RAM(0x00);					
+						if(Neo_System.language == Chinese)
+						{					
+								Show_HZ12_12(15,16,78,79);//查看
+								Show_HZ12_12(47,16,8,9);//地址
+						}
+						else if(Neo_System.language == English)
 						{
-								Show_HZ12_12(96,16,111,112);//取消
-								Show_HZ12_12(128,16,80,81);//隐藏
+								Asc8_16(32,16,"address");
+						}
+						if(showaddress[AddID-1].hide)
+						{	
+								if(Neo_System.language == Chinese)
+								{										
+										Show_HZ12_12(96,16,111,112);//取消
+										Show_HZ12_12(128,16,80,81);//隐藏
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(104,16,"unhide");
+								}
 						}
 						else
-						{
-								Show_HZ12_12(96,16,80,81);//隐藏
-								Show_HZ12_12(128,16,17,18);//钱包
+						{		
+								if(Neo_System.language == Chinese)
+								{
+										Show_HZ12_12(96,16,80,81);//隐藏
+										Show_HZ12_12(128,16,17,18);//钱包
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(112,16,"hide");
+								}
 						}
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(184,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(168,16,"return");
 						Display_Triangle(1);
 						Display_arrow(0);
 						Display_arrow(1);
@@ -1049,16 +1234,33 @@ void Display_Click_Add(uint8_t AddID)
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
 						if(showaddress[AddID-1].hide)
-						{
-								Show_HZ12_12(15,16,111,112);//取消
-								Show_HZ12_12(47,16,80,81);//隐藏
+						{		
+								if(Neo_System.language == Chinese)
+								{				
+										Show_HZ12_12(15,16,111,112);//取消
+										Show_HZ12_12(47,16,80,81);//隐藏
+								}
+								else if(Neo_System.language == English)
+								{		
+										Asc8_16(36,16,"unhide");
+								}
 						}
 						else
 						{
-								Show_HZ12_12(15,16,80,81);//隐藏
-								Show_HZ12_12(47,16,17,18);//钱包
+								if(Neo_System.language == Chinese)
+								{								
+										Show_HZ12_12(15,16,80,81);//隐藏
+										Show_HZ12_12(47,16,17,18);//钱包
+								}
+								else if(Neo_System.language == English)
+								{	
+										Asc8_16(44,16,"hide");
+								}
 						}
-						Show_HZ12_12(112,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(112,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(104,16,"return");
 						Display_Triangle(1);
 						Display_arrow(0);
 				}
@@ -1086,17 +1288,38 @@ void Display_Click_Add(uint8_t AddID)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(96,16,78,79);//查看
-						Show_HZ12_12(128,16,8,9);//地址
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(96,16,78,79);//查看
+								Show_HZ12_12(128,16,8,9);//地址
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(100,16,"address");
+						}
 						if(showaddress[AddID].hide)
 						{
-								Show_HZ12_12(178,16,111,112);//取消
-								Show_HZ12_12(210,16,80,81);//隐藏
+								if(Neo_System.language == Chinese)
+								{
+										Show_HZ12_12(178,16,111,112);//取消
+										Show_HZ12_12(210,16,80,81);//隐藏
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(168,16,"unhide");
+								}
 						}
 						else
 						{
-								Show_HZ12_12(178,16,80,81);//隐藏
-								Show_HZ12_12(210,16,17,18);//钱包
+								if(Neo_System.language == Chinese)
+								{							
+										Show_HZ12_12(178,16,80,81);//隐藏
+										Show_HZ12_12(210,16,17,18);//钱包
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(176,16,"hide");
+								}
 						}
 						Display_Triangle(1);
 						Display_arrow(1);
@@ -1116,10 +1339,17 @@ void Display_Set_Coin_NEO(void)
 				{
 						Key_Flag.flag.middle = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(88,16,97,97);//版
-						Show_HZ12_12(104,16,73,73);//本				
-						Show_HZ12_12(120,16,98,98);//号
-						Asc8_16(136,16,VERSION_NEO_STR);
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(88,16,97,97);//版
+								Show_HZ12_12(104,16,73,73);//本				
+								Show_HZ12_12(120,16,98,98);//号						
+								Asc8_16(136,16,VERSION_NEO_STR);
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(112,16,VERSION_NEO_STR);
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0)
 						{
@@ -1132,10 +1362,6 @@ void Display_Set_Coin_NEO(void)
 				if((Key_Flag.flag.middle)&&(page_index == 1))
 				{
 						Key_Flag.flag.middle = 0;
-				}			
-				if((Key_Flag.flag.middle)&&(page_index == 2))
-				{
-						Key_Flag.flag.middle = 0;
 						return;
 				}
 				
@@ -1143,12 +1369,18 @@ void Display_Set_Coin_NEO(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-					  Show_HZ12_12(104,16,97,97);//版
-						Show_HZ12_12(120,16,73,73);//本
-						Show_HZ12_12(136,16,98,98);//号
-						
-						Show_HZ12_12(184,16,99,101);//合约签
-						Show_HZ12_12(232,16,57,57);//名
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(104,16,97,97);//版
+								Show_HZ12_12(120,16,73,73);//本
+								Show_HZ12_12(136,16,98,98);//号								
+								Show_HZ12_12(184,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(100,16,"version");
+								Asc8_16(176,16,"return");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);					
 				}
@@ -1156,32 +1388,27 @@ void Display_Set_Coin_NEO(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(30,16,97,97);//版
-						Show_HZ12_12(46,16,73,73);//本
-						Show_HZ12_12(62,16,98,98);//号
-						
-						Show_HZ12_12(96,16,99,101);//合约签
-						Show_HZ12_12(144,16,57,57);//名
-						Show_HZ12_12(184,16,82,83);//返回
-						Display_Triangle(1);	
-						Display_arrow(0);	
+						if(Neo_System.language == Chinese)
+						{						
+								Show_HZ12_12(30,16,97,97);//版
+								Show_HZ12_12(46,16,73,73);//本
+								Show_HZ12_12(62,16,98,98);//号								
+								Show_HZ12_12(112,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(19,16,"version");
+								Asc8_16(104,16,"return");
+						}
+						Display_Triangle(1);
+						Display_arrow(0);
 						Display_arrow(1);
-				}
-				if((page_index == 2)&&(RefreshDisplay == 1))
-				{
-						RefreshDisplay = 0;
-						Fill_RAM(0x00);
-						Show_HZ12_12(20,16,99,101);//合约签
-						Show_HZ12_12(68,16,57,57);//名
-						Show_HZ12_12(112,16,82,83);//返回
-						Display_Triangle(1);	
-						Display_arrow(0);			
 				}
 				
 				if(Key_Flag.flag.right)//右键有效时，ID加1
 				{
 						Key_Flag.flag.right = 0;
-						if(page_index<2)
+						if(page_index<1)
 						{
 								page_index++;
 								RefreshDisplay = 1;
@@ -1201,12 +1428,18 @@ void Display_Set_Coin_NEO(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(104,16,97,97);//版
-						Show_HZ12_12(120,16,73,73);//本
-						Show_HZ12_12(136,16,98,98);//号
-						
-						Show_HZ12_12(184,16,99,101);//合约签
-						Show_HZ12_12(232,16,57,57);//名
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(104,16,97,97);//版
+								Show_HZ12_12(120,16,73,73);//本
+								Show_HZ12_12(136,16,98,98);//号								
+								Show_HZ12_12(184,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(100,16,"version");
+								Asc8_16(176,16,"return");
+						}
 						
 						Display_Triangle(1);
 						Display_arrow(1);
@@ -1240,7 +1473,10 @@ void Display_Set_Coin(void)
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
 						Asc8_16(116,16,"NEO");
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(184,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(176,16,"return");
 						Display_Triangle(1);
 						Display_arrow(1);					
 				}
@@ -1249,7 +1485,10 @@ void Display_Set_Coin(void)
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
 						Asc8_16(50,16,"NEO");
-						Show_HZ12_12(112,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(112,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(104,16,"return");
 						Display_Triangle(1);	
 						Display_arrow(0);			
 				}	
@@ -1278,7 +1517,10 @@ void Display_Set_Coin(void)
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
 						Asc8_16(116,16,"NEO");
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(184,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(176,16,"return");
 						Display_Triangle(1);
 						Display_arrow(1);
 				}					
@@ -1297,10 +1539,17 @@ void Display_Set_About(void)
 				{
 						Key_Flag.flag.middle = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(88,16,97,97);//版
-						Show_HZ12_12(104,16,73,73);//本				
-						Show_HZ12_12(120,16,98,98);//号
-						Asc8_16(136,16,VERSION_NEODUN_STR);
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(88,16,97,97);//版
+								Show_HZ12_12(104,16,73,73);//本				
+								Show_HZ12_12(120,16,98,98);//号
+								Asc8_16(136,16,VERSION_NEODUN_STR);
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(112,16,VERSION_NEODUN_STR);
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0)
 						{
@@ -1313,12 +1562,20 @@ void Display_Set_About(void)
 				if((Key_Flag.flag.middle)&&(page_index == 1))
 				{
 						Key_Flag.flag.middle = 0;
-						Fill_RAM(0x00);
-						Show_HZ12_12(56,8,47,50);//需要帮助
-						Show_HZ12_12(120,8,12,12);//请
-						Show_HZ12_12(136,8,51,52);//登陆
-						Show_HZ12_12(168,8,104,105);//官网
-						Asc8_16(72,28,"www.neodun.com");
+						Fill_RAM(0x00);					
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(56,8,47,50);//需要帮助
+								Show_HZ12_12(120,8,12,12);//请
+								Show_HZ12_12(136,8,51,52);//登陆
+								Show_HZ12_12(168,8,104,105);//官网
+								Asc8_16(72,28,"www.neodun.com");
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(4,8,"Visit official website for help");
+								Asc8_16(72,28,"www.neodun.com");
+						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0)
 						{
@@ -1327,7 +1584,7 @@ void Display_Set_About(void)
 						}
 						Key_Flag.flag.middle = 0;
 						RefreshDisplay = 1;
-				}			
+				}
 				if((Key_Flag.flag.middle)&&(page_index == 2))
 				{
 						Key_Flag.flag.middle = 0;
@@ -1338,11 +1595,19 @@ void Display_Set_About(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(96,16,77,77);//固
-						Show_HZ12_12(112,16,46,46);//件
-						Show_HZ12_12(128,16,97,97);//版
-						Show_HZ12_12(144,16,73,73);//本
-						Show_HZ12_12(184,16,49,50);//帮助
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(96,16,77,77);//固
+								Show_HZ12_12(112,16,46,46);//件
+								Show_HZ12_12(128,16,97,97);//版
+								Show_HZ12_12(144,16,73,73);//本
+								Show_HZ12_12(184,16,49,50);//帮助
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(96,16,"firmware");
+								Asc8_16(176,16,"help");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);			
 				}
@@ -1350,12 +1615,21 @@ void Display_Set_About(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(20,16,77,77);//固
-						Show_HZ12_12(36,16,46,46);//件
-						Show_HZ12_12(52,16,97,97);//版
-						Show_HZ12_12(68,16,73,73);//本
-						Show_HZ12_12(112,16,49,50);//帮助
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(20,16,77,77);//固
+								Show_HZ12_12(36,16,46,46);//件
+								Show_HZ12_12(52,16,97,97);//版
+								Show_HZ12_12(68,16,73,73);//本
+								Show_HZ12_12(112,16,49,50);//帮助
+								Show_HZ12_12(184,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(28,16,"firmware");
+								Asc8_16(112,16,"help");
+								Asc8_16(168,16,"return");
+						}
 						Display_Triangle(1);	
 						Display_arrow(0);	
 						Display_arrow(1);
@@ -1364,8 +1638,16 @@ void Display_Set_About(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(44,16,49,50);//帮助
-						Show_HZ12_12(112,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(44,16,49,50);//帮助
+								Show_HZ12_12(112,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(44,16,"help");
+								Asc8_16(104,16,"return");						
+						}
 						Display_Triangle(1);	
 						Display_arrow(0);				
 				}
@@ -1393,11 +1675,19 @@ void Display_Set_About(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(96,16,77,77);//固
-						Show_HZ12_12(112,16,46,46);//件
-						Show_HZ12_12(128,16,97,97);//版
-						Show_HZ12_12(144,16,73,73);//本
-						Show_HZ12_12(184,16,49,50);//帮助
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(96,16,77,77);//固
+								Show_HZ12_12(112,16,46,46);//件
+								Show_HZ12_12(128,16,97,97);//版
+								Show_HZ12_12(144,16,73,73);//本
+								Show_HZ12_12(184,16,49,50);//帮助
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(96,16,"firmware");
+								Asc8_16(176,16,"help");
+						}					
 						Display_Triangle(1);
 						Display_arrow(1);
 				}					
@@ -1407,22 +1697,33 @@ void Display_Set_About(void)
 void Display_Set_Security_ResetWallet(void)
 {
 		Fill_RAM(0x00);
-		Show_HZ12_12(64,7,68,68);//即
-		Show_HZ12_12(80,7,32,32);//将
-		Show_HZ12_12(96,7,55,56);//删除
-		Show_HZ12_12(128,7,96,96);//全
-		Show_HZ12_12(144,7,89,89);//部
-		Show_HZ12_12(160,7,108,109);//数据
-	
-		Show_HZ12_12(72,28,55,56);//删除
-		Show_HZ12_12(104,28,42,42);//后
-		Show_HZ12_12(120,28,91,92);//无法
-		Show_HZ12_12(152,28,110,110);//找
-		Show_HZ12_12(168,28,83,83);//回
-	
-		Show_HZ12_12(46,47,111,112);//取消
-		Show_HZ12_12(112,47,113,114);//继续
-		Show_HZ12_12(184,47,111,112);//取消
+		if(Neo_System.language == Chinese)
+		{
+				Show_HZ12_12(64,7,68,68);//即
+				Show_HZ12_12(80,7,32,32);//将
+				Show_HZ12_12(96,7,55,56);//删除
+				Show_HZ12_12(128,7,96,96);//全
+				Show_HZ12_12(144,7,89,89);//部
+				Show_HZ12_12(160,7,108,109);//数据
+			
+				Show_HZ12_12(72,28,55,56);//删除
+				Show_HZ12_12(104,28,42,42);//后
+				Show_HZ12_12(120,28,91,92);//无法
+				Show_HZ12_12(152,28,110,110);//找
+				Show_HZ12_12(168,28,83,83);//回
+			
+				Show_HZ12_12(46,47,111,112);//取消
+				Show_HZ12_12(112,47,113,114);//继续
+				Show_HZ12_12(184,47,111,112);//取消
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(8,7,"All keys & apps will be erased");
+				Asc8_16(24,28,"Pin is required to confirm");
+				Asc8_16(38,47,"cancel");
+				Asc8_16(176,47,"cancel");
+				Display_Triangle(0);
+		}
 		
 		while(1)
 		{
@@ -1430,19 +1731,30 @@ void Display_Set_Security_ResetWallet(void)
 				{
 						Key_Flag.flag.middle = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(96,7,75,76);//风险
-						Show_HZ12_12(128,7,63,64);//操作
-					
-						Show_HZ12_12(76,28,53,54);//是否
-						Show_HZ12_12(108,28,34,34);//重
-						Show_HZ12_12(124,28,3,3);//置
-						Show_HZ12_12(140,28,2,2);//设
-						Show_HZ12_12(156,28,43,43);//备
-						Asc8_16(172,28,"?");
-					
-						Show_HZ12_12(46,47,111,112);//取消
-						Show_HZ12_12(112,47,113,114);//继续
-						Show_HZ12_12(184,47,111,112);//取消						
+						if(Neo_System.language == Chinese)
+						{					
+								Show_HZ12_12(96,7,75,76);//风险
+								Show_HZ12_12(128,7,63,64);//操作
+							
+								Show_HZ12_12(76,28,53,54);//是否
+								Show_HZ12_12(108,28,34,34);//重
+								Show_HZ12_12(124,28,3,3);//置
+								Show_HZ12_12(140,28,2,2);//设
+								Show_HZ12_12(156,28,43,43);//备
+								Asc8_16(172,28,"?");
+							
+								Show_HZ12_12(46,47,111,112);//取消
+								Show_HZ12_12(112,47,113,114);//继续
+								Show_HZ12_12(184,47,111,112);//取消	
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(44,7,"Be sure to reset all?");
+								Asc8_16(48,28,"This is irreversible");
+								Asc8_16(38,47,"cancel");
+								Asc8_16(100,47,"confirm");								
+								Asc8_16(176,47,"cancel");						
+						}
 						while(1)
 						{
 								if(Key_Flag.flag.middle)
@@ -1451,20 +1763,28 @@ void Display_Set_Security_ResetWallet(void)
 										if(Display_VerifyCode() == 0)
 										{
 												Fill_RAM(0x00);
-												Show_HZ12_12(96,8,34,34);//重
-												Show_HZ12_12(112,8,3,3);//置
-												Show_HZ12_12(128,8,27,27);//成
-												Show_HZ12_12(144,8,115,115);//功
-											
-												Show_HZ12_12(72,28,116,118);//牛顿忘
-												Show_HZ12_12(120,28,29,29);//记
-												Show_HZ12_12(136,28,119,121);//了一切
+												if(Neo_System.language == Chinese)
+												{
+														Show_HZ12_12(96,8,34,34);//重
+														Show_HZ12_12(112,8,3,3);//置
+														Show_HZ12_12(128,8,27,27);//成
+														Show_HZ12_12(144,8,115,115);//功
+													
+														Show_HZ12_12(72,28,116,118);//牛顿忘
+														Show_HZ12_12(120,28,29,29);//记
+														Show_HZ12_12(136,28,119,121);//了一切
+												}
+												else if(Neo_System.language == English)
+												{
+														Asc8_16(64,7,"Reset successful");
+														Asc8_16(28,28,"NEODUN forgets everything");
+												}
 												Display_Triangle(0);
 											
 												Key_Control(1);
 												while(Key_Flag.flag.middle == 0);
 												Key_Flag.flag.middle = 0;
-												EmptyWallet();				//清空钱包数据
+												EmptyWallet(); //清空钱包数据
 												HAL_Delay(50);
 												System_Reset();//系统重启
 										}
@@ -1522,12 +1842,20 @@ void Display_Set_Security(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(100,16,106,107);//更改
-						Asc8_16(132,16,"PIN");
-						Show_HZ12_12(188,16,34,34);//重
-						Show_HZ12_12(204,16,3,3);//置
-						Show_HZ12_12(220,16,2,2);//设
-						Show_HZ12_12(236,16,43,43);//备
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(100,16,106,107);//更改
+								Asc8_16(132,16,"PIN");
+								Show_HZ12_12(188,16,34,34);//重
+								Show_HZ12_12(204,16,3,3);//置
+								Show_HZ12_12(220,16,2,2);//设
+								Show_HZ12_12(236,16,43,43);//备
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(92,16,"changePIN");
+								Asc8_16(168,16,"reset-");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);			
 				}
@@ -1535,13 +1863,22 @@ void Display_Set_Security(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(20,16,106,107);//更改
-						Asc8_16(52,16,"PIN");
-						Show_HZ12_12(96,16,34,34);//重
-						Show_HZ12_12(112,16,3,3);//置
-						Show_HZ12_12(128,16,2,2);//设
-						Show_HZ12_12(144,16,43,43);//备
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(20,16,106,107);//更改
+								Asc8_16(52,16,"PIN");
+								Show_HZ12_12(96,16,34,34);//重
+								Show_HZ12_12(112,16,3,3);//置
+								Show_HZ12_12(128,16,2,2);//设
+								Show_HZ12_12(144,16,43,43);//备
+								Show_HZ12_12(184,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(44,16,"-pin");
+								Asc8_16(92,16,"reset all");
+								Asc8_16(168,16,"return");
+						}
 						Display_Triangle(1);	
 						Display_arrow(0);	
 						Display_arrow(1);
@@ -1550,11 +1887,19 @@ void Display_Set_Security(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(30,16,34,34);//重
-						Show_HZ12_12(46,16,3,3);//置
-						Show_HZ12_12(62,16,2,2);//设
-						Show_HZ12_12(78,16,43,43);//备
-						Show_HZ12_12(112,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(30,16,34,34);//重
+								Show_HZ12_12(46,16,3,3);//置
+								Show_HZ12_12(62,16,2,2);//设
+								Show_HZ12_12(78,16,43,43);//备
+								Show_HZ12_12(112,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(36,16,"reset-");
+								Asc8_16(104,16,"return");								
+						}
 						Display_Triangle(1);	
 						Display_arrow(0);			
 				}
@@ -1582,16 +1927,151 @@ void Display_Set_Security(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(100,16,106,107);//更改
-						Asc8_16(132,16,"PIN");
-						Show_HZ12_12(168,16,34,34);//重
-						Show_HZ12_12(184,16,3,3);//置
-						Show_HZ12_12(200,16,2,2);//设
-						Show_HZ12_12(216,16,43,43);//备
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(100,16,106,107);//更改
+								Asc8_16(132,16,"PIN");
+								Show_HZ12_12(188,16,34,34);//重
+								Show_HZ12_12(204,16,3,3);//置
+								Show_HZ12_12(220,16,2,2);//设
+								Show_HZ12_12(236,16,43,43);//备
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(92,16,"changePIN");
+								Asc8_16(168,16,"reset-");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);
 				}					
 		}		
+}
+
+void Display_Set_language(void)
+{
+		uint8_t RefreshDisplay = 1;//是否重新刷新界面标志
+		uint8_t page_index = 0;		//页面ID
+		while(1)
+		{
+				if(Set_Flag.flag.usb_offline == 0)
+						return;
+				if((Key_Flag.flag.middle)&&(page_index == 0))
+				{
+						Key_Flag.flag.middle = 0;
+						Neo_System.language = Chinese;
+						//更改更新标识
+						uint8_t slot_data[32];
+						ATSHA_read_data_slot(14,slot_data);
+						slot_data[2] = 0;
+						ATSHA_write_data_slot(14,0,slot_data,32);
+						
+						Fill_RAM(0x00);
+						Show_HZ12_12(96,16,2,3);//设置
+						Show_HZ12_12(128,16,27,27);//成
+						Show_HZ12_12(144,16,115,115);//功
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;								
+						}
+						Key_Flag.flag.middle = 0;
+						return;
+				}
+				if((Key_Flag.flag.middle)&&(page_index == 1))
+				{
+						Key_Flag.flag.middle = 0;
+						Neo_System.language = English;							
+						//更改更新标识
+						uint8_t slot_data[32];
+						ATSHA_read_data_slot(14,slot_data);
+						slot_data[2] = 1;
+						ATSHA_write_data_slot(14,0,slot_data,32);						
+					
+						Fill_RAM(0x00);
+						Asc8_16(120,16,"OK");
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0)
+						{
+								if(Set_Flag.flag.usb_offline == 0)
+										return;								
+						}
+						Key_Flag.flag.middle = 0;					
+						return;
+				}			
+				if((Key_Flag.flag.middle)&&(page_index == 2))
+				{
+						Key_Flag.flag.middle = 0;
+						return;
+				}				
+				if((page_index == 0)&&(RefreshDisplay == 1))
+				{
+						RefreshDisplay = 0;
+						Fill_RAM(0x00);
+						Show_HZ12_12(112,16,138,138);//中
+						Show_HZ12_12(128,16,45,45);//文
+						Asc8_16(164,16,"English");
+						Display_Triangle(1);
+						Display_arrow(1);			
+				}
+				if((page_index == 1)&&(RefreshDisplay == 1))
+				{
+						RefreshDisplay = 0;
+						Fill_RAM(0x00);
+						Show_HZ12_12(44,16,138,138);//中
+						Show_HZ12_12(60,16,45,45);//文
+						Asc8_16(100,16,"English");					
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(184,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(168,16,"return");
+
+						Display_Triangle(1);	
+						Display_arrow(0);	
+						Display_arrow(1);
+				}	
+				if((page_index == 2)&&(RefreshDisplay == 1))
+				{
+						RefreshDisplay = 0;
+						Fill_RAM(0x00);
+						Asc8_16(32,16,"English");
+						if(Neo_System.language == Chinese)
+								Show_HZ12_12(112,16,82,83);//返回
+						else if(Neo_System.language == English)
+								Asc8_16(104,16,"return");
+						Display_Triangle(1);
+						Display_arrow(0);
+				}
+				if(Key_Flag.flag.right)//右键有效时，ID加1
+				{
+						Key_Flag.flag.right = 0;
+						if(page_index<2)
+						{
+								page_index++;
+								RefreshDisplay = 1;
+						}
+				}
+				if(Key_Flag.flag.left)//左键有效时，ID加1
+				{
+						Key_Flag.flag.left = 0;
+						if(page_index > 0)
+						{
+								page_index--;
+								RefreshDisplay = 1;
+						}
+				}
+				
+				if((page_index == 0)&&(RefreshDisplay == 1))
+				{
+						RefreshDisplay = 0;
+						Fill_RAM(0x00);
+						Show_HZ12_12(112,16,138,138);//中
+						Show_HZ12_12(128,16,45,45);//文
+						Asc8_16(164,16,"English");
+						Display_Triangle(1);
+						Display_arrow(1);
+				}					
+		}
 }
 
 void Display_Click_Set(void)
@@ -1614,7 +2094,10 @@ void Display_Click_Set(void)
 						else
 						{
 								Fill_RAM(0x00);
-								Show_HZ12_12(120,24,91,91);//无
+								if(Neo_System.language == Chinese)
+										Show_HZ12_12(120,24,91,91);//无
+								else if(Neo_System.language == English)
+										Asc8_16(112,16,"None");
 								Display_Triangle(0);
 								while(Key_Flag.flag.middle==0)
 								{
@@ -1634,21 +2117,34 @@ void Display_Click_Set(void)
 				if((Key_Flag.flag.middle)&&(page_index == 2))
 				{
 						Key_Flag.flag.middle = 0;
-						Display_Set_About();
+						Display_Set_language();
 						RefreshDisplay = 1;
-				}		
+				}				
 				if((Key_Flag.flag.middle)&&(page_index == 3))
 				{
 						Key_Flag.flag.middle = 0;
-						return;
+						Display_Set_About();
+						RefreshDisplay = 1;
 				}
-				
+				if((Key_Flag.flag.middle)&&(page_index == 4))
+				{
+						Key_Flag.flag.middle = 0;
+						return;
+				}				
 				if((page_index == 0)&&(RefreshDisplay == 1))
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(112,16,93,94);//币种
-						Show_HZ12_12(184,16,95,96);//安全
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(112,16,93,94);//币种
+								Show_HZ12_12(184,16,95,96);//安全
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(116,16,"app");
+								Asc8_16(160,16,"security");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);					
 				}
@@ -1656,9 +2152,18 @@ void Display_Click_Set(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(46,16,93,94);//币种
-						Show_HZ12_12(112,16,95,96);//安全
-						Show_HZ12_12(184,16,102,103);//关于
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(46,16,93,94);//币种
+								Show_HZ12_12(112,16,95,96);//安全
+								Show_HZ12_12(184,16,136,137);//语言
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(48,16,"app");
+								Asc8_16(96,16,"security");
+								Asc8_16(168,16,"langu-");
+						}
 						Display_Triangle(1);
 						Display_arrow(0);
 						Display_arrow(1);					
@@ -1667,19 +2172,56 @@ void Display_Click_Set(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(46,16,95,96);//安全
-						Show_HZ12_12(112,16,102,103);//关于
-						Show_HZ12_12(184,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(46,16,95,96);//安全
+								Show_HZ12_12(112,16,136,137);//语言
+								Show_HZ12_12(184,16,102,103);//关于
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(36,16,"secur-");
+								Asc8_16(96,16,"language");
+								Asc8_16(172,16,"about");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);
 						Display_arrow(0);				
-				}			
+				}
 				if((page_index == 3)&&(RefreshDisplay == 1))
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(46,16,102,103);//关于
-						Show_HZ12_12(112,16,82,83);//返回
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(46,16,136,137);//语言
+								Show_HZ12_12(112,16,102,103);//关于
+								Show_HZ12_12(184,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(36,16,"langu-");
+								Asc8_16(108,16,"about");
+								Asc8_16(168,16,"return");
+						}					
+						Display_Triangle(1);
+						Display_arrow(1);
+						Display_arrow(0);							
+				}
+				if((page_index == 4)&&(RefreshDisplay == 1))
+				{
+						RefreshDisplay = 0;
+						Fill_RAM(0x00);
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(46,16,102,103);//关于
+								Show_HZ12_12(112,16,82,83);//返回
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(40,16,"about");
+								Asc8_16(104,16,"return");						
+						}
 						Display_Triangle(1);
 						Display_arrow(0);		
 				}	
@@ -1687,7 +2229,7 @@ void Display_Click_Set(void)
 				if(Key_Flag.flag.right)//右键有效时，ID加1
 				{
 						Key_Flag.flag.right = 0;
-						if(page_index<3)
+						if(page_index<4)
 						{
 								page_index++;
 								RefreshDisplay = 1;
@@ -1707,8 +2249,16 @@ void Display_Click_Set(void)
 				{
 						RefreshDisplay = 0;
 						Fill_RAM(0x00);
-						Show_HZ12_12(112,16,93,94);//币种
-						Show_HZ12_12(184,16,95,96);//安全
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(112,16,93,94);//币种
+								Show_HZ12_12(184,16,95,96);//安全
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(116,16,"app");
+								Asc8_16(168,16,"secur-");
+						}
 						Display_Triangle(1);
 						Display_arrow(1);
 				}
@@ -1719,18 +2269,29 @@ uint8_t Display_AddAdd(char *address)
 {
 		Key_Control(1);
 		Fill_RAM(0x00);
-		Show_HZ12_12(0,7,53,54);//是否
-		Show_HZ12_12(32,7,24,25);//导入
-		Show_HZ12_12(64,7,17,18);//钱包
-		Asc8_16(96,7,"?");
-		
-		Show_HZ12_12(0,28,17,18);//钱包
-		Show_HZ12_12(32,28,8,9);//地址
-		Asc8_16(64,28,":");
+		if(Neo_System.language == Chinese)
+		{
+				Show_HZ12_12(0,7,53,54);//是否
+				Show_HZ12_12(32,7,24,25);//导入
+				Show_HZ12_12(64,7,17,18);//钱包
+				Asc8_16(96,7,"?");
+				
+				Show_HZ12_12(0,28,17,18);//钱包
+				Show_HZ12_12(32,28,8,9);//地址
+				Asc8_16(64,28,":");
 
-		Show_HZ12_12(46,47,111,112);//取消
-		Show_HZ12_12(112,47,113,114);//继续
-		Show_HZ12_12(184,47,111,112);//取消
+				Show_HZ12_12(46,47,111,112);//取消
+				Show_HZ12_12(112,47,113,114);//继续
+				Show_HZ12_12(184,47,111,112);//取消
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(0,7,"Import a new key");
+				Asc8_16(0,28,"address:");
+				Asc8_16(23,47,"cancel");
+				Asc8_16(176,47,"cancel");
+				Display_Triangle(0);
+		}
 		Start_TIM(OLED_INPUT_TIME);
 		while(1)
 		{
@@ -1741,9 +2302,18 @@ uint8_t Display_AddAdd(char *address)
 						Key_Flag.flag.middle = 0;
 						Fill_RAM(0x00);					
 						Asc8_16(0,7,(uint8_t*)address);
-						Show_HZ12_12(54,47,54,54);//否
-						Show_HZ12_12(120,47,53,53);//是
-						Show_HZ12_12(192,47,54,54);//否
+						if(Neo_System.language == Chinese)
+						{
+								Show_HZ12_12(54,47,54,54);//否
+								Show_HZ12_12(120,47,53,53);//是
+								Show_HZ12_12(192,47,54,54);//否
+						}
+						else if(Neo_System.language == English)
+						{
+								Asc8_16(23,47,"cancel");
+								Asc8_16(100,47,"confirm");
+								Asc8_16(176,47,"cancel");						
+						}
 						Start_TIM(OLED_INPUT_TIME);
 						while(1)
 						{
@@ -1772,22 +2342,52 @@ uint8_t Display_AddAdd(char *address)
 uint8_t Display_DelAdd(uint8_t AddID)
 {
 		uint8_t value = 0;
-		uint8_t index = 128 - (8*showaddress[AddID].len_name + 136)/2;
+		uint8_t index = 0;
 		Key_Control(1);
 		Fill_RAM(0x00);
-		Show_HZ12_12(index,7,53,56);//是否删除
-		index += 64;
-		Asc8_16(index,7,(uint8_t*)showaddress[AddID].name);
-		index += 8*showaddress[AddID].len_name;
-		Show_HZ12_12(index,7,59,61);//及其私
-		index += 48;
-		Show_HZ12_12(index,7,22,22);//钥
-		index += 16;
-		Asc8_16(index,7,"?");
-		Show_HZ12_12(80,28,62,67);//该操作不可逆
-		Show_HZ12_12(58,47,54,54);//否
-		Show_HZ12_12(120,47,53,53);//是
-		Show_HZ12_12(182,47,54,54);//否
+		if(Neo_System.language == Chinese)
+		{
+				index = 128 - (8*showaddress[AddID].len_name + 136)/2;
+				Show_HZ12_12(index,7,53,56);//是否删除
+				index += 64;
+				Asc8_16(index,7,(uint8_t*)showaddress[AddID].name);
+				index += 8*showaddress[AddID].len_name;
+				Show_HZ12_12(index,7,59,61);//及其私
+				index += 48;
+				Show_HZ12_12(index,7,22,22);//钥
+				index += 16;
+				Asc8_16(index,7,"?");
+				Show_HZ12_12(80,28,62,67);//该操作不可逆
+				Show_HZ12_12(58,47,54,54);//否
+				Show_HZ12_12(120,47,53,53);//是
+				Show_HZ12_12(182,47,54,54);//否
+		}
+		else if(Neo_System.language == English)
+		{
+				index = 128 - (8*showaddress[AddID].len_name + 200)/2;
+				Asc8_16(index,7,(uint8_t*)showaddress[AddID].name);
+				index += 8*showaddress[AddID].len_name;				
+				Asc8_16(index,7," & its key will be erased");
+			
+				Asc8_16(24,28,"PIN is required to confirm");
+				Asc8_16(23,47,"cancel");
+				Asc8_16(176,47,"cancel");
+				Display_Triangle(0);
+			
+				Key_Flag.flag.middle = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;
+
+				Fill_RAM(0x00);
+				index = 128 - (8*showaddress[AddID].len_name + 136)/2;
+				Asc8_16(index,7,"Be sure to erase ");
+				index += 136;
+				Asc8_16(index,7,(uint8_t*)showaddress[AddID].name);
+				Asc8_16(48,28,"This is irrecersible");			
+				Asc8_16(23,47,"cancel");
+				Asc8_16(100,47,"confirm");
+				Asc8_16(176,47,"cancel");		
+		}
 		Asc8_16(226,26,"s");
 		Start_TIM(OLED_INPUT_TIME);
 		while(1)
@@ -1817,38 +2417,81 @@ uint8_t Display_Sign_ContractTran(SIGN_Out_Para *data,ADDRESS *address,uint8_t s
 		int count_int = 0;//表示整数部分占用的显示位数
 		int count_dec = 8;//表示小数部分后缀的零的个数
 		Key_Control(1);
-		Fill_RAM(0x00);		
-		Show_HZ12_12(0,0,122,122);//从
-		Asc8_16(16,0,(uint8_t*)address->name);
-		index = 16 + 8*address->len_name;
-		Show_HZ12_12(index,0,123,124);//发送
-		index += 32;
+		Fill_RAM(0x00);
+	
+		if(Neo_System.language == Chinese)
 		{
-				count_int = drawNumber(index,0,data->money[signdata_index]/100000000,8);
-				if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
+				Show_HZ12_12(0,0,122,122);//从
+				Asc8_16(16,0,(uint8_t*)address->name);
+				index = 16 + 8*address->len_name;
+				Show_HZ12_12(index,0,123,124);//发送
+				index += 32;
 				{
-						Asc8_16(index+count_int*8,0,".");
-						count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
-				}
-				if(data->money[signdata_index] == 0)//值为0的情况
-						count_dec = 8;
-				count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
-				
-				if(data->coin == 0)
-						Asc8_16(count_bit,0,"GAS");
-				else if(data->coin == 1)
-						Asc8_16(count_bit,0,"NEO");
+						count_int = drawNumber(index,0,data->money[signdata_index]/100000000,8);
+						if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
+						{
+								Asc8_16(index+count_int*8,0,".");
+								count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
+						}
+						if(data->money[signdata_index] == 0)//值为0的情况
+								count_dec = 8;
+						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
+						
+						if(data->coin == 0)
+								Asc8_16(count_bit,0,"GAS");
+						else if(data->coin == 1)
+								Asc8_16(count_bit,0,"NEO");
 
-				Show_HZ12_12(count_bit+28,0,125,125);//到
+						Show_HZ12_12(count_bit+28,0,125,125);//到
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
+				}
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(0,7,"from");
+				Asc8_16(32,7,(uint8_t*)address->name);
+				Asc8_16(0,28,"send");
+				index += 40;
+				{
+						count_int = drawNumber(index,0,data->money[signdata_index]/100000000,8);
+						if(data->money[signdata_index]%100000000)//消除值正好为100000000的显示BUG
+						{
+								Asc8_16(index+count_int*8,28,".");
+								count_dec = drawxNumber(index+(count_int+1)*8,28,data->money[signdata_index]%100000000,8) - 1;//-1是把小数点算进去
+						}
+						if(data->money[signdata_index] == 0)//值为0的情况
+								count_dec = 8;
+						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
+						
+						if(data->coin == 0)
+								Asc8_16(count_bit,28,"GAS");
+						else if(data->coin == 1)
+								Asc8_16(count_bit,28,"NEO");
+				}
+				Asc8_16(index+28,28,"to");
 				Display_Triangle(0);
+				Key_Flag.flag.middle = 0;
 				while(Key_Flag.flag.middle == 0);
 				Key_Flag.flag.middle = 0;
 		}
+		
 		Fill_RAM(0x00);
 		Asc8_16(0,0,(uint8_t*)dst_address);
-		Show_HZ12_12(46,47,111,112);//取消
-		Show_HZ12_12(112,47,134,135);//同意
-		Show_HZ12_12(184,47,111,112);//取消
+		if(Neo_System.language == Chinese)
+		{
+				Show_HZ12_12(46,47,111,112);//取消
+				Show_HZ12_12(112,47,134,135);//同意
+				Show_HZ12_12(184,47,111,112);//取消
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(23,47,"cancel");
+				Asc8_16(100,47,"confirm");
+				Asc8_16(176,47,"cancel");			
+		}
+		
 		Start_TIM(OLED_INPUT_TIME);
 		Key_Control(1);
 		while(1)
@@ -1884,37 +2527,80 @@ uint8_t Display_Sign_Nep5(SIGN_Out_Para *data,ADDRESS *address,char *dst_address
 		int count_dec = 8;//表示小数部分后缀的零的个数
 		Key_Control(1);
 		Fill_RAM(0x00);		
-		Show_HZ12_12(0,0,122,122);//从
-		Asc8_16(16,0,(uint8_t*)address->name);
-		index = 16 + 8*address->len_name;
-		Show_HZ12_12(index,0,123,124);//发送
-		index += 32;
+	
+		if(Neo_System.language == Chinese)
 		{
-				count_int = drawNumber(index,0,data->money[1]/100000000,8);
-				if(data->money[1]%100000000)//消除值正好为100000000的显示BUG
+				Show_HZ12_12(0,0,122,122);//从
+				Asc8_16(16,0,(uint8_t*)address->name);
+				index = 16 + 8*address->len_name;
+				Show_HZ12_12(index,0,123,124);//发送
+				index += 32;
 				{
-						Asc8_16(index+count_int*8,0,".");
-						count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[1]%100000000,8) - 1;//-1是把小数点算进去
+						count_int = drawNumber(index,0,data->money[1]/100000000,8);
+						if(data->money[1]%100000000)//消除值正好为100000000的显示BUG
+						{
+								Asc8_16(index+count_int*8,0,".");
+								count_dec = drawxNumber(index+(count_int+1)*8,0,data->money[1]%100000000,8) - 1;//-1是把小数点算进去
+						}
+						if(data->money[1] == 0)//值为0的情况
+								count_dec = 8;
+						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
+
+						if(data->coin == 2)
+								Asc8_16(count_bit,0,"NNC");
+						else if(data->coin == 3)
+								Asc8_16(count_bit,0,"CPX");
+
+						Show_HZ12_12(count_bit+28,0,125,125);//到
+						Display_Triangle(0);
+						while(Key_Flag.flag.middle == 0);
+						Key_Flag.flag.middle = 0;
 				}
-				if(data->money[1] == 0)//值为0的情况
-						count_dec = 8;
-				count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
-
-				if(data->coin == 2)
-						Asc8_16(count_bit,0,"NNC");
-				else if(data->coin == 3)
-						Asc8_16(count_bit,0,"CPX");
-
-				Show_HZ12_12(count_bit+28,0,125,125);//到
-				Display_Triangle(0);
-				while(Key_Flag.flag.middle == 0);
-				Key_Flag.flag.middle = 0;
 		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(0,7,"from");
+				Asc8_16(32,7,(uint8_t*)address->name);
+				Asc8_16(0,28,"send");
+				index += 40;
+				{
+						count_int = drawNumber(index,0,data->money[1]/100000000,8);
+						if(data->money[1]%100000000)//消除值正好为100000000的显示BUG
+						{
+								Asc8_16(index+count_int*8,28,".");
+								count_dec = drawxNumber(index+(count_int+1)*8,28,data->money[1]%100000000,8) - 1;//-1是把小数点算进去
+						}
+						if(data->money[1] == 0)//值为0的情况
+								count_dec = 8;
+						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
+						
+						if(data->coin == 2)
+								Asc8_16(count_bit,0,"NNC");
+						else if(data->coin == 3)
+								Asc8_16(count_bit,0,"CPX");
+				}
+				Asc8_16(index+28,28,"to");
+				Display_Triangle(0);
+				Key_Flag.flag.middle = 0;
+				while(Key_Flag.flag.middle == 0);
+				Key_Flag.flag.middle = 0;		
+		}
+		
 		Fill_RAM(0x00);
 		Asc8_16(0,0,(uint8_t*)dst_address);
-		Show_HZ12_12(46,47,111,112);//取消
-		Show_HZ12_12(112,47,134,135);//同意
-		Show_HZ12_12(184,47,111,112);//取消
+		if(Neo_System.language == Chinese)		
+		{
+				Show_HZ12_12(46,47,111,112);//取消
+				Show_HZ12_12(112,47,134,135);//同意
+				Show_HZ12_12(184,47,111,112);//取消
+		}
+		else 	if(Neo_System.language == English)
+		{
+				Asc8_16(23,47,"cancel");
+				Asc8_16(100,47,"confirm");
+				Asc8_16(176,47,"cancel");		
+		}
+		
 		Start_TIM(OLED_INPUT_TIME);
 		Key_Control(1);
 		while(1)
@@ -1924,9 +2610,9 @@ uint8_t Display_Sign_Nep5(SIGN_Out_Para *data,ADDRESS *address,char *dst_address
 				if(Key_Flag.flag.middle)
 				{
 						Key_Control(0);
-						if(Display_VerifyCode() == 0)//密码正确
+						if(Display_VerifyCode() != 0)//密码正确
 						{
-								return NEO_SUCCESS;
+								break;
 						}
 						else
 						{
@@ -1939,6 +2625,20 @@ uint8_t Display_Sign_Nep5(SIGN_Out_Para *data,ADDRESS *address,char *dst_address
 						return NEO_USER_REFUSE;	//取消
 				}
 		}
+		Fill_RAM(0x00);
+		Display_Triangle(0);
+		if(Neo_System.language == Chinese)		
+		{
+				Show_HZ12_12(96,16,101,101);//签
+				Show_HZ12_12(112,16,57,57);//名
+				Show_HZ12_12(128,16,27,27);//成
+				Show_HZ12_12(144,16,115,115);//功
+		}
+		else 	if(Neo_System.language == English)
+		{
+				Asc8_16(92,16,"TX signed");
+		}
+		return NEO_SUCCESS;
 }
 
 uint8_t Display_Sign_Data_Type_Identify(void)
@@ -1982,21 +2682,31 @@ uint8_t Display_Updata_Wallet(void)
 		uint8_t value = 0;
 		Key_Control(1);
 		Fill_RAM(0x00);
-		Show_HZ12_12(64,7,68,68);//即
-		Show_HZ12_12(80,7,32,32);//将
-		Show_HZ12_12(96,7,69,70);//升级
-		Show_HZ12_12(128,7,17,18);//钱包
-		Show_HZ12_12(160,7,71,72);//程序
-		
-		Show_HZ12_12(64,28,12,12);//请
-		Show_HZ12_12(80,28,6,7);//确认
-		Show_HZ12_12(112,28,53,53);//是
-		Show_HZ12_12(128,28,73,74);//本人
-		Show_HZ12_12(160,28,63,64);//操作
-	
-		Show_HZ12_12(58,47,54,54);//否
-		Show_HZ12_12(120,47,53,53);//是
-		Show_HZ12_12(182,47,54,54);//否
+		if(Neo_System.language == Chinese)
+		{
+				Show_HZ12_12(64,7,68,68);//即
+				Show_HZ12_12(80,7,32,32);//将
+				Show_HZ12_12(96,7,69,70);//升级
+				Show_HZ12_12(128,7,17,18);//钱包
+				Show_HZ12_12(160,7,71,72);//程序
+				
+				Show_HZ12_12(64,28,12,12);//请
+				Show_HZ12_12(80,28,6,7);//确认
+				Show_HZ12_12(112,28,53,53);//是
+				Show_HZ12_12(128,28,73,74);//本人
+				Show_HZ12_12(160,28,63,64);//操作
+			
+				Show_HZ12_12(46,47,111,112);//取消
+				Show_HZ12_12(112,47,113,114);//继续
+				Show_HZ12_12(184,47,111,112);//取消
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(20,16,"An upgrade request received");
+				Asc8_16(23,47,"cancel");
+				Asc8_16(176,47,"cancel");
+				Display_Triangle(0);			
+		}
 		while(1)
 		{
 				if(Key_Flag.flag.middle)
@@ -2012,18 +2722,26 @@ uint8_t Display_Updata_Wallet(void)
 		}
 		
 		Fill_RAM(0x00);
-		Show_HZ12_12(96,7,75,76);//风险
-		Show_HZ12_12(128,7,63,64);//操作
-		
-		Show_HZ12_12(76,28,53,54);//是否
-		Show_HZ12_12(108,28,69,70);//升级
-		Show_HZ12_12(140,28,77,77);//固
-		Show_HZ12_12(156,28,46,46);//件
-		Asc8_16(172,28,"?");
-		
-		Show_HZ12_12(58,47,54,54);//否
-		Show_HZ12_12(120,47,53,53);//是
-		Show_HZ12_12(182,47,54,54);//否
+		if(Neo_System.language == Chinese)
+		{				
+				Show_HZ12_12(76,16,53,54);//是否
+				Show_HZ12_12(108,16,69,70);//升级
+				Show_HZ12_12(140,16,77,77);//固
+				Show_HZ12_12(156,16,46,46);//件
+				Asc8_16(172,28,"?");
+				
+				Show_HZ12_12(58,47,54,54);//否
+				Show_HZ12_12(120,47,53,53);//是
+				Show_HZ12_12(182,47,54,54);//否
+		}
+		else if(Neo_System.language == English)
+		{
+				Asc8_16(76,8,"Allow upgrade");	
+				Asc8_16(24,28,"Pin is required to confirm");			
+				Asc8_16(23,47,"cancel");
+				Asc8_16(100,47,"confirm");
+				Asc8_16(176,47,"cancel");				
+		}
 		while(1)
 		{
 				if(Key_Flag.flag.middle)

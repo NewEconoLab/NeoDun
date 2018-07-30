@@ -21,14 +21,14 @@ uint8_t SetCode(uint8_t code_array[8])
 		memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 		
 		Fill_RAM(0x00);
-		if(Neo_System.language == 0)
+		if(Neo_System.language == Chinese)
 		{
 				//第一行显示
 				Show_HZ12_12(96,7,2,5);//设置密码
 		}
-		else
+		else if(Neo_System.language == English)
 		{
-		
+				Asc8_16(100,7,"set PIN");
 		}
 		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
 		Show_Pattern(&gImage_emptypin[0],21,23,26,38);
@@ -130,16 +130,16 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
     memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 
 		Fill_RAM(0x00);
-		if(Neo_System.language == 0)
+		if(Neo_System.language == Chinese)
 		{
 				//第一行显示
 				Show_HZ12_12(96,7,133,133);//输
 				Show_HZ12_12(112,7,25,25);//入
 				Show_HZ12_12(128,7,4,5);//密码		
 		}
-		else
+		else if(Neo_System.language == English)
 		{
-		
+				Asc8_16(116,7,"PIN");
 		}
 		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
 		Show_Pattern(&gImage_emptypin[0],21,23,26,38);

@@ -71,6 +71,13 @@
 #define COIN_BTC							"BTC"
 #define COIN_ETH							"ETH"
 
+//”Ô—‘
+enum
+{
+		Chinese	= 0,
+		English = 1,
+};
+
 //∑µªÿ÷µ
 enum
 {

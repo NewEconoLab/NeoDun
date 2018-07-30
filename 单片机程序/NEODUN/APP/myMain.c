@@ -38,11 +38,11 @@
 #include "stmflash.h"
 
 void my_main(void)
-{
+{	
 		//数据初始化
 		Sys_Data_Init();
 	
-		//开机更新系统标识、设置标识、地址、插件信息
+		//开机更新系统标识、设置标识、地址、插件信息、语言
 		if(Update_PowerOn_SYSFLAG(&Neo_System)==0)			
 		{
 				Fill_RAM(0x00);
@@ -51,7 +51,7 @@ void my_main(void)
 				return;
 		}
 		Update_PowerOn_SetFlag(&Set_Flag,&Neo_System);
-		
+			
 		//快速开机处理，应用在插件回跳APP
 		if(SysFlagType == 0)
 		{
@@ -64,8 +64,15 @@ NEWWALLET:
 				{
 						Key_Control(1);
 						Fill_RAM(0x00);
-						Show_HZ12_12(84,16,0,1);//欢迎
-						Asc8_16(116,16,"NEODUN");
+						if(Neo_System.language == Chinese)
+						{		
+								Show_HZ12_12(84,16,0,1);//欢迎
+								Asc8_16(116,16,"NEODUN");
+						}
+						else if(Neo_System.language == English)
+						{										
+								Asc8_16(60,16,"Welcome to NEODUN");
+						}
 						Display_Triangle(0);	
 						while(Key_Flag.flag.middle == 0);
 						Key_Flag.flag.middle = 0;
@@ -75,41 +82,63 @@ NEWWALLET:
 						Key_Control(1);
 						{
 								Fill_RAM(0x00);
-								Show_HZ12_12(80,8,4,5);//密码
-								Show_HZ12_12(112,8,2,3);//设置
-								Show_HZ12_12(144,8,26,27);//完成
-								Show_HZ12_12(16,28,12,12);//请
-								Show_HZ12_12(32,28,28,29);//牢记
-								Show_HZ12_12(64,28,4,5);//密码
-								Show_HZ12_12(96,28,30,32);//丢失将
-								Show_HZ12_12(144,28,24,24);//导
-								Show_HZ12_12(160,28,33,33);//致
-								Show_HZ12_12(178,28,2,2);//设
-								Show_HZ12_12(192,28,43,43);//备
-								Show_HZ12_12(208,28,34,34);//重
-								Show_HZ12_12(224,28,3,3);//置
+								if(Neo_System.language == Chinese)
+								{
+										Show_HZ12_12(80,8,4,5);//密码
+										Show_HZ12_12(112,8,2,3);//设置
+										Show_HZ12_12(144,8,26,27);//完成
+										Show_HZ12_12(16,28,12,12);//请
+										Show_HZ12_12(32,28,28,29);//牢记
+										Show_HZ12_12(64,28,4,5);//密码
+										Show_HZ12_12(96,28,30,32);//丢失将
+										Show_HZ12_12(144,28,24,24);//导
+										Show_HZ12_12(160,28,33,33);//致
+										Show_HZ12_12(178,28,2,2);//设
+										Show_HZ12_12(192,28,43,43);//备
+										Show_HZ12_12(208,28,34,34);//重
+										Show_HZ12_12(224,28,3,3);//置
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(44,16,"PIN setting completed");
+								}
 								Display_Triangle(0);
 						}
 						while(Key_Flag.flag.middle == 0);
 						Key_Flag.flag.middle = 0;
 						{
-								Fill_RAM(0x00); 
-								Show_HZ12_12(88,16,10,11);//空的
-								Asc8_16(120,16,"NEODUN");
+								Fill_RAM(0x00);
+								if(Neo_System.language == Chinese)
+								{
+										Show_HZ12_12(88,16,10,11);//空的
+										Asc8_16(120,16,"NEODUN");
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(72,16,"No keys inside");
+								}
 						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0);
 						Key_Flag.flag.middle = 0;
 						{
 								Fill_RAM(0x00);
-								Show_HZ12_12(40,8,12,16);//请使用支持
-								Asc8_16(120,8,"NEODUN");
-								Show_HZ12_12(168,8,11,11);//的
-								Show_HZ12_12(184,8,17,18);//钱包
-								Show_HZ12_12(40,28,19,21);//创建新
-								Show_HZ12_12(88,28,4,4);//密
-								Show_HZ12_12(104,28,22,25);//钥并导入
-								Asc8_16(168,28,"NEODUN");
+								if(Neo_System.language == Chinese)
+								{
+										Show_HZ12_12(40,8,12,16);//请使用支持
+										Asc8_16(120,8,"NEODUN");
+										Show_HZ12_12(168,8,11,11);//的
+										Show_HZ12_12(184,8,17,18);//钱包
+										Show_HZ12_12(40,28,19,21);//创建新
+										Show_HZ12_12(88,28,4,4);//密
+										Show_HZ12_12(104,28,22,25);//钥并导入
+										Asc8_16(168,28,"NEODUN");
+								}
+								else if(Neo_System.language == English)
+								{
+										Asc8_16(68,8,"Pls import keys");
+										Asc8_16(44,28,"with driver or wallet");
+								}
 						}
 						Display_Triangle(0);
 						while(Key_Flag.flag.middle == 0);
@@ -173,6 +202,11 @@ NEWWALLET:
 						//电池电量较低做个提醒
 						
 				}
+				if((Set_Flag.flag.usb_offline == 0)&&(Key_Flag.flag.middle == 1))//连上USB，按下中间键为清除显示
+				{
+						Key_Flag.flag.middle = 0;
+						Display_Usb();
+				}			
 				if(Set_Flag.flag.usb_offline)								//USB断开后开启系统显示功能
 				{
 						Display_MainPage_judge();								//显示更新
