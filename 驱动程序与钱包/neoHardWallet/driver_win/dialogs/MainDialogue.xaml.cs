@@ -317,30 +317,24 @@ namespace driver_win.dialogs
         //更新固件
         public async void InstallFramework()
         {
-            var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
-            var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
+            await Dispatcher.InvokeAsync(async ()=>
+            {
+                var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
+                var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
 
-            byte[] postdata;
-            //从服务器获取固件和插件的版本信息
-            var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType + "_" + version));
-            var res = await HttpHelper.HttpPost(url, postdata);
-            var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
-            byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
+                byte[] postdata;
+                //从服务器获取固件和插件的版本信息
+                var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType + "_" + version));
+                var res = await HttpHelper.HttpPost(url, postdata);
+                var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
+                byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
 
 
-            EnumInstallType type = EnumInstallType.Framework;
-            EnumPluginType content = EnumPluginType.Unknow;
+                EnumInstallType type = EnumInstallType.Framework;
+                EnumPluginType content = EnumPluginType.Unknow;
 
-            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type,content);
-            //result = await driverControl.Update();
-            //if (result)
-            //{
-            //    DialogueControl.ShowMessageDialogue("安装成功", 2, this);
-            //}
-            //else
-            //{
-            //    DialogueControl.ShowMessageDialogue("安装失败", 2, this);
-            //}
+                Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type, content);
+            });
 
         }
 
