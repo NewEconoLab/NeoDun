@@ -1311,8 +1311,15 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 										SHA256_Data(secure_pipe.pubkeyA,64,secure_pipe.hashA,2);
 										//4、显示hash
 										Fill_RAM(0x00);
-										Show_HZ12_12(104,16,95,96);//安全
-										Show_HZ12_12(136,16,5,5);//码
+										if(Neo_System.language == Chinese)
+										{
+												Show_HZ12_12(104,16,95,96);//安全
+												Show_HZ12_12(136,16,5,5);//码
+										}
+										else if(Neo_System.language == English)
+										{
+												Asc8_16(76,16,"security code");
+										}
 										num[0] = ((secure_pipe.hashA[0]>>4)>9)?((secure_pipe.hashA[0]>>4)+0x57):((secure_pipe.hashA[0]>>4)+0x30);
 										Asc8_16(98,32,num);
 										num[0] = ((secure_pipe.hashA[0]&0x0F)>9)?((secure_pipe.hashA[0]&0x0F)+0x57):((secure_pipe.hashA[0]&0x0F)+0x30);
