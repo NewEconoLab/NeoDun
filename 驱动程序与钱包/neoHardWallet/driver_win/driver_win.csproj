@@ -143,6 +143,7 @@
     <Compile Include="control\GetPackageInfo.cs" />
     <Compile Include="control\Mgr_Package.cs" />
     <Compile Include="control\ManagerControl.cs" />
+    <Compile Include="control\SecurityChannel.cs" />
     <Compile Include="control\SetName.cs" />
     <Compile Include="control\SignData.cs" />
     <Compile Include="dialogs\AddressListDialogue.xaml.cs">
@@ -164,9 +165,13 @@
     <Compile Include="dialogs\MessageDialogue.xaml.cs">
       <DependentUpon>MessageDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="dialogs\VerifyECDH.xaml.cs">
+      <DependentUpon>VerifyECDH.xaml</DependentUpon>
+    </Compile>
     <Compile Include="driver\BootloaderHidDriver.cs" />
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
+    <Compile Include="helper\ECDH.cs" />
     <Compile Include="helper\Helper.cs" />
     <Compile Include="helper\PasswordBoxMonitor.cs" />
     <Compile Include="protocol\address.cs" />
@@ -211,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="dialogs\MessageDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\VerifyECDH.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

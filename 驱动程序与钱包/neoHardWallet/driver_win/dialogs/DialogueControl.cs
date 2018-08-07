@@ -77,5 +77,18 @@ namespace driver_win.dialogs
             importAddressListDialogue.ShowDialog();
             list.Remove(importAddressListDialogue);
         }
+
+
+        public static void ShowVerityECDH(Window window)
+        {
+            if (!window.IsActive)
+                return;
+            VerifyECDH verifyECDH = new VerifyECDH();
+            list.Add(verifyECDH);
+            verifyECDH.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            verifyECDH.Owner = window;
+            verifyECDH.Show();
+            list.Remove(verifyECDH);
+        }
     }
 }

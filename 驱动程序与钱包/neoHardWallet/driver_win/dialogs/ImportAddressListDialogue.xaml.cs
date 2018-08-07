@@ -119,7 +119,7 @@ namespace driver_win.dialogs
                     myBitmapImage.EndInit();
                     img_state.Source = myBitmapImage;
                     label_state.Visibility = Visibility.Visible;
-                    label_state.Content = result;
+                    label_state.Content = result.errorCode;
                     label_state.Foreground = new SolidColorBrush(Color.FromRgb(255,106,106));
                 }
 

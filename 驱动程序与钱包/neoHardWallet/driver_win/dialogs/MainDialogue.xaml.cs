@@ -44,6 +44,7 @@ namespace driver_win.dialogs
 
             LinkSinger();
 
+            var str= ECDH.Ins.GetPubHash(ECDH.Ins.pubKey);
 
         }
 

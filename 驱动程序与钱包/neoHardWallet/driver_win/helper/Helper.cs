@@ -46,7 +46,8 @@ namespace driver_win.helper
         InstallFramework,
         SignData,
         InstallPlugin,
-        UninstallPlugin
+        UninstallPlugin,
+        SecurityChannel,
     }
 
 
@@ -64,6 +65,7 @@ namespace driver_win.helper
         AgreeInstallFramework = 0x03a2,//同意更新固件
         InstallSuc=0x03a1,//成功安裝固件或插件
         UninstallSuc = 0x03a3, //卸載插件成功
+        SecurityChannelSuc = 0x04a1,//安全通道成功回复
 
         AddAddressFailed = 0x02e4,//增加地址失败
         DelAddressFailed = 0x02e3,//删除地址失败

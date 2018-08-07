@@ -89,6 +89,7 @@ namespace NeoDun
             crc = crc ^ 0xFFFFFFFF;
             return BitConverter.GetBytes(crc);
         }
+
         public static byte[] ComputeSHA256(byte[] src, int begin, int length)
         {
             return sha256.ComputeHash(src, begin, length);

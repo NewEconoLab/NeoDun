@@ -402,6 +402,25 @@ namespace NeoDun
                 {
                     deleInstallFramework();
                 }
+                //安全通道回复
+                if (msg.tag1 == 0x04 && msg.tag2 == 0xa1)
+                {
+                    byte[] outdata = null;
+                    string outdatahash = null;
+                    outdatahash = msg.readHash256(4);
+                    //轮询直到reciveid的数据被收到
+                    while (true)
+                    {
+                        await Task.Delay(5);
+                        var __block = dataTable.getBlockBySha256(outdatahash);
+                        if (__block.Check())
+                        {
+                            outdata = __block.data;
+                            break;
+                        }
+                    }
+                    eventHandler(EnumControl.SecurityChannel, EnumError.SecurityChannelSuc, outdata);
+                }
             });
             watcherColl.OnRecv(msg, srcmsg);
             //if (userHandleRecv != null)
