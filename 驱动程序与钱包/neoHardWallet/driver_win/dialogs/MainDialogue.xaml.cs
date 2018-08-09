@@ -44,7 +44,6 @@ namespace driver_win.dialogs
 
             LinkSinger();
 
-            var str= ECDH.Ins.GetPubHash(ECDH.Ins.pubKey);
 
         }
 
@@ -361,7 +360,7 @@ namespace driver_win.dialogs
             var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
             byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
             
-            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin,data, type, content);
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin,data, type, content, version);
             if (result.errorCode == EnumError.InstallSuc)
             {
                 DialogueControl.ShowMessageDialogue("安装成功",2, this);

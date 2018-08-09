@@ -110,6 +110,7 @@ namespace driver_win.control
                 byte[] data = (byte[])_params[0];
                 EnumInstallType type = (EnumInstallType)_params[1];
                 EnumPluginType content = (EnumPluginType)_params[2];
+                UInt16 version = (UInt16)(decimal.Parse((string)_params[3]) * 100);
 
                 var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
                 string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
@@ -142,7 +143,7 @@ namespace driver_win.control
                 signMsg.writeUInt16(0, (UInt16)type);
                 signMsg.writeUInt16(2, (UInt16)content);
                 Array.Copy(hash, 0, signMsg.data, 4, hash.Length);
-
+                signMsg.writeUInt16(36, version);
                 for (var i = 0; i < remoteids.Count; i++)
                 {
                     signMsg.writeUInt32(38, remoteids[i]);
@@ -153,6 +154,7 @@ namespace driver_win.control
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 result.errorCode = EnumError.CommonFailed;
             }
         }
