@@ -110,7 +110,8 @@ namespace driver_win.control
                 byte[] data = (byte[])_params[0];
                 EnumInstallType type = (EnumInstallType)_params[1];
                 EnumPluginType content = (EnumPluginType)_params[2];
-                UInt16 version = (UInt16)(decimal.Parse((string)_params[3]) * 100);
+                string version = ((string)_params[3]).Split('.')[0].PadLeft(2, '0') + ((string)_params[3]).Split('.')[1].PadRight(2, '0');
+                byte[] byte_version = ThinNeo.Helper.HexString2Bytes(version);
 
                 var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
                 string str_hash = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
@@ -143,7 +144,8 @@ namespace driver_win.control
                 signMsg.writeUInt16(0, (UInt16)type);
                 signMsg.writeUInt16(2, (UInt16)content);
                 Array.Copy(hash, 0, signMsg.data, 4, hash.Length);
-                signMsg.writeUInt16(36, version);
+                signMsg.data[36] = byte_version[0];
+                signMsg.data[37] = byte_version[1];
                 for (var i = 0; i < remoteids.Count; i++)
                 {
                     signMsg.writeUInt32(38, remoteids[i]);

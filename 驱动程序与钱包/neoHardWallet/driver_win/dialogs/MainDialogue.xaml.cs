@@ -243,6 +243,7 @@ namespace driver_win.dialogs
                     }
                     else
                     {
+                        btn_uninstall.Visibility = Visibility.Visible;
                         btn_update.Visibility = Visibility.Hidden;
                     }
                     btn_install.Visibility = Visibility.Hidden;
@@ -369,6 +370,8 @@ namespace driver_win.dialogs
             else
             {
                 DialogueControl.ShowMessageDialogue("安装失败",2, this);
+                img.Visibility = Visibility.Hidden;
+                btn.Visibility = Visibility.Visible;
             }
 
 
