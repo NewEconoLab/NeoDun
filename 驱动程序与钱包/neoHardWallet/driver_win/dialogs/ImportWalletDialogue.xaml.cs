@@ -1,4 +1,5 @@
-﻿using System;
+﻿using driver_win.helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,10 @@ namespace driver_win.dialogs
             {
                 DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
                 return;
+            }
+            if (!ECDH.Ins.CheckResult)
+            {
+                DialogueControl.ShowVerityECDH(this.Owner);
             }
             DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
         }

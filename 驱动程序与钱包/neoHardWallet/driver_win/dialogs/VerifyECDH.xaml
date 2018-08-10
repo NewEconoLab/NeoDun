@@ -21,20 +21,24 @@
             <Grid>
                 <Label x:Name="title" FontSize="12" Content="安全检查" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58" HorizontalContentAlignment="Center" Height="24" Margin="131,15,131,0"/>
                 <Label x:Name="state" FontSize="12" Content="正在进行安全验证..." Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="153" HorizontalContentAlignment="Left" Height="24" Margin="45,55,122,0"/>
-                <Label x:Name="tip" FontSize="12" Content="请输入NEODUN屏幕上显示的安全码 :" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="216" HorizontalContentAlignment="Left" Height="24" Margin="45,85,59,0"/>
 
-                <Border Name="border1" CornerRadius="5" Margin="50,130,245,98" BorderThickness="1" BorderBrush="#6676C8" Background="#FF262F59">
-                    <TextBox Name="textBox1" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text1Changed"/>
-                </Border>
-                <Border Name="border2" CornerRadius="5" Margin="110,130,185,98" BorderThickness="1" BorderBrush="#6676C8">
-                    <TextBox Name="textBox2" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text2Changed"/>
-                </Border>
-                <Border Name="border3" CornerRadius="5" Margin="170,130,125,98" BorderThickness="1" BorderBrush="#6676C8">
-                    <TextBox Name="textBox3" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text3Changed" />
-                </Border>
-                <Border Name="border4" CornerRadius="5" Margin="230,130,65,98" BorderThickness="1" BorderBrush="#6676C8">
-                    <TextBox Name="textBox4" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text4Changed"/>
-                </Border>
+
+                <Grid Name="FillInHash" Visibility="Hidden">
+                    <Label x:Name="tip" FontSize="12" Content="请输入NEODUN屏幕上显示的安全码 :" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="216" HorizontalContentAlignment="Left" Height="24" Margin="45,85,59,0"/>
+                    <Border Name="border1" CornerRadius="5" Margin="50,130,245,98" BorderThickness="1" BorderBrush="#6676C8" Background="#FF262F59">
+                        <TextBox Name="textBox1" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text1Changed"/>
+                    </Border>
+                    <Border Name="border2" CornerRadius="5" Margin="110,130,185,98" BorderThickness="1" BorderBrush="#6676C8">
+                        <TextBox Name="textBox2" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text2Changed"/>
+                    </Border>
+                    <Border Name="border3" CornerRadius="5" Margin="170,130,125,98" BorderThickness="1" BorderBrush="#6676C8">
+                        <TextBox Name="textBox3" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text3Changed" />
+                    </Border>
+                    <Border Name="border4" CornerRadius="5" Margin="230,130,65,98" BorderThickness="1" BorderBrush="#6676C8">
+                        <TextBox Name="textBox4" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text4Changed"/>
+                    </Border>
+
+                </Grid>
 
                 <Border Name="border_state2" Visibility="Hidden" CornerRadius="5" Margin="40,142,54,110" BorderThickness="1" BorderBrush="#000000" Background="#BF000000">
                     <Label Name="lb_state2" Foreground="White" Content="验证中..." HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Background="{x:Null}" BorderThickness="0" FontSize="8" Padding="0"/>

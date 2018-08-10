@@ -35,7 +35,7 @@ namespace driver_win.control
             result.data = json;
         }
 
-        public async override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             string str_data = (string)_params[0];
             string str_address = (string)_params[1];
@@ -65,7 +65,7 @@ namespace driver_win.control
                     json["msg"] = new MyJson.JsonNode_ValueString("0206");
                     result.data = result;
                     Release();
-                    return;
+                    return false;
                 }
 
                 var addbytes = add.GetAddbytes();
@@ -78,6 +78,7 @@ namespace driver_win.control
                 //这个dataid 要上一个block 传送完毕了才知道
                 signMsg.writeUInt32(42, (uint)remoteid);
                 signer.SendMessage(signMsg, true);
+                return true;
             }
         }
     }

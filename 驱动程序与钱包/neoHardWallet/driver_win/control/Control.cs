@@ -38,7 +38,8 @@ namespace driver_win.control
         {
             Init();
 
-            SendMsg(_params);
+            if (!await SendMsg(_params))
+                return result;
 
             wait = true;
 
@@ -50,7 +51,7 @@ namespace driver_win.control
             return result;
         }
 
-        public abstract void SendMsg(params object[] _params);
+        public abstract Task<bool> SendMsg(params object[] _params);
         public abstract void HandleMsg(params object[] _params);
     }
 }

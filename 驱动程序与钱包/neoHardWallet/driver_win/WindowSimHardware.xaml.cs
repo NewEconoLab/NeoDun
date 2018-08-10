@@ -1,8 +1,10 @@
-﻿using NeoDun;
+﻿using driver_win.helper;
+using NeoDun;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -182,6 +184,7 @@ namespace driver_win
                     //neo addressbyte 长度25
                     var address = NeoDun.SignTool.EncodeBase58(recv.data, 2, 25);
                     var _data = dataTable.getBlockByDataId(data0id);
+                    _data.data = SignTool.AesDecrypt(_data.data,ECDH.Ins.M);
                     //验证一下，看私钥和公钥是否匹配
                     var pubkey = NeoDun.SignTool.GetPublicKeyFromPrivateKey(_data.data);
                     var addresscalc = NeoDun.SignTool.GetAddressFromPublicKey(pubkey);
@@ -497,6 +500,44 @@ namespace driver_win
                 msg.writeUInt16(4, version);
                 this.SendMsg(msg);
             }
+            if (recv.tag1 == 0x04 && recv.tag2 == 0x01)
+            {
+                byte[] priKey = new byte[32];
+                using (RandomNumberGenerator rng =RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(priKey);
+                }
+                var PubKey = ThinNeo.Cryptography.ECC.ECCurve.Secp256r1.G * priKey;
+                byte[] pubKey = PubKey.EncodePoint(false);
+
+                byte[] data = SignTool.ComputeSHA256(pubKey, 0, pubKey.Length);
+                string str = SignTool.EncodeBase58(data, 0, data.Length);
+                str = str.Substring(0, 4);
+
+                Console.WriteLine(str);
+
+
+                var hash = SignTool.ComputeSHA256(pubKey, 0, pubKey.Length);
+                var strhash = SignTool.Bytes2HexString(hash, 0, hash.Length);
+                {//准备好数据块，飞回去
+                    var block = dataTable.newOrGet(strhash, (UInt32)pubKey.Length, DataBlockFrom.FromSigner);
+                    block.data = pubKey;
+                    this.dataUpdate = true;
+                    //将outdata 发回上位机
+                    this.SendBlock(block);
+                }
+                //再发条通知消息 告诉上位机hash
+                NeoDun.Message msg = new Message();
+                msg.tag1 = 0x04;
+                msg.tag2 = 0xa1;
+                msg.msgid = recv.msgid;
+                msg.writeUInt32(0, (UInt32)pubKey.Length);
+                msg.writeHash256(4, hash);
+                this.SendMsg(msg);
+            }
+
+
+
             Action call = () =>
                 {
                     this.list1.Items.Add("recv msg:" + recv.ToString() + "|" + DateTime.Now.ToString());

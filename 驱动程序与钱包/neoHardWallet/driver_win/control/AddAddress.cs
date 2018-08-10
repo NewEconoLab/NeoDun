@@ -15,7 +15,7 @@ namespace driver_win.control
             result.errorCode = (EnumError)_params[0];
         }
 
-        public async override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             string wif = (string)_params[0];
             byte[] privateKey;
@@ -30,7 +30,7 @@ namespace driver_win.control
             catch (Exception e)
             {
                 result.errorCode = EnumError.IncorrectWif;
-                return;
+                return false;
             }
 
             //地址查重 
@@ -39,11 +39,14 @@ namespace driver_win.control
                 if (add.AddressText == str_address)
                 {
                     result.errorCode = EnumError.DuplicateWif;
-                    return;
+                    return false;
                 }
             }
             try
             {
+                //将私钥进行aes加密
+                privateKey = SignTool.AesEncrypt(privateKey,ECDH.Ins.M);
+
                 string str_addressType = "Neo";
                 UInt16 addressType = (UInt16)Enum.Parse(typeof(AddressType), str_addressType);
                 byte[] bytes_address = NeoDun.SignTool.DecodeBase58(str_address);
@@ -69,7 +72,8 @@ namespace driver_win.control
                 if (remoteid == 0)
                 {
                     result.errorCode = EnumError.CommonFailed;
-                    return;
+                    Release();
+                    return false;
                 }
                 __block.dataidRemote = 0;
 
@@ -82,12 +86,13 @@ namespace driver_win.control
                 //这个dataid 要上一个block 传送完毕了才知道
                 signMsg.writeUInt32(42, (uint)remoteid);
                 signer.SendMessage(signMsg, true);
-
+                return true;
             }
             catch (Exception e)
             {
                 result.errorCode = EnumError.IncorrectWif;
-                return;
+                Release();
+                return false;
             }
         }
     }

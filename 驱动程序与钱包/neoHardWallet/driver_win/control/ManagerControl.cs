@@ -39,6 +39,7 @@ namespace driver_win.control
             dic.Add(EnumControl.InstallFramework, new InstallFramework());
             dic.Add(EnumControl.InstallPlugin, new InstallPlugin());
             dic.Add(EnumControl.UninstallPlugin, new UninstallPlugin());
+            dic.Add(EnumControl.SecurityChannel, new SecurityChannel());
         }
 
         public async Task<Result> ToDo(EnumControl enumControl, params object[] _params)

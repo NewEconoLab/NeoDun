@@ -18,7 +18,7 @@ namespace driver_win.control
             result.data = (object)signer.addressPool.addresses;
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
 
             signer.InitAddressPool();
@@ -30,7 +30,7 @@ namespace driver_win.control
 
             signer.SendMessage(msg, true);
 
-
+            return true;
         }
     }
 }

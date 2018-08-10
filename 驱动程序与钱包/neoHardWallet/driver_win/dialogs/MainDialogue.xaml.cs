@@ -42,9 +42,20 @@ namespace driver_win.dialogs
             Signer.Ins.deleInstallFramework += InstallFramework;
             Signer.Ins.Start();
 
+            CreateSimHardware();
+
             LinkSinger();
 
+            hhgate.CustomServer.BeginServer();
+        }
 
+        //模拟插入钱包
+        WindowSimHardware hard = new WindowSimHardware();
+        private async void CreateSimHardware()
+        {
+            DriverS.simdriver.bActive = true;
+            hard.Show();
+            await Task.Delay(2000);
         }
 
         //托盤相關操作
@@ -82,7 +93,6 @@ namespace driver_win.dialogs
                         GetPackageInfo();
                         ShowUnlinkPage(true);
                         ShowBalloonTip("NeoDun已经连接");
-                        hhgate.CustomServer.BeginServer();
                     }
                 }
                 else

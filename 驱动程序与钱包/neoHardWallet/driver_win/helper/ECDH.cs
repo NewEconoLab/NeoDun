@@ -27,6 +27,8 @@ namespace driver_win.helper
         public byte[] M { private set; get; }
         public byte[] pubKey_B;//B
 
+        public bool CheckResult { private set; get; }
+
         static System.Security.Cryptography.SHA256 sha256 = System.Security.Cryptography.SHA256.Create();
         static RIPEMD160Managed ripemd160 = new RIPEMD160Managed();
 
@@ -48,17 +50,18 @@ namespace driver_win.helper
             M= EcpointM.EncodePoint(false);
         }
 
-        public string GetPubHash(byte[] pub)
+        public void CheckPubHash(string hash)
         {
-            return "1234";
-            byte[] data = SignTool.ComputeCRC32(pub,0,pub.Length);
-            return ThinNeo.Helper.Bytes2HexString(data);
+            byte[] data = SignTool.ComputeSHA256(pubKey_B, 0, pubKey_B.Length);
+            string str = SignTool.EncodeBase58(data, 0, data.Length);
+            str = str.Substring(0,4);
+            CheckResult =  hash == str;
         }
 
         /// <summary>
-        /// 检查m是否为null
+        /// null返回true
         /// </summary>
-        /// <returns>null返回true</returns>
+        /// <returns></returns>
         /// 
         public bool CheckM()
         {

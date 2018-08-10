@@ -12,7 +12,7 @@ namespace driver_win.helper
         Task<Result> ToDo(params object[] _params);
         void Done(params object[] _params);
         void Release();
-        void SendMsg(params object[] _params);
+        Task<bool> SendMsg(params object[] _params);
         void HandleMsg(params object[] _params);
     }
 

@@ -15,7 +15,7 @@ namespace driver_win.control
             result.errorCode = (EnumError)_params[0];
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             string _addressType = (string)_params[0];
             string _addressText = (string)_params[1];
@@ -28,6 +28,7 @@ namespace driver_win.control
             msg.writeUInt16(0, addressType);
             Array.Copy(bytes_addressText, 0, msg.data, 2, bytes_addressText.Length);
             signer.SendMessage(msg, true);
+            return true;
         }
     }
 }

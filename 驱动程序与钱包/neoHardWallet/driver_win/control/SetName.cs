@@ -15,7 +15,7 @@ namespace driver_win.control
             result.errorCode = (EnumError)_params[0];
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             string address = (string)_params[0];
             byte[] bytes_name = (byte[])_params[1];
@@ -23,7 +23,7 @@ namespace driver_win.control
             if (bytes_name.Length > 6)
             {
                 result.errorCode = EnumError.LongName;
-                return;
+                return false;
             }
 
 
@@ -36,7 +36,7 @@ namespace driver_win.control
             msg.writeUInt16(26, (ushort)bytes_name.Length);
             Array.Copy(bytes_name, 0, msg.data, 28, bytes_name.Length);
             signer.SendMessage(msg, true);
-
+            return true;
         }
     }
 }

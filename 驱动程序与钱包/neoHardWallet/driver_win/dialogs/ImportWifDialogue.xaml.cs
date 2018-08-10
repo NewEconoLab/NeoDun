@@ -34,15 +34,20 @@ namespace driver_win.dialogs
 
         private async void btn_Add(object sender, RoutedEventArgs e)
         {
+            if (!ECDH.Ins.CheckResult)
+            {
+                DialogueControl.ShowVerityECDH(this);
+            }
+
             Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
-            //string result = await driverControl.AddAddressByWif(this.label_Wif.Text.ToString());
+
             if (result.errorCode == EnumError.AddAddressSuc)
             {
                 this.Close();
 
                 DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
 
-                await Task.Delay(2000);
+                await Task.Delay(500);
 
                 DialogueControl.ShowAddressListDialogue(this.Owner);
             }

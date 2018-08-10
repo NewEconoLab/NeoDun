@@ -32,13 +32,14 @@ namespace driver_win.control
             result.data = Jo_PackageInfo;
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x03;
             msg.tag2 = 0x04;//查
             msg.msgid = NeoDun.SignTool.RandomShort();
             signer.SendMessage(msg, true);
+            return true;
         }
     }
 }

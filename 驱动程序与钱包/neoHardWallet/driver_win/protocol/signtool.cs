@@ -141,7 +141,7 @@ namespace NeoDun
                 }
             }
         }
-        public static  string EncodeBase58(byte[] data,int begin,int length)
+        public static string EncodeBase58(byte[] data,int begin,int length)
         {
             byte[] input = new byte[length];
             Array.Copy(data, begin, input, 0, length);

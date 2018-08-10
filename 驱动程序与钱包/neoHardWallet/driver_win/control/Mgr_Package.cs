@@ -16,13 +16,14 @@ namespace driver_win.control
             result.errorCode = enumError;
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             NeoDun.Message msg = new NeoDun.Message();
             msg.tag1 = 0x03;
             msg.tag2 = 0x02;
             msg.msgid = NeoDun.SignTool.RandomShort();
             signer.SendMessage(msg, true);
+            return true;
         }
     }
 
@@ -36,7 +37,7 @@ namespace driver_win.control
             result.errorCode = enumError;
         }
 
-        public async override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             try
             {
@@ -82,11 +83,12 @@ namespace driver_win.control
                 }
 
                 signer.SendMessage(signMsg, true);
-
+                return true;
             }
             catch (Exception e)
             {
                 result.errorCode = EnumError.CommonFailed;
+                return false;
             }
         }
     }
@@ -103,7 +105,7 @@ namespace driver_win.control
             result.errorCode = enumError;
         }
 
-        public async override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             try
             {
@@ -152,12 +154,13 @@ namespace driver_win.control
                 }
 
                 signer.SendMessage(signMsg, true);
-
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 result.errorCode = EnumError.CommonFailed;
+                return false;
             }
         }
     }
@@ -172,7 +175,7 @@ namespace driver_win.control
             result.errorCode = enumError;
         }
 
-        public override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
             EnumPluginType enumPluginType = (EnumPluginType)_params[0];
             NeoDun.Message msg = new NeoDun.Message();
@@ -181,6 +184,7 @@ namespace driver_win.control
             msg.msgid = NeoDun.SignTool.RandomShort();
             msg.writeUInt16(0, (UInt16)enumPluginType);
             signer.SendMessage(msg, true);
+            return true;
         }
     }
 

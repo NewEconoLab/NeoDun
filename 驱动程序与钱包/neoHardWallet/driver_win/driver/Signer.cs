@@ -367,7 +367,7 @@ namespace NeoDun
                     {
                         await Task.Delay(5);
                         var __block = dataTable.getBlockBySha256(outdatahash);
-                        if (__block.Check())
+                        if (__block !=null && __block.Check())
                         {
                             outdata = __block.data;
                             break;
@@ -413,7 +413,7 @@ namespace NeoDun
                     {
                         await Task.Delay(5);
                         var __block = dataTable.getBlockBySha256(outdatahash);
-                        if (__block.Check())
+                        if (__block != null && __block.Check())
                         {
                             outdata = __block.data;
                             break;

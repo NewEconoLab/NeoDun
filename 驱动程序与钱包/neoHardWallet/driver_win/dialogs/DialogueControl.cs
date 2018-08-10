@@ -87,7 +87,7 @@ namespace driver_win.dialogs
             list.Add(verifyECDH);
             verifyECDH.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             verifyECDH.Owner = window;
-            verifyECDH.Show();
+            verifyECDH.ShowDialog();
             list.Remove(verifyECDH);
         }
     }

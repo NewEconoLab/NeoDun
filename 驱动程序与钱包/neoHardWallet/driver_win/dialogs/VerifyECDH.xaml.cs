@@ -1,4 +1,5 @@
-﻿using driver_win.helper;
+﻿using driver_win.control;
+using driver_win.helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,15 @@ namespace driver_win.dialogs
         public VerifyECDH()
         {
             InitializeComponent();
+            Init();
+        }
+
+        public async void Init()
+        {
+            //和下位机通讯获取下位机的pubkey
+            await ManagerControl.Ins.ToDo(EnumControl.SecurityChannel);
+            //已经获取到了
+            this.FillInHash.Visibility = Visibility.Visible;
             ChangeFocusable(1);
             this.textBox1.Focus();
         }
@@ -49,7 +59,7 @@ namespace driver_win.dialogs
             if (str.Length >= 1)
             {
                 str = str[str.Length - 1].ToString();
-                Regex re = new Regex("[^a-f0-9.-]+");
+                Regex re = new Regex("[^0-9a-zA-Z.-]+");
                 if (re.IsMatch(this.textBox1.Text))
                 {
                     str = "";
@@ -71,7 +81,7 @@ namespace driver_win.dialogs
             if (str.Length >= 1)
             {
                 str = str[str.Length - 1].ToString();
-                Regex re = new Regex("[^a-f0-9.-]+");
+                Regex re = new Regex("[^0-9a-zA-Z.-]+");
                 if (re.IsMatch(this.textBox2.Text))
                 {
                     str = "";
@@ -93,7 +103,7 @@ namespace driver_win.dialogs
             if (str.Length >= 1)
             {
                 str = str[str.Length - 1].ToString();
-                Regex re = new Regex("[^a-f0-9.-]+");
+                Regex re = new Regex("[^0-9a-zA-Z.-]+");
                 if (re.IsMatch(this.textBox3.Text))
                 {
                     str = "";
@@ -114,7 +124,7 @@ namespace driver_win.dialogs
             if (str.Length >= 1)
             {
                 str = str[str.Length - 1].ToString();
-                Regex re = new Regex("[^a-f0-9.-]+");
+                Regex re = new Regex("[^0-9a-zA-Z.-]+");
                 if (re.IsMatch(this.textBox4.Text))
                 {
                     str = "";
@@ -139,9 +149,9 @@ namespace driver_win.dialogs
 
             //应sb产品需求自我等待500毫秒以欺骗使用者
             await Task.Delay(500);
-            string hash = ECDH.Ins.GetPubHash(ECDH.Ins.pubKey_B);
             string str = this.textBox1.Text + this.textBox2.Text + this.textBox3.Text + this.textBox4.Text;
-            if (hash == str)
+            ECDH.Ins.CheckPubHash(str);
+            if (ECDH.Ins.CheckResult)
             {//验证成功
                 this.lb_state2.Content= "安全检查已完成！";
                 this.state.Content = "安全验证已通过！";
@@ -150,6 +160,8 @@ namespace driver_win.dialogs
                 this.border2.BorderBrush = new SolidColorBrush(color);
                 this.border3.BorderBrush = new SolidColorBrush(color);
                 this.border4.BorderBrush = new SolidColorBrush(color);
+                await Task.Delay(1000);
+                this.Close();
             }
             else
             {//验证失败

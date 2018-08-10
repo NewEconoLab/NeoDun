@@ -16,16 +16,13 @@ namespace driver_win.control
             {
                 byte[] data = (byte[])_params[1];
                 ECDH.Ins.pubKey_B = data;
+                ECDH.Ins.CalM(data);
             }
 
         }
 
-        public async override void SendMsg(params object[] _params)
+        public async override Task<bool> SendMsg(params object[] _params)
         {
-            if (ECDH.Ins.CheckM())
-            {
-                return;
-            }
             var data = ECDH.Ins.pubKey;
             var hash = NeoDun.SignTool.ComputeSHA256(data, 0, data.Length);
             var hashstr = NeoDun.SignTool.Bytes2HexString(hash, 0, hash.Length);
@@ -49,6 +46,7 @@ namespace driver_win.control
                 signMsg.writeUInt32(42, (uint)remoteid);
                 signer.SendMessage(signMsg, true);
             }
+            return true;
         }
     }
 }
