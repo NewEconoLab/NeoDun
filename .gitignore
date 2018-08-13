@@ -10,3 +10,9 @@
 /驱动程序与钱包/neoHardWallet/.vs/driver/v15/sqlite3/storage.ide-shm
 /驱动程序与钱包/neoHardWallet/.vs/driver/v15/sqlite3/storage.ide-wal
 /驱动程序与钱包/neoHardWallet/.vs
+/驱动程序与钱包/neoHardWallet/llvm/obj
+/驱动程序与钱包/neoHardWallet/llvm/bin
+/驱动程序与钱包/neoHardWallet/thinSDK/obj
+/驱动程序与钱包/neoHardWallet/thinSDK/bin
+/驱动程序与钱包/neoHardWallet/thinSDK_neo/obj
+/驱动程序与钱包/neoHardWallet/thinSDK_neo/bin

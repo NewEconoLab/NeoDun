@@ -187,7 +187,7 @@ namespace driver_win.dialogs
 
             if (JA_PackageInfo!= null && JA_PackageInfo.Count > 0)
             {
-                this.label_FrameworkVersion.Content = "固件 " +JA_PackageInfo["Framework"].ToString();
+                this.label_FrameworkVersion.Content = "Framework " +JA_PackageInfo["Framework"].ToString();
                 double nowgjversion = double.Parse(JA_PackageInfo["Framework"].ToString());
                 //如果下位机固件版本低于服务器版本就显示升级按钮
                 if (nowgjversion < double.Parse(servicePackageInfo["Framework"].ToString()))
@@ -330,7 +330,7 @@ namespace driver_win.dialogs
             await Dispatcher.InvokeAsync(async ()=>
             {
                 var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
-                var version = this.label_FrameworkVersion.Content.ToString().Split(' ')[1];
+                var version = servicePackageInfo[pluginType].ToString();
 
                 byte[] postdata;
                 //从服务器获取固件和插件的版本信息
@@ -343,7 +343,7 @@ namespace driver_win.dialogs
                 EnumInstallType type = EnumInstallType.Framework;
                 EnumPluginType content = EnumPluginType.Unknow;
 
-                Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type, content);
+                Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type, content,version);
             });
 
         }
