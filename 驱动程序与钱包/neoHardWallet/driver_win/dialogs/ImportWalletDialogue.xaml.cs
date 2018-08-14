@@ -75,11 +75,14 @@ namespace driver_win.dialogs
                 DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
                 return;
             }
-            if (!ECDH.Ins.CheckResult)
+            if (ECDH.Ins.CheckResult)
             {
                 DialogueControl.ShowVerityECDH(this.Owner);
             }
-            DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
+            if (!ECDH.Ins.CheckM())
+            {
+                DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
+            }
         }
 
         private void Action_PwGotFouces(object sender, RoutedEventArgs e)

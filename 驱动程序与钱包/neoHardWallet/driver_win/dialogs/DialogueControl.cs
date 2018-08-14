@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using driver_win.helper;
 
 namespace driver_win.dialogs
 {
@@ -89,6 +90,22 @@ namespace driver_win.dialogs
             verifyECDH.Owner = window;
             verifyECDH.ShowDialog();
             list.Remove(verifyECDH);
+        }
+
+
+        public static ND_MessageBoxResult ShowMessageBox(Window window, string messageBoxText, ND_MessageBoxButton button,long waitTime = 9999999999)
+        {
+            if (!window.IsActive)
+                return ND_MessageBoxResult.No;
+            MessageBox messageBox = new MessageBox();
+            list.Add(messageBox);
+            messageBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            messageBox.Owner = window;
+            messageBox.Show(messageBoxText, button, waitTime);
+            messageBox.ShowDialog();
+            ND_MessageBoxResult result = messageBox.nD_MessageBoxResult;
+            list.Remove(messageBox);
+            return result;
         }
     }
 }

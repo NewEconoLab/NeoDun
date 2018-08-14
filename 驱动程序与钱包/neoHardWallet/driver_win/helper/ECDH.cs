@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using ThinNeo.Cryptography.Cryptography;
 
 namespace driver_win.helper
 {
@@ -35,7 +36,7 @@ namespace driver_win.helper
         public ECDH()
         {
             priKey = new byte[32];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            using (System.Security.Cryptography.RandomNumberGenerator rng = System.Security.Cryptography.RandomNumberGenerator.Create())
             {
                 rng.GetBytes(priKey);
             }
@@ -53,13 +54,13 @@ namespace driver_win.helper
         public void CheckPubHash(string hash)
         {
             byte[] data = SignTool.ComputeSHA256(pubKey_B, 0, pubKey_B.Length);
-            string str = SignTool.EncodeBase58(data, 0, data.Length);
+            string str = SignTool.EncodeBase58(data, 0, 25);
             str = str.Substring(0,4);
             CheckResult =  hash == str;
         }
 
         /// <summary>
-        /// null返回true
+        /// null返回false
         /// </summary>
         /// <returns></returns>
         /// 

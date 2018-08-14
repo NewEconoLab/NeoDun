@@ -162,6 +162,9 @@
     <Compile Include="dialogs\MainDialogue.xaml.cs">
       <DependentUpon>MainDialogue.xaml</DependentUpon>
     </Compile>
+    <Compile Include="dialogs\MessageBox.xaml.cs">
+      <DependentUpon>MessageBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\MessageDialogue.xaml.cs">
       <DependentUpon>MessageDialogue.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="dialogs\MainDialogue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\MessageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -363,6 +370,9 @@
     <Resource Include="res\底1.png" />
     <Resource Include="res\底2.png" />
     <Resource Include="res\底3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icon1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,6 +47,7 @@ namespace driver_win.dialogs
             LinkSinger();
 
             hhgate.CustomServer.BeginServer();
+
         }
 
         //模拟插入钱包
@@ -393,15 +394,33 @@ namespace driver_win.dialogs
             Button btn = (sender as Button);
             var pluginType = ((btn.Parent as StackPanel).Children[1] as Label).Content.ToString().Split(' ')[0];
             EnumPluginType content = (EnumPluginType)Enum.Parse(typeof(EnumPluginType), pluginType);
-            Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, content);
-            if (result.errorCode == EnumError.UninstallSuc)
+            bool needConfirm =false;
+            foreach (var addr in Signer.Ins.addressPool.addresses)
             {
-                DialogueControl.ShowMessageDialogue("卸载成功",2, this);
-                GetPackageInfo();
+                if ((UInt16)addr.type == (UInt16)content)
+                {
+                    needConfirm = true;
+                    break;
+                }
             }
-            else
+            if (needConfirm)
             {
-                DialogueControl.ShowMessageDialogue("卸载失败", 2, this);
+                ND_MessageBoxResult nD_MessageBoxResult =DialogueControl.ShowMessageBox(this,"你有地址需要用到这个插件，是否确认卸载",ND_MessageBoxButton.OKCancel);
+
+                if (nD_MessageBoxResult == ND_MessageBoxResult.OK)
+                {
+                    Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, content);
+                    if (result.errorCode == EnumError.UninstallSuc)
+                    {
+                        DialogueControl.ShowMessageDialogue("卸载成功", 2, this);
+                        GetPackageInfo();
+                    }
+                    else
+                    {
+                        DialogueControl.ShowMessageDialogue("卸载失败", 2, this);
+                    }
+
+                }
             }
         }
 

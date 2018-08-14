@@ -82,6 +82,56 @@ namespace driver_win.helper
 
     }
 
+    //
+    // 摘要:
+    //     Specifies which message box button that a user clicks. System.Windows.MessageBoxResult
+    //     is returned by the Overload:System.Windows.MessageBox.Show method.
+    public enum ND_MessageBoxResult
+    {
+        //
+        // 摘要:
+        //     The message box returns no result.
+        None = 0,
+        //
+        // 摘要:
+        //     The result value of the message box is OK.
+        OK = 1,
+        //
+        // 摘要:
+        //     The result value of the message box is Cancel.
+        Cancel = 2,
+        //
+        // 摘要:
+        //     The result value of the message box is Yes.
+        Yes = 6,
+        //
+        // 摘要:
+        //     The result value of the message box is No.
+        No = 7
+    }
+
+    //
+    // 摘要:
+    //     Specifies the buttons that are displayed on a message box. Used as an argument
+    //     of the Overload:System.Windows.MessageBox.Show method.
+    public enum ND_MessageBoxButton
+    {
+        //
+        // 摘要:
+        //     The message box displays an OK button.
+        OK = 0,
+        //
+        // 摘要:
+        //     The message box displays OK and Cancel buttons.
+        OKCancel = 1,
+        //
+        // 摘要:
+        //     The message box displays Yes, No, and Cancel buttons.
+        None = 2
+
+    }
+
+
     public class HttpHelper
     {
         public static string MakeRpcUrlPost(string url, string method, out byte[] data, params MyJson.IJsonNode[] _params)

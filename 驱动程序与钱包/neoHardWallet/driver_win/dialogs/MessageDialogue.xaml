@@ -19,7 +19,7 @@
             </Border.Background>
         </Border>
         <Grid>
-            <Label x:Name="msg" Content="" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" HorizontalContentAlignment="Center"/>
+            <Label x:Name="msg" Content="" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="162" HorizontalContentAlignment="Center" Height="66" Margin="20,19,18,15"/>
         </Grid>
     </Grid>
 </Window>

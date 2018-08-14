@@ -38,22 +38,24 @@ namespace driver_win.dialogs
             {
                 DialogueControl.ShowVerityECDH(this);
             }
-
-            Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
-
-            if (result.errorCode == EnumError.AddAddressSuc)
+            if (ECDH.Ins.CheckM())
             {
-                this.Close();
+                Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
 
-                DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
+                if (result.errorCode == EnumError.AddAddressSuc)
+                {
+                    this.Close();
 
-                await Task.Delay(500);
+                    DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
 
-                DialogueControl.ShowAddressListDialogue(this.Owner);
-            }
-            else
-            {
-                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2,this);
+                    await Task.Delay(500);
+
+                    DialogueControl.ShowAddressListDialogue(this.Owner);
+                }
+                else
+                {
+                    DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
+                }
             }
         }
 

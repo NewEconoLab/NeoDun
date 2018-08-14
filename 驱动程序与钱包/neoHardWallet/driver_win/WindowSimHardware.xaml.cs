@@ -511,7 +511,7 @@ namespace driver_win
                 byte[] pubKey = PubKey.EncodePoint(false);
 
                 byte[] data = SignTool.ComputeSHA256(pubKey, 0, pubKey.Length);
-                string str = SignTool.EncodeBase58(data, 0, data.Length);
+                string str = SignTool.EncodeBase58(data, 0, 25);
                 str = str.Substring(0, 4);
 
                 Console.WriteLine(str);
