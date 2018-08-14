@@ -19,6 +19,11 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
+                <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}"  Margin="285,15,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_CloseDialogue">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
+                    </Button.Background>
+                </Button>
                 <Label x:Name="title" FontSize="12" Content="安全检查" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58" HorizontalContentAlignment="Center" Height="24" Margin="131,15,131,0"/>
                 <Label x:Name="state" FontSize="12" Content="正在进行安全验证..." Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="153" HorizontalContentAlignment="Left" Height="24" Margin="45,55,122,0"/>
 

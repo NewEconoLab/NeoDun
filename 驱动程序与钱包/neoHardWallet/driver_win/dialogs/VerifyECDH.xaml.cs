@@ -200,5 +200,10 @@ namespace driver_win.dialogs
             Hyperlink link = sender as Hyperlink;
             Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri));
         }
+
+        private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
     }
 }
