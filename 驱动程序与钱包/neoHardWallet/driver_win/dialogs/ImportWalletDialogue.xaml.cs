@@ -79,7 +79,7 @@ namespace driver_win.dialogs
             {
                 DialogueControl.ShowVerityECDH(this.Owner);
             }
-            if (!ECDH.Ins.CheckM())
+            if (ECDH.Ins.CheckM())
             {
                 DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
             }
