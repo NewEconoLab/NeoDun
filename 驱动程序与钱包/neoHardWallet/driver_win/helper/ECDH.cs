@@ -69,7 +69,7 @@ namespace driver_win.helper
             return M == null ? false : true;
         }
 
-        public void UnInit()
+        public void Release()
         {
             priKey = null;
             pubKey = null;

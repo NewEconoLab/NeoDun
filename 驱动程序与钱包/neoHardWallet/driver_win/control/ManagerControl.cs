@@ -80,8 +80,11 @@ namespace driver_win.control
 
         public void Release()
         {
-            if(curControl != null)
+            if (curControl != null)
+            {
                 curControl.Release();
+                ECDH.Ins.Release();
+            }
         }
     }
 }
