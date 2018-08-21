@@ -74,6 +74,7 @@ namespace driver_win.helper
             priKey = null;
             pubKey = null;
             M = null;
+            CheckResult = false;
         }
 
     }

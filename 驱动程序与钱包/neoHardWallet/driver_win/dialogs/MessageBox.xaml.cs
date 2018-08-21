@@ -23,6 +23,13 @@ namespace driver_win.dialogs
         public MessageBox()
         {
             InitializeComponent();
+            InitPage();
+        }
+
+        public void InitPage()
+        {
+            this.confirm.Content = Mgr_Language.Ins.Code2Word(this.confirm.Content.ToString());
+            this.cancel.Content = Mgr_Language.Ins.Code2Word(this.cancel.Content.ToString());
         }
 
         public ND_MessageBoxResult nD_MessageBoxResult;
@@ -32,23 +39,23 @@ namespace driver_win.dialogs
             this.msg.Text = messageBoxText;
             if (button == ND_MessageBoxButton.OK)
             {
-                Grid.SetColumn(this.ok,2);
-                Grid.SetRow(this.ok, 1);
-                this.ok.Visibility = Visibility.Visible;
+                Grid.SetColumn(this.confirm,2);
+                Grid.SetRow(this.confirm, 1);
+                this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Hidden;
             }
             else if (button == ND_MessageBoxButton.OKCancel)
             {
-                Grid.SetColumn(this.ok, 1);
-                Grid.SetRow(this.ok, 1);
+                Grid.SetColumn(this.confirm, 1);
+                Grid.SetRow(this.confirm, 1);
                 Grid.SetColumn(this.cancel, 3);
                 Grid.SetRow(this.cancel, 1);
-                this.ok.Visibility = Visibility.Visible;
+                this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Visible;
             }
             else
             {
-                this.ok.Visibility = Visibility.Hidden;
+                this.confirm.Visibility = Visibility.Hidden;
                 this.cancel.Visibility = Visibility.Hidden;
             }
         }

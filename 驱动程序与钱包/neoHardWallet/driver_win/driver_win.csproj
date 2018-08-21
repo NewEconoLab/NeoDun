@@ -175,7 +175,9 @@
     <Compile Include="driver\driver.cs" />
     <Compile Include="driver\SimDriver.cs" />
     <Compile Include="helper\ECDH.cs" />
-    <Compile Include="helper\Helper.cs" />
+    <Compile Include="helper\Enum.cs" />
+    <Compile Include="helper\HttpHelper.cs" />
+    <Compile Include="helper\Mgr_Language.cs" />
     <Compile Include="helper\PasswordBoxMonitor.cs" />
     <Compile Include="protocol\address.cs" />
     <Compile Include="protocol\datatable.cs" />

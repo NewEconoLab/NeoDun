@@ -25,6 +25,20 @@ namespace driver_win.dialogs
         public ImportWifDialogue()
         {
             InitializeComponent();
+            InitPage();
+        }
+
+        public void InitPage()
+        {
+            this.lb_page_add.Content = Mgr_Language.Ins.Code2Word(this.lb_page_add.Content.ToString());
+            this.lb_page_add2.Content = Mgr_Language.Ins.Code2Word(this.lb_page_add2.Content.ToString());
+            this.lb_page_ps.Content = Mgr_Language.Ins.Code2Word(this.lb_page_ps.Content.ToString());
+            this.lb_page_seed.Content = Mgr_Language.Ins.Code2Word(this.lb_page_seed.Content.ToString());
+            this.lb_page_wif.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wif.Content.ToString());
+            this.lb_page_wif2.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wif2.Content.ToString());
+
+            this.Tb_wordlist.Text = Mgr_Language.Ins.Code2Word(this.Tb_wordlist.Text);
+            this.label_Wif.Text = Mgr_Language.Ins.Code2Word(this.label_Wif.Text);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -34,11 +48,11 @@ namespace driver_win.dialogs
 
         private async void btn_Add(object sender, RoutedEventArgs e)
         {
-            if (!ECDH.Ins.CheckResult)
+            if (!ECDH.Ins.CheckM() || !ECDH.Ins.CheckResult)
             {
                 DialogueControl.ShowVerityECDH(this);
             }
-            if (ECDH.Ins.CheckM())
+            if (ECDH.Ins.CheckResult)
             {
                 Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
 

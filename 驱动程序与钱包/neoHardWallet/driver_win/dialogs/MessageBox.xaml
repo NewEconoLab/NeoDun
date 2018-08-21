@@ -31,9 +31,9 @@
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="80*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock  x:Name="msg" TextWrapping="Wrap" Text="你有地址需要用到这个插件你有" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="218" TextAlignment="Center"  Height="53" Margin="21,25,21,5" Grid.ColumnSpan="5"/>
-            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="ok" Content="确定"  Click="Click_OK" Height="30" Width="55" Grid.Column="1" Grid.Row="1"/>
-            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="cancel" Content="取消"  Click="Click_CANCEL" Height="30" Width="55" Grid.Column="3" Grid.Row="1"/>
+            <TextBlock  x:Name="msg" TextWrapping="Wrap" Text="" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="218" TextAlignment="Center"  Height="53" Margin="21,25,21,5" Grid.ColumnSpan="5"/>
+            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="confirm" Content="$page_confirm"  Click="Click_OK" Height="30" Width="55" Grid.Column="1" Grid.Row="1"/>
+            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="cancel" Content="$page_cance"  Click="Click_CANCEL" Height="30" Width="55" Grid.Column="3" Grid.Row="1"/>
         </Grid>
     </Grid>
 </Window>

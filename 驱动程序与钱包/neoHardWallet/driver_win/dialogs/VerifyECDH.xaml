@@ -24,12 +24,12 @@
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label x:Name="title" FontSize="12" Content="安全检查" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58" HorizontalContentAlignment="Center" Height="24" Margin="131,15,131,0"/>
-                <Label x:Name="state" FontSize="12" Content="正在进行安全验证..." Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="153" HorizontalContentAlignment="Left" Height="24" Margin="45,55,122,0"/>
+                <Label x:Name="title" FontSize="12" Content="$page_safecheck" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58" HorizontalContentAlignment="Center" Height="24" Margin="131,15,131,0"/>
+                <Label x:Name="state" FontSize="12" Content="$page_safing" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="153" HorizontalContentAlignment="Left" Height="24" Margin="45,55,122,0"/>
 
 
                 <Grid Name="FillInHash" Visibility="Hidden">
-                    <Label x:Name="tip" FontSize="12" Content="请输入NEODUN屏幕上显示的安全码 :" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="216" HorizontalContentAlignment="Left" Height="24" Margin="45,85,59,0"/>
+                    <Label x:Name="tip" FontSize="12" Content="$msg_04a1" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="216" HorizontalContentAlignment="Left" Height="24" Margin="45,85,59,0"/>
                     <Border Name="border1" CornerRadius="5" Margin="50,130,245,98" BorderThickness="1" BorderBrush="#6676C8" Background="#FF262F59">
                         <TextBox Name="textBox1" Foreground="White" Text="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" FontSize="22" TextChanged="Text1Changed"/>
                     </Border>
@@ -46,21 +46,21 @@
                 </Grid>
 
                 <Border Name="border_state2" Visibility="Hidden" CornerRadius="5" Margin="40,142,54,110" BorderThickness="1" BorderBrush="#000000" Background="#BF000000">
-                    <Label Name="lb_state2" Foreground="White" Content="验证中..." HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Background="{x:Null}" BorderThickness="0" FontSize="8" Padding="0"/>
+                    <Label Name="lb_state2" Foreground="White" Content="$page_verifying" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Background="{x:Null}" BorderThickness="0" FontSize="8" Padding="0"/>
                 </Border>
 
                 <Button Visibility="Hidden" Name="restart" Style="{StaticResource ResourceKey=MyWpfButton}" Width="60" Height="30" Click="Btn_Restart" Margin="120,190,0,0">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="重试" Margin="-12,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Foreground="White" Width="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="24"/>
+                            <Label Name="lb_page_restart" Content="$page_restart" Margin="-12,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Foreground="White" Width="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="24"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
 
-                <Label Visibility="Hidden" x:Name="help" FontSize="12" Content="请检查安全码输入是否有误。需要帮助请点击" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="255" HorizontalContentAlignment="Left" Height="24" Margin="11,236,54,0"/>
+                <Label Visibility="Hidden" x:Name="help" FontSize="12" Content="$page_safehelp" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="255" HorizontalContentAlignment="Left" Height="24" Margin="11,236,54,0"/>
 
                 <TextBlock Visibility="Hidden" Name="helpLink" Margin="260,241,10,7" >
-                    <Hyperlink NavigateUri="http://neodun.com/" Click="GoToHelp">这里。</Hyperlink>
+                    <Hyperlink NavigateUri="http://neodun.com/" Click="GoToHelp">help</Hyperlink>
                 </TextBlock>
             </Grid>
         </Border>

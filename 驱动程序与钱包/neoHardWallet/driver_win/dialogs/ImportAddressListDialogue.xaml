@@ -23,9 +23,9 @@
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label x:Name="test" Content="地址管理" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
-                <Label Content="序号" IsEnabled="False" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
-                <Label Content="地址" IsEnabled="False" Width="48" Height="15" Margin="87,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1" RenderTransformOrigin="1.573,0.724"/>
+                <Label x:Name="lb_page_addressmgr" Content="$page_addressmgr" IsEnabled="False" Width="70" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
+                <Label Name="lb_page_index" Content="$page_index" IsEnabled="False" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Label Name="lb_page_address" Content="$page_address" IsEnabled="False" Width="48" Height="15" Margin="87,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1" RenderTransformOrigin="1.573,0.724"/>
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
                 <ListBox  Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 </ListBox>

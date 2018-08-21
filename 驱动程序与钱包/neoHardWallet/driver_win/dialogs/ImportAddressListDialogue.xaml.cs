@@ -24,6 +24,14 @@ namespace driver_win.dialogs
         public ImportAddressListDialogue()
         {
             InitializeComponent();
+            InitPage();
+        }
+
+        public void InitPage()
+        {
+            this.lb_page_address.Content = Mgr_Language.Ins.Code2Word(this.lb_page_address.Content.ToString());
+            this.lb_page_addressmgr.Content = Mgr_Language.Ins.Code2Word(this.lb_page_addressmgr.Content.ToString());
+            this.lb_page_index.Content = Mgr_Language.Ins.Code2Word(this.lb_page_index.Content.ToString());
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

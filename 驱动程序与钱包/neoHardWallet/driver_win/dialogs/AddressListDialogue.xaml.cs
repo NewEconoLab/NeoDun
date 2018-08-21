@@ -25,7 +25,23 @@ namespace driver_win.dialogs
         public AddressListDialogue()
         {
             InitializeComponent();
+            InitPage();
             GetAddressList();
+        }
+
+        public void InitPage()
+        {
+            this.lb_page_address.Content = Mgr_Language.Ins.Code2Word(this.lb_page_address.Content.ToString());
+            this.lb_page_empty.Content = Mgr_Language.Ins.Code2Word(this.lb_page_empty.Content.ToString());
+            this.lb_page_index.Content = Mgr_Language.Ins.Code2Word(this.lb_page_index.Content.ToString());
+            this.lb_page_name.Content = Mgr_Language.Ins.Code2Word(this.lb_page_name.Content.ToString());
+            this.lb_page_wallet.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wallet.Content.ToString());
+
+            this.lb_page_message_1.Text = Mgr_Language.Ins.Code2Word(this.lb_page_message_1.Text);
+            this.lb_page_message_2.Text = Mgr_Language.Ins.Code2Word(this.lb_page_message_2.Text);
+
+            //this.lb_msg_name.Text = Mgr_Language.Ins.Code2Word(this.lb_msg_name.Text);
+            //this.lb_msg_addr.Text = Mgr_Language.Ins.Code2Word(this.lb_msg_addr.Text);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -108,6 +124,8 @@ namespace driver_win.dialogs
             var address = (listboxitem.FindName("address") as Label).Content;
             var type = (listboxitem.FindName("type") as Label).Content;
             var name = (listboxitem.FindName("type") as Label).Content;
+
+            var a = "{0}";
 
             var lb_msg_name = this.message.FindName("lb_msg_name") as Run;
             lb_msg_name.Text = name.ToString() ;

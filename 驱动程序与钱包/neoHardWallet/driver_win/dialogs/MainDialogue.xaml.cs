@@ -31,6 +31,7 @@ namespace driver_win.dialogs
         public MainDialogue()
         {
             InitializeComponent();
+            InitPage();
             DriverS.Init();
 
 
@@ -48,6 +49,26 @@ namespace driver_win.dialogs
 
             hhgate.CustomServer.BeginServer();
 
+            var a = Mgr_Language.Ins;
+        }
+
+        void InitPage()
+        {
+            this.lb_page_apps.Content = Mgr_Language.Ins.Code2Word(this.lb_page_apps.Content.ToString());
+            this.lb_page_autoimport.Content = Mgr_Language.Ins.Code2Word(this.lb_page_autoimport.Content.ToString());
+            this.lb_page_browser.Content = Mgr_Language.Ins.Code2Word(this.lb_page_browser.Content.ToString());
+            this.lb_page_frameware.Content = Mgr_Language.Ins.Code2Word(this.lb_page_frameware.Content.ToString());
+            this.lb_page_import.Content = Mgr_Language.Ins.Code2Word(this.lb_page_import.Content.ToString());
+            this.lb_page_manager.Content = Mgr_Language.Ins.Code2Word(this.lb_page_manager.Content.ToString());
+            this.lb_page_state.Content = Mgr_Language.Ins.Code2Word(this.lb_page_state.Content.ToString());
+            this.lb_page_title.Content = Mgr_Language.Ins.Code2Word(this.lb_page_title.Content.ToString());
+            this.lb_page_unlink.Content = Mgr_Language.Ins.Code2Word(this.lb_page_unlink.Content.ToString());
+            this.lb_page_wallet.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wallet.Content.ToString());
+            this.lb_page_support.Content = Mgr_Language.Ins.Code2Word(this.lb_page_support.Content.ToString());
+            this.Btn_Framework_update.Content = Mgr_Language.Ins.Code2Word(this.Btn_Framework_update.Content.ToString());
+            this.btn_install.Content = Mgr_Language.Ins.Code2Word(this.btn_install.Content.ToString());
+            this.btn_update.Content = Mgr_Language.Ins.Code2Word(this.btn_update.Content.ToString());
+            this.btn_uninstall.Content = Mgr_Language.Ins.Code2Word(this.btn_uninstall.Content.ToString());
         }
 
         //模拟插入钱包

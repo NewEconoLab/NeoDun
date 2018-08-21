@@ -23,7 +23,16 @@ namespace driver_win.dialogs
         public ImportWalletDialogue()
         {
             InitializeComponent();
+            InitPage();
+        }
 
+        public void InitPage()
+        {
+            this.label_pw.Text = Mgr_Language.Ins.Code2Word(this.label_path.Text);
+            this.label_path.Text = Mgr_Language.Ins.Code2Word(this.label_path.Text);
+            this.lb_page_add.Content = Mgr_Language.Ins.Code2Word(this.lb_page_add.Content.ToString());
+            this.lb_page_import.Content = Mgr_Language.Ins.Code2Word(this.lb_page_import.Content.ToString());
+            this.lb_page_scan.Content = Mgr_Language.Ins.Code2Word(this.lb_page_scan.Content.ToString());
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -75,11 +84,11 @@ namespace driver_win.dialogs
                 DialogueControl.ShowMessageDialogue("错误的钱包格式",2,this);
                 return;
             }
-            if (!ECDH.Ins.CheckResult)
+            if (!ECDH.Ins.CheckM()|| !ECDH.Ins.CheckResult)
             {
                 DialogueControl.ShowVerityECDH(this.Owner);
             }
-            if (ECDH.Ins.CheckM())
+            if (ECDH.Ins.CheckResult)
             {
                 DialogueControl.ShowImportAddressListDialogue(nep6wallet, password, this.Owner);
             }

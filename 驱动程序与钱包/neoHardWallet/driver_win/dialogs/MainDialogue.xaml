@@ -13,7 +13,7 @@
             <Grid Width="150" Height="50" HorizontalAlignment="Left" Background="#3B4267">
                 <Image Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="110" Height="27" Margin="0,0,0,0" Source="/driver_win;component/res/neodun反白logo.png" Stretch="UniformToFill" />
             </Grid>
-            <Label Content="Neodun 驱动程序 v0.1" Margin="170,0,0,0" FontSize="14px" VerticalContentAlignment="Center" Foreground="White"/>
+            <Label Name="lb_page_title" Content="$page_title" Margin="170,0,0,0" FontSize="14px" VerticalContentAlignment="Center" Foreground="White"/>
             <Button Grid.Row="0" Style="{StaticResource ResourceKey=MyWpfButton_Cancel}" BorderBrush="{x:Null}" Margin="932,18,0,0" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" Click="Btn_Minimized">
                 <Button.Background>
                     <ImageBrush ImageSource="/driver_win;component/res/minimise.png" Stretch="None">
@@ -43,21 +43,28 @@
             </Grid.Background>
             <Grid x:Name="nelLogo" Visibility="Visible">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/NELlogo.png" Margin="873,536,0,0" Width="77" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                <Label Content="技术支持" IsEnabled="False" Width="48" Height="18" Margin="815,542,102,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
+                <Label Name="lb_page_support" Content="$page_support" IsEnabled="False" Width="48" Height="18" Margin="815,542,102,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
             </Grid>
             <Grid x:Name="unlink" Visibility="Hidden">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/Group.png"  Width="400" Height="197" Margin="300,167" VerticalAlignment="Top"/>
-                <Label Content="没有检测到设备，请检查设备是否连接正常。" Padding="0" Margin="360,394,0,0" Foreground="White" VerticalContentAlignment="Center" FontSize="14" Height="21" VerticalAlignment="Top" Cursor="None"/>
+                <Label Name="lb_page_unlink" Content="$page_unlink" Padding="0" Margin="360,394,0,0" Foreground="White" VerticalContentAlignment="Center" FontSize="14" Height="21" VerticalAlignment="Top" Cursor="None"/>
             </Grid>
             <Grid x:Name="main" Visibility="Visible">
-                <Image Source="/driver_win;component/res/state.png" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="76,18" Width="138" />
+                <Button Style="{StaticResource ResourceKey=MyWpfButton}" Margin="78,18,0,0" Height="46" Width="136">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="Fill" Width="20" Height="20" Source="/driver_win;component/res/linkDevice.png" />
+                            <Label Name="lb_page_state" Content="$page_state" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <GroupBox x:Name="btnList" Visibility="Visible" BorderThickness="0" Margin="710,0,0,0">
                     <Grid>
                         <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Click="Btn_ManageAddr" Margin="36,88,0,0" >
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Source="/driver_win;component/res/wallet.png" Width="20" Height="20" />
-                                    <Label Content="管理钱包" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Name="lb_page_wallet" Content="$page_wallet" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -65,7 +72,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Width="20" Height="20" Source="/driver_win;component/res/privatekey.png" />
-                                    <Label  Content="手动导入钱包" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Name="lb_page_import"  Content="$page_import" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -73,7 +80,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Width="20" Height="20" Source="/driver_win;component/res/钱包文件.png" />
-                                    <Label Content="导入钱包文件" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Name="lb_page_autoimport" Content="$page_autoimport" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -81,7 +88,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <Image Stretch="Fill" Source="/driver_win;component/res/explorer.png" Width="20" Height="20" />
-                                    <Label Content="NEL区块浏览器" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                    <Label Name="lb_page_browser" Content="$page_browser" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="120" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -89,7 +96,7 @@
                 </GroupBox>
                 <GroupBox x:Name="managePackage" Visibility="Visible" BorderThickness="0" Margin="0,0,280,0">
                     <Grid Background="#00000000">
-                        <Label Content="固件和插件管理" IsEnabled="False" Width="88" Height="18" Margin="100,109,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Label Name="lb_page_manager" Content="$page_manager" IsEnabled="False" Width="88" Height="18" Margin="100,109,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
                         <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="52" Width="622" Margin="79,90,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,0,0" Panel.ZIndex="10">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="1" Direction="270" BlurRadius="1"/>
@@ -100,15 +107,15 @@
                                 <DropShadowEffect Direction="270" BlurRadius="8" ShadowDepth="2"/>
                             </Border.Effect>
                         </Border>
-                        <Label Content="固件" IsEnabled="False" Width="50" Height="26" Margin="110,160,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
-                        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="50" Margin="110,160,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
-                        <Label Content="插件" IsEnabled="False" Width="50" Height="26" Margin="110,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
-                        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="50" Margin="110,277,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
+                        <Label Name="lb_page_frameware" Content="$page_frameware" IsEnabled="False" Width="65" Height="26" Margin="110,160,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="65" Margin="110,160,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
+                        <Label Name="lb_page_apps" Content="$page_apps" IsEnabled="False" Width="65" Height="26" Margin="110,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" Cursor="None" Panel.ZIndex="20"/>
+                        <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="65" Margin="110,277,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="10,10,10,10" />
                         <Image Source="/driver_win;component/res/固件.png" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="110,211" Width="20" Height="26" />
                         <Label Name="label_FrameworkVersion" Content="Framework(V0.0)" IsEnabled="False" Width="200" Height="21" Margin="140,212,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                         <GridSplitter HorizontalAlignment="Left" Height="1" Margin="110,256,0,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
                         <Image Visibility="Hidden" Name="gif_Framework_loading" gif:ImageBehavior.AnimatedSource="/driver_win;component/res/loading.gif" Margin="570,-120,0,0" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Button Visibility="Hidden" Style="{StaticResource ResourceKey=MyWpfButton_update}" Name="Btn_Framework_update" Content="升级" Margin="606,204,0,0" Click="Click_ApplyInstall_Framework" />
+                        <Button Visibility="Hidden" Style="{StaticResource ResourceKey=MyWpfButton_update}" Name="Btn_Framework_update" Content="$page_upgrade" Margin="606,204,0,0" Click="Click_ApplyInstall_Framework" />
                         <ListBox Name="listbox" Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
                         </ListBox>
                         <ListBox Name="listboxDemo" Visibility="Hidden"  Margin="79,308,10,70" Width="622" Background="#00000000" BorderBrush="{x:Null}">
@@ -117,9 +124,9 @@
                                     <Image Name="img_icon" Source="/driver_win;component/res/固件.png" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Height="26"/>
                                     <Label Name="label_version" Content="Neo(V0.0)" IsEnabled="False" Width="100" Height="21" Margin="-7,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="14" Cursor="None" Panel.ZIndex="20"/>
                                     <GridSplitter HorizontalAlignment="Left" Height="1" Margin="-125,65,-5,0" VerticalAlignment="Top" Width="570" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                                    <Button Visibility="Hidden" Name="btn_install" Style="{StaticResource ResourceKey=MyWpfButton_install}" Content="安装" Margin="-70,10,0,0" />
-                                    <Button Visibility="Hidden" Name="btn_uninstall" Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="删除" Margin="-70,10,0,0" />
-                                    <Button Visibility="Hidden" Name="btn_update" Style="{StaticResource ResourceKey=MyWpfButton_update}" Content="升级" Margin="-70,10,0,0" />
+                                    <Button Visibility="Hidden" Name="btn_install" Style="{StaticResource ResourceKey=MyWpfButton_install}" Content="$page_install" Margin="-70,10,0,0" />
+                                    <Button Visibility="Hidden" Name="btn_uninstall" Style="{StaticResource ResourceKey=MyWpfButton_uninstall}" Content="$page_uninstal" Margin="-70,10,0,0" />
+                                    <Button Visibility="Hidden" Name="btn_update" Style="{StaticResource ResourceKey=MyWpfButton_update}" Content="$page_upgrade" Margin="-70,10,0,0" />
                                     <Image Visibility="Hidden" Name="gif_loading" gif:ImageBehavior.AnimatedSource="/driver_win;component/res/loading.gif" Margin="-70,10,0,0" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </ListBoxItem>

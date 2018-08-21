@@ -27,7 +27,18 @@ namespace driver_win.dialogs
         public VerifyECDH()
         {
             InitializeComponent();
+            InitPage();
             Init();
+        }
+
+        public void InitPage()
+        {
+            this.title.Content = Mgr_Language.Ins.Code2Word(this.title.Content.ToString());
+            this.state.Content = Mgr_Language.Ins.Code2Word(this.state.Content.ToString());
+            this.tip.Content = Mgr_Language.Ins.Code2Word(this.tip.Content.ToString());
+            this.lb_state2.Content = Mgr_Language.Ins.Code2Word(this.lb_state2.Content.ToString());
+            this.lb_page_restart.Content = Mgr_Language.Ins.Code2Word(this.lb_page_restart.Content.ToString());
+            this.help.Content = Mgr_Language.Ins.Code2Word(this.help.Content.ToString());
         }
 
         public async void Init()
