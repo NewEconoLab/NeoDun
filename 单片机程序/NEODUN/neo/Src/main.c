@@ -42,7 +42,6 @@
 #include "bitBang_I2c.h"
 #include "OLED281/oled281.h"
 #include "aw9136.h"
-#include "timer.h"
 #include "main_define.h"
 #include "stmflash.h"
 #include "app_hal.h"
@@ -67,30 +66,35 @@ extern void my_main(void);
 
 int main(void)
 {
+		//1 地址偏移设置
 		SCB->VTOR = FLASH_BASE | 0x20000;//设置偏移量
 
-		//清除程序跳转，残留的FLASH标识
-		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
-													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-
+		//2 读取数据，判断程序执行状态
 		if(STMFLASH_ReadWord(0x0801F000) == 0xffffffff)
 				SysFlagType = 0;
 		else
-				SysFlagType = 1;	
+				SysFlagType = 1;
+	
+		//3 清除程序跳转，残留的FLASH标识
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
+													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
 		
-		HAL_Init();//设置中断优先级，中断分组2
-		Deal_USB_ERROR();		
+		//4 硬件初始化
+		HAL_Init();
 		SystemClock_Config();
 		MX_GPIO_Init();
+		if(SysFlagType == 0)
+				Deal_USB_ERROR();
 		MX_CRC_Init();
 		MX_RNG_Init();
 		MX_UART4_Init();			//指纹
 		MX_USART2_UART_Init();//蓝牙
 		MX_USART1_UART_Init();//打印
-		ATSHA_I2c_Init();
-		OLED281_Init();
-		AW9136_Init();
-		TIM3_Init(100-1,8400-1);//10ms进入一次中断计数
+		ATSHA_I2c_Init();			//加密芯片
+		if(SysFlagType)
+				USB_Init();
+		OLED281_Init();				//OLED
+		AW9136_Init();				//按键
 
 		while (1)
 		{
@@ -274,11 +278,9 @@ void MX_GPIO_Init(void)
 	
 	//USB插入检测
 	GPIO_InitStruct.Pin=GPIO_PIN_9;      
-	GPIO_InitStruct.Mode=GPIO_MODE_IT_RISING_FALLING;      
+	GPIO_InitStruct.Mode=GPIO_MODE_INPUT;      
 	GPIO_InitStruct.Pull=GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA,&GPIO_InitStruct);
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn,2,0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 
 /* USER CODE BEGIN 4 */

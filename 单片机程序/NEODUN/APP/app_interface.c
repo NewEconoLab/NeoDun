@@ -22,6 +22,7 @@ X14系统标识存储如下：
 				unsigned char	update;						//1表示需要升级，0表示不需要升级
 				unsigned char	language;					//1表示英文，0表示中文
 				unsigned char count;						//地址数量
+				unsigned char errornum;					//密码错误次数
 	 8-15：空
 	16-21：设置标识
 				unsigned char auto_show;										//连接钱包后自动弹出驱动界面
@@ -89,6 +90,7 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_NEODUN *flag)
 				flag->count = 0;
 				flag->update = 0;
 				flag->language = 0;
+				flag->errornum = 0;
 				EmptyWallet();
 		}
 		else//旧钱包，读取系统标识
@@ -96,6 +98,7 @@ uint8_t Update_PowerOn_SYSFLAG(SYSTEM_NEODUN *flag)
 				flag->update   = slot_flag[1];
 				flag->language = slot_flag[2];			
 				flag->count    = Update_AddressInfo_To_Ram();
+				flag->errornum = slot_flag[4];
 				if(flag->count != slot_flag[3])//开机检测的地址数量和记录的数量不一致，则更新存储的计数值
 				{
 						slot_flag[0] = 0;
@@ -271,11 +274,13 @@ uint8_t Updata_Set_Flag(SET_FLAG *Flag)
 ***************************************************/
 void Update_Flag_ATSHA(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 {
-		uint8_t array_write[32];
+		uint8_t array_write[32]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+																	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 		array_write[0] = flag->new_wallet;
 		array_write[1] = flag->update;
 		array_write[2] = flag->language;
 		array_write[3] = flag->count;
+		array_write[4] = flag->errornum;
 		array_write[16] = Flag->flag.auto_show;
 		array_write[17] = Flag->flag.auto_update;
 		array_write[18] = Flag->flag.add_address;
@@ -304,7 +309,8 @@ void EmptyWallet(void)
 		for(i=3;i<14;i++)
 		{
 				ATSHA_write_data_slot(i,0,array_write1,32);
-		}																		
+				HAL_Delay(50);
+		}
 		ATSHA_write_data_slot(SLOT_FLAG,0,array_write2,32);
 }
 

@@ -3,10 +3,6 @@
 
 #include "sys.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 ////IO方向设置
 //#define SDA1_IN()  {GPIOB->MODER&=~(3<<(9*2));GPIOB->MODER|=0<<9*2;} //PB9输入模式
 //#define SDA1_OUT() {GPIOB->MODER&=~(3<<(9*2));GPIOB->MODER|=1<<9*2;} //PB9输出模式
@@ -44,9 +40,6 @@ uint8_t IIC2_Wait_Ack(void); 							//IIC等待ACK信号
 void IIC2_Ack(void);									//IIC发送ACK信号
 void IIC2_NAck(void);								  //IIC不发送ACK信号
 
-#ifdef __cplusplus
- }
-#endif
 
 #endif
 

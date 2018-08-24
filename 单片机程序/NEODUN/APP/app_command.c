@@ -11,6 +11,7 @@
 #include "OLED281/oled281.h"
 #include "stmflash.h"
 #include "encrypt.h"
+#include "app_aes.h"
 
 #define PC_SEND_PER_PACK_SIZE		50*1024
 
@@ -486,6 +487,7 @@ void Deal_Sign_Data_Restart(void)
 						HAL_Delay(HID_SEND_DELAY);
 #endif
 						HID_SIGN_DATA_REP(CMD_SIGN_OK,serialId,98,hash_sign,32);
+						SysFlagType = 0xFF;
 				}
 				else if(return_value == NEO_USER_REFUSE)
 				{
@@ -561,9 +563,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		data_rp[1] = 0xa4;
 		data_rp[2] = serialID & 0xff;
 		data_rp[3] = (serialID >> 8) & 0xff;
-		data_rp[4] = (VERSION_NEODUN >> 8) & 0xff;
-		data_rp[5] = VERSION_NEODUN & 0xff;
-	
+		data_rp[4] = VERSION_NEODUN & 0xff;
+		data_rp[5] = (VERSION_NEODUN >> 8) & 0xff;	
 		
 		if(coinrecord.coin1 == 0xFFFF)
 		{
@@ -572,8 +573,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{
-				data_rp[6] = (coinrecord.coin1 >> 8)&0xff;
-				data_rp[7] = coinrecord.coin1&0xff;
+				data_rp[6] = coinrecord.coin1&0xff;			
+				data_rp[7] = (coinrecord.coin1 >> 8)&0xff;
 		}
 		if(coinrecord.version1 == 0xFFFF)
 		{
@@ -582,8 +583,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[8] = (coinrecord.version1>>8)&0xff;
-				data_rp[9] = coinrecord.version1&0xff;
+				data_rp[8] = coinrecord.version1&0xff;			
+				data_rp[9] = (coinrecord.version1>>8)&0xff;
 		}
 		if(coinrecord.coin2 == 0xFFFF)
 		{
@@ -592,8 +593,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{
-				data_rp[10] = (coinrecord.coin2 >> 8)&0xff;
-				data_rp[11] = coinrecord.coin2&0xff;		
+				data_rp[10] = coinrecord.coin2&0xff;
+				data_rp[11] = (coinrecord.coin2 >> 8)&0xff;
 		}
 		if(coinrecord.version2 == 0xFFFF)
 		{		
@@ -602,8 +603,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[12] = (coinrecord.version2>>8)&0xff;
-				data_rp[13] = coinrecord.version2&0xff;
+				data_rp[12] = coinrecord.version2&0xff;
+				data_rp[13] = (coinrecord.version2>>8)&0xff;				
 		}
 		if(coinrecord.coin3 == 0xFFFF)
 		{		
@@ -612,8 +613,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[14] = (coinrecord.coin3 >> 8)&0xff;
-				data_rp[15] = coinrecord.coin3&0xff;	
+				data_rp[14] = coinrecord.coin3&0xff;
+				data_rp[15] = (coinrecord.coin3 >> 8)&0xff;					
 		}
 		if(coinrecord.version3 == 0xFFFF)
 		{		
@@ -622,8 +623,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[16] = (coinrecord.version3>>8)&0xff;
-				data_rp[17] = coinrecord.version3&0xff;	
+				data_rp[16] = coinrecord.version3&0xff;
+				data_rp[17] = (coinrecord.version3>>8)&0xff;					
 		}
 		if(coinrecord.coin4 == 0xFFFF)
 		{		
@@ -632,8 +633,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[18] = (coinrecord.coin4 >> 8)&0xff;
-				data_rp[19] = coinrecord.coin4&0xff;	
+				data_rp[18] = coinrecord.coin4&0xff;
+				data_rp[19] = (coinrecord.coin4 >> 8)&0xff;
 		}
 		if(coinrecord.version4 == 0xFFFF)
 		{		
@@ -642,8 +643,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[20] = (coinrecord.version4>>8)&0xff;
-				data_rp[21] = coinrecord.version4&0xff;	
+				data_rp[20] = coinrecord.version4&0xff;
+				data_rp[21] = (coinrecord.version4>>8)&0xff;
 		}
 		if(coinrecord.coin5 == 0xFFFF)
 		{		
@@ -652,8 +653,8 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[22] = (coinrecord.coin5 >> 8)&0xff;
-				data_rp[23] = coinrecord.coin5&0xff;
+				data_rp[22] = coinrecord.coin5&0xff;
+				data_rp[23] = (coinrecord.coin5 >> 8)&0xff;
 		}
 		if(coinrecord.version5 == 0xFFFF)
 		{		
@@ -662,8 +663,9 @@ static void HID_QUERY_PACK_INFO_REP(uint16_t serialID)
 		}
 		else
 		{		
-				data_rp[24] = (coinrecord.version5>>8)&0xff;
-				data_rp[25] = coinrecord.version5&0xff;	
+				data_rp[24] = coinrecord.version5&0xff;
+				data_rp[25] = (coinrecord.version5>>8)&0xff;
+				
 		}
 		crc = Utils_crc32(0,data_rp,62);
 		data_rp[62] = crc & 0xff;
@@ -693,37 +695,6 @@ static void HID_UNINSTALL_PACK_REP(uint16_t state,uint16_t serialID,uint16_t ins
 		data_rp[62] = crc & 0xff;
 		data_rp[63] = (crc >> 8) & 0xff;
 		SendUSBData(data_rp,64);			
-}
-
-static void HID_SECU_PIPE_REP(uint16_t serialID,uint8_t PubKeyData[32])
-{
-		uint32_t crc = 0;
-		uint8_t data_rp[64];
-	
-		memset(data_rp,0,64);
-		data_rp[0] = 0x04;
-		data_rp[1] = 0xa1;
-		data_rp[2] = serialID & 0xff;
-		data_rp[3] = (serialID >> 8) & 0xff;
-		memmove(data_rp+4,PubKeyData,50);	
-		crc = Utils_crc32(0,data_rp,62);
-		data_rp[62] = crc & 0xff;
-		data_rp[63] = (crc >> 8) & 0xff;
-		SendUSBData(data_rp,64);
-#ifdef HID_Delay
-						HAL_Delay(HID_SEND_DELAY);
-#endif		
-		
-		memset(data_rp,0,64);
-		data_rp[0] = 0x04;
-		data_rp[1] = 0xa1;
-		data_rp[2] = serialID & 0xff;
-		data_rp[3] = (serialID >> 8) & 0xff;
-		memmove(data_rp+4,PubKeyData,14);	
-		crc = Utils_crc32(0,data_rp,62);
-		data_rp[62] = crc & 0xff;
-		data_rp[63] = (crc >> 8) & 0xff;
-		SendUSBData(data_rp,64);	
 }
 
 static void HID_SECU_GET_PUBKEY_REP(uint16_t serialID,uint8_t hash[32])
@@ -930,9 +901,26 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 																if(Set_Flag.flag.del_address)//是否重复进行删除地址时的密码验证，1为需要，0为不需要
 																		Passport_Flag.flag.del_address = 0;
 																else
-																		Passport_Flag.flag.del_address = 1;		
-																Display_Usb();															
+																		Passport_Flag.flag.del_address = 1;														
 																HID_DEL_ADDRESS_REP(0,serialId,addressType);
+																{
+																		Fill_RAM(0x00);
+																#ifdef Chinese		
+																		Show_HZ12_12(80,16,61,61);//私
+																		Show_HZ12_12(96,16,22,22);//钥
+																		Show_HZ12_12(112,16,55,56);//删除
+																		Show_HZ12_12(144,16,27,27);//成
+																		Show_HZ12_12(160,16,115,115);//功
+																#endif
+																#ifdef English
+																		Show_AscII_Picture(18,16,WalletBitmapDot,sizeof(WalletBitmapDot));//40
+																		Show_AscII_Picture(62,16,andBitmapDot,sizeof(andBitmapDot));//24
+																		Show_AscII_Picture(90,16,keyBitmapDot,sizeof(keyBitmapDot));//24
+																		Show_AscII_Picture(118,16,haveBitmapDot,sizeof(haveBitmapDot));//32
+																		Show_AscII_Picture(154,16,beenBitmapDot,sizeof(beenBitmapDot));//32
+																		Show_AscII_Picture(190,16,erasedBitmapDot,sizeof(erasedBitmapDot));//48
+																#endif																
+																}
 														}
 														else//密码错误
 														{
@@ -965,12 +953,13 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 												HID_DEL_ADDRESS_REP(ERR_UNKNOW_COIN,serialId,addressType);
 												break;
 										}
-										Display_Usb();
 										break;
 								}
 								case CMD_ADD_ADDRESS:					//0x0204
 								{
 										uint16_t addressType = data[4] | (data[5] << 8);
+										uint8_t add_decrypt[32];
+										uint32_t len_aes;
 										if(Neo_System.count == 5) //地址已满
 										{
 												if(Set_Flag.flag.add_address)
@@ -999,16 +988,27 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 												int tempLen = 0;
 												char temp[40] = "";
 												char addrCacl[40] = "";
-												//得到传入的地址
-												Alg_Base58Encode(data+6 , 25 ,temp,&tempLen);
-												memmove(PrivateKey,dataSave,32);
+												
+												//1 计算地址
+												Alg_Base58Encode(data+6 , 25 ,temp,&tempLen);												
+												//2 aes解密得到私钥
+												STM32_AES_ECB_Decrypt(dataSave,32,secure_pipe.keyM,add_decrypt,&len_aes);
+												if(len_aes != 32)
+												{
+														Display_Usb();
+														HID_ADD_ADDRESS_REP(ERR_UNKONW_ADD,serialId,addressType,data+6);
+														break;														
+												}
+												memmove(PrivateKey,add_decrypt,32);
+												//3 私钥推出公钥										
 												Alg_GetPublicFromPrivate(PrivateKey,PublicKey,1);
 												memmove(PubKey,PublicKey,33);
-												//得到数据包计算出的地址
+												//4 公钥计算地址
 												Alg_GetAddressFromPublic(PubKey,addrCacl,33);
 #ifdef printf_debug
 												printf("Address Prikey:%s\r\n",addrCacl);
 #endif
+												//5 比较地址
 												if(ArrayCompare((uint8_t*)temp,(uint8_t*)addrCacl,tempLen))
 												{
 														uint8_t return_value = Display_AddAdd(addrCacl);
@@ -1243,7 +1243,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 												ATSHA_write_data_slot(14,0,slot_data,32);
 												HID_INSTALL_REQUEST_REP(1,serialId);
 												HAL_Delay(500);
-												Deal_USB_ERROR();//重新配置下USB
+//												Deal_USB_ERROR();//重新配置下USB
 												//重启回跳到BootLoader
 												System_Reset();
 										}
@@ -1301,41 +1301,60 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 								}
 								case CMD_SECU_PIPE:						//0x0401
 								{
+										uint8_t num[2] = {'0','\0'};
+										uint8_t key_M_pub[64];
+										char temp[40];
+										int len;
+										memset(temp,0,40);
 										memset(&secure_pipe,0,sizeof(SECURE_PIPE));
-										uint8_t num[2] = {'0','\0'};																		
 										//1、生成随机数
 										RandomArray(secure_pipe.randoma,32);
 										//2、生成公钥
-										Alg_ECCscalarMul(secure_pipe.randoma,NULL,secure_pipe.pubkeyA,0);
+										Alg_ECCscalarMul(secure_pipe.randoma,NULL,secure_pipe.pubkeyA+1,0);
+										secure_pipe.pubkeyA[0] = 4;
 										//3、计算公钥hash
-										SHA256_Data(secure_pipe.pubkeyA,64,secure_pipe.hashA,2);
-										//4、显示hash
+										SHA256_Data(secure_pipe.pubkeyA,65,secure_pipe.hashA,32);
+										//4、Base58编码
+										Alg_Base58Encode(secure_pipe.hashA,25,temp,&len);
+										//5、显示前4位
 										Fill_RAM(0x00);
-										if(Neo_System.language == Chinese)
-										{
+										#ifdef Chinese										
 												Show_HZ12_12(104,16,95,96);//安全
 												Show_HZ12_12(136,16,5,5);//码
-										}
-										else if(Neo_System.language == English)
-										{
-												Asc8_16(76,16,"security code");
-										}
-										num[0] = ((secure_pipe.hashA[0]>>4)>9)?((secure_pipe.hashA[0]>>4)+0x57):((secure_pipe.hashA[0]>>4)+0x30);
+										#endif
+										#ifdef English
+												Show_AscII_Picture(82,16,SecurityBitmapDot,sizeof(SecurityBitmapDot));//56
+												Show_AscII_Picture(142,16,codeBitmapDot,sizeof(codeBitmapDot));//32
+										#endif
+										num[0] = temp[0];
 										Asc8_16(98,32,num);
-										num[0] = ((secure_pipe.hashA[0]&0x0F)>9)?((secure_pipe.hashA[0]&0x0F)+0x57):((secure_pipe.hashA[0]&0x0F)+0x30);
+										num[0] = temp[1];
 										Asc8_16(114,32,num);
-										num[0] = ((secure_pipe.hashA[1]>>4)>9)?((secure_pipe.hashA[1]>>4)+0x57):((secure_pipe.hashA[1]>>4)+0x30);
+										num[0] = temp[2];
 										Asc8_16(130,32,num);
-										num[0] = ((secure_pipe.hashA[1]&0x0F)>9)?((secure_pipe.hashA[1]&0x0F)+0x57):((secure_pipe.hashA[1]&0x0F)+0x30);
+										num[0] = temp[3];
 										Asc8_16(146,32,num);
-										//5、将公钥传给上位机
-										HID_SECU_PIPE_REP(serialId,secure_pipe.pubkeyA);
+										//6、获取上位机的公钥
+										memmove(secure_pipe.pubkeyB,dataSave+1,64);
+										//7、计算对称加密aes256的key
+										Alg_ECCscalarMul(secure_pipe.randoma,secure_pipe.pubkeyB,key_M_pub,1);
+										memmove(secure_pipe.keyM+1,key_M_pub,31);
+										secure_pipe.keyM[0] = 0x04;
+										//8、通知上位机来要数据
+										memset(dataSave,0,sizeof(dataSave));
+										memmove(dataSave,secure_pipe.pubkeyA,65);
+										HidData.reqSerial = RandomInteger();
+										HID_SIGN_DATA_REP(CMD_NOTIFY_DATA,HidData.reqSerial,65,secure_pipe.hashA,32);
+#ifdef HID_Delay
+										HAL_Delay(HID_SEND_DELAY);
+#endif										
+										HID_SIGN_DATA_REP(CMD_SECU_PIPE_REP,serialId,65,secure_pipe.hashA,32);
 										break;
 								}
 								case CMD_SECU_GET_PUBKEY:			//0x0402
 								{
 										uint8_t hash_pub[32];
-										uint8_t key_M_pub[64];									
+										uint8_t key_M_pub[64];								
 										Fill_RAM(0x00);
 										Display_Usb();
 										//1、获取上位机的公钥
@@ -1344,7 +1363,7 @@ void Hid_Data_Analysis(uint8_t data[],int len)
 										Alg_ECCscalarMul(secure_pipe.randoma,secure_pipe.pubkeyB,key_M_pub,1);
 										memmove(secure_pipe.keyM,key_M_pub,32);
 										//3、回复上位机公钥的hash
-										SHA256_Data(secure_pipe.pubkeyB,64,hash_pub,32);									
+										SHA256_Data(secure_pipe.pubkeyB,64,hash_pub,32);
 										HID_SECU_GET_PUBKEY_REP(serialId,hash_pub);
 										break;
 								}

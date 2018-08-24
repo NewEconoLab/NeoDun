@@ -7,23 +7,18 @@
 
 void Display_Triangle(uint8_t direction);
 void Display_arrow(uint8_t direction);
+void Display_Fill_Triangle(uint8_t direction,uint8_t pos);
 void Display_Usb(void);
 uint8_t Display_Time_count(void);
 void Display_Address(uint8_t state,ADDRESS *address);
 
 
-
 void Display_MainPage(void);
-void Display_MainPage_0Add(void);
-void Display_MainPage_1Add(void);
-void Display_MainPage_2Add(void);
-void Display_MainPage_3Add(void);
-void Display_MainPage_4Add(void);
-void Display_MainPage_5Add(void);
-void Display_MainPage_judge(void);
-void Display_SetCode(void);
+void Display_MainPage_proc(void);
+void Display_SetCode(uint8_t state);
 uint8_t Display_VerifyCode(void);
 uint8_t Display_VerifyCode_PowerOn(void);
+
 
 void Display_Click_Add(uint8_t AddID);
 void Display_Coin_NEO(void);
@@ -32,6 +27,7 @@ void Display_Set_About(void);
 void Display_Set_Security_ResetWallet(void);
 void Display_Set_Security(void);
 void Display_Click_Set(void);
+
 
 uint8_t Display_AddAdd(char *address);
 uint8_t Display_DelAdd(uint8_t AddID);
