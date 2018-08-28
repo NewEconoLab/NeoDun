@@ -30,19 +30,17 @@ namespace driver_win.dialogs
         {
             this.confirm.Text = Mgr_Language.Ins.Code2Word(this.confirm.Text);
             this.cancel.Text = Mgr_Language.Ins.Code2Word(this.cancel.Text);
+            this.restart.Text = Mgr_Language.Ins.Code2Word(this.restart.Text);
         }
 
         public ND_MessageBoxResult nD_MessageBoxResult = ND_MessageBoxResult.None;
 
         public async Task<ND_MessageBoxResult> Show(string messageBoxText,ND_MessageBoxButton button,long waitTime)
         {
-            this.confirm.Text = Mgr_Language.Ins.Code2Word(this.confirm.Text);
-            this.cancel.Text = Mgr_Language.Ins.Code2Word(this.cancel.Text);
-            this.restart.Text = Mgr_Language.Ins.Code2Word(this.restart.Text);
             this.msg.Content = messageBoxText;
             if (button == ND_MessageBoxButton.OK)
             {
-                Grid.SetColumn(this.confirm, 4);
+                Grid.SetColumn(this.confirm, 3);
                 Grid.SetRow(this.confirm, 0);
                 this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Hidden;
@@ -51,10 +49,10 @@ namespace driver_win.dialogs
             }
             else if (button == ND_MessageBoxButton.OKCancel)
             {
-                Grid.SetColumn(this.confirm, 4);
+                Grid.SetColumn(this.confirm, 3);
                 Grid.SetRow(this.confirm, 0);
                 Grid.SetColumn(this.cancel, 4);
-                Grid.SetRow(this.cancel, 1);
+                Grid.SetRow(this.cancel, 0);
                 this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Visible;
                 this.restart.Visibility = Visibility.Hidden;
@@ -62,10 +60,10 @@ namespace driver_win.dialogs
             }
             else if (button == ND_MessageBoxButton.RestartCancel)
             {
-                Grid.SetColumn(this.restart, 4);
+                Grid.SetColumn(this.restart, 3);
                 Grid.SetRow(this.restart, 0);
                 Grid.SetColumn(this.cancel, 4);
-                Grid.SetRow(this.cancel, 1);
+                Grid.SetRow(this.cancel, 0);
                 this.confirm.Visibility = Visibility.Hidden;
                 this.cancel.Visibility = Visibility.Visible;
                 this.restart.Visibility = Visibility.Visible;

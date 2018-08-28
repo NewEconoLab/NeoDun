@@ -21,16 +21,15 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80*"/>
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="100*"/>
-                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="60*"/>
             </Grid.ColumnDefinitions>
-            <Label  x:Name="msg" Content="" Padding="0" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="410" Height="20" Margin="45,13,0,17" Grid.ColumnSpan="4" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+            <Label  x:Name="msg" Content="" Padding="0" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="314" Height="20" Margin="45,13,0,17" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5">
                 <Label.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -40,9 +39,9 @@
                     </TransformGroup>
                 </Label.RenderTransform>
             </Label>
-            <TextBlock Name="confirm" Text="$page_confirm"  PreviewMouseDown="Click_OK" Height="19" Width="55" Grid.Column="4" Grid.Row="0"/>
-            <TextBlock Name="restart" Text="$page_restart"  PreviewMouseDown="Click_Restart" Height="19" Width="55" Grid.Column="4" Grid.Row="0"/>
-            <TextBlock Name="cancel" Text="$page_confirm"  PreviewMouseDown="Click_CANCEL" Height="19" Width="55" Grid.Column="4" Grid.Row="1"/>
+            <TextBlock Name="confirm" Foreground="Green" Text="$page_confirm"  PreviewMouseDown="Click_OK" Height="19" Width="55" Grid.Column="3" Grid.Row="0" FontWeight="Bold"/>
+            <TextBlock Name="restart" Foreground="Green" Text="$page_restart"  PreviewMouseDown="Click_Restart" Height="19" Width="55" Grid.Column="3" Grid.Row="0" FontWeight="Bold"/>
+            <TextBlock Name="cancel" Foreground="White"  Text="$page_cancel"  PreviewMouseDown="Click_CANCEL" Height="19" Width="55" Grid.Column="4" Grid.Row="0" FontWeight="Bold"/>
         </Grid>
     </Grid>
 </Window>

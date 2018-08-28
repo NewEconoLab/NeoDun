@@ -315,7 +315,7 @@ namespace NeoDun
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
-                    eventHandler(EnumControl.ApplyInstallFramework, EnumMsgCode.RefuseUpdate);
+                    eventHandler(EnumControl.ApplyInstallFramework, EnumMsgCode.RefuseUpdate,EnumErrorCode.NoError);
                 }
                 //卸载失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)

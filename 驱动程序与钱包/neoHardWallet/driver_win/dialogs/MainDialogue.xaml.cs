@@ -31,6 +31,7 @@ namespace driver_win.dialogs
         public MainDialogue()
         {
             InitializeComponent();
+            var ins = Mgr_Language.Ins;
             mainDialogue = this;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitPage();
@@ -54,7 +55,6 @@ namespace driver_win.dialogs
 
             hhgate.CustomServer.BeginServer();
 
-            var ins = Mgr_Language.Ins;
         }
 
         public static MainDialogue mainDialogue;
@@ -327,30 +327,22 @@ namespace driver_win.dialogs
         //申請更新固件
         private async void Click_ApplyInstall_Framework(object sender, RoutedEventArgs e)
         {
-            Button btn = (sender as Button);
             ForbidAllBtnClick();
 
             //安装按钮隐藏  等待按钮显示
-            Image img = this.FindName("gif_Framework_loading") as Image;
-            img.Visibility = Visibility.Visible;
-            btn.Visibility = Visibility.Hidden;
+            gif_Framework_loading.Visibility = Visibility.Visible;
+            Btn_Framework_update.Visibility = Visibility.Hidden;
 
             //bool result = await driverControl.ApplyForUpdate();
             Result result = await ManagerControl.Ins.ToDo(EnumControl.ApplyInstallFramework);
-            if (result.msgCode == EnumMsgCode.AgreeUpdate)
+            if (result.msgCode != EnumMsgCode.AgreeUpdate)
             {
-                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
+                gif_Framework_loading.Visibility = Visibility.Hidden;
+                Btn_Framework_update.Visibility = Visibility.Visible;
 
-            }
-            else //拒絕  後續要加一些特殊的提示處理等流程
-            {
-                DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
+                AllowAllBtnClick();
             }
 
-            img.Visibility = Visibility.Hidden;
-            btn.Visibility = Visibility.Visible;
-
-            AllowAllBtnClick();
         }
 
         //更新固件
@@ -358,6 +350,12 @@ namespace driver_win.dialogs
         {
             await Dispatcher.InvokeAsync(async ()=>
             {
+                ForbidAllBtnClick();
+
+                //安装按钮隐藏  等待按钮显示
+                gif_Framework_loading.Visibility = Visibility.Visible;
+                Btn_Framework_update.Visibility = Visibility.Hidden;
+
                 var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
                 var version = servicePackageInfo[pluginType].ToString();
 
@@ -373,6 +371,10 @@ namespace driver_win.dialogs
                 EnumPluginType content = EnumPluginType.Unknow;
 
                 Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallFramework, data, type, content,version);
+                gif_Framework_loading.Visibility = Visibility.Hidden;
+                Btn_Framework_update.Visibility = Visibility.Visible;
+
+                AllowAllBtnClick();
             });
 
         }
@@ -401,19 +403,9 @@ namespace driver_win.dialogs
             byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
             
             Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin, data, type, content, version);
-            if (result.msgCode == EnumMsgCode.InstallSuc)
-            {
-                DialogueControl.ShowMessageDialogue("安装成功",2, this);
-                GetPackageInfo();
-            }
-            else
-            {
-                DialogueControl.ShowMessageDialogue("安装失败",2, this);
-                img.Visibility = Visibility.Hidden;
-                btn.Visibility = Visibility.Visible;
-            }
-
-
+            GetPackageInfo();
+            img.Visibility = Visibility.Hidden;
+            btn.Visibility = Visibility.Visible;
             AllowAllBtnClick();
         }
         //點擊卸載插件
@@ -437,17 +429,8 @@ namespace driver_win.dialogs
 
                 if (nD_MessageBoxResult == ND_MessageBoxResult.OK)
                 {
-                    Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, this, content);
-                    if (result.msgCode == EnumMsgCode.UninstallSuc)
-                    {
-                        DialogueControl.ShowMessageDialogue("卸载成功", 2, this);
-                        GetPackageInfo();
-                    }
-                    else
-                    {
-                        DialogueControl.ShowMessageDialogue("卸载失败", 2, this);
-                    }
-
+                    Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, content);
+                    GetPackageInfo();
                 }
             }
         }
