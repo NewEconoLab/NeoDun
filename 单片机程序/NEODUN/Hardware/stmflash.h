@@ -29,9 +29,6 @@ typedef __IO uint8_t   vu8;
 #define ADDR_FLASH_SECTOR_10    ((uint32_t)0x080C0000) 	//扇区10起始地址,128 Kbytes  
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x080E0000) 	//扇区11起始地址,128 Kbytes  
 
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 uint32_t STMFLASH_ReadWord(uint32_t faddr);		  	//读出字  
 void STMFLASH_Write(uint32_t WriteAddr,uint32_t *pBuffer,uint32_t NumToWrite);		//从指定地址开始写入指定长度的数据
@@ -47,9 +44,7 @@ uint16_t STMFLASH_ReadHalfWord(uint32_t faddr);
 void STMFLASH_Write_ByteArray(uint32_t WriteAddr,uint8_t *pBuffer,uint32_t NumToWrite);		//从指定地址开始写入指定长度的数据	 
 void STMFLASH_Read_ByteArray(uint32_t ReadAddr,uint8_t *pBuffer,uint32_t NumToRead);   		//从指定地址开始读出指定长度的数据	 
 	 
-#ifdef __cplusplus
- }
-#endif
+
 		
 #endif
 

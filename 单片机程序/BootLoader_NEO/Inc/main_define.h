@@ -14,6 +14,8 @@
 #define SLOT_FLAG						14
 #define SLOT_SECRET					15
 
+#define HID_QUEUE_DEPTH					50
+
 typedef union
 {
 		struct
@@ -62,6 +64,12 @@ enum
 		PAGE_INDEX_ID_ERROR 		= 6
 };
 
+typedef struct
+{
+	uint8_t data[64];
+	uint8_t len;
+}HID_RECV_DATA;
+
 extern uint8_t gImage_wait[128];
 
 
@@ -70,6 +78,11 @@ extern SIGN_KEY_FLAG Key_Flag;
 extern BOOT_SYS_FLAG BootFlag;
 extern uint8_t HID_RX_BUF[RECV_BIN_FILE_LEN] __attribute__ ((at(0X20001000)));
 extern volatile uint8_t touch_motor_flag;    //1表示开启触摸振动，0表示关闭振动
+
+//HID数据
+extern volatile uint32_t hid_index_read;
+extern volatile uint32_t hid_index_write;
+extern HID_RECV_DATA hid_recv_data[HID_QUEUE_DEPTH];
 
 void DATA_Init(void);
 

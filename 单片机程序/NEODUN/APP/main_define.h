@@ -4,6 +4,9 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
+#define Chinese
+//#define English
+
 #define HID_QUEUE_DEPTH					50
 
 #define FLASH_ADDRESS_SIGN_DATA	0x0801F000 //签名结果地址
@@ -39,10 +42,10 @@
 #define ADDR_SIZE   					40
 #define SLOT_FLAG							14
 #define DISPLAY_ERROR_TIME		2000
-#define INPUT_TIME_DIV				100
-#define SYSTEM_BASE_TIME			10
+#define INPUT_TIME_DIV				1000
+#define SYSTEM_BASE_TIME			1
 #define MOTOR_TIME  					80
-#define KEY_VALID_TIME				3
+#define KEY_VALID_TIME				30
 
 #define HID_MAX_DATA_LEN			64*1024
 #define DATA_PACK_SIZE				50
@@ -70,13 +73,6 @@
 #define COIN_NEO							"NEO"
 #define COIN_BTC							"BTC"
 #define COIN_ETH							"ETH"
-
-//语言
-enum
-{
-		Chinese	= 0,
-		English = 1,
-};
 
 //返回值
 enum
@@ -145,6 +141,7 @@ typedef struct
 		uint8_t	update;						//1表示需要升级，0表示不需要升级
 		uint8_t	language;					//1表示英文，0表示中文
 		uint8_t count;						//地址数量
+		uint8_t errornum;					//密码错误次数
 		uint8_t	sn[12];						//单片机唯一SN码
 		uint8_t pin[8];
 }SYSTEM_NEODUN;
@@ -160,6 +157,14 @@ typedef struct
 		uint8_t	  Pack_ID;
 		uint8_t 	hashRecord[32];	
 }DATA_HID_RECORD;
+
+//密码设置
+typedef struct
+{
+		uint8_t state;
+		uint8_t	MingWen[32];
+		uint8_t	NewMingWen[32];
+}PASSPORT_SET_INFO;
 
 //为地址显示开辟内存
 typedef struct
@@ -190,8 +195,8 @@ typedef struct
 typedef struct
 {
 		uint8_t randoma[32];
-		uint8_t pubkeyA[64];
-		uint8_t hashA[2];
+		uint8_t pubkeyA[65];
+		uint8_t hashA[32];
 		uint8_t pubkeyB[64];		
 		uint8_t keyM[32];
 }SECURE_PIPE;
@@ -229,18 +234,136 @@ extern volatile 	uint8_t 	task_1s_flag;
 //声明ASCII库
 extern uint8_t ASC8X16[];
 extern uint8_t HZ12X12_S[];
+
 //声明图片
 extern uint8_t gImage_emptypin[72];
 extern uint8_t gImage_fullpin[72];
 extern uint8_t gImage_Set[512];
-extern uint8_t gImage_triangle_up[72];
-extern uint8_t gImage_triangle_down[72];
+extern uint8_t gImage_triangle_up[128];
+extern uint8_t gImage_triangle_down[128];
 extern uint8_t gImage_Address[512];
 extern uint8_t gImage_Address_hide[512];
 extern uint8_t gImage_arrow_left[128];
 extern uint8_t gImage_arrow_right[128];
+extern uint8_t gImage_arrow_fill_left[128];
+extern uint8_t gImage_arrow_fill_right[128];
 extern uint8_t gImage_Usb[288];
 extern uint8_t gImage_delete[64];
+
+//ASCII图片声明
+extern unsigned char aBitmapDot[16];
+extern unsigned char ABitmapDot[16];
+extern unsigned char AboutBitmapDot[80];
+extern unsigned char AddressBitmapDot[112];
+extern unsigned char addressBitmapDot[112];
+extern unsigned char againBitmapDot[80];
+extern unsigned char AllBitmapDot[32];
+extern unsigned char allBitmapDot[32];
+extern unsigned char AllowBitmapDot[80];
+extern unsigned char andBitmapDot[48];
+extern unsigned char anyBitmapDot[48];
+extern unsigned char APPBitmapDot[48];
+extern unsigned char appsBitmapDot[64];
+extern unsigned char AreBitmapDot[48];
+extern unsigned char attemptsBitmapDot[128];
+extern unsigned char availableBitmapDot[112];
+extern unsigned char BackBitmapDot[64];
+extern unsigned char beBitmapDot[32];
+extern unsigned char beenBitmapDot[64];
+extern unsigned char belowBitmapDot[80];
+extern unsigned char CancelBitmapDot[96];
+extern unsigned char cancelBitmapDot[96];
+extern unsigned char changepinBitmapDot[144];
+extern unsigned char change_pinBitmapDot[128];
+extern unsigned char checkBitmapDot[80];
+extern unsigned char codeBitmapDot[64];
+extern unsigned char confirmBitmapDot[96];
+extern unsigned char ConfirmBitmapDot[96];
+extern unsigned char containBitmapDot[96];
+extern unsigned char dataBitmapDot[64];
+extern unsigned char didBitmapDot[48];
+extern unsigned char DoBitmapDot[32];
+extern unsigned char doesBitmapDot[64];
+extern unsigned char eraseBitmapDot[80];
+extern unsigned char erasedBitmapDot[96];
+extern unsigned char ErasingBitmapDot[96];
+extern unsigned char ERRORBitmapDot[80];
+extern unsigned char firmwareBitmapDot[112];
+extern unsigned char FirmwareBitmapDot[112];
+extern unsigned char forBitmapDot[48];
+extern unsigned char FromBitmapDot[64];
+extern unsigned char fromBitmapDot[64];
+extern unsigned char hasBitmapDot[48];
+extern unsigned char haveBitmapDot[64];
+extern unsigned char HelpBitmapDot[64];
+extern unsigned char helpBitmapDot[64];
+extern unsigned char HideBitmapDot[64];
+extern unsigned char hideBitmapDot[64];
+extern unsigned char importBitmapDot[80];
+extern unsigned char ImportingBitmapDot[128];
+extern unsigned char incorrect_BitmapDot[128];
+extern unsigned char IncorrectBitmapDot[128];
+extern unsigned char inBitmapDot[32];
+extern unsigned char irreversibleBitmapDot[144];
+extern unsigned char IsolateBitmapDot[96];
+extern unsigned char isBitmapDot[32];
+extern unsigned char ItBitmapDot[32];
+extern unsigned char keyBitmapDot[48];
+extern unsigned char keysBitmapDot[64];
+extern unsigned char leftBitmapDot[48];
+extern unsigned char ManagerBitmapDot[112];
+extern unsigned char manyBitmapDot[80];
+extern unsigned char matchBitmapDot[80];
+extern unsigned char NEODUNBitmapDot[96];
+extern unsigned char newBitmapDot[48];
+extern unsigned char NoNameBitmapDot[96];
+extern unsigned char NoneBitmapDot[64];
+extern unsigned char notBitmapDot[48];
+extern unsigned char officialBitmapDot[96];
+extern unsigned char OKBitmapDot[32];
+extern unsigned char onlyBitmapDot[64];
+extern unsigned char ourBitmapDot[48];
+extern unsigned char PINBitmapDot[48];
+extern unsigned char PINsBitmapDot[48];
+extern unsigned char PleaseBitmapDot[96];
+extern unsigned char pleaseBitmapDot[96];
+extern unsigned char proceedBitmapDot[112];
+extern unsigned char reimportBitmapDot[112];
+extern unsigned char requiredBitmapDot[112];
+extern unsigned char ResetBitmapDot[80];
+extern unsigned char resetBitmapDot[80];
+extern unsigned char ResetallBitmapDot[128];
+extern unsigned char SecurityBitmapDot[112];
+extern unsigned char seenBitmapDot[64];
+extern unsigned char SendBitmapDot[64];
+extern unsigned char set_BitmapDot[48];
+extern unsigned char SetBitmapDot[48];
+extern unsigned char SettingsBitmapDot[112];
+extern unsigned char signedBitmapDot[96];
+extern unsigned char successfulBitmapDot[144];
+extern unsigned char sureBitmapDot[64];
+extern unsigned char theBitmapDot[48];
+extern unsigned char ThisBitmapDot[64];
+extern unsigned char toBitmapDot[32];
+extern unsigned char TooBitmapDot[48];
+extern unsigned char TransactionBitmapDot[160];
+extern unsigned char tryBitmapDot[48];
+extern unsigned char unhideBitmapDot[96];
+extern unsigned char UnhideBitmapDot[96];
+extern unsigned char updateBitmapDot[96];
+extern unsigned char usingBitmapDot[80];
+extern unsigned char VersionBitmapDot[96];
+extern unsigned char VisitBitmapDot[64];
+extern unsigned char walletBitmapDot[80];
+extern unsigned char WalletBitmapDot[80];
+extern unsigned char wantBitmapDot[64];
+extern unsigned char websiteBitmapDot[112];
+extern unsigned char welcomeBitmapDot[128];
+extern unsigned char willBitmapDot[48];
+extern unsigned char wwwBitmapDot[224];
+extern unsigned char YouBitmapDot[48];
+extern unsigned char youBitmapDot[48];
+extern unsigned char YourBitmapDot[64];
 
 void Sys_Data_Init(void);
 

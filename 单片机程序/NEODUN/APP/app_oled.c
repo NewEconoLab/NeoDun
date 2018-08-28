@@ -1,45 +1,67 @@
 #include "app_oled.h"
 #include <string.h>
 #include "OLED281/oled281.h"
-#include "timer.h"
 #include "atsha204a.h"
 #include "app_des.h"
 #include "app_aes.h"
 #include "app_utils.h"
 #include "aw9136.h"
 #include "OledMenu.h"
+#include "tick_stm32.h"
+
+#define PASSPORD_NUM_ROW				50
+#define PASSPORD_RESULT_COLUMN	200
 
 /************************************************
 设置密码函数
+	state:  0表示新钱包设置密码    1表示旧钱包更改密码
 返回值： 0  失败
 				1  成功
 *************************************************/
-uint8_t SetCode(uint8_t code_array[8])
+uint8_t SetCode(uint8_t code_array[8],uint8_t state)
 {
 		uint8_t num[2] = {'0','\0'};
     uint8_t index = 0;	
 		memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 		
 		Fill_RAM(0x00);
-		if(Neo_System.language == Chinese)
+		
+		if(state == 0)
 		{
+		#ifdef Chinese
 				//第一行显示
 				Show_HZ12_12(96,7,2,5);//设置密码
+		#endif
+		#ifdef English
+				Show_AscII_Picture(102,7,SetBitmapDot,sizeof(SetBitmapDot));//24
+				Show_AscII_Picture(130,7,PINBitmapDot,sizeof(PINBitmapDot));//24
+		#endif
 		}
-		else if(Neo_System.language == English)
+		else if(state == 1)
 		{
-				Asc8_16(100,7,"set PIN");
+		#ifdef Chinese
+				//第一行显示
+				Show_HZ12_12(88,7,2,3);//设置
+				Show_HZ12_12(120,7,21,21);//新
+				Show_HZ12_12(136,7,4,5);//密码
+		#endif
+		#ifdef English
+				Show_AscII_Picture(88,7,SetBitmapDot,sizeof(SetBitmapDot));//24
+				Show_AscII_Picture(120,7,newBitmapDot,sizeof(newBitmapDot));//24
+				Show_AscII_Picture(152,7,PINBitmapDot,sizeof(PINBitmapDot));//24
+		#endif		
 		}
-		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
-		Show_Pattern(&gImage_emptypin[0],21,23,26,38);
-		Show_Pattern(&gImage_emptypin[0],27,29,26,38);
-		Show_Pattern(&gImage_emptypin[0],33,35,26,38);
-		Show_Pattern(&gImage_emptypin[0],39,41,26,38);
-		Show_Pattern(&gImage_emptypin[0],45,47,26,38);
-		clearArea(60,38,200,1);
+		
+		Show_Pattern(&gImage_emptypin[0],15,17,28,40);
+		Show_Pattern(&gImage_emptypin[0],21,23,28,40);
+		Show_Pattern(&gImage_emptypin[0],27,29,28,40);
+		Show_Pattern(&gImage_emptypin[0],33,35,28,40);
+		Show_Pattern(&gImage_emptypin[0],39,41,28,40);
+		Show_Pattern(&gImage_emptypin[0],45,47,28,40);
+		clearArea(60,40,200,1);
 		Display_arrow(0);
 		Display_arrow(1);
-		Asc8_16(124,52,"5");
+		Asc8_16(124,PASSPORD_NUM_ROW,"5");
 		
 		Key_Control(1);
     while(index < 6)
@@ -56,13 +78,13 @@ uint8_t SetCode(uint8_t code_array[8])
 						else if(code_array[index] == 0xFF)
 						{
 								clearArea(124,48,8,16);
-								Asc8_16(124,52,"9");
+								Asc8_16(124,PASSPORD_NUM_ROW,"9");
                 code_array[index] = '9';								
 						}
             else
             {
                 num[0] = --code_array[index];
-								Asc8_16(124,52,num);
+								Asc8_16(124,PASSPORD_NUM_ROW,num);
             }
         }
         if(Key_Flag.flag.right)//右键按下
@@ -70,20 +92,20 @@ uint8_t SetCode(uint8_t code_array[8])
 						Key_Flag.flag.right = 0;
             if(code_array[index] == '9')
             {
-								clearArea(124,52,8,16);
+								clearArea(124,48,8,16);
 								Show_Pattern(&gImage_delete[0],31,32,48,64);
                 code_array[index] = 0xFF;
             }
 						else if(code_array[index] == 0xFF)
 						{
 								clearArea(124,48,8,16);
-								Asc8_16(124,52,"0");
+								Asc8_16(124,PASSPORD_NUM_ROW,"0");
                 code_array[index] = '0';		
 						}
             else
             {
                 num[0] = ++code_array[index];
-								Asc8_16(124,52,num);
+								Asc8_16(124,PASSPORD_NUM_ROW,num);
             }
         }
         if(Key_Flag.flag.middle)//中间建按下
@@ -95,13 +117,13 @@ uint8_t SetCode(uint8_t code_array[8])
 								if(index>0)
 										index--;
 								code_array[index] = '5';
-								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,26,38);
-								clearArea(58+index*24,38,16,1);
+								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,28,40);
+								clearArea(58+index*24,40,16,1);
 						}
 						else
 						{
-								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
-								clearArea(58+index*24,38,16,1);
+								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,28,40);
+								clearArea(58+index*24,40,16,1);
 								index++;
 						}
             if(index == 6)
@@ -110,7 +132,7 @@ uint8_t SetCode(uint8_t code_array[8])
             }
             else
             {
-								Asc8_16(124,52,"5");
+								Asc8_16(124,PASSPORD_NUM_ROW,"5");
             }
         }
     }
@@ -119,6 +141,9 @@ uint8_t SetCode(uint8_t code_array[8])
 }
 /************************************************
 密码验证函数
+输入参数：
+	state： 0表示验证密码，1表示验证新密码，2新钱包验证密码，0xff表示开机验证密码
+	
 返回值： 
 				0  失败
 				1  成功
@@ -130,34 +155,63 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
     memset(code_array,0x35,8);//将数组都设置为字符 ‘5’
 
 		Fill_RAM(0x00);
-		if(Neo_System.language == Chinese)
+		
+		if(state == 1)
 		{
-				//第一行显示
-				Show_HZ12_12(96,7,133,133);//输
-				Show_HZ12_12(112,7,25,25);//入
-				Show_HZ12_12(128,7,4,5);//密码		
+				#ifdef Chinese
+						//第一行显示
+						Show_HZ12_12(88,7,6,7);//确认
+						Show_HZ12_12(120,7,21,21);//新
+						Show_HZ12_12(136,7,4,5);//密码
+				#endif
+				#ifdef English
+						Show_AscII_Picture(76,7,ConfirmBitmapDot,sizeof(ConfirmBitmapDot));//48
+						Show_AscII_Picture(128,7,newBitmapDot,sizeof(newBitmapDot));//24
+						Show_AscII_Picture(156,7,PINBitmapDot,sizeof(PINBitmapDot));//24
+				#endif
 		}
-		else if(Neo_System.language == English)
+		else if(state == 2)
 		{
-				Asc8_16(116,7,"PIN");
+				#ifdef Chinese
+						//第一行显示
+						Show_HZ12_12(96,7,6,7);//确认
+						Show_HZ12_12(128,7,4,5);//密码		
+				#endif
+				#ifdef English
+						Show_AscII_Picture(90,7,ConfirmBitmapDot,sizeof(ConfirmBitmapDot));//48
+						Show_AscII_Picture(142,7,PINBitmapDot,sizeof(PINBitmapDot));//24
+				#endif		
 		}
-		Show_Pattern(&gImage_emptypin[0],15,17,26,38);
-		Show_Pattern(&gImage_emptypin[0],21,23,26,38);
-		Show_Pattern(&gImage_emptypin[0],27,29,26,38);
-		Show_Pattern(&gImage_emptypin[0],33,35,26,38);
-		Show_Pattern(&gImage_emptypin[0],39,41,26,38);
-		Show_Pattern(&gImage_emptypin[0],45,47,26,38);
-		clearArea(60,38,200,1);
+		else
+		{
+				#ifdef Chinese
+						//第一行显示
+						Show_HZ12_12(96,7,133,133);//输
+						Show_HZ12_12(112,7,25,25);//入
+						Show_HZ12_12(128,7,4,5);//密码		
+				#endif
+				#ifdef English
+						Show_AscII_Picture(116,7,PINBitmapDot,sizeof(PINBitmapDot));//24
+				#endif		
+		}
+		
+		Show_Pattern(&gImage_emptypin[0],15,17,28,40);
+		Show_Pattern(&gImage_emptypin[0],21,23,28,40);
+		Show_Pattern(&gImage_emptypin[0],27,29,28,40);
+		Show_Pattern(&gImage_emptypin[0],33,35,28,40);
+		Show_Pattern(&gImage_emptypin[0],39,41,28,40);
+		Show_Pattern(&gImage_emptypin[0],45,47,28,40);
+		clearArea(60,40,200,1);
 		Display_arrow(0);
 		Display_arrow(1);
-		Asc8_16(124,52,"5");
-		if(state)
-				Asc8_16(226,26,"s");		
+		Asc8_16(124,PASSPORD_NUM_ROW,"5");
+		if(state != 0xff)
+				Asc8_16(244,28,"s");		
 		Key_Control(1);//清空按键标志位，开启按键有效
 		Start_TIM(OLED_INPUT_TIME);		
     while(1)
     {
-				if(state)
+				if(state != 0xff)
 				{
 						if(Display_Time_count() == 0)
 							  return 0;
@@ -167,20 +221,20 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 						Key_Flag.flag.left = 0;
             if(code_array[index] == '0')
             {
-								clearArea(124,52,8,16);
+								clearArea(124,48,8,16);
 								Show_Pattern(&gImage_delete[0],31,32,48,64);
                 code_array[index] = 0xFF;
             }
 						else if(code_array[index] == 0xFF)
 						{
 								clearArea(124,48,8,16);
-								Asc8_16(124,52,"9");
+								Asc8_16(124,PASSPORD_NUM_ROW,"9");
                 code_array[index] = '9';								
 						}
             else
             {
                 num[0] = --code_array[index];
-								Asc8_16(124,52,num);
+								Asc8_16(124,PASSPORD_NUM_ROW,num);
             }
         }
         if(Key_Flag.flag.right)//右键按下
@@ -188,20 +242,20 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 						Key_Flag.flag.right = 0;
             if(code_array[index] == '9')
             {
-								clearArea(124,52,8,16);
+								clearArea(124,48,8,16);
 								Show_Pattern(&gImage_delete[0],31,32,48,64);
                 code_array[index] = 0xFF;
             }
 						else if(code_array[index] == 0xFF)
 						{
 								clearArea(124,48,8,16);
-								Asc8_16(124,52,"0");
+								Asc8_16(124,PASSPORD_NUM_ROW,"0");
                 code_array[index] = '0';		
 						}
             else
             {
                 num[0] = ++code_array[index];
-								Asc8_16(124,52,num);
+								Asc8_16(124,PASSPORD_NUM_ROW,num);
             }
         }
         if(Key_Flag.flag.middle)//中间建按下
@@ -213,13 +267,13 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 								if(index>0)
 										index--;
 								code_array[index] = '5';
-								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,26,38);
-								clearArea(58+index*24,38,16,1);
+								Show_Pattern(&gImage_emptypin[0],15+6*index,17+6*index,28,40);
+								clearArea(58+index*24,40,16,1);
 						}
 						else
 						{
-								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,26,38);
-								clearArea(58+index*24,38,16,1);
+								Show_Pattern(&gImage_fullpin[0],15+6*index,17+6*index,28,40);
+								clearArea(58+index*24,40,16,1);
 								index++;
 						}
             if(index == 6)
@@ -228,7 +282,7 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
             }
             else
             {
-								Asc8_16(124,52,"5");
+								Asc8_16(124,PASSPORD_NUM_ROW,"5");
             }
         }
     }
@@ -237,60 +291,88 @@ uint8_t VerifyCode(uint8_t code_array[8],uint8_t state)
 }
 /************************************************
 设置密码
+		state:  0表示新钱包设置密码    1表示旧钱包更改密码
 返回值： 
 				0  设置成功
 				1  加密芯片随机数出错  
 				2  DES加密出错
 				3  加密芯片写入出错
 *************************************************/
-uint8_t setCode(void)
+uint8_t setCode(PASSPORT_SET_INFO *passport,uint8_t state)
 {
-		uint8_t pin[8];		
+		uint8_t pin[8];
 		uint8_t random[32];
-		uint8_t MingWen[32];
 		uint32_t Len_Out = 0;
 		uint32_t crc = 0;
 		
-		SetCode(pin);								//得到用户输入的有效6位PIN码
-		crc = Utils_crc32(0,pin,6);//组合成8位的PIN码
-		pin[6] = crc & 0xff;
-		pin[7] = (crc>>8) & 0xff;
-		
-		memset(random,0,32);
-		memset(MingWen,0,32);
-		if(ATSHA_get_random(random) == 0)
+		if((passport->state & 0xF0) == 0)
 		{
-				Asc8_16(176,9,(uint8_t *)"ERROR!!!");
-				HAL_Delay(1000);
-				return 1;
-		}
-		crc = Utils_crc32(0,random,30);
-		random[30] = crc & 0xff;
-		random[31] = (crc>>8) & 0xff;
-		if(My_DES_Encrypt(random,32,pin,MingWen,&Len_Out))
-		{
+				SetCode(pin,state);								//得到用户输入的有效6位PIN码
+				crc = Utils_crc32(0,pin,6);//组合成8位的PIN码
+				pin[6] = crc & 0xff;
+				pin[7] = (crc>>8) & 0xff;
+			
+				if((passport->state & 0x0F) == 0)
+				{
+						passport->state |= 0x0F;
+						ATSHA_read_data_slot(0,passport->MingWen);
+				}
+				memset(random,0,32);
+				if(ATSHA_get_random(random) == 0)
+				{
+#ifdef Chinese
+						Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+						Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif				
+						HAL_Delay(1000);
+						return 1;
+				}
+				crc = Utils_crc32(0,random,30);
+				random[30] = crc & 0xff;
+				random[31] = (crc>>8) & 0xff;
+				if(My_DES_Encrypt(random,32,pin,passport->NewMingWen,&Len_Out))
+				{
 #ifdef printf_debug			
-				printf("My_DES_Encrypt \n");
+						printf("My_DES_Encrypt \n");
 #endif			
-				Asc8_16(176,9,(uint8_t *)"ERROR!!!");
-				HAL_Delay(1000);
-				return 2;
+#ifdef Chinese
+						Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+						Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
+						HAL_Delay(1000);
+						return 2;
+				}
 		}
-		if(ATSHA_write_data_slot(0,0,MingWen,32) == 0)
-		{
-#ifdef printf_debug			
-				printf("ATSHA_write_data_slot \n");
-#endif			
-				Asc8_16(176,9,(uint8_t *)"ERROR!!!");
-				HAL_Delay(1000);
-				return 3;
-		}	
 		else
 		{
-				Asc8_16(176,9,(uint8_t *)"OK");
-				HAL_Delay(1000);
-				return 0;
+				if(ATSHA_write_data_slot(0,0,passport->NewMingWen,32) == 0)
+				{
+#ifdef printf_debug			
+						printf("ATSHA_write_data_slot \n");
+#endif			
+#ifdef Chinese
+						Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+						Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
+						HAL_Delay(1000);
+						return 3;
+				}
 		}
+
+//#ifdef Chinese
+//		Asc8_16(176,7,"OK");
+//#endif
+//#ifdef English			
+//		Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,OKBitmapDot,sizeof(OKBitmapDot));
+//#endif
+//		HAL_Delay(1000);
+		return 0;
 }
 /************************************************
 验证密码
@@ -323,7 +405,12 @@ uint8_t verifyCode(uint8_t state)
 #ifdef printf_debug			
 				printf("ATSHA_read_data_slot \n");
 #endif			
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 1;
 		}
@@ -332,7 +419,12 @@ uint8_t verifyCode(uint8_t state)
 #ifdef printf_debug			
 				printf("My_DES_Decrypt \n");
 #endif					
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 2;
 		}
@@ -341,13 +433,23 @@ uint8_t verifyCode(uint8_t state)
 #ifdef printf_debug			
 				printf("My_DES_Decrypt Len_Out ERROR \n");
 #endif					
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 3;
 		}
 		if(Utils_verifycrc(AnWen,32))
 		{
-				Asc8_16(176,9,"OK");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"OK");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,OKBitmapDot,sizeof(OKBitmapDot));
+#endif
 				HAL_Delay(1000);
 				return 0;
 		}
@@ -356,7 +458,12 @@ uint8_t verifyCode(uint8_t state)
 #ifdef printf_debug			
 				printf("VerifyCrc ERROR \n");
 #endif
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 4;
 		}
@@ -384,7 +491,12 @@ uint8_t verifyCodeGetPin(uint8_t state,uint8_t PinCode[8])
 #ifdef printf_debug			
 				printf("ATSHA_read_data_slot \n");
 #endif			
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 1;
 		}
@@ -393,7 +505,12 @@ uint8_t verifyCodeGetPin(uint8_t state,uint8_t PinCode[8])
 #ifdef printf_debug			
 				printf("My_DES_Decrypt \n");
 #endif					
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 2;
 		}
@@ -402,13 +519,23 @@ uint8_t verifyCodeGetPin(uint8_t state,uint8_t PinCode[8])
 #ifdef printf_debug			
 				printf("My_DES_Decrypt Len_Out ERROR \n");
 #endif					
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 3;
 		}
 		if(Utils_verifycrc(AnWen,32))
 		{
-				Asc8_16(176,9,"OK");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"OK");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,OKBitmapDot,sizeof(OKBitmapDot));
+#endif
 				HAL_Delay(1000);
 				return 0;
 		}
@@ -417,11 +544,90 @@ uint8_t verifyCodeGetPin(uint8_t state,uint8_t PinCode[8])
 #ifdef printf_debug			
 				printf("VerifyCrc ERROR \n");
 #endif
-				Asc8_16(176,9,"ERROR!!!");
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
 				HAL_Delay(1000);
 				return 4;
 		}
 }
+
+uint8_t verifyCodeSetPin(PASSPORT_SET_INFO* passport,uint8_t PinCode[8])
+{
+		uint8_t pin[8];//用户输入的PIN码
+		uint8_t MingWen[32];
+		uint8_t AnWen[32];
+		uint32_t Len_Out = 0;
+		uint32_t crc = 0;
+		
+		if(VerifyCode(pin,2) == 0)		//得到用户输入的有效6位PIN码
+				return 5;
+		crc = Utils_crc32(0,pin,6);//组合成8位的PIN码
+		pin[6] = crc & 0xff;
+		pin[7] = (crc>>8) & 0xff;
+		memmove(PinCode,pin,8);		
+				
+		memset(AnWen,0,32);
+		memset(MingWen,0,32);
+
+		if(My_DES_Decrypt(passport->NewMingWen,32,pin,AnWen,&Len_Out))
+		{
+#ifdef printf_debug			
+				printf("My_DES_Decrypt \n");
+#endif					
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
+				HAL_Delay(1000);
+				return 2;
+		}
+		if(Len_Out != 32)
+		{
+#ifdef printf_debug			
+				printf("My_DES_Decrypt Len_Out ERROR \n");
+#endif					
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
+				HAL_Delay(1000);
+				return 3;
+		}
+		if(Utils_verifycrc(AnWen,32))
+		{
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"OK");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,OKBitmapDot,sizeof(OKBitmapDot));
+#endif
+				HAL_Delay(1000);
+				return 0;
+		}
+		else
+		{
+#ifdef printf_debug			
+				printf("VerifyCrc ERROR \n");
+#endif
+#ifdef Chinese
+				Asc8_16(PASSPORD_RESULT_COLUMN,7,"ERROR");
+#endif
+#ifdef English			
+				Show_AscII_Picture(PASSPORD_RESULT_COLUMN,7,ERRORBitmapDot,sizeof(ERRORBitmapDot));
+#endif	
+				HAL_Delay(1000);
+				return 4;
+		}
+}
+
 /************************************************
 新钱包加密数据
 参数：

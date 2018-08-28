@@ -79,5 +79,7 @@ void drawInt(int x, int y, int num);
 int drawNumber(int x, int y, long long num, int len);
 int drawxNumber(int x, int y, long long num, int len);
 	
+//0816 new picture show function
+void Show_AscII_Picture(unsigned char x, unsigned char y,unsigned char *data, int len);
 
 #endif

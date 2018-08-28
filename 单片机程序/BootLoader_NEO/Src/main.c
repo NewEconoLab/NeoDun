@@ -1,28 +1,8 @@
 /*------------------------------------------------File Info---------------------------------------------
 ** File Name: main.c
-** Last modified Date:  2018-04-19
+** Created By: 		 hkh
 ** Last Version: 
 ** Descriptions: 
-**------------------------------------------------------------------------------------------------------
-** Created By: 		 hkh
-** Created date:   2017-11-14
-** Version: 
-** Descriptions: NEODUN BootLoader 
-**	
-** 1、APP程序从扇区4开始存储，前面扇区0-3，总共64KB，留给BootLoader程序
-** 2、APP程序存储在扇区4和扇区5，这两个扇区的大小为64+128KB
-** 3、HID的速度改善，修改Polling Interval（轮询间隔）
-** 4、AW9136的灵敏度由寄存器THR2-THR4设置
-** 5、修改N_THR2、N_THR3、N_THR4值，可更改按键S1-S3的灵敏度  默认值为0x2328  现改为0x0808
-** 6、插入USB开机出现异常，修改BootLoader主流程，只有进入升级状态，才枚举USBHID设备，调整主流程
-** 7、VID一致  PID不同，PID为22352时，表示这个是钱包;VID表示供应商识别码，PID表示产品识别码
-** 8、BootLoader问题，如果BootLoader停留的时间不够AW9136初始化，会导致程序进入AW9136的sleep模式，导致速度变慢
-				解决办法：只有进入升级界面的时候，才初始化AW9136，不然只初始化，中间按键有效
-** 9、通过写入0x1111进寄存器（N_OFR1~3）以及定义宏CNT_INT来提高AW9136的初始化速度
-** 10、增加触摸按键双击的识别N_TAPR1-2、N_TDTR、N_GIER寄存器的值,但是检测到双击操作时，单击也会被检测到
-** 11、亮度调整在OLED的0xC1处修改，可调范围：0-0xff
-** 12、注意USB的主从控制引脚，导致USB设备一直有效
-** 13、代码重构
 ********************************************************************************************************/
 #include "main.h"
 #include "stm32f4xx_hal.h"
@@ -52,26 +32,21 @@ static void MX_USART1_UART_Init(void);
 
 static uint8_t	usb_init_flag = 0;
 static uint8_t	aw9136_init_flag = 0;
-//HID数据处理变量
-static volatile uint8_t 	HID_PAGE_RECV[64];
-static volatile int 			HID_RECV_LEN  = 0;
-static volatile uint8_t 	hid_recv_flag = 0;
+static uint8_t	slot_data_read[32];
 
 int main(void)
 {
-		//清除程序跳转，残留的FLASH标识
+		//1 清除程序跳转，残留的FLASH标识
 		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
 													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-	
-		uint8_t	slot_data_read[32];
-		
-		//数据初始化
+			
+		//2 数据初始化
 		DATA_Init();
 		
-		//硬件初始化
+		//3 硬件初始化
 		BSP_Init();
 	
-		//加密芯片判断
+		//4 加密芯片读取
 		if(ReadAT204Flag(&BootFlag)==0)
 		{
 				Fill_RAM(0x00);
@@ -80,7 +55,7 @@ int main(void)
 				return 0;
 		}
 		
-		//调试和升级选择
+		//5 调试和升级选择
 		if(Have_App() == 0)       			//不存在APP程序
 		{
 				if(usb_init_flag == 0)
@@ -134,7 +109,7 @@ int main(void)
 				}
 		}
 		
-		//升级处理
+		//6 升级处理
 		if(BootFlag.flag.update)//需要升级
 		{
 				if(usb_init_flag == 0)
@@ -167,11 +142,18 @@ int main(void)
 				Hid_Need_Updata_Rp();
 				while(1)
 				{
-						if(hid_recv_flag)			//接收数据则处理
+						if(hid_index_read != hid_index_write)				//收到HID数据包
 						{
-								Hid_Data_Analysis((uint8_t *)HID_PAGE_RECV,HID_RECV_LEN);
-								hid_recv_flag = 0;
-						}
+								Hid_Data_Analysis(hid_recv_data[hid_index_read].data,hid_recv_data[hid_index_read].len);
+								memset(hid_recv_data[hid_index_read].data,0,64);
+								hid_index_read++;
+								if(hid_index_read == hid_index_write)
+								{
+									hid_index_write = 0;
+									hid_index_read = 0;
+								}
+						}						
+
 						if(BootFlag.flag.update_flag_failed)//一旦检测到更新失败，则退出程序
 						{
 								Fill_RAM(0x00);
@@ -180,7 +162,7 @@ int main(void)
 						}
 				}
 		}
-		//大厅app已安装，且不需要升级，则直接进入大厅app
+		//7 大厅app已安装，且不需要升级，则直接进入大厅app
 		iap_load_app(FLASH_APP0_ADDR);
 		return 0;
 }
@@ -366,9 +348,9 @@ void MX_RNG_Init(void)
 
 void USB_DataReceiveHander(uint8_t *data,int len)
 {
-		HID_RECV_LEN = len;
-		memmove((uint8_t *)HID_PAGE_RECV,data,len);
-		hid_recv_flag = 1;
+		memmove(&hid_recv_data[hid_index_write].data,data,len);
+		hid_recv_data[hid_index_write].len = len;
+		hid_index_write++;
 }
 
 /**

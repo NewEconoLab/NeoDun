@@ -3,6 +3,19 @@
 #include "Asc8x16.h" 	   //ascii 8*16字库
 #include "HZ12X12_S.h" 	   //12*12宋体自定义汉字库
 #include "bmp.h"
+#include "main_define.h"
+#ifdef English
+		#include "Eng_pic.h"
+#endif
+//__INLINE static uint8_t get_Ascii_width(uint8_t ch)
+//{
+//		return AscillIndexLen[ch-32];
+//}
+
+//__INLINE static int get_Ascii_index(uint8_t ch)
+//{
+//		return AscillIndexNum[ch-32];
+//}
 
 //向SSD1325写入一个字节。
 //dat:要写入的数据/命令
@@ -136,12 +149,14 @@ void OLED281_Init(void)
 
 }
 
+//列
 void Set_Column_Address(unsigned char a, unsigned char b) {
 	OLED_WR_Byte(0x15, OLED_CMD);			// Set Column Address
 	OLED_WR_Byte(a, OLED_DATA);			//   Default => 0x00
 	OLED_WR_Byte(b, OLED_DATA);			//   Default => 0x77
 }
 
+//行
 void Set_Row_Address(unsigned char a, unsigned char b) {
 	OLED_WR_Byte(0x75, OLED_CMD);			// Set Row Address
 	OLED_WR_Byte(a, OLED_DATA);			//   Default => 0x00
@@ -458,71 +473,60 @@ void Show_Pattern(unsigned char *Data_Pointer, unsigned char a, unsigned char b,
  数据转换程序：将2位分成1个字节存入显存，由于1个seg表示4个列所以要同时写2个字节即4个像素
  uchar DATA：取模来的字模数据
  ****************************************/
-void Con_4_byte(unsigned char DATA) {
-	unsigned char d1_4byte[4], d2_4byte[4];
-	unsigned char i;
-	unsigned char d, k1, k2;
-	d = DATA;
+void Con_4_byte(unsigned char DATA) 
+{
+		unsigned char d1_4byte[4], d2_4byte[4];
+		unsigned char i;
+		unsigned char d, k1, k2;
+		d = DATA;
 
-	for (i = 0; i < 2; i++)   // 一两位的方式写入  2*4=8位
-			{
-		k1 = d & 0xc0;     //当i=0时 为D7,D6位 当i=1时 为D5,D4位
+		for (i = 0; i < 2; i++)   // 一两位的方式写入  2*4=8位
+		{
+				k1 = d & 0xc0;     		//当i=0时 为D7,D6位 当i=1时 为D5,D4位
+				/****有4种可能，16级灰度,一个字节数据表示两个像素，一个像素对应一个字节的4位***/
+				switch (k1)
+				{
+						case 0x00:
+								d1_4byte[i] = 0x00;
+								break;
+						case 0x40:  // 0100,0000
+								d1_4byte[i] = 0x0f;
+								break;
+						case 0x80:  //1000,0000
+								d1_4byte[i] = 0xf0;
+								break;
+						case 0xc0:   //1100,0000
+								d1_4byte[i] = 0xff;
+								break;
+						default:
+								break;
+				}
 
-		/****有4种可能，16级灰度,一个字节数据表示两个像素，一个像素对应一个字节的4位***/
+				d = d << 2;
+				k2 = d & 0xc0;     //当i=0时 为D7,D6位 当i=1时 为D5,D4位
+				/****有4种可能，16级灰度,一个字节数据表示两个像素，一个像素对应一个字节的4位***/
 
-		switch (k1) {
-		case 0x00:
-			d1_4byte[i] = 0x00;
-
-			break;
-		case 0x40:  // 0100,0000
-			d1_4byte[i] = 0x0f;
-
-			break;
-		case 0x80:  //1000,0000
-			d1_4byte[i] = 0xf0;
-
-			break;
-		case 0xc0:   //1100,0000
-			d1_4byte[i] = 0xff;
-
-			break;
-		default:
-			break;
+				switch (k2) 
+				{
+						case 0x00:
+								d2_4byte[i] = 0x00;
+								break;
+						case 0x40:  // 0100,0000
+								d2_4byte[i] = 0x0f;
+								break;
+						case 0x80:  //1000,0000
+								d2_4byte[i] = 0xf0;
+								break;
+						case 0xc0:   //1100,0000
+								d2_4byte[i] = 0xff;
+								break;
+						default:
+								break;
+				}
+				d = d << 2;                               //左移两位
+				OLED_WR_Byte(d1_4byte[i], OLED_DATA);	    //写前2列
+				OLED_WR_Byte(d2_4byte[i], OLED_DATA);     //写后2列	  共计4列
 		}
-
-		d = d << 2;
-		k2 = d & 0xc0;     //当i=0时 为D7,D6位 当i=1时 为D5,D4位
-
-		/****有4种可能，16级灰度,一个字节数据表示两个像素，一个像素对应一个字节的4位***/
-
-		switch (k2) {
-		case 0x00:
-			d2_4byte[i] = 0x00;
-
-			break;
-		case 0x40:  // 0100,0000
-			d2_4byte[i] = 0x0f;
-
-			break;
-		case 0x80:  //1000,0000
-			d2_4byte[i] = 0xf0;
-
-			break;
-		case 0xc0:   //1100,0000
-			d2_4byte[i] = 0xff;
-
-			break;
-		default:
-			break;
-		}
-
-		d = d << 2;                                //左移两位
-
-		OLED_WR_Byte(d1_4byte[i], OLED_DATA);	    //写前2列
-		OLED_WR_Byte(d2_4byte[i], OLED_DATA);               //写后2列	  共计4列
-	}
-
 }
 
 /***************************************************************
@@ -563,7 +567,8 @@ void Show_HZ12_12(unsigned char x, unsigned char y, unsigned char num1, unsigned
 //参数：显示的位置（x,y），ch[]要显示的字符串
 //返回：无
 //==============================================================  
-void Asc8_16(unsigned char x, unsigned char y, unsigned char ch[]) {
+void Asc8_16(unsigned char x, unsigned char y, unsigned char ch[]) 
+{
 	unsigned char x1, c = 0, i = 0, j = 0;
 	while (ch[i] != '\0') {
 		x1 = x / 4;
@@ -741,3 +746,17 @@ int drawxNumber(int x, int y, long long num, int len)
 		return 0;
 }
 
+void Show_AscII_Picture(unsigned char x, unsigned char y,unsigned char *data, int len)
+{
+		unsigned char x1, i=0;   
+		
+		x1=x/4;
+		Set_Column_Address(OLED_SHIFT+x1,OLED_SHIFT+x1+len/8-1); // 设置列坐标，shift为列偏移量由1322决定 
+		Set_Row_Address(y,y+15); 
+		Set_Write_RAM();	 //	写显存    
+				
+		for(i=0;i<len;i++)
+		{	
+				Con_4_byte(data[i]);	//数据转换
+		}
+}

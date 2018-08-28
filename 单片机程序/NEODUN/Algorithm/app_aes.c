@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// AES 使用的密码，可以考虑通过SHA256得来
-
-
 int32_t STM32_AES_ECB_Encrypt(uint8_t* InputMessage,
                         uint32_t InputMessageLength,
                         uint8_t  *AES256_Key,

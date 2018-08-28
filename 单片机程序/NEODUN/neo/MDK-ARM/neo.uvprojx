@@ -365,7 +365,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm;..\..\ATSHA204\Appatsha204;..\..\ATSHA204\Atsha204_hw;..\..\ATSHA204\lib;..\..\Hardware;..\..\APP</IncludePath>
+              <IncludePath>..\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy;..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc;..\Drivers\CMSIS\Include;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;..\..\STM32_Cryptographic_Library\inc;..\..\Algorithm;..\..\ATSHA204\Appatsha204;..\..\ATSHA204\Atsha204_hw;..\..\ATSHA204\lib;..\..\Hardware;..\..\APP;..\..\Hardware\OLED281</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -693,6 +693,11 @@
               <FileType>4</FileType>
               <FilePath>..\..\APP\Sha256.lib</FilePath>
             </File>
+            <File>
+              <FileName>tick_stm32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\APP\tick_stm32.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -772,11 +777,6 @@
               <FileName>oled281.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Hardware\OLED281\oled281.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Hardware\timer.c</FilePath>
             </File>
             <File>
               <FileName>sys.c</FileName>

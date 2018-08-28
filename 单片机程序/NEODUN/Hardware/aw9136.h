@@ -195,9 +195,6 @@
 #define     WADDR    	 	0x7e
 #define     WDATA    	 	0x7f
 
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 uint16_t I2C_read_reg(uint8_t ReadAddr);
 void I2C_write_reg(uint8_t WriteAddr,uint16_t DataToWrite);
@@ -230,8 +227,6 @@ void AW_LedReleaseTouch(void);
 void Key_Control(unsigned char value);
 void Motor_touch(int time);
 
-#ifdef __cplusplus
- }
-#endif
+
 
 #endif
