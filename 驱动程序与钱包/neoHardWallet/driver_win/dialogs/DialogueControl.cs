@@ -94,24 +94,22 @@ namespace driver_win.dialogs
         }
 
         static MessageBox messageBox;
-        public  static ND_MessageBoxResult ShowMessageBox(string messageBoxText, ND_MessageBoxButton button,long waitTime = 0)
+        public async  static Task<ND_MessageBoxResult> ShowMessageBox(string messageBoxText, ND_MessageBoxButton button,long waitTime = 999999)
         {
             if (messageBox != null)
             {
                 messageBox.Close();
+                list.Remove(messageBox);
             }
             messageBox = new MessageBox();
             list.Add(messageBox);
-            Console.WriteLine(messageBoxText);
             messageBox.WindowStartupLocation = WindowStartupLocation.Manual;
             messageBox.Left = MainDialogue.mainDialogue.Left + 250;
             messageBox.Top = MainDialogue.mainDialogue.Top+47;
             messageBox.Owner = MainDialogue.mainDialogue;
             //messageBox.IsHitTestVisible = false;
             //messageBox.Focusable = false;
-            messageBox.Show(messageBoxText, button, waitTime);
-            ND_MessageBoxResult result = messageBox.nD_MessageBoxResult;
-            list.Remove(messageBox);
+            ND_MessageBoxResult result = await messageBox.Show(messageBoxText, button, waitTime);
             return result;
         }
     }

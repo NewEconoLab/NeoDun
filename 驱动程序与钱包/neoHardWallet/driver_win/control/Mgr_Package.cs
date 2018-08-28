@@ -15,6 +15,7 @@ namespace driver_win.control
             EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
             EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
             result.msgCode = enumMsgCode;
+            result.errorCode = enumErrorCode;
         }
 
         public override void Init()
@@ -38,11 +39,14 @@ namespace driver_win.control
     //安装（升级）固件
     class InstallFramework : Control
     {
+        protected bool needRestart = true;
+
         public override void HandleMsg(params object[] _params)
         {
             EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
             EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
             result.msgCode = enumMsgCode;
+            result.errorCode = enumErrorCode;
         }
 
         public override void Init()
@@ -119,11 +123,14 @@ namespace driver_win.control
     //安装升级插件
     class InstallPlugin : Control
     {
+        protected bool needRestart = true;
+
         public override void HandleMsg(params object[] _params)
         {
             EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
             EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
             result.msgCode = enumMsgCode;
+            result.errorCode = enumErrorCode;
         }
 
         public override void Init()
@@ -202,6 +209,7 @@ namespace driver_win.control
             EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
             EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
             result.msgCode = enumMsgCode;
+            result.errorCode = enumErrorCode;
         }
 
         public override void Init()

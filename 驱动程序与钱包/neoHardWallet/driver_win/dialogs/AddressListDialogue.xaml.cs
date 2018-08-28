@@ -134,7 +134,7 @@ namespace driver_win.dialogs
             if (result.msgCode == EnumMsgCode.DeletingName)
                 return;
             this.message.Visibility = Visibility.Collapsed;
-            DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 1, this);
+            //DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 1, this);
             GetAddressList();
         }
 

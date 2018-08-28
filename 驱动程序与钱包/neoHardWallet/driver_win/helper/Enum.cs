@@ -133,7 +133,8 @@ namespace driver_win.helper
         //
         // 摘要:
         //     The result value of the message box is No.
-        No = 7
+        No = 7,
+        Restart = 8,
     }
 
     //
@@ -153,7 +154,9 @@ namespace driver_win.helper
         //
         // 摘要:
         //     The message box displays Yes, No, and Cancel buttons.
-        None = 2
+        None = 2,
+        
+        RestartCancel =3
 
     }
 

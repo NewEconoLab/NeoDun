@@ -16,6 +16,8 @@ namespace driver_win.control
 
         protected Signer signer = Signer.Ins;
 
+        protected bool needRestart = false;
+
         protected bool wait;
 
         public async void Done(params object[] _params)
@@ -34,7 +36,7 @@ namespace driver_win.control
         public async Task<Result> ToDo(params object[] _params)
         {
             Init();
-            dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None);
+            await dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None);
             if (!await SendMsg(_params))
                 return result;
 
@@ -44,7 +46,16 @@ namespace driver_win.control
             {
                 await Task.Delay(100);
             }
-            dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None,3);
+            if (needRestart&& result.errorCode!= EnumErrorCode.NoError)
+            {
+                var r =await dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.RestartCancel,999);
+                if (r == ND_MessageBoxResult.Restart)
+                    return await this.ToDo(_params);
+            }
+            else
+            {
+                await dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None, 3);
+            }
             return result;
         }
 

@@ -289,6 +289,8 @@ namespace NeoDun
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
+                    var a = msg.readUInt16(0);
+                    var aa = a.ToString("x4");
                     EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
                     eventHandler(EnumControl.DelAddress, EnumMsgCode.DeleteNameFailed, errorCode);
                 }
@@ -325,7 +327,6 @@ namespace NeoDun
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
                 {
                     var epoch = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-                    Console.WriteLine(epoch);
                     var pos = msg.readUInt16(0);
                     var count = msg.readUInt16(2);
                     var type = (NeoDun.AddressType)msg.readUInt16(4);

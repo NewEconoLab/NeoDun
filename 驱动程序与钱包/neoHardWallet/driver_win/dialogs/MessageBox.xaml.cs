@@ -32,62 +32,88 @@ namespace driver_win.dialogs
             this.cancel.Text = Mgr_Language.Ins.Code2Word(this.cancel.Text);
         }
 
-        public ND_MessageBoxResult nD_MessageBoxResult;
+        public ND_MessageBoxResult nD_MessageBoxResult = ND_MessageBoxResult.None;
 
-        public void Show(string messageBoxText,ND_MessageBoxButton button,long waitTime=0)
+        public async Task<ND_MessageBoxResult> Show(string messageBoxText,ND_MessageBoxButton button,long waitTime)
         {
-            this.restart.Visibility = Visibility.Hidden;
+            this.confirm.Text = Mgr_Language.Ins.Code2Word(this.confirm.Text);
+            this.cancel.Text = Mgr_Language.Ins.Code2Word(this.cancel.Text);
+            this.restart.Text = Mgr_Language.Ins.Code2Word(this.restart.Text);
             this.msg.Content = messageBoxText;
             if (button == ND_MessageBoxButton.OK)
             {
-                Grid.SetColumn(this.confirm,2);
-                Grid.SetRow(this.confirm, 1);
+                Grid.SetColumn(this.confirm, 4);
+                Grid.SetRow(this.confirm, 0);
                 this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Hidden;
+                this.restart.Visibility = Visibility.Hidden;
+
             }
             else if (button == ND_MessageBoxButton.OKCancel)
             {
-                Grid.SetColumn(this.confirm, 1);
-                Grid.SetRow(this.confirm, 1);
-                Grid.SetColumn(this.cancel, 3);
+                Grid.SetColumn(this.confirm, 4);
+                Grid.SetRow(this.confirm, 0);
+                Grid.SetColumn(this.cancel, 4);
                 Grid.SetRow(this.cancel, 1);
                 this.confirm.Visibility = Visibility.Visible;
                 this.cancel.Visibility = Visibility.Visible;
+                this.restart.Visibility = Visibility.Hidden;
+
+            }
+            else if (button == ND_MessageBoxButton.RestartCancel)
+            {
+                Grid.SetColumn(this.restart, 4);
+                Grid.SetRow(this.restart, 0);
+                Grid.SetColumn(this.cancel, 4);
+                Grid.SetRow(this.cancel, 1);
+                this.confirm.Visibility = Visibility.Hidden;
+                this.cancel.Visibility = Visibility.Visible;
+                this.restart.Visibility = Visibility.Visible;
             }
             else
             {
                 this.confirm.Visibility = Visibility.Hidden;
                 this.cancel.Visibility = Visibility.Hidden;
+                this.restart.Visibility = Visibility.Hidden;
+
             }
             this.Show();
-            if (waitTime == 0)
-                return;
+            if (waitTime ==  999999)
+            {
+                return nD_MessageBoxResult;
+            }
             int i = 0;
             while (true)
             {
-                System.Threading.Thread.Sleep(1000);
+                await Task.Delay(1000);
                 i++;
                 if (i >= waitTime)
+                {
+                    this.Close();
                     break;
+                }
+                if (nD_MessageBoxResult != ND_MessageBoxResult.None)
+                {
+                    this.Close();
+                    break;
+                }
             }
-            this.Hide();
+            return nD_MessageBoxResult;
         }
 
         private void Click_OK(object sender, RoutedEventArgs e)
         {
             nD_MessageBoxResult = ND_MessageBoxResult.OK;
-            this.DialogResult = true;
         }
 
         private void Click_CANCEL(object sender, RoutedEventArgs e)
         {
             nD_MessageBoxResult = ND_MessageBoxResult.Cancel;
-            this.DialogResult = true;
         }
 
         private void Click_Restart(object sender, MouseButtonEventArgs e)
         {
-
+            nD_MessageBoxResult = ND_MessageBoxResult.Restart;
         }
     }
 }

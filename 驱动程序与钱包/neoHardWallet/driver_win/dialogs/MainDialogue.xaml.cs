@@ -32,9 +32,13 @@ namespace driver_win.dialogs
         {
             InitializeComponent();
             mainDialogue = this;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitPage();
             DriverS.Init();
 
+            byte[] a = new byte[2] { 0x01, 0x04 };
+            int value;
+            value = (int)((a[0] & 0xFF) | ((a[1] & 0xFF) << 8));
 
             this.list_btns.Add(this.Btn_Framework_update);
             this.list_btns.Add(this.manageAddr);
@@ -50,7 +54,7 @@ namespace driver_win.dialogs
 
             hhgate.CustomServer.BeginServer();
 
-            var a = Mgr_Language.Ins;
+            var ins = Mgr_Language.Ins;
         }
 
         public static MainDialogue mainDialogue;
@@ -153,7 +157,7 @@ namespace driver_win.dialogs
         }
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            //this.DragMove();
         }
 
         private void Btn_Minimized(object sender, RoutedEventArgs e)
@@ -429,7 +433,7 @@ namespace driver_win.dialogs
             }
             if (needConfirm)
             {
-                ND_MessageBoxResult nD_MessageBoxResult =DialogueControl.ShowMessageBox("你有地址需要用到这个插件，是否确认卸载",ND_MessageBoxButton.OKCancel);
+                ND_MessageBoxResult nD_MessageBoxResult =await DialogueControl.ShowMessageBox("你有地址需要用到这个插件，是否确认卸载",ND_MessageBoxButton.OKCancel,99999);
 
                 if (nD_MessageBoxResult == ND_MessageBoxResult.OK)
                 {

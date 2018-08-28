@@ -56,20 +56,18 @@ namespace driver_win.dialogs
             {
                 Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
 
-                if (result.msgCode == EnumMsgCode.AddAddressSuc)
-                {
-                    this.Close();
+                this.Close();
+                await Task.Delay(500);
+                DialogueControl.ShowAddressListDialogue(this.Owner);
 
-                    DialogueControl.ShowMessageDialogue("添加成功", 2, this.Owner);
-
-                    await Task.Delay(500);
-
-                    DialogueControl.ShowAddressListDialogue(this.Owner);
-                }
-                else
-                {
-                    DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
-                }
+                //if (result.msgCode == EnumMsgCode.AddAddressSuc)
+                //{
+                //
+                //}
+                //else
+                //{
+                //    DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
+                //}
             }
         }
 
