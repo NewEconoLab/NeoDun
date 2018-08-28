@@ -283,44 +283,43 @@ namespace NeoDun
                 //设置地址名称失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe2)
                 {
-                    //setNameEventHandler("失败");
-                    eventHandler( EnumControl.SetName,EnumError.SetNameFailed);
+                    EnumErrorCode errorCode =(EnumErrorCode) msg.readUInt16(0);
+                    eventHandler( EnumControl.SetName,EnumMsgCode.SetNameFailed,errorCode);
                 }
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
-                    eventHandler(EnumControl.DelAddress,EnumError.DelAddressFailed);
-
-                    //if (errorEventHandler != null)
-                    //    delAddressEventHandler(false);
+                    EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
+                    eventHandler(EnumControl.DelAddress, EnumMsgCode.DeleteNameFailed, errorCode);
                 }
                 //增加地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe4)
                 {
-                    eventHandler(EnumControl.AddAddress,EnumError.AddAddressFailed);
-
-                    //if (addAddressEventHandler != null)
-                    //    addAddressEventHandler(false);
+                    EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
+                    eventHandler(EnumControl.AddAddress, EnumMsgCode.AddAddressFailed,errorCode);
                 }
                 //签名失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe5)
                 {
-                    eventHandler(EnumControl.SignData, EnumError.SignFailed);
+                    EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
+                    eventHandler(EnumControl.SignData, EnumMsgCode.SignFailed, errorCode);
                 }
                 //安装失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe1)
                 {
-                    eventHandler(EnumControl.Common, EnumError.InstallFailed);
+                    EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
+                    eventHandler(EnumControl.Common, EnumMsgCode.InstallFailed, errorCode);
                 }
                 //拒绝更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe2)
                 {
-                    eventHandler(EnumControl.ApplyInstallFramework,EnumError.RefuseInstallFramework);
+                    eventHandler(EnumControl.ApplyInstallFramework, EnumMsgCode.RefuseUpdate);
                 }
                 //卸载失败
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xe3)
                 {
-                    eventHandler(EnumControl.UninstallPlugin, EnumError.UninstallFailed);
+                    EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
+                    eventHandler(EnumControl.UninstallPlugin, EnumMsgCode.UninstallFailed, errorCode);
                 }
                 //收到地址,//加进地址池子里
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa0)
@@ -339,22 +338,22 @@ namespace NeoDun
                 //地址接受完毕
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa1)
                 {
-                    eventHandler(EnumControl.GetAddress);
+                    eventHandler(EnumControl.GetAddress,EnumMsgCode.GetAddressSuc,EnumErrorCode.NoError);
                 }
                 //设置地址名称成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa2)
                 {
-                    eventHandler(EnumControl.SetName,EnumError.SetNameSuc);
+                    eventHandler(EnumControl.SetName,EnumMsgCode.SetNameSuc, EnumErrorCode.NoError);
                 }
                 //删除地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa3)
                 {
-                    eventHandler(EnumControl.DelAddress,EnumError.DelAddressSuc);
+                    eventHandler(EnumControl.DelAddress, EnumMsgCode.DeleteNameSuc, EnumErrorCode.NoError);
                 }
                 //增加地址成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa4)
                 {
-                    eventHandler(EnumControl.AddAddress,EnumError.AddAddressSuc);
+                    eventHandler(EnumControl.AddAddress, EnumMsgCode.AddAddressSuc, EnumErrorCode.NoError);
                 }
                 //签名成功
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xa5)
@@ -373,29 +372,29 @@ namespace NeoDun
                             break;
                         }
                     }
-                    eventHandler(EnumControl.SignData,EnumError.SignSuc,outdata);
+                    eventHandler(EnumControl.SignData, EnumMsgCode.SignSuc, EnumErrorCode.NoError, outdata);
                 }
                 //安装成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa1)
                 {
-                    eventHandler(EnumControl.Common,EnumError.InstallSuc);
+                    eventHandler(EnumControl.Common, EnumMsgCode.InstallSuc, EnumErrorCode.NoError);
                 }
                 //同意更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa2)
                 {
-                    eventHandler(EnumControl.ApplyInstallFramework,EnumError.AgreeInstallFramework);
+                    eventHandler(EnumControl.ApplyInstallFramework, EnumMsgCode.AgreeUpdate, EnumErrorCode.NoError);
                 }
                 //卸载成功
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa3)
                 {
-                    eventHandler(EnumControl.UninstallPlugin,EnumError.UninstallSuc);
+                    eventHandler(EnumControl.UninstallPlugin, EnumMsgCode.UninstallSuc, EnumErrorCode.NoError);
                 }
                 //查询固件插件版本回复
                 if (msg.tag1 == 0x03 && msg.tag2 == 0xa4)
                 {
                     byte[] outdata = null;
                     outdata = msg.data;
-                    eventHandler(EnumControl.GetPackage,outdata);
+                    eventHandler(EnumControl.GetPackage, EnumMsgCode.GetMessageSuc, EnumErrorCode.NoError, outdata);
                 }
                 //下位机请求更新固件
                 if (msg.tag1 == 0x03 && msg.tag2 == 0x11)
@@ -419,7 +418,7 @@ namespace NeoDun
                             break;
                         }
                     }
-                    eventHandler(EnumControl.SecurityChannel, EnumError.SecurityChannelSuc, outdata);
+                    eventHandler(EnumControl.SecurityChannel, EnumMsgCode.BuildSecurityChannelSuc,EnumErrorCode.NoError, outdata);
                 }
             });
             watcherColl.OnRecv(msg, srcmsg);

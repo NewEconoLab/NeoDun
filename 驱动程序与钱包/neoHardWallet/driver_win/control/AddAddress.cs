@@ -12,7 +12,14 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            result.errorCode = (EnumError)_params[0];
+            result.msgCode = (EnumMsgCode)_params[0];
+            result.errorCode = (EnumErrorCode)_params[1];
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.AddingAddress;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)
@@ -29,7 +36,8 @@ namespace driver_win.control
             }
             catch (Exception e)
             {
-                result.errorCode = EnumError.IncorrectWif;
+                result.msgCode = EnumMsgCode.AddAddressFailed;
+                result.errorCode = EnumErrorCode.IncorrectWif;
                 return false;
             }
 
@@ -38,7 +46,8 @@ namespace driver_win.control
             {
                 if (add.AddressText == str_address)
                 {
-                    result.errorCode = EnumError.DuplicateWif;
+                    result.msgCode = EnumMsgCode.AddAddressFailed;
+                    result.errorCode = EnumErrorCode.DuplicateWif;
                     return false;
                 }
             }
@@ -68,10 +77,10 @@ namespace driver_win.control
                         break;
                     }
                 }
-                //uint remoteid = await __block.GetRemoteid();
                 if (remoteid == 0)
                 {
-                    result.errorCode = EnumError.CommonFailed;
+                    result.msgCode = EnumMsgCode.AddAddressFailed;
+                    result.errorCode = EnumErrorCode.IncorrectHash;
                     Release();
                     return false;
                 }
@@ -90,7 +99,8 @@ namespace driver_win.control
             }
             catch (Exception e)
             {
-                result.errorCode = EnumError.IncorrectWif;
+                result.errorCode = EnumErrorCode.IncorrectWif;
+                result.msgCode = EnumMsgCode.AddAddressFailed;
                 Release();
                 return false;
             }

@@ -12,9 +12,10 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
             MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
-            if (enumError == EnumError.SignSuc)
+            if (enumMsgCode == EnumMsgCode.SignSuc)
             {
                 byte[] _outdata = (byte[])_params[1];
                 var pubkeylen = _outdata[0];
@@ -31,8 +32,14 @@ namespace driver_win.control
                 json["pubkey"] = new MyJson.JsonNode_ValueString("");
                 json["tag"] = new MyJson.JsonNode_ValueNumber(0);
             }
-            result.errorCode = enumError;
+            result.msgCode = enumMsgCode;
             result.data = json;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.Signing;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)

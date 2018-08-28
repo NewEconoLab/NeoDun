@@ -85,8 +85,29 @@ namespace driver_win.helper
         {
             if (curDic.ContainsKey(code))
                 return curDic[code];
-            return "null";
+            return "";
         }
 
+        public string Code2Word(EnumMsgCode enumMsgCode, EnumErrorCode enumErrorCode)
+        {
+            return  Msg2Word(enumMsgCode) +Error2Word(enumErrorCode);
+        }
+
+
+        private string Error2Word(EnumErrorCode enumErrorCode)
+        {
+            string errorCode = "$error_"+((uint)enumErrorCode).ToString("x4");
+            if (curDic.ContainsKey(errorCode))
+                return curDic[errorCode];
+            return "";
+        }
+
+        private string Msg2Word(EnumMsgCode enumMsgCode)
+        {
+            string msgCode = "$msg_" + ((uint)enumMsgCode).ToString("x4");
+            if (curDic.ContainsKey(msgCode))
+                return curDic[msgCode];
+            return "";
+        }
     }
 }

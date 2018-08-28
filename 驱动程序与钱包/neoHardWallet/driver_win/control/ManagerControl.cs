@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace driver_win.control
 {
@@ -36,18 +37,17 @@ namespace driver_win.control
             dic.Add(EnumControl.GetPackage, new GetPackageInfo());
             dic.Add(EnumControl.SignData, new SignData());
             dic.Add(EnumControl.ApplyInstallFramework,new ApplyUpdateFramework());
-            dic.Add(EnumControl.InstallFramework, new InstallFramework());
+            dic.Add(EnumControl.InstallFramework, new InstallFramework()); 
             dic.Add(EnumControl.InstallPlugin, new InstallPlugin());
             dic.Add(EnumControl.UninstallPlugin, new UninstallPlugin());
             dic.Add(EnumControl.SecurityChannel, new SecurityChannel());
         }
 
-        public async Task<Result> ToDo(EnumControl enumControl, params object[] _params)
+        public async Task<Result> ToDo(EnumControl enumControl,params object[] _params)
         {
             if (Lock)
             {
                 Result result = new Result();
-                result.errorCode = EnumError.Doing;
                 return result;
             }
             Lock = true;

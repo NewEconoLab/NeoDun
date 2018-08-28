@@ -36,12 +36,8 @@ namespace driver_win.dialogs
             this.lb_page_index.Content = Mgr_Language.Ins.Code2Word(this.lb_page_index.Content.ToString());
             this.lb_page_name.Content = Mgr_Language.Ins.Code2Word(this.lb_page_name.Content.ToString());
             this.lb_page_wallet.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wallet.Content.ToString());
-
             this.lb_page_message_1.Text = Mgr_Language.Ins.Code2Word(this.lb_page_message_1.Text);
             this.lb_page_message_2.Text = Mgr_Language.Ins.Code2Word(this.lb_page_message_2.Text);
-
-            //this.lb_msg_name.Text = Mgr_Language.Ins.Code2Word(this.lb_msg_name.Text);
-            //this.lb_msg_addr.Text = Mgr_Language.Ins.Code2Word(this.lb_msg_addr.Text);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -68,9 +64,8 @@ namespace driver_win.dialogs
         private async void GetAddressList()
         {
             this.listbox.Items.Clear();
-            //var address = await driverControl.GetAddressList();
             Result result = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
-            if (result.errorCode != EnumError.CommonSuc)
+            if (result.msgCode != EnumMsgCode.GetAddressSuc)
                 return;
             var address = (System.Collections.Concurrent.ConcurrentBag<NeoDun.Address>)result.data;
             var demoItem = this.listboxDemo.Items[0] as ListBoxItem;
@@ -136,7 +131,7 @@ namespace driver_win.dialogs
             //string result = await driverControl.DeleteAddress(type.ToString(),address.ToString());
 
             Result result = await ManagerControl.Ins.ToDo(EnumControl.DelAddress, type.ToString(), address.ToString());
-            if (result.errorCode == EnumError.Doing)
+            if (result.msgCode == EnumMsgCode.DeletingName)
                 return;
             this.message.Visibility = Visibility.Collapsed;
             DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 1, this);

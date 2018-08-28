@@ -31,6 +31,7 @@ namespace driver_win.dialogs
         public MainDialogue()
         {
             InitializeComponent();
+            mainDialogue = this;
             InitPage();
             DriverS.Init();
 
@@ -51,6 +52,8 @@ namespace driver_win.dialogs
 
             var a = Mgr_Language.Ins;
         }
+
+        public static MainDialogue mainDialogue;
 
         void InitPage()
         {
@@ -330,7 +333,7 @@ namespace driver_win.dialogs
 
             //bool result = await driverControl.ApplyForUpdate();
             Result result = await ManagerControl.Ins.ToDo(EnumControl.ApplyInstallFramework);
-            if (result.errorCode == EnumError.AgreeInstallFramework)
+            if (result.msgCode == EnumMsgCode.AgreeUpdate)
             {
                 DialogueControl.ShowMessageDialogue(result.errorCode.ToString(), 2, this);
 
@@ -393,8 +396,8 @@ namespace driver_win.dialogs
             var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
             byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);
             
-            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin,data, type, content, version);
-            if (result.errorCode == EnumError.InstallSuc)
+            Result result = await ManagerControl.Ins.ToDo(EnumControl.InstallPlugin, data, type, content, version);
+            if (result.msgCode == EnumMsgCode.InstallSuc)
             {
                 DialogueControl.ShowMessageDialogue("安装成功",2, this);
                 GetPackageInfo();
@@ -426,12 +429,12 @@ namespace driver_win.dialogs
             }
             if (needConfirm)
             {
-                ND_MessageBoxResult nD_MessageBoxResult =DialogueControl.ShowMessageBox(this,"你有地址需要用到这个插件，是否确认卸载",ND_MessageBoxButton.OKCancel);
+                ND_MessageBoxResult nD_MessageBoxResult =DialogueControl.ShowMessageBox("你有地址需要用到这个插件，是否确认卸载",ND_MessageBoxButton.OKCancel);
 
                 if (nD_MessageBoxResult == ND_MessageBoxResult.OK)
                 {
-                    Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, content);
-                    if (result.errorCode == EnumError.UninstallSuc)
+                    Result result = await ManagerControl.Ins.ToDo(EnumControl.UninstallPlugin, this, content);
+                    if (result.msgCode == EnumMsgCode.UninstallSuc)
                     {
                         DialogueControl.ShowMessageDialogue("卸载成功", 2, this);
                         GetPackageInfo();

@@ -12,8 +12,15 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
-            result.errorCode = enumError;
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+            result.msgCode = enumMsgCode;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.TryUpdate;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)
@@ -33,8 +40,15 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
-            result.errorCode = enumError;
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+            result.msgCode = enumMsgCode;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.Installing;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)
@@ -66,7 +80,8 @@ namespace driver_win.control
                     uint remoteid = await __block.GetRemoteid();
                     if (remoteid == 0)
                     {
-                        result.errorCode = EnumError.CommonFailed;
+                        result.msgCode = EnumMsgCode.InstallFailed;
+                        result.errorCode = EnumErrorCode.IncorrectHash;
                     }
                     remoteids.Add((uint)remoteid);
                     __block.dataidRemote = 0;
@@ -91,7 +106,8 @@ namespace driver_win.control
             }
             catch (Exception e)
             {
-                result.errorCode = EnumError.CommonFailed;
+                result.msgCode = EnumMsgCode.InstallFailed;
+                result.errorCode = EnumErrorCode.IncorrectHash;
                 return false;
             }
         }
@@ -105,8 +121,15 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
-            result.errorCode = enumError;
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+            result.msgCode = enumMsgCode;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.Installing;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)
@@ -138,7 +161,8 @@ namespace driver_win.control
                     uint remoteid = await __block.GetRemoteid();
                     if (remoteid == 0)
                     {
-                        result.errorCode = EnumError.CommonFailed;
+                        result.msgCode = EnumMsgCode.InstallFailed;
+                        result.errorCode = EnumErrorCode.IncorrectHash;
                     }
                     remoteids.Add((uint)remoteid);
                     __block.dataidRemote = 0;
@@ -162,8 +186,8 @@ namespace driver_win.control
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                result.errorCode = EnumError.CommonFailed;
+                result.msgCode = EnumMsgCode.InstallFailed;
+                result.errorCode = EnumErrorCode.IncorrectHash;
                 return false;
             }
         }
@@ -175,8 +199,15 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
-            result.errorCode = enumError;
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+            result.msgCode = enumMsgCode;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.Uninstalling;
+            result.errorCode = EnumErrorCode.NoError;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)

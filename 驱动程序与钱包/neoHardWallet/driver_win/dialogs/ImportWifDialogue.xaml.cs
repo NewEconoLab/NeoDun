@@ -56,7 +56,7 @@ namespace driver_win.dialogs
             {
                 Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, this.label_Wif.Text.ToString());
 
-                if (result.errorCode == EnumError.AddAddressSuc)
+                if (result.msgCode == EnumMsgCode.AddAddressSuc)
                 {
                     this.Close();
 

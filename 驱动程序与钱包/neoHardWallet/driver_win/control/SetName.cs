@@ -12,7 +12,15 @@ namespace driver_win.control
 
         public override void HandleMsg(params object[] _params)
         {
-            result.errorCode = (EnumError)_params[0];
+            result.msgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.SettingName;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)
@@ -22,7 +30,8 @@ namespace driver_win.control
 
             if (bytes_name.Length > 6)
             {
-                result.errorCode = EnumError.LongName;
+                result.msgCode = EnumMsgCode.SetNameFailed;
+                result.errorCode = EnumErrorCode.AddressNameTooLong;
                 return false;
             }
 

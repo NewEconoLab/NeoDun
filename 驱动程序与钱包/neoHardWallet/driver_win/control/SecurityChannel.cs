@@ -11,14 +11,21 @@ namespace driver_win.control
     {
         public override void HandleMsg(params object[] _params)
         {
-            EnumError enumError = (EnumError)_params[0];
-            if (enumError == EnumError.SecurityChannelSuc)
+            EnumMsgCode enumMsgCode = (EnumMsgCode)_params[0];
+            EnumErrorCode enumErrorCode = (EnumErrorCode)_params[1];
+            if (enumMsgCode == EnumMsgCode.BuildSecurityChannelSuc)
             {
-                byte[] data = (byte[])_params[1];
+                byte[] data = (byte[])_params[2];
                 ECDH.Ins.pubKey_B = data;
                 ECDH.Ins.CalM(data);
             }
 
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.BuildingSecurityChannel;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)

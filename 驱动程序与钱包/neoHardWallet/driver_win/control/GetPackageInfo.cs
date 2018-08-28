@@ -12,8 +12,9 @@ namespace driver_win.control
 
         public override void HandleMsg(params object[] _params)
         {
-            result.errorCode = EnumError.CommonSuc;
-            byte[] data = (byte[])_params[0];
+            result.msgCode = (EnumMsgCode)_params[0];
+            result.errorCode = (EnumErrorCode)_params[1];
+            byte[] data = (byte[])_params[2];
             string appVersion = data[0] + "." + data[1];
 
             MyJson.JsonNode_Object Jo_PackageInfo = new MyJson.JsonNode_Object();
@@ -30,6 +31,12 @@ namespace driver_win.control
             }
 
             result.data = Jo_PackageInfo;
+        }
+
+        public override void Init()
+        {
+            result.msgCode = EnumMsgCode.GettingMessage;
+            result.errorCode = EnumErrorCode.Unknow;
         }
 
         public async override Task<bool> SendMsg(params object[] _params)

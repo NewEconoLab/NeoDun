@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace driver_win.control
 {
@@ -17,7 +18,7 @@ namespace driver_win.control
 
         protected bool wait;
 
-        public void Done(params object[] _params)
+        public async void Done(params object[] _params)
         {
             HandleMsg(_params);
             wait = false;
@@ -28,16 +29,12 @@ namespace driver_win.control
             wait = false;
         }
 
-        public void Init()
-        {
-            result.data = null;
-            result.errorCode = EnumError.CommonFailed;
-        }
+        public abstract void Init();
 
         public async Task<Result> ToDo(params object[] _params)
         {
             Init();
-
+            dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None);
             if (!await SendMsg(_params))
                 return result;
 
@@ -47,7 +44,7 @@ namespace driver_win.control
             {
                 await Task.Delay(100);
             }
-
+            dialogs.DialogueControl.ShowMessageBox(Mgr_Language.Ins.Code2Word(result.msgCode, result.errorCode), ND_MessageBoxButton.None,3);
             return result;
         }
 

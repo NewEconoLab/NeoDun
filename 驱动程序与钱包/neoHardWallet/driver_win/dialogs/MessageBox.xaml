@@ -5,24 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:driver_win.dialogs"
         mc:Ignorable="d"
-        WindowStyle="None" Height="130" Width="260" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White">
+        WindowStyle="None" Height="50" Width="550" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" OpacityMask="White">
     <Grid Background="Transparent">
-        <Border BorderThickness="5" CornerRadius="10,10,10,10">
+        <Border BorderThickness="5" CornerRadius="0,0,10,10">
             <Border.Effect>
                 <DropShadowEffect Direction="0" ShadowDepth="0" RenderingBias="Quality" BlurRadius="6"/>
             </Border.Effect>
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#2F3A66" Offset="0"/>
-                    <GradientStop Color="#232C55" Offset="1"/>
+                    <GradientStop Color="#3B4267" Offset="0"/>
+                    <GradientStop Color="#3B4267" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50*"/>
-                <RowDefinition Height="20*"/>
-                <RowDefinition Height="8*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80*"/>
@@ -31,9 +30,19 @@
                 <ColumnDefinition Width="100*"/>
                 <ColumnDefinition Width="80*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock  x:Name="msg" TextWrapping="Wrap" Text="" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="218" TextAlignment="Center"  Height="53" Margin="21,25,21,5" Grid.ColumnSpan="5"/>
-            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="confirm" Content="$page_confirm"  Click="Click_OK" Height="30" Width="55" Grid.Column="1" Grid.Row="1"/>
-            <Button Visibility="Visible" Style="{StaticResource ResourceKey=MyWpfButton_cancel2}" Name="cancel" Content="$page_cance"  Click="Click_CANCEL" Height="30" Width="55" Grid.Column="3" Grid.Row="1"/>
+            <Label  x:Name="msg" Content="" Padding="0" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="410" Height="20" Margin="45,13,0,17" Grid.ColumnSpan="4" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                <Label.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform AngleY="0.052"/>
+                        <RotateTransform/>
+                        <TranslateTransform Y="0.222"/>
+                    </TransformGroup>
+                </Label.RenderTransform>
+            </Label>
+            <TextBlock Name="confirm" Text="$page_confirm"  PreviewMouseDown="Click_OK" Height="19" Width="55" Grid.Column="4" Grid.Row="0"/>
+            <TextBlock Name="restart" Text="$page_restart"  PreviewMouseDown="Click_Restart" Height="19" Width="55" Grid.Column="4" Grid.Row="0"/>
+            <TextBlock Name="cancel" Text="$page_confirm"  PreviewMouseDown="Click_CANCEL" Height="19" Width="55" Grid.Column="4" Grid.Row="1"/>
         </Grid>
     </Grid>
 </Window>

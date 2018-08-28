@@ -91,7 +91,7 @@ namespace driver_win.dialogs
         private async void AddAddress(List<string> wifs)
         {
             //先获取一下地址，可以提前避免重复添加
-            await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
+            await ManagerControl.Ins.ToDo(EnumControl.GetAddress,EnumMsgCode.GettingAddress);
 
             for (var i = 0; i < wifs.Count; i++)
             {
@@ -107,8 +107,8 @@ namespace driver_win.dialogs
                 if (this.Visibility != Visibility.Visible)
                     return;
                 //var result =await driverControl.AddAddressByWif(wif);
-                Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress, wif);
-                if (result.errorCode == EnumError.AddAddressSuc)
+                Result result = await ManagerControl.Ins.ToDo(EnumControl.AddAddress);
+                if (result.msgCode == EnumMsgCode.AddAddressSuc)
                 {
                     img_state.Visibility = Visibility.Visible;
                     BitmapImage myBitmapImage = new BitmapImage();

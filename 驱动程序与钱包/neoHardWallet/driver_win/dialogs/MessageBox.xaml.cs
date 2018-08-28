@@ -28,15 +28,16 @@ namespace driver_win.dialogs
 
         public void InitPage()
         {
-            this.confirm.Content = Mgr_Language.Ins.Code2Word(this.confirm.Content.ToString());
-            this.cancel.Content = Mgr_Language.Ins.Code2Word(this.cancel.Content.ToString());
+            this.confirm.Text = Mgr_Language.Ins.Code2Word(this.confirm.Text);
+            this.cancel.Text = Mgr_Language.Ins.Code2Word(this.cancel.Text);
         }
 
         public ND_MessageBoxResult nD_MessageBoxResult;
 
-        public void Show(string messageBoxText,ND_MessageBoxButton button,long waitTime=9999999999)
+        public void Show(string messageBoxText,ND_MessageBoxButton button,long waitTime=0)
         {
-            this.msg.Text = messageBoxText;
+            this.restart.Visibility = Visibility.Hidden;
+            this.msg.Content = messageBoxText;
             if (button == ND_MessageBoxButton.OK)
             {
                 Grid.SetColumn(this.confirm,2);
@@ -58,6 +59,18 @@ namespace driver_win.dialogs
                 this.confirm.Visibility = Visibility.Hidden;
                 this.cancel.Visibility = Visibility.Hidden;
             }
+            this.Show();
+            if (waitTime == 0)
+                return;
+            int i = 0;
+            while (true)
+            {
+                System.Threading.Thread.Sleep(1000);
+                i++;
+                if (i >= waitTime)
+                    break;
+            }
+            this.Hide();
         }
 
         private void Click_OK(object sender, RoutedEventArgs e)
@@ -70,6 +83,11 @@ namespace driver_win.dialogs
         {
             nD_MessageBoxResult = ND_MessageBoxResult.Cancel;
             this.DialogResult = true;
+        }
+
+        private void Click_Restart(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

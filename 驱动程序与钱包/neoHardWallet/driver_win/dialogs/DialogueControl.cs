@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using driver_win.helper;
 
 namespace driver_win.dialogs
@@ -92,17 +93,23 @@ namespace driver_win.dialogs
             list.Remove(verifyECDH);
         }
 
-
-        public static ND_MessageBoxResult ShowMessageBox(Window window, string messageBoxText, ND_MessageBoxButton button,long waitTime = 9999999999)
+        static MessageBox messageBox;
+        public  static ND_MessageBoxResult ShowMessageBox(string messageBoxText, ND_MessageBoxButton button,long waitTime = 0)
         {
-            if (!window.IsActive)
-                return ND_MessageBoxResult.No;
-            MessageBox messageBox = new MessageBox();
+            if (messageBox != null)
+            {
+                messageBox.Close();
+            }
+            messageBox = new MessageBox();
             list.Add(messageBox);
-            messageBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            messageBox.Owner = window;
+            Console.WriteLine(messageBoxText);
+            messageBox.WindowStartupLocation = WindowStartupLocation.Manual;
+            messageBox.Left = MainDialogue.mainDialogue.Left + 250;
+            messageBox.Top = MainDialogue.mainDialogue.Top+47;
+            messageBox.Owner = MainDialogue.mainDialogue;
+            //messageBox.IsHitTestVisible = false;
+            //messageBox.Focusable = false;
             messageBox.Show(messageBoxText, button, waitTime);
-            messageBox.ShowDialog();
             ND_MessageBoxResult result = messageBox.nD_MessageBoxResult;
             list.Remove(messageBox);
             return result;
