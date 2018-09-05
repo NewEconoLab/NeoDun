@@ -49,7 +49,7 @@ namespace driver_win.dialogs
             Signer.Ins.deleInstallFramework += InstallFramework;
             Signer.Ins.Start();
 
-            CreateSimHardware();
+            //CreateSimHardware();
 
             LinkSinger();
 
@@ -300,7 +300,6 @@ namespace driver_win.dialogs
                 this.Btn_Framework_update.Visibility = Visibility.Hidden;
             }
             Result addressList = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
-
             AllowAllBtnClick();
         }
         //點擊打開地址管理頁面
@@ -358,10 +357,11 @@ namespace driver_win.dialogs
 
                 var pluginType = this.label_FrameworkVersion.Content.ToString().Split(' ')[0];
                 var version = servicePackageInfo[pluginType].ToString();
+                var language = Mgr_Language.Ins.curEnumLanguage.ToString();
 
                 byte[] postdata;
                 //从服务器获取固件和插件的版本信息
-                var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType + "_" + version));
+                var url = HttpHelper.MakeRpcUrlPost("https://apiaggr.nel.group/api/testnet", "downloadplugin", out postdata, new MyJson.JsonNode_ValueString(pluginType + "_" + version+"_"+ language));
                 var res = await HttpHelper.HttpPost(url, postdata);
                 var str_plugin = MyJson.Parse(res).AsDict()["result"].AsList()[0].AsDict()["plugin"].ToString();
                 byte[] data = ThinNeo.Helper.HexString2Bytes(str_plugin);

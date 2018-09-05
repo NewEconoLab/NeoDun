@@ -27,7 +27,7 @@ namespace driver_win.helper
 
         private Dictionary<string, string> dic_cn = new Dictionary<string, string>();
         private Dictionary<string, string> dic_en = new Dictionary<string, string>();
-        private EnumLanguage curEnumLanguage;
+        public EnumLanguage curEnumLanguage;
         private Dictionary<string, string> curDic;
 
         private void Init()
