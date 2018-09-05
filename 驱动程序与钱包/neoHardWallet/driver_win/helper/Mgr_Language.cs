@@ -47,6 +47,16 @@ namespace driver_win.helper
                 }
             }
 
+            if (System.Threading.Thread.CurrentThread.CurrentCulture.Name == "zh-CN")
+            {
+                curDic = dic_cn;
+            }
+            else
+            {
+                curDic = dic_en;
+            }
+
+            /*
             //读取配置获取语言环境
             if (System.IO.File.Exists("appsetting.txt"))
             {
@@ -64,6 +74,7 @@ namespace driver_win.helper
                 }
 
             }
+            */
 
         }
 
