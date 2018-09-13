@@ -52,7 +52,7 @@ RNG_HandleTypeDef hrng;
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart1;
-
+IWDG_HandleTypeDef hiwdg;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -61,6 +61,7 @@ static void MX_RNG_Init(void);
 static void MX_UART4_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
+//static void MX_IWDG_Init(void);
 
 extern void my_main(void);
 
@@ -87,6 +88,7 @@ int main(void)
 				Deal_USB_ERROR();
 		MX_CRC_Init();
 		MX_RNG_Init();
+//		MX_IWDG_Init();
 		MX_UART4_Init();			//÷∏Œ∆
 		MX_USART2_UART_Init();//¿∂—¿
 		MX_USART1_UART_Init();//¥Ú”°
@@ -190,6 +192,15 @@ void MX_USART1_UART_Init(void)
   HAL_UART_Init(&huart1);
 
 }
+
+///* IWDG init function */
+//static void MX_IWDG_Init(void)
+//{
+//  hiwdg.Instance = IWDG;
+//  hiwdg.Init.Prescaler = IWDG_PRESCALER_64;
+//  hiwdg.Init.Reload = 500;
+//  HAL_IWDG_Init(&hiwdg);
+//}
 
 /** Configure pins as 
         * Analog 

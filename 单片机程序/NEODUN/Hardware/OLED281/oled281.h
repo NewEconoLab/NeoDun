@@ -69,6 +69,7 @@ void clearArea(int x, int y, int width, int height);
 
 //以下ASCII程序
 void Asc8_16(unsigned char x, unsigned char y, unsigned char ch[]);
+
 //以下汉字程序
 void HZ12_12(unsigned char x, unsigned char y, unsigned char num);
 void Show_HZ12_12(unsigned char x, unsigned char y, unsigned char num1, unsigned char num2);

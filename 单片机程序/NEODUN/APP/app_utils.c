@@ -3,6 +3,8 @@
 #include "HASH/SHA256/sha256.h"
 
 extern RNG_HandleTypeDef hrng;
+extern IWDG_HandleTypeDef hiwdg;
+
 //Local variable
 static const uint32_t  POLYNOMIAL = 0xEDB88320;
 static uint8_t have_table = 0;
@@ -125,6 +127,11 @@ void jump_to_app(uint32_t appxaddr)
 				MSR_MSP(*(vu32*)appxaddr);								//初始化APP堆栈指针(用户代码区的第一个字用于存放栈顶地址)
 				jump2app();																//跳转到APP.
 		}
+}
+
+void IWDG_Feed(void)
+{   
+    HAL_IWDG_Refresh(&hiwdg); 	//喂狗
 }
 
 void Power_ON_BLE(void)

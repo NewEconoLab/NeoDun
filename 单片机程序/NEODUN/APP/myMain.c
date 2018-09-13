@@ -189,7 +189,9 @@ NEWWALLET:
 								if(Set_Flag.flag.usb_state_pre)			//表示从断开连接USB，到连上USB
 								{
 										if(SysFlagType != 0xFF)
+										{
 												Display_Usb();
+										}
 								}
 								Set_Flag.flag.usb_state_pre = 0;
 						}
@@ -217,6 +219,9 @@ NEWWALLET:
 				{
 						Display_MainPage_proc();								//显示更新
 				}
+				
+//				//5 喂狗
+//				IWDG_Feed();
 		}
 }
 

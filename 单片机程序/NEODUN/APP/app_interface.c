@@ -1,56 +1,3 @@
-/*****************************************************************
-加密芯片存储如下：一个16个槽（X0-X15）
-		X00：验证身份的明文（这里的明文对应的暗文，末尾应加上CRC校验）
-		X01：随机数（A+B）明文
-		X02：随机数（A+B）明文
-		X03：私钥1明文
-		X04：私钥2明文
-		X05：私钥3明文
-		X06：私钥4明文
-		X07：私钥5明文
-		X08：地址1			
-		X09：地址2	
-		X10：地址3
-		X11：地址4
-		X12：地址5
-		X13：升级程序解密的公钥
-		X14：系统标识
-		X15：C（不可读写，保密）
-X14系统标识存储如下：
-		0-7：系统标识
-				unsigned char	new_wallet; 			//1表示新钱包，0表示旧钱包
-				unsigned char	update;						//1表示需要升级，0表示不需要升级
-				unsigned char	language;					//1表示英文，0表示中文
-				unsigned char count;						//地址数量
-				unsigned char errornum;					//密码错误次数
-	 8-15：空
-	16-21：设置标识
-				unsigned char auto_show;										//连接钱包后自动弹出驱动界面
-				unsigned char Auto_Update_Flag;							//开机时自动检查更新
-				unsigned char Add_Address_Flag;							//新增地址
-				unsigned char Del_Address_Flag;							//删除地址
-				unsigned char Backup_Address_Flag;				  //备份地址
-				unsigned char Backup_Address_Encrypt_Flag; 	//备份钱包时进行加密标识			
-	24-27：空
-	28-31:新旧钱包标识
-地址存放说明：address[32]
-			0 -24：Base58计算前的25字节（0x17开始）数据
-			25-30：6字节作为地址名称
-			31	 ：高4bit表示该槽中地址名称的长度，低4bit表示隐藏属性
-******************************************************************		
-内部FLASH插件存储规划：
-		扇区0-扇区3：BootLoader
-		扇区4			：数据存储(程序跳转临时数据)
-		扇区5+扇区6：大厅APP（NEODUN）
-		扇区7		 	：APP1
-		扇区8			：APP2
-		扇区9			：APP3
-		扇区10		：APP4
-		扇区11		：APP5
-APP存储扇区（扇区7-扇区11）：
-			插件类型：扇区结束地址-4
-			插件版本：扇区结束地址-2
-*****************************************************************/
 #include "app_interface.h"
 #include <string.h>
 #include <stdio.h>
@@ -142,12 +89,6 @@ uint8_t Update_PowerOn_SetFlag(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 		
 		if(flag->new_wallet)//新钱包
 		{
-				Flag->flag.add_address = 1;
-				Flag->flag.del_address = 1;
-				Flag->flag.backup_address = 1;
-				Flag->flag.auto_show = 0;
-				Flag->flag.auto_update = 0;
-				Flag->flag.backup_address_encrypt = 0;
 				if(Updata_Set_Flag(Flag))
 						return 1;
 				else
@@ -155,12 +96,6 @@ uint8_t Update_PowerOn_SetFlag(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 		}
 		else
 		{
-				Flag->flag.auto_show   = slot_data[16];
-				Flag->flag.auto_update = slot_data[17];
-				Flag->flag.add_address = slot_data[18];
-				Flag->flag.del_address = slot_data[19];
-				Flag->flag.backup_address = slot_data[20];
-				Flag->flag.backup_address_encrypt = slot_data[21];
 				return 1;
 		}
 }
@@ -257,12 +192,6 @@ uint8_t Updata_Set_Flag(SET_FLAG *Flag)
 																	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 		if(ATSHA_read_data_slot(SLOT_FLAG,slot_data) == 0)
 				return 0;
-		slot_data[16] = Flag->flag.auto_show;
-		slot_data[17] = Flag->flag.auto_update;
-		slot_data[18] = Flag->flag.add_address;
-		slot_data[19] = Flag->flag.del_address;
-		slot_data[20] = Flag->flag.backup_address;
-		slot_data[21] = Flag->flag.backup_address_encrypt;
 		if(ATSHA_write_data_slot(SLOT_FLAG,0,slot_data,32) == 0)
 				return 0;		
 		return 1;
@@ -281,12 +210,6 @@ void Update_Flag_ATSHA(SET_FLAG *Flag,SYSTEM_NEODUN *flag)
 		array_write[2] = flag->language;
 		array_write[3] = flag->count;
 		array_write[4] = flag->errornum;
-		array_write[16] = Flag->flag.auto_show;
-		array_write[17] = Flag->flag.auto_update;
-		array_write[18] = Flag->flag.add_address;
-		array_write[19] = Flag->flag.del_address;
-		array_write[20] = Flag->flag.backup_address;
-		array_write[21] = Flag->flag.backup_address_encrypt;
 		array_write[28] = 0x88;
 		array_write[29] = 0x88;
 		array_write[30] = 0x88;
