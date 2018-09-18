@@ -28,7 +28,7 @@
                     <Button.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/底3.png" Stretch="UniformToFill"/>
                     </Button.Background>
-                    <Label Name="lb_page_wif" Content="$page_wif" IsEnabled="False" Width="95" Height="14" Margin="0,0,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
+                    <Label Name="lb_page_wif" Content="$page_wif" IsEnabled="False" Width="54" Height="14" Margin="10,0,0,0" FontSize="12px" VerticalAlignment="Center" HorizontalAlignment="Center"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
                 </Button>
                 <Grid Name="bip"  Visibility="Visible"  Margin="-3,5,-3,-5">
                     <Grid.Background>
@@ -37,10 +37,10 @@
                     <Label Name="lb_page_seed" Content="$page_seed" IsEnabled="False" Width="95" Height="14" Margin="70,20,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
                     <TextBox Name="Tb_wordlist" Style="{StaticResource TextBoxStyle1}" Text="$page_seedexplain" Margin="60,78,60,187" Foreground="White" GotFocus="Action_GotFocus">
                     </TextBox>
-                    <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr2" Width="108" Height="44" Click="btn_Add2" Margin="260,290,0,0" >
+                    <Button Style="{StaticResource ResourceKey=MyWpfButton2}" x:Name="manageAddr2" Width="113" Height="44" Click="btn_Add2" Margin="260,290,0,0" >
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <Label Name="lb_page_add" Content="$page_add" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                <Label x:Name="lb_page_add" Content="$page_add" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="102" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -49,23 +49,23 @@
                     <Button.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/底3.png" Stretch="UniformToFill"/>
                     </Button.Background>
-                    <Label Content="使用助记词导入" IsEnabled="False" Width="95" Height="14" Margin="0,0,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
+                    <Label Name="lb_page_seed2" Content="$page_seed" IsEnabled="False" Width="95" Height="14" Margin="0,0,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0"/>
                 </Button>
                 <Grid Name="wif" Visibility="Hidden"  Margin="-3,5,-3,-5">
                     <Grid.Background>
                         <ImageBrush ImageSource="/driver_win;component/res/底2.png"/>
                     </Grid.Background>
-                    <Label Name="lb_page_wif2" Content="$page_wif" IsEnabled="False" Width="95" Height="14" Margin="282,20,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                    <Label Name="lb_page_wif2" Content="$page_wif" IsEnabled="False" Width="50" Height="14" Margin="312,17,262,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Center"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
                     <TextBox Name="label_Wif"  Text="$page_wifexplain" Width="481" Height="16" Margin="74,126,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0" GotFocus="Action_GotFocus" LostFocus="Action_LostFocus"/>
                     <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,144,0,0" VerticalAlignment="Top" Width="500" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                    <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Width="108" Height="44" Click="btn_Add" Margin="260,203,0,0" >
+                    <Button Style="{StaticResource ResourceKey=MyWpfButton2}" x:Name="manageAddr" Width="113" Height="44" Click="btn_Add" Margin="260,203,0,0" >
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
-                                <Label Name="lb_page_add2" Content="$page_add" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                                <Label Name="lb_page_add2" Content="$page_add" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Label Name="lb_page_ps" Content="$page_ps" IsEnabled="False" Width="345" Height="14" Margin="142,321,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                    <Label Name="lb_page_ps" Content="$page_ps" IsEnabled="False" Width="565" Height="14" Margin="30,321,0,0" FontSize="12px" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left"  Foreground="White" Padding="0"/>
                 </Grid>
             </Grid>
         </Border>

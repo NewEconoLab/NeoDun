@@ -38,6 +38,13 @@ namespace driver_win.dialogs
         public async Task<ND_MessageBoxResult> Show(string messageBoxText,ND_MessageBoxButton button,long waitTime)
         {
             this.msg.Content = messageBoxText;
+            if (this.msg.Content.ToString().Length < 40)
+                this.msg.FontSize = 15;
+            else
+            {
+                var num = (this.msg.Content.ToString().Length - 40) / 5;
+                this.msg.FontSize = (15 - (int)num) <=9 ?9:(15 - (int)num);
+            }
             if (button == ND_MessageBoxButton.OK)
             {
                 Grid.SetColumn(this.confirm, 3);

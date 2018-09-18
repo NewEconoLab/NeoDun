@@ -29,7 +29,7 @@
                 <ColumnDefinition Width="60*"/>
                 <ColumnDefinition Width="60*"/>
             </Grid.ColumnDefinitions>
-            <Label  x:Name="msg" Content="" Padding="0" FontSize="15" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="314" Height="20" Margin="45,13,0,17" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5">
+            <Label x:Name="msg" Content="" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"  Width="377" Height="20" Margin="16,13,0,17" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5">
                 <Label.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

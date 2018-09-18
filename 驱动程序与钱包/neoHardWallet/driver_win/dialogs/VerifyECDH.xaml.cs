@@ -155,7 +155,7 @@ namespace driver_win.dialogs
 
         private async void StartVerity()
         {
-            this.lb_state2.Content = "验证中...";
+            this.lb_state2.Content = Mgr_Language.Ins.Code2Word("$page_verifying");
             this.border_state2.Visibility = Visibility.Visible;
 
             //应sb产品需求自我等待500毫秒以欺骗使用者
@@ -164,8 +164,8 @@ namespace driver_win.dialogs
             ECDH.Ins.CheckPubHash(str);
             if (ECDH.Ins.CheckResult)
             {//验证成功
-                this.lb_state2.Content= "安全检查已完成！";
-                this.state.Content = "安全验证已通过！";
+                this.lb_state2.Content = Mgr_Language.Ins.Code2Word("$page_securityverificationfaild") ;
+                this.state.Content = Mgr_Language.Ins.Code2Word("$page_securityverificationpassed") ;
                 System.Windows.Media.Color color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2DDE4F");
                 this.border1.BorderBrush = new SolidColorBrush(color);
                 this.border2.BorderBrush = new SolidColorBrush(color);
@@ -176,8 +176,8 @@ namespace driver_win.dialogs
             }
             else
             {//验证失败
-                this.lb_state2.Content = "安全验证未通过！";
-                this.state.Content = "安全验证未通过！";
+                this.lb_state2.Content = Mgr_Language.Ins.Code2Word("$page_securityverificationfaild");
+                this.state.Content = Mgr_Language.Ins.Code2Word("$page_securityverificationpassed");
                 System.Windows.Media.Color color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF6C6C");
                 this.border1.BorderBrush = new SolidColorBrush(color);
                 this.border2.BorderBrush = new SolidColorBrush(color);
@@ -191,7 +191,7 @@ namespace driver_win.dialogs
 
         private void Btn_Restart(object sender, RoutedEventArgs e)
         {
-            this.state.Content = "正在进行安全验证...";
+            this.state.Content = Mgr_Language.Ins.Code2Word("$page_safing");
             this.border_state2.Visibility = Visibility.Hidden;
             this.textBox1.Text = "";
             this.textBox2.Text = "";

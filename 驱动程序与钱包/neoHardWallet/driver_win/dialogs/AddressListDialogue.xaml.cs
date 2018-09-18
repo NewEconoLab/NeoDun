@@ -25,6 +25,7 @@ namespace driver_win.dialogs
         public AddressListDialogue()
         {
             InitializeComponent();
+            this.lab_tips1.Content = Mgr_Language.Ins.Code2Word(this.lab_tips1.Content.ToString());
             InitPage();
             GetAddressList();
         }
@@ -52,7 +53,7 @@ namespace driver_win.dialogs
 
         private void Image_MouseLeave(object sender, MouseEventArgs e)
         {
-            this.lab_tips1.Visibility = Visibility.Hidden;
+            this.lab_tips1.Visibility = Visibility.Collapsed;
         }
 
         private void Btn_CloseDialogue(object sender, RoutedEventArgs e)
@@ -109,7 +110,7 @@ namespace driver_win.dialogs
             Copystr.Append(address.ToString());
             Clipboard.SetText(Copystr.ToString());
 
-            DialogueControl.ShowMessageDialogue("复制成功", 1, this);
+            DialogueControl.ShowMessageDialogue(Mgr_Language.Ins.Code2Word("$page_copysuc"), 1, this);
         }
 
         private async void Click_Delete(object sender, RoutedEventArgs e)
@@ -118,9 +119,7 @@ namespace driver_win.dialogs
             var listboxitem = ((sender as Button).Parent as Grid).Parent as ListBoxItem;
             var address = (listboxitem.FindName("address") as Label).Content;
             var type = (listboxitem.FindName("type") as Label).Content;
-            var name = (listboxitem.FindName("type") as Label).Content;
-
-            var a = "{0}";
+            var name = (listboxitem.FindName("name") as TextBox).Text;
 
             var lb_msg_name = this.message.FindName("lb_msg_name") as Run;
             lb_msg_name.Text = name.ToString() ;

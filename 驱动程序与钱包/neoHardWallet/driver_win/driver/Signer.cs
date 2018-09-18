@@ -166,7 +166,10 @@ namespace NeoDun
             Message srcmsg = null; 
             if (msg.tag1 == 0x00 || msg.tag2 >= 0xa0)//如果是一条回复消息，找原始消息
             {
-                srcmsg = this.needBackMessage[msg.msgid];
+                if (this.needBackMessage.ContainsKey(msg.msgid))
+                    srcmsg = this.needBackMessage[msg.msgid];
+                else
+                    return;
             }
 
 
@@ -289,8 +292,6 @@ namespace NeoDun
                 //删除地址失败
                 if (msg.tag1 == 0x02 && msg.tag2 == 0xe3)
                 {
-                    var a = msg.readUInt16(0);
-                    var aa = a.ToString("x4");
                     EnumErrorCode errorCode = (EnumErrorCode)msg.readUInt16(0);
                     eventHandler(EnumControl.DelAddress, EnumMsgCode.DeleteNameFailed, errorCode);
                 }

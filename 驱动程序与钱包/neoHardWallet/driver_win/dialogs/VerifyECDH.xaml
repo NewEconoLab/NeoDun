@@ -25,7 +25,7 @@
                     </Button.Background>
                 </Button>
                 <Label x:Name="title" FontSize="12" Content="$page_safecheck" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58" HorizontalContentAlignment="Center" Height="24" Margin="131,15,131,0"/>
-                <Label x:Name="state" FontSize="12" Content="$page_safing" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="153" HorizontalContentAlignment="Left" Height="24" Margin="45,55,122,0"/>
+                <Label x:Name="state" FontSize="12" Content="$page_safing" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" Width="265" HorizontalContentAlignment="Left" Height="24" Margin="45,55,10,0"/>
 
 
                 <Grid Name="FillInHash" Visibility="Hidden">

@@ -28,11 +28,12 @@ namespace driver_win.dialogs
 
         public void InitPage()
         {
-            this.label_pw.Text = Mgr_Language.Ins.Code2Word(this.label_path.Text);
+            this.label_pw.Text = Mgr_Language.Ins.Code2Word(this.label_pw.Text);
             this.label_path.Text = Mgr_Language.Ins.Code2Word(this.label_path.Text);
             this.lb_page_add.Content = Mgr_Language.Ins.Code2Word(this.lb_page_add.Content.ToString());
             this.lb_page_import.Content = Mgr_Language.Ins.Code2Word(this.lb_page_import.Content.ToString());
             this.lb_page_scan.Content = Mgr_Language.Ins.Code2Word(this.lb_page_scan.Content.ToString());
+            this.lb_ps.Content = Mgr_Language.Ins.Code2Word(this.lb_ps.Content.ToString());
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

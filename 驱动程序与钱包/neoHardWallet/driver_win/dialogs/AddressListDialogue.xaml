@@ -25,9 +25,9 @@
                         <ImageBrush ImageSource="/driver_win;component/res/close.png"/>
                     </Button.Background>
                 </Button>
-                <Label x:Name="lb_page_wallet" Content="$page_wallet" IsEnabled="False" Width="48" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
+                <Label x:Name="lb_page_wallet" Content="$page_wallet" IsEnabled="False" Width="127" Height="15" Margin="44,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="12" Cursor="None"/>
                 <Label Name="lb_page_index" Content="$page_index" IsEnabled="False" Width="48" Height="15" Margin="27,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
-                <Label Name="lb_page_name" Content="$page_name" IsEnabled="False" Width="48" Height="15" Margin="72,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
+                <Label Name="lb_page_name" Content="$page_name" IsEnabled="False" Width="60" Height="15" Margin="60,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Label Name="lb_page_address" Content="$page_address" IsEnabled="False" Width="56" Height="15" Margin="330,81,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 <Image Grid.Row="0"  Source="/driver_win;component/res/？.png" Margin="101,83,0,0" Width="12" Height="12" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="1" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"/>
                 <Grid Name="noWallet" Visibility="Hidden">
@@ -35,7 +35,7 @@
                     <Label Name="lb_page_empty" Content="$page_empty" IsEnabled="False" Width="160" Height="15" Margin="0,380,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="12" Cursor="None" Panel.ZIndex="1"/>
                 </Grid>
                 <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="26" Width="600" Margin="14,75,0,0" VerticalAlignment="Top" Background="#3B4267" CornerRadius="15,15,15,15"/>
-                <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="$page_nameexplain" Margin="113,48,310,339"/>
+                <Label Name="lab_tips1" Visibility="Hidden" Style="{StaticResource ResourceKey=tipLable}" Content="$page_nameexplain" Margin="113,48,85,339"/>
                 <ListBox Name="listbox" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}">
                 </ListBox>
                 <ListBox Visibility="Collapsed" Name="listboxDemo" Margin="14,106,10,18" Background="#00000000" BorderBrush="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
@@ -82,9 +82,10 @@
                     <TextBlock TextWrapping="Wrap" Margin="20,18,10,18">
                         <Run x:Name="lb_page_message_1" Text="$page_message_1"/>
                         <Run x:Name="lb_msg_name" Text=""/>
+                        <Run x:Name="lb_page_message_2" Text="$page_message_2"/>
                         <Run Text=" （"/>
                         <Run x:Name="lb_msg_addr" Text="" Foreground="#A6FFB6"/>
-                        <Run x:Name="lb_page_message_2" Text="$page_message_2"/>
+                        <Run Text=" )"/>
                     </TextBlock>
                 </Grid>
             </Grid>

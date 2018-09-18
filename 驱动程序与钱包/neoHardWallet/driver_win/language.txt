@@ -1,0 +1,92 @@
+﻿$error_0100	The installer failed to pass security verification	安装文件未通过安全验证
+$error_0101	Insufficient storage space	设备存储空间不足
+$error_0102	APP is currently in use	APP正在使用中
+$error_0103	APP type error	APP类型错误
+$error_0104	Data exception	数据异常
+$error_0201	The number of private keys has reached the maximum limit	私钥数量到达上限
+$error_0202	The private key has been imported	该私钥已导入
+$error_0203	This wallet name is already used	钱包名称重复
+$error_0204	The plugin required for this currency is not yet installed	未安装该币种所需插件
+$error_0205	Private key format error	私钥格式错误
+$error_0206	This address does not exist	地址不存在
+$error_0207	Wallet name exceeds length limit	钱包名称超出长度限制
+$error_0301	The required private key was not imported	未导入所需私钥
+$error_0302	Multi-sig is not supported	不支持多签
+$error_0303	Signature packet error	签名数据包错误
+$error_0401	Rejected by user	用户拒绝
+$msg_0100	Data is ready to be transferred	准备传输数据
+$msg_01a2	Data transfer is in progress	数据传输中
+$msg_01e0	Data transfer error. Please try again	数据传输错误，请重试
+$msg_00e0	Data transfer error. Please try again	数据传输错误，请重试
+$msg_0112	Data transfer error. Please try again	数据传输错误，请重试
+$msg_0301	Installation in progress	正在进行安装…
+$msg_03a1	Installation is successful	安装成功
+$msg_03e1	Installation failed  	安装失败 
+$msg_0302	The update request has been submitted	升级请求已发送，请在NEODUN上进行确认
+$msg_03a2	Preparing for upgrade	正在进行升级准备
+$msg_03e2	NEODUN upgrade declined. 	NEODUN拒绝升级
+$msg_0303	Plugin uninstallion is in progress	正在卸载插件
+$msg_03a3	Plugin successfully uninstalled	插件卸载成功
+$msg_03e3	Plugin uninstallation failed  	插件卸载失败 
+$msg_0304	Obtaining NEODUN information	正在获取NEODUN信息
+$msg_03a4	Information successfully obtained	获取信息成功
+$msg_0201	Querying wallet address	正在查询钱包地址
+$msg_02a1	Query complete	查询完成
+$msg_0401	Establishing a secure communication channel	正在建立安全通讯通道
+$msg_04a1	Enter the security code on NEODUN	请输入NEODUN上的安全码
+$msg_0202	Setting address name	正在设置地址名称
+$msg_02a2	Address name is set	名称设置成功
+$msg_02e2	Name setting failed  	"名称设置失败"
+$msg_0203	The request to delete the wallet has been submitted. Please confirm it on NEODUN	删除钱包的请求已发送，请在NEODUN上进行确认
+$msg_02a3	Wallet  has been successfully deleted	删除钱包成功
+$msg_02e3	Deletion of the wallet failed  	"删除钱包失败"
+$msg_0204	The import request has been submitted. Please confirm it on NEODUN	导入请求已发送，请在NEODUN上进行确认
+$msg_02a4	Wallet successfully imported	导入钱包成功
+$msg_02e4	Import failed  	"导入失败"
+$msg_0205	Signature request has been submitted. Please confirm it on NEODUN	签名请求已发送，请在NEODUN上进行确认
+$msg_02a5	Signature successfully signed	签名成功
+$msg_02e5	Signature failed  	"签名失败"
+$page_copysuc	Copy Successfully	复制成功
+$page_securitycodetrue	The verification was successful. A secure channel has been established.	验证成功，安全通道已建立。
+$page_securitycodefalse	Verification failed. Please try it again. If you need help, please click here. 	"验证失败，请重试。需要帮助请点击这里。"
+$page_unlink	No device detected, please check if the device is connected properly	没有检测到设备，请检查设备是否连接正常
+$page_title	NEODUN manager	NEODUN管理
+$page_manager	APP Manager	APP程序管理
+$page_state	connected	设备已连接
+$page_frameware	Firmware	固件
+$page_apps	APP	APP
+$page_wallet	Wallet manager	管理钱包
+$page_import	Import manually	手动导入钱包
+$page_autoimport	Import file	导入钱包文件
+$page_browser	NEL explorer	区块链浏览器
+$page_upgrade	Upgrade	升级
+$page_install	Install	安装
+$page_uninstal	Uninstall	卸载
+$page_support	Supporter	技术支持
+$page_index	NO.	序号
+$page_name	Name	名称
+$page_nameexplain	Please set a name for the address no more than 6 letters	为地址设置一个名称，长度不超过6个字母
+$page_noname	noname	未命名
+$page_address	Address	地址
+$page_message_1	Requesting to delete 	请求删除
+$page_message_2	。please confirm on NEODUN	请在NEODUN上进行确认
+$page_empty	No wallet adress found	未查询到钱包地址
+$page_seed	Recovery phrases	使用助记词导入
+$page_seedexplain	Please enter the recovery phrase and separate each word with a space	请输入助记词，按空格分隔
+$page_wif	WIF 	使用WIF私钥导入
+$page_wifexplain	Please enter your WIF	请输入您的WIF
+$page_ps	NEODUN does not support exporting private keys. Please back it up yourself.	为了您的资产安全，NEODUN不支持私钥导出，请自行妥善备份
+$page_add	Import	导入
+$page_scan	Browse	浏览
+$page_select	Please select your wallet file	请选择钱包文件
+$page_password	Please enter your password	请输入密码
+$page_addressmgr	 wow	管理钱包
+$page_confirm	confirm	确定
+$page_cancel	cancel	取消
+$page_restart	retry	重试
+$page_safecheck	Security check	安全检查
+$page_safing	Security verification in progress	正在进行安全验证
+$page_securityverificationpassed	Security verification passed	安全检查已通过
+$page_securityverificationfaild	Security verification faild	安全通过未通过
+$page_verifying	In verification	验证中……
+$page_safehelp	If you have any problems, please click the	请检查安全码是否输入正确。需要帮助请点击这里

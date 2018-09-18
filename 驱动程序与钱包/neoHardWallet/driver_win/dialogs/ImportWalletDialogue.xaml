@@ -29,21 +29,21 @@
                 <PasswordBox Name="pwb_pw" Width="360" Height="19" Margin="74,176,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0" GotFocus="Action_PwGotFouces" LostFocus="Action_PwLostFouces" Panel.ZIndex="10"/>
                 <TextBox Name="label_pw" Text="$page_password" Width="360" Height="19" Margin="74,176,0,0" FontSize="14px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="#BFBFBF" Padding="0" Background="#00000000" BorderThickness="0"/>
                 <GridSplitter HorizontalAlignment="Left" Height="1" Margin="64,195,0,0" VerticalAlignment="Top" Width="370" RenderTransformOrigin="0.5,0.5" Background="#6676C8"/>
-                <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="manageAddr" Width="108" Height="44" Click="Btn_Add" Margin="260,242,0,0">
+                <Button Style="{StaticResource ResourceKey=MyWpfButton2}" x:Name="manageAddr" Width="108" Height="44" Click="Btn_Add" Margin="260,242,0,0">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <Label Name="lb_page_add" Content="$page_add" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                            <Label Name="lb_page_add" Content="$page_add" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="91" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button Style="{StaticResource ResourceKey=MyWpfButton}" x:Name="find" Width="108" Height="44" Click="Btn_OpenFile" Margin="462,106,0,0">
+                <Button Style="{StaticResource ResourceKey=MyWpfButton2}" x:Name="find" Width="108" Height="44" Click="Btn_OpenFile" Margin="462,106,0,0">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <Label Name="lb_page_scan" Content="$page_scan" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="63" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                            <Label Name="lb_page_scan" Content="$page_scan" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="White" Width="94" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Label Content="为了您的资产安全，Neodun不支持地址导出，请自行妥善备份！" IsEnabled="False" Width="345" Height="14" Margin="142,321,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0"/>
+                <Label Name="lb_ps" Content="$page_ps" IsEnabled="False" Width="551" Height="21" Margin="44,314,0,0" FontSize="12px" VerticalAlignment="Top" HorizontalAlignment="Left"  VerticalContentAlignment="Center" Foreground="White" Padding="0" HorizontalContentAlignment="Center" />
             </Grid>
         </Border>
     </Grid>

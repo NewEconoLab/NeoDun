@@ -252,14 +252,14 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Label}">
                         <StackPanel>
-                            <Canvas Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,30,0,0" Background="Transparent">
+                            <Canvas Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0" Background="Transparent">
                                 <Path Stroke="Black" StrokeThickness="0.5" Fill="White">
                                     <Path.Data>
-                                        <PathGeometry Figures="M 10,0 L 10,0,0,5  L 0,5,10,10"/>
+                                        <PathGeometry Figures="M 10,0 L 10,0,0,5  L 0,5,10,5"/>
                                     </Path.Data>
                                 </Path>
                             </Canvas>
-                            <Border CornerRadius="10" BorderBrush="White" BorderThickness="0" VerticalAlignment="Top" Margin="11,-30,0,0" Background="White" HorizontalAlignment="Left" Padding="5">
+                            <Border CornerRadius="10" BorderBrush="White" BorderThickness="0" VerticalAlignment="Top" Margin="10,-30,0,0" Background="White" HorizontalAlignment="Left" Padding="5">
                                 <Border.Effect>
                                     <DropShadowEffect ShadowDepth="1" Direction="270" BlurRadius="2" Color="Black"/>
                                 </Border.Effect>

@@ -36,6 +36,8 @@ namespace driver_win.dialogs
             this.lb_page_seed.Content = Mgr_Language.Ins.Code2Word(this.lb_page_seed.Content.ToString());
             this.lb_page_wif.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wif.Content.ToString());
             this.lb_page_wif2.Content = Mgr_Language.Ins.Code2Word(this.lb_page_wif2.Content.ToString());
+            this.lb_page_seed.Content = Mgr_Language.Ins.Code2Word(this.lb_page_seed.Content.ToString());
+            this.lb_page_seed2.Content = Mgr_Language.Ins.Code2Word(this.lb_page_seed2.Content.ToString());
 
             this.Tb_wordlist.Text = Mgr_Language.Ins.Code2Word(this.Tb_wordlist.Text);
             this.label_Wif.Text = Mgr_Language.Ins.Code2Word(this.label_Wif.Text);

@@ -43,11 +43,11 @@
             </Grid.Background>
             <Grid x:Name="nelLogo" Visibility="Visible">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/NELlogo.png" Margin="873,536,0,0" Width="77" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                <Label Name="lb_page_support" Content="$page_support" IsEnabled="False" Width="48" Height="18" Margin="815,542,102,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
+                <Label Name="lb_page_support" Content="$page_support" IsEnabled="False" Width="62" Height="18" Margin="811,542,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Padding="0" VerticalContentAlignment="Center" FontSize="12" Cursor="None"/>
             </Grid>
             <Grid x:Name="unlink" Visibility="Hidden">
                 <Image Grid.Row="0"  Source="/driver_win;component/res/Group.png"  Width="400" Height="197" Margin="300,167" VerticalAlignment="Top"/>
-                <Label Name="lb_page_unlink" Content="$page_unlink" Padding="0" Margin="360,394,0,0" Foreground="White" VerticalContentAlignment="Center" FontSize="14" Height="21" VerticalAlignment="Top" Cursor="None"/>
+                <Label Name="lb_page_unlink" Content="$page_unlink" Padding="0" Margin="10,394,0,0" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  FontSize="14" Height="21" VerticalAlignment="Top" Cursor="None"/>
             </Grid>
             <Grid x:Name="main" Visibility="Visible">
                 <Button Style="{StaticResource ResourceKey=MyWpfButton}" Margin="78,18,0,0" Height="46" Width="136">

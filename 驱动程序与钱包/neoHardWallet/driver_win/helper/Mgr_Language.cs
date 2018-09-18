@@ -40,8 +40,8 @@ namespace driver_win.helper
                 {
                     var strs = line.Split('\t');
                     var code = strs[0];
-                    var word_cn = strs[1];
-                    var word_en = strs[2];
+                    var word_cn = strs[2];
+                    var word_en = strs[1];
                     dic_cn.Add(code, word_cn);
                     dic_en.Add(code, word_en);
                 }
@@ -94,6 +94,8 @@ namespace driver_win.helper
 
         public string Code2Word(string code)
         {
+            if (!code.Contains("$"))
+                return code;
             if (curDic.ContainsKey(code))
                 return curDic[code];
             return "";
