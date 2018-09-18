@@ -24,11 +24,22 @@ static void MX_RNG_Init(void);
 #define FLASH_ADDRESS_PACK				0x08010000
 #define FLASH_RESULT_sign_ADDRESS	0x0801F000
 #define FLASH_RESULT_alg_ADDRESS	0x0801F800
+#define FLASH_ADDRESS_FLAG_JUMP		0x0801FC00
+#define FLASH_ANALY_DATA_OK				0x0801FC04
+#define FLASH_SIGN_DATA_OK				0x0801FC08
 #define	FLASH_ADDRESS_SCENE		  	0x0801FE00 //现场数据地址
 
-uint8_t privateKey_flash[32];
-uint8_t data_pack[512];
-uint32_t pack_len = 0;
+//错误码
+#define ERR_PLUGS_DATALEN					0x00000001
+#define ERR_PLUGS_PACKERR					0x00000002
+#define ERR_PLUGS_PRIKEY					0x00000003
+#define ERR_PLUGS_SIGN						0x00000004
+
+#define FLASH_SUCCESS_FLAG				0x80000000
+
+static uint8_t privateKey_flash[32];
+static uint8_t data_pack[512];
+static uint32_t pack_len = 0;
 
 typedef  void (*iapfun)(void);
 iapfun jump2app;
@@ -53,19 +64,18 @@ int main(void)
 		//清除程序跳转，残留的FLASH标识
 		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP|FLASH_FLAG_OPERR|FLASH_FLAG_WRPERR|FLASH_FLAG_PGAERR
 													|FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-	
+
 		uint8_t resultsignRecord[98];
-		int 		len_sign_alg = 0;
 		uint8_t result_SignData[64];
-		SIGN_Out_Para Sign;
 		uint8_t PublicKey_Flash[65];
 		uint8_t PubKey_Flash[33];
 		uint8_t	Pin_code[8];
-		uint8_t  AddressID;
+		int 		len_sign_alg = 0;	
+		uint8_t AddressID = 0;
+		SIGN_Out_Para Sign;	
 
 		//硬件初始化
 		HAL_Init();
-
 		SystemClock_Config();
 		MX_GPIO_Init();
 		MX_CRC_Init();
@@ -73,7 +83,7 @@ int main(void)
 		ATSHA_I2c_Init();
 
 #ifdef Debug
-//		Test_Ecc_Sign_Data();
+		Test_Ecc_Sign_Data();
 		AddressID = 2;
 		Pin_code[0] = 0x35;
 		Pin_code[1] = 0x35;
@@ -82,92 +92,118 @@ int main(void)
 		Pin_code[4] = 0x35;
 		Pin_code[5] = 0x35;
 		Pin_code[6] = 0x36;
-		Pin_code[7] = 0x29;		
+		Pin_code[7] = 0x29;
 #endif
 
-		//数据初始化
-		memset(&data_pack,0,512);
-		pack_len = STMFLASH_ReadWord(FLASH_ADDRESS_PACK);
-		if(pack_len == 0xffffffff)
+		if((STMFLASH_ReadWord(FLASH_ANALY_DATA_OK) == 0xffffffff)&&(STMFLASH_ReadWord(FLASH_ADDRESS_FLAG_JUMP) == 0xffffffff))
 		{
-				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
-				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP		
-		}
-	
-		//获得数据包
-		AddressID = STMFLASH_ReadWord(FLASH_ADDRESS_SCENE+4);
-		STMFLASH_Read_ByteArray(FLASH_ADDRESS_PACK+4,Pin_code,8);
-		STMFLASH_Read(FLASH_ADDRESS_PACK+12,(uint32_t*)data_pack,pack_len);
-		memset(&Sign,0,sizeof(Sign));
-		memset(&result_SignData,0,64);
-		memset(&resultsignRecord,0,98);
+				//1 数据初始化
+				memset(&data_pack,0,512);
+				pack_len = STMFLASH_ReadWord(FLASH_ADDRESS_PACK);
+				if(pack_len == 0xffffffff)
+				{
+						STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+						STMFLASH_WriteWord(FLASH_ADDRESS_FLAG_JUMP,ERR_PLUGS_DATALEN);
+						jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP		
+				}
+			
+				//2 获得数据包
+				STMFLASH_Read(FLASH_ADDRESS_PACK+12,(uint32_t*)data_pack,pack_len);
+				memset(&Sign,0,sizeof(Sign));
+				memset(&result_SignData,0,64);
+				memset(&resultsignRecord,0,98);
+						
+				//3 解析数据包
+				if(Alg_ShowSignData(data_pack,pack_len,&Sign))
+				{
+						STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+						STMFLASH_WriteWord(FLASH_ADDRESS_FLAG_JUMP,ERR_PLUGS_PACKERR);
+						jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
+				}
+
+				//4 将结果写入FLASH
+				{
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS,Sign.type);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+1,Sign.version);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+2,Sign.coin);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+3,Sign.countAttributes);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+4,Sign.countInputs);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+5,Sign.countOutputs);
+						STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+6,Sign.address[0],25);
+						STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+31,Sign.address[1],25);
+						STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+56,Sign.assetid[0],25);
+						STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+88,Sign.assetid[1],25);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+120,(uint8_t)Sign.money[0]);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+121,(uint8_t)(Sign.money[0]>>8));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+122,(uint8_t)(Sign.money[0]>>16));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+123,(uint8_t)(Sign.money[0]>>24));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+124,(uint8_t)(Sign.money[0]>>32));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+125,(uint8_t)(Sign.money[0]>>40));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+126,(uint8_t)(Sign.money[0]>>48));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+127,(uint8_t)(Sign.money[0]>>56));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+128,(uint8_t)Sign.money[1]);
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+129,(uint8_t)(Sign.money[1]>>8));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+130,(uint8_t)(Sign.money[1]>>16));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+131,(uint8_t)(Sign.money[1]>>24));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+132,(uint8_t)(Sign.money[1]>>32));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+133,(uint8_t)(Sign.money[1]>>40));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+134,(uint8_t)(Sign.money[1]>>48));
+						STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+135,(uint8_t)(Sign.money[1]>>56));			
+				}
 				
-		//解析数据包
-		if(Alg_ShowSignData(data_pack,pack_len,&Sign))
+				//5 置相应标志位
+				STMFLASH_WriteWord(FLASH_ANALY_DATA_OK,FLASH_SUCCESS_FLAG);
+		}
+		else
 		{
-				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
-				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
+				//1 数据初始化
+				memset(&data_pack,0,512);
+				pack_len = STMFLASH_ReadWord(FLASH_ADDRESS_PACK);
+				if(pack_len == 0xffffffff)
+				{
+						STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+						STMFLASH_WriteWord(FLASH_ADDRESS_FLAG_JUMP,ERR_PLUGS_DATALEN);
+						jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP		
+				}
+
+				//2 获取数据
+				AddressID = STMFLASH_ReadWord(FLASH_ADDRESS_SCENE+4);
+				STMFLASH_Read_ByteArray(FLASH_ADDRESS_PACK+4,Pin_code,8);
+				STMFLASH_Read(FLASH_ADDRESS_PACK+12,(uint32_t*)data_pack,pack_len);
+				memset(&result_SignData,0,64);
+				memset(&resultsignRecord,0,98);
+
+				//3 解密私钥
+				if(Get_Privekey(AddressID+7,Pin_code,privateKey_flash) != 0)//出错
+				{
+						STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+						STMFLASH_WriteWord(FLASH_ADDRESS_FLAG_JUMP,ERR_PLUGS_PRIKEY);
+						jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
+				}
+
+				//4 签名数据包
+				if(Alg_ECDSASignData(data_pack,pack_len,result_SignData,&len_sign_alg,privateKey_flash))
+				{
+						STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
+						STMFLASH_WriteWord(FLASH_ADDRESS_FLAG_JUMP,ERR_PLUGS_SIGN);
+						jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
+				}
+
+				//5 组合最终的数据
+				Alg_GetPublicFromPrivate(privateKey_flash,PublicKey_Flash,1);
+				memmove(PubKey_Flash,PublicKey_Flash,33);
+				resultsignRecord[0] = 33;
+				memmove(resultsignRecord+1,PubKey_Flash,33);
+				memmove(resultsignRecord+34,result_SignData,64);
+				STMFLASH_Write_ByteArray(FLASH_RESULT_alg_ADDRESS,resultsignRecord,98);	//记录签名数据结果			
+
+				//6 置相应标志位
+				STMFLASH_WriteWord(FLASH_SIGN_DATA_OK,FLASH_SUCCESS_FLAG);
 		}
 
-		//解密私钥
-		if(Get_Privekey(AddressID+7,Pin_code,privateKey_flash) != 0)//出错
-		{
-				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
-				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
-		}
-
-		//签名数据包
-		if(Alg_ECDSASignData(data_pack,pack_len,result_SignData,&len_sign_alg,privateKey_flash))
-		{
-				STMFLASH_WriteWord(FLASH_RESULT_sign_ADDRESS,0);
-				jump_to_app(FLASH_NEODUN_ADDRESS);//出错跳回大厅APP
-		}
-		
-		//组合最终的数据
-		Alg_GetPublicFromPrivate(privateKey_flash,PublicKey_Flash,1);
-		memmove(PubKey_Flash,PublicKey_Flash,33);
-		resultsignRecord[0] = 33;
-		memmove(resultsignRecord+1,PubKey_Flash,33);
-		memmove(resultsignRecord+34,result_SignData,64);
-		
-		//将结果写入FLASH
-		{
-				//记录解释签名结果
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS,Sign.type);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+1,Sign.version);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+2,Sign.coin);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+3,Sign.countAttributes);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+4,Sign.countInputs);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+5,Sign.countOutputs);
-				STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+6,Sign.address[0],25);
-				STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+31,Sign.address[1],25);
-				STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+56,Sign.assetid[0],25);
-				STMFLASH_Write_ByteArray(FLASH_RESULT_sign_ADDRESS+88,Sign.assetid[1],25);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+120,(uint8_t)Sign.money[0]);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+121,(uint8_t)(Sign.money[0]>>8));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+122,(uint8_t)(Sign.money[0]>>16));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+123,(uint8_t)(Sign.money[0]>>24));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+124,(uint8_t)(Sign.money[0]>>32));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+125,(uint8_t)(Sign.money[0]>>40));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+126,(uint8_t)(Sign.money[0]>>48));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+127,(uint8_t)(Sign.money[0]>>56));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+128,(uint8_t)Sign.money[1]);
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+129,(uint8_t)(Sign.money[1]>>8));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+130,(uint8_t)(Sign.money[1]>>16));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+131,(uint8_t)(Sign.money[1]>>24));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+132,(uint8_t)(Sign.money[1]>>32));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+133,(uint8_t)(Sign.money[1]>>40));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+134,(uint8_t)(Sign.money[1]>>48));
-				STMFLASH_WriteByte(FLASH_RESULT_sign_ADDRESS+135,(uint8_t)(Sign.money[1]>>56));			
-		}
-		STMFLASH_Write_ByteArray(FLASH_RESULT_alg_ADDRESS,resultsignRecord,98);	//记录签名数据结果
-		
 		//回跳到NEODUN
 		jump_to_app(FLASH_NEODUN_ADDRESS);//跳回大厅APP
-		while(1)
-		{
-		
-		}
+		while(1);
 }
 
 /** System Clock Configuration

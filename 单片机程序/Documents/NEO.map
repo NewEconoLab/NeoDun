@@ -317,19 +317,19 @@ Section Cross References
     main.o(i.main) refers to main.o(i.MX_CRC_Init) for MX_CRC_Init
     main.o(i.main) refers to main.o(i.MX_RNG_Init) for MX_RNG_Init
     main.o(i.main) refers to bitbang_i2c.o(i.ATSHA_I2c_Init) for ATSHA_I2c_Init
-    main.o(i.main) refers to memseta.o(.text) for __aeabi_memclr4
     main.o(i.main) refers to stmflash.o(i.STMFLASH_ReadWord) for STMFLASH_ReadWord
+    main.o(i.main) refers to memseta.o(.text) for __aeabi_memclr4
     main.o(i.main) refers to stmflash.o(i.STMFLASH_WriteWord) for STMFLASH_WriteWord
     main.o(i.main) refers to main.o(i.jump_to_app) for jump_to_app
-    main.o(i.main) refers to stmflash.o(i.STMFLASH_Read_ByteArray) for STMFLASH_Read_ByteArray
     main.o(i.main) refers to stmflash.o(i.STMFLASH_Read) for STMFLASH_Read
     main.o(i.main) refers to showsign.o(i.Alg_ShowSignData) for Alg_ShowSignData
+    main.o(i.main) refers to stmflash.o(i.STMFLASH_WriteByte) for STMFLASH_WriteByte
+    main.o(i.main) refers to stmflash.o(i.STMFLASH_Write_ByteArray) for STMFLASH_Write_ByteArray
+    main.o(i.main) refers to stmflash.o(i.STMFLASH_Read_ByteArray) for STMFLASH_Read_ByteArray
     main.o(i.main) refers to app_interface.o(i.Get_Privekey) for Get_Privekey
     main.o(i.main) refers to ecdsa.o(i.Alg_ECDSASignData) for Alg_ECDSASignData
     main.o(i.main) refers to ecdsa.o(i.Alg_GetPublicFromPrivate) for Alg_GetPublicFromPrivate
     main.o(i.main) refers to memmovea.o(.text) for __aeabi_memmove4
-    main.o(i.main) refers to stmflash.o(i.STMFLASH_WriteByte) for STMFLASH_WriteByte
-    main.o(i.main) refers to stmflash.o(i.STMFLASH_Write_ByteArray) for STMFLASH_Write_ByteArray
     main.o(i.main) refers to main.o(.bss) for data_pack
     main.o(i.main) refers to main.o(.data) for pack_len
     stm32f4xx_hal_msp.o(i.HAL_MspInit) refers to stm32f4xx_hal_cortex.o(i.HAL_NVIC_SetPriorityGrouping) for HAL_NVIC_SetPriorityGrouping
@@ -2036,62 +2036,62 @@ Image Symbol Table
     ../Src/stm32f4xx_hal_msp.c               0x00000000   Number         0  stm32f4xx_hal_msp.o ABSOLUTE
     ../Src/stm32f4xx_it.c                    0x00000000   Number         0  stm32f4xx_it.o ABSOLUTE
     ../Src/system_stm32f4xx.c                0x00000000   Number         0  system_stm32f4xx.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isdigit_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isgraph_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isprint_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ispunct_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isspace_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  islower_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isupper_o.o ABSOLUTE
+    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  iscntrl_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isxdigit_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isblank_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  ctype_o.o ABSOLUTE
-    ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalnum_o.o ABSOLUTE
     ../clib/microlib/ctype/ctype.c           0x00000000   Number         0  isalpha_o.o ABSOLUTE
-    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uidiv.o ABSOLUTE
+    ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
     ../clib/microlib/errno.c                 0x00000000   Number         0  errno.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llsshr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
     ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
-    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf3.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf4.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf5.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf6.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf7.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf8.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfa.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf2.o ABSOLUTE
     ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf1.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printf0.o ABSOLUTE
+    ../clib/microlib/printf/printf.c         0x00000000   Number         0  printfb.o ABSOLUTE
     ../clib/microlib/printf/stubs.s          0x00000000   Number         0  stubs.o ABSOLUTE
     ../clib/microlib/stdio/fputc.c           0x00000000   Number         0  fputc.o ABSOLUTE
     ../clib/microlib/stdio/semi.s            0x00000000   Number         0  semi.o ABSOLUTE
     ../clib/microlib/stdio/streams.c         0x00000000   Number         0  stdout.o ABSOLUTE
     ../clib/microlib/string/memcmp.c         0x00000000   Number         0  memcmp.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmovea.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmoveb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memmovea.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/string/strcmp.c         0x00000000   Number         0  strcmp.o ABSOLUTE
@@ -2104,8 +2104,8 @@ Image Symbol Table
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  depilogue.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixl.o ABSOLUTE
     ../fplib/microlib/fpfix.c                0x00000000   Number         0  dfixul.o ABSOLUTE
-    ../fplib/microlib/fpflt.c                0x00000000   Number         0  dflti.o ABSOLUTE
     ../fplib/microlib/fpflt.c                0x00000000   Number         0  dfltl.o ABSOLUTE
+    ../fplib/microlib/fpflt.c                0x00000000   Number         0  dflti.o ABSOLUTE
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  dmul.o ABSOLUTE
     ../fplib/microlib/fpneg.c                0x00000000   Number         0  dneg.o ABSOLUTE
     ../fplib/microlib/fpscalb.c              0x00000000   Number         0  dscalb.o ABSOLUTE
@@ -2114,8 +2114,8 @@ Image Symbol Table
     ../mathlib/fabs.c                        0x00000000   Number         0  fabs.o ABSOLUTE
     ../mathlib/fpclassify.c                  0x00000000   Number         0  fpclassify.o ABSOLUTE
     ../mathlib/poly.c                        0x00000000   Number         0  poly.o ABSOLUTE
-    ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
     ../mathlib/pow.c                         0x00000000   Number         0  pow_x.o ABSOLUTE
+    ../mathlib/pow.c                         0x00000000   Number         0  pow.o ABSOLUTE
     ../mathlib/qnan.c                        0x00000000   Number         0  qnan.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt_x.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
@@ -2212,15 +2212,15 @@ Image Symbol Table
     .text                                    0x080605a6   Section        0  llshl.o(.text)
     .text                                    0x080605c4   Section        0  llushr.o(.text)
     .text                                    0x080605e4   Section        0  llsshr.o(.text)
-    .text                                    0x08060608   Section        0  iusefp.o(.text)
     .text                                    0x08060608   Section        0  depilogue.o(.text)
+    .text                                    0x08060608   Section        0  iusefp.o(.text)
     .text                                    0x080606c2   Section        0  ddiv.o(.text)
     .text                                    0x080607a0   Section        0  dscalb.o(.text)
     .text                                    0x080607d0   Section       48  cdrcmple.o(.text)
     .text                                    0x08060800   Section       36  init.o(.text)
-    .text                                    0x08060824   Section        0  dsqrt.o(.text)
     .text                                    0x08060824   Section        0  semi.o(.text)
     .text                                    0x08060824   Section        0  iusesemip.o(.text)
+    .text                                    0x08060824   Section        0  dsqrt.o(.text)
     i.AES128_decrypt                         0x080608c8   Section        0  crypto.o(i.AES128_decrypt)
     i.AES128_encrypt                         0x08060bcc   Section        0  crypto.o(i.AES128_encrypt)
     i.AES128_keyschedule_dec                 0x08060ee0   Section        0  crypto.o(i.AES128_keyschedule_dec)
@@ -2340,11 +2340,11 @@ Image Symbol Table
     i.InitBig                                0x08065fb0   Section        0  crypto.o(i.InitBig)
     i.LeftShift                              0x08066018   Section        0  crypto.o(i.LeftShift)
     i.MX_CRC_Init                            0x080660a8   Section        0  main.o(i.MX_CRC_Init)
-    MX_CRC_Init                              0x080660a9   Thumb Code    26  main.o(i.MX_CRC_Init)
+    MX_CRC_Init                              0x080660a9   Thumb Code    28  main.o(i.MX_CRC_Init)
     i.MX_GPIO_Init                           0x080660dc   Section        0  main.o(i.MX_GPIO_Init)
     MX_GPIO_Init                             0x080660dd   Thumb Code    96  main.o(i.MX_GPIO_Init)
     i.MX_RNG_Init                            0x08066140   Section        0  main.o(i.MX_RNG_Init)
-    MX_RNG_Init                              0x08066141   Thumb Code    26  main.o(i.MX_RNG_Init)
+    MX_RNG_Init                              0x08066141   Thumb Code    28  main.o(i.MX_RNG_Init)
     i.MemManage_Handler                      0x08066174   Section        0  stm32f4xx_it.o(i.MemManage_Handler)
     i.ModularAddBig                          0x08066178   Section        0  crypto.o(i.ModularAddBig)
     i.ModularFastMul2                        0x080661bc   Section        0  crypto.o(i.ModularFastMul2)
@@ -2462,29 +2462,30 @@ Image Symbol Table
     i.isATCAError                            0x0806b14c   Section        0  atca_command.o(i.isATCAError)
     i.jump_to_app                            0x0806b1a8   Section        0  main.o(i.jump_to_app)
     i.main                                   0x0806b1e0   Section        0  main.o(i.main)
-    i.make_table                             0x0806b4b4   Section        0  app_interface.o(i.make_table)
-    make_table                               0x0806b4b5   Thumb Code    68  app_interface.o(i.make_table)
-    i.sqrt                                   0x0806b504   Section        0  sqrt.o(i.sqrt)
-    i.test_assert_data_is_locked             0x0806b572   Section        0  atsha204a.o(i.test_assert_data_is_locked)
-    test_assert_data_is_locked               0x0806b573   Thumb Code    36  atsha204a.o(i.test_assert_data_is_locked)
-    .constdata                               0x0806b598   Section      291  ecdsa.o(.constdata)
-    .constdata                               0x0806b6bc   Section      516  showsign.o(.constdata)
-    .constdata                               0x0806b8c0   Section       24  system_stm32f4xx.o(.constdata)
-    .constdata                               0x0806b8d8   Section     6040  crypto.o(.constdata)
-    table_reduction8                         0x0806c300   Data         512  crypto.o(.constdata)
-    table_reduction4                         0x0806c500   Data          32  crypto.o(.constdata)
-    pad                                      0x0806ce90   Data          64  crypto.o(.constdata)
-    .constdata                               0x0806d070   Section      136  pow.o(.constdata)
-    bp                                       0x0806d070   Data          16  pow.o(.constdata)
-    dp_h                                     0x0806d080   Data          16  pow.o(.constdata)
-    dp_l                                     0x0806d090   Data          16  pow.o(.constdata)
-    L                                        0x0806d0a0   Data          48  pow.o(.constdata)
-    P                                        0x0806d0d0   Data          40  pow.o(.constdata)
-    .constdata                               0x0806d0f8   Section        8  qnan.o(.constdata)
+    i.make_table                             0x0806b56c   Section        0  app_interface.o(i.make_table)
+    make_table                               0x0806b56d   Thumb Code    68  app_interface.o(i.make_table)
+    i.sqrt                                   0x0806b5bc   Section        0  sqrt.o(i.sqrt)
+    i.test_assert_data_is_locked             0x0806b62a   Section        0  atsha204a.o(i.test_assert_data_is_locked)
+    test_assert_data_is_locked               0x0806b62b   Thumb Code    36  atsha204a.o(i.test_assert_data_is_locked)
+    .constdata                               0x0806b650   Section      291  ecdsa.o(.constdata)
+    .constdata                               0x0806b774   Section      516  showsign.o(.constdata)
+    .constdata                               0x0806b978   Section       24  system_stm32f4xx.o(.constdata)
+    .constdata                               0x0806b990   Section     6040  crypto.o(.constdata)
+    table_reduction8                         0x0806c3b8   Data         512  crypto.o(.constdata)
+    table_reduction4                         0x0806c5b8   Data          32  crypto.o(.constdata)
+    pad                                      0x0806cf48   Data          64  crypto.o(.constdata)
+    .constdata                               0x0806d128   Section      136  pow.o(.constdata)
+    bp                                       0x0806d128   Data          16  pow.o(.constdata)
+    dp_h                                     0x0806d138   Data          16  pow.o(.constdata)
+    dp_l                                     0x0806d148   Data          16  pow.o(.constdata)
+    L                                        0x0806d158   Data          48  pow.o(.constdata)
+    P                                        0x0806d188   Data          40  pow.o(.constdata)
+    .constdata                               0x0806d1b0   Section        8  qnan.o(.constdata)
     .data                                    0x20000000   Section        1  app_interface.o(.data)
     have_table                               0x20000000   Data           1  app_interface.o(.data)
     .data                                    0x20000004   Section        4  system_stm32f4xx.o(.data)
     .data                                    0x20000008   Section       16  main.o(.data)
+    pack_len                                 0x20000010   Data           4  main.o(.data)
     .data                                    0x20000018   Section        4  stm32f4xx_hal.o(.data)
     .data                                    0x2000001c   Section       42  atca_command.o(.data)
     .data                                    0x20000048   Section        4  bitbang_i2c.o(.data)
@@ -2496,6 +2497,8 @@ Image Symbol Table
     .bss                                     0x20001064   Section     1024  app_interface.o(.bss)
     table                                    0x20001064   Data        1024  app_interface.o(.bss)
     .bss                                     0x20001464   Section      556  main.o(.bss)
+    privateKey_flash                         0x20001470   Data          32  main.o(.bss)
+    data_pack                                0x20001490   Data         512  main.o(.bss)
     .bss                                     0x20001690   Section       32  stm32f4xx_hal_flash.o(.bss)
     STACK                                    0x200016b0   Section     8192  startup_stm32f407xx.o(STACK)
 
@@ -2874,36 +2877,35 @@ Image Symbol Table
     fputc                                    0x0806b139   Thumb Code    18  fputc.o(i.fputc)
     isATCAError                              0x0806b14d   Thumb Code    88  atca_command.o(i.isATCAError)
     jump_to_app                              0x0806b1a9   Thumb Code    48  main.o(i.jump_to_app)
-    main                                     0x0806b1e1   Thumb Code   680  main.o(i.main)
-    sqrt                                     0x0806b505   Thumb Code   110  sqrt.o(i.sqrt)
-    P_256_a                                  0x0806b598   Data          32  ecdsa.o(.constdata)
-    P_256_b                                  0x0806b5b8   Data          32  ecdsa.o(.constdata)
-    P_256_p                                  0x0806b5d8   Data          32  ecdsa.o(.constdata)
-    P_256_n                                  0x0806b5f8   Data          32  ecdsa.o(.constdata)
-    P_256_Gx                                 0x0806b618   Data          32  ecdsa.o(.constdata)
-    P_256_Gy                                 0x0806b638   Data          32  ecdsa.o(.constdata)
-    AHBPrescTable                            0x0806b8c0   Data          16  system_stm32f4xx.o(.constdata)
-    APBPrescTable                            0x0806b8d0   Data           8  system_stm32f4xx.o(.constdata)
-    Sbox                                     0x0806b8d8   Data         256  crypto.o(.constdata)
-    InvSbox                                  0x0806b9d8   Data         256  crypto.o(.constdata)
-    rcon                                     0x0806bad8   Data          40  crypto.o(.constdata)
-    enc_table                                0x0806bb00   Data        1024  crypto.o(.constdata)
-    dec_table                                0x0806bf00   Data        1024  crypto.o(.constdata)
-    SP1                                      0x0806c520   Data         256  crypto.o(.constdata)
-    SP2                                      0x0806c620   Data         256  crypto.o(.constdata)
-    SP3                                      0x0806c720   Data         256  crypto.o(.constdata)
-    SP4                                      0x0806c820   Data         256  crypto.o(.constdata)
-    SP5                                      0x0806c920   Data         256  crypto.o(.constdata)
-    SP6                                      0x0806ca20   Data         256  crypto.o(.constdata)
-    SP7                                      0x0806cb20   Data         256  crypto.o(.constdata)
-    SP8                                      0x0806cc20   Data         256  crypto.o(.constdata)
-    K256                                     0x0806cd20   Data         256  crypto.o(.constdata)
-    __mathlib_zero                           0x0806d0f8   Data           8  qnan.o(.constdata)
-    Region$$Table$$Base                      0x0806d100   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0806d120   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x0806b1e1   Thumb Code   858  main.o(i.main)
+    sqrt                                     0x0806b5bd   Thumb Code   110  sqrt.o(i.sqrt)
+    P_256_a                                  0x0806b650   Data          32  ecdsa.o(.constdata)
+    P_256_b                                  0x0806b670   Data          32  ecdsa.o(.constdata)
+    P_256_p                                  0x0806b690   Data          32  ecdsa.o(.constdata)
+    P_256_n                                  0x0806b6b0   Data          32  ecdsa.o(.constdata)
+    P_256_Gx                                 0x0806b6d0   Data          32  ecdsa.o(.constdata)
+    P_256_Gy                                 0x0806b6f0   Data          32  ecdsa.o(.constdata)
+    AHBPrescTable                            0x0806b978   Data          16  system_stm32f4xx.o(.constdata)
+    APBPrescTable                            0x0806b988   Data           8  system_stm32f4xx.o(.constdata)
+    Sbox                                     0x0806b990   Data         256  crypto.o(.constdata)
+    InvSbox                                  0x0806ba90   Data         256  crypto.o(.constdata)
+    rcon                                     0x0806bb90   Data          40  crypto.o(.constdata)
+    enc_table                                0x0806bbb8   Data        1024  crypto.o(.constdata)
+    dec_table                                0x0806bfb8   Data        1024  crypto.o(.constdata)
+    SP1                                      0x0806c5d8   Data         256  crypto.o(.constdata)
+    SP2                                      0x0806c6d8   Data         256  crypto.o(.constdata)
+    SP3                                      0x0806c7d8   Data         256  crypto.o(.constdata)
+    SP4                                      0x0806c8d8   Data         256  crypto.o(.constdata)
+    SP5                                      0x0806c9d8   Data         256  crypto.o(.constdata)
+    SP6                                      0x0806cad8   Data         256  crypto.o(.constdata)
+    SP7                                      0x0806cbd8   Data         256  crypto.o(.constdata)
+    SP8                                      0x0806ccd8   Data         256  crypto.o(.constdata)
+    K256                                     0x0806cdd8   Data         256  crypto.o(.constdata)
+    __mathlib_zero                           0x0806d1b0   Data           8  qnan.o(.constdata)
+    Region$$Table$$Base                      0x0806d1b8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0806d1d8   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000004   Data           4  system_stm32f4xx.o(.data)
     hcrc                                     0x20000008   Data           8  main.o(.data)
-    pack_len                                 0x20000010   Data           4  main.o(.data)
     jump2app                                 0x20000014   Data           4  main.o(.data)
     uwTick                                   0x20000018   Data           4  stm32f4xx_hal.o(.data)
     exectimes_204a                           0x2000001c   Data          42  atca_command.o(.data)
@@ -2916,8 +2918,6 @@ Image Symbol Table
     sign_s_malloc                            0x20000232   Data          50  ecdsa.o(.bss)
     preallocated_buffer                      0x20000264   Data        3584  ecdsa.o(.bss)
     hrng                                     0x20001464   Data          12  main.o(.bss)
-    privateKey_flash                         0x20001470   Data          32  main.o(.bss)
-    data_pack                                0x20001490   Data         512  main.o(.bss)
     pFlash                                   0x20001690   Data          32  stm32f4xx_hal_flash.o(.bss)
     __initial_sp                             0x200036b0   Data           0  startup_stm32f407xx.o(STACK)
 
@@ -2929,9 +2929,9 @@ Memory Map of the image
 
   Image Entry point : 0x08060189
 
-  Load Region LR_IROM1 (Base: 0x08060000, Size: 0x0000d174, Max: 0x000a0000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08060000, Size: 0x0000d22c, Max: 0x000a0000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x08060000, Size: 0x0000d120, Max: 0x000a0000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08060000, Size: 0x0000d1d8, Max: 0x000a0000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -3209,19 +3209,19 @@ Memory Map of the image
     0x0806b14a   0x00000002   PAD
     0x0806b14c   0x0000005c   Code   RO         2587    i.isATCAError       atca_command.o
     0x0806b1a8   0x00000038   Code   RO         1186    i.jump_to_app       main.o
-    0x0806b1e0   0x000002d4   Code   RO         1187    i.main              main.o
-    0x0806b4b4   0x00000050   Code   RO         1020    i.make_table        app_interface.o
-    0x0806b504   0x0000006e   Code   RO         4501    i.sqrt              m_wm.l(sqrt.o)
-    0x0806b572   0x00000024   Code   RO          887    i.test_assert_data_is_locked  atsha204a.o
-    0x0806b596   0x00000002   PAD
-    0x0806b598   0x00000123   Data   RO          167    .constdata          ecdsa.o
-    0x0806b6bb   0x00000001   PAD
-    0x0806b6bc   0x00000204   Data   RO          564    .constdata          showsign.o
-    0x0806b8c0   0x00000018   Data   RO         1071    .constdata          system_stm32f4xx.o
-    0x0806b8d8   0x00001798   Data   RO         3388    .constdata          Sha256.lib(crypto.o)
-    0x0806d070   0x00000088   Data   RO         4111    .constdata          m_wm.l(pow.o)
-    0x0806d0f8   0x00000008   Data   RO         4498    .constdata          m_wm.l(qnan.o)
-    0x0806d100   0x00000020   Data   RO         4564    Region$$Table       anon$$obj.o
+    0x0806b1e0   0x0000038c   Code   RO         1187    i.main              main.o
+    0x0806b56c   0x00000050   Code   RO         1020    i.make_table        app_interface.o
+    0x0806b5bc   0x0000006e   Code   RO         4501    i.sqrt              m_wm.l(sqrt.o)
+    0x0806b62a   0x00000024   Code   RO          887    i.test_assert_data_is_locked  atsha204a.o
+    0x0806b64e   0x00000002   PAD
+    0x0806b650   0x00000123   Data   RO          167    .constdata          ecdsa.o
+    0x0806b773   0x00000001   PAD
+    0x0806b774   0x00000204   Data   RO          564    .constdata          showsign.o
+    0x0806b978   0x00000018   Data   RO         1071    .constdata          system_stm32f4xx.o
+    0x0806b990   0x00001798   Data   RO         3388    .constdata          Sha256.lib(crypto.o)
+    0x0806d128   0x00000088   Data   RO         4111    .constdata          m_wm.l(pow.o)
+    0x0806d1b0   0x00000008   Data   RO         4498    .constdata          m_wm.l(qnan.o)
+    0x0806d1b8   0x00000020   Data   RO         4564    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x000036b0, Max: 0x00020000, ABSOLUTE)
@@ -3252,36 +3252,36 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       100          0          0          0          0       1292   app_aes.o
-       172         10          0          0          0       2205   app_des.o
-       534         22          0          1       1024       4333   app_interface.o
-       736          0          0          0          0       6996   atca_basic.o
-       316         10          0         42          0       4420   atca_command.o
-       142          6          0          0          0       3019   atca_iface_stm32_i2c.o
-       222          0          0          0          0      18775   atsha204a.o
-         0          0          0          0          0     629132   bignum.o
-       736         90          0          4          0       6332   bitbang_i2c.o
-      1224        130        291          0       4112      17017   ecdsa.o
-        80          0          0          0          0       3213   getaddress.o
-        84          6          0          0          0       1197   hal_stm32_timer.o
-      1212        134          0         16        556       5380   main.o
-      7808        464        516          0          0       8906   showsign.o
-        36          8        392          0       8192        832   startup_stm32f407xx.o
-       228         24          0          4          0       5512   stm32f4xx_hal.o
-       350         28          0          0          0      32594   stm32f4xx_hal_cortex.o
-        36          0          0          0          0       1031   stm32f4xx_hal_crc.o
-       636         64          0          0         32       5942   stm32f4xx_hal_flash.o
-       512         46          0          0          0       1644   stm32f4xx_hal_gpio.o
-       190         16          0          0          0       1982   stm32f4xx_hal_msp.o
-      1612         54          0          0          0       4250   stm32f4xx_hal_rcc.o
-        48          0          0          0          0       1055   stm32f4xx_hal_rng.o
-        36          0          0          0          0       4134   stm32f4xx_it.o
-       214          4          0          0          0       4563   stmflash.o
-        16          0          0          0          0        468   sys.o
-       100         18         24          4          0       1155   system_stm32f4xx.o
+       100          0          0          0          0       1312   app_aes.o
+       172         10          0          0          0       2229   app_des.o
+       534         22          0          1       1024       4401   app_interface.o
+       736          0          0          0          0       7080   atca_basic.o
+       316         10          0         42          0       4484   atca_command.o
+       142          6          0          0          0       3059   atca_iface_stm32_i2c.o
+       222          0          0          0          0      18831   atsha204a.o
+         0          0          0          0          0     629212   bignum.o
+       736         90          0          4          0       6436   bitbang_i2c.o
+      1224        130        291          0       4112      17217   ecdsa.o
+        80          0          0          0          0       3237   getaddress.o
+        84          6          0          0          0       1213   hal_stm32_timer.o
+      1396        136          0         16        556       5744   main.o
+      7808        464        516          0          0       8994   showsign.o
+        36          8        392          0       8192        840   startup_stm32f407xx.o
+       228         24          0          4          0       5588   stm32f4xx_hal.o
+       350         28          0          0          0      32678   stm32f4xx_hal_cortex.o
+        36          0          0          0          0       1047   stm32f4xx_hal_crc.o
+       636         64          0          0         32       6038   stm32f4xx_hal_flash.o
+       512         46          0          0          0       1660   stm32f4xx_hal_gpio.o
+       190         16          0          0          0       2022   stm32f4xx_hal_msp.o
+      1612         54          0          0          0       4290   stm32f4xx_hal_rcc.o
+        48          0          0          0          0       1071   stm32f4xx_hal_rng.o
+        36          0          0          0          0       4214   stm32f4xx_it.o
+       214          4          0          0          0       4639   stmflash.o
+        16          0          0          0          0        480   sys.o
+       100         18         24          4          0       1187   system_stm32f4xx.o
 
     ----------------------------------------------------------------------
-     17408       1138       1256         76      13916     777379   Object Totals
+     17592       1140       1256         76      13916     779203   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         28          4          1          5          0          0   (incl. Padding)
 
@@ -3358,15 +3358,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     46096       1918       7440         84      13916    1003081   Grand Totals
-     46096       1918       7440         84      13916    1003081   ELF Image Totals
-     46096       1918       7440         84          0          0   ROM Totals
+     46280       1920       7440         84      13916    1004905   Grand Totals
+     46280       1920       7440         84      13916    1004905   ELF Image Totals
+     46280       1920       7440         84          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                53536 (  52.28kB)
+    Total RO  Size (Code + RO Data)                53720 (  52.46kB)
     Total RW  Size (RW Data + ZI Data)             14000 (  13.67kB)
-    Total ROM Size (Code + RO Data + RW Data)      53620 (  52.36kB)
+    Total ROM Size (Code + RO Data + RW Data)      53804 (  52.54kB)
 
 ==============================================================================
 

@@ -3,13 +3,18 @@
 
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#define Chinese
-//#define English
+
+//#define Chinese
+#define English
 
 #define HID_QUEUE_DEPTH					50
 
 #define FLASH_ADDRESS_SIGN_DATA	0x0801F000 //签名结果地址
+#define FLASH_ADDRESS_FLAG_JUMP	0x0801FC00 //跳转标识
 #define	FLASH_ADDRESS_SCENE		  0x0801FE00 //现场数据地址
 #define FLASH_ADDRESS_PACK		  0x08010000 //扇区4
 #define FLASH_DATA_SECTOR				FLASH_SECTOR_4
@@ -68,6 +73,10 @@
 #define ERR_DATA_PACK					0x0303
 #define ERR_USER_REFUSE				0x0401
 #define ERR_TIME_OUT					0x0501
+#define ERR_PLUGS_DATALEN			0x0601
+#define ERR_PLUGS_PACKERR			0x0602
+#define ERR_PLUGS_PRIKEY			0x0603
+#define ERR_PLUGS_SIGN				0x0604
 
 //币种
 #define COIN_NEO							"NEO"
@@ -95,18 +104,12 @@ typedef union
 		uint8_t data;
 }KEY_FLAG;
 
-//设置标识    现只用到新增、删除和备份地址    未用标识默认为0，其它标识默认值为1
+//设置标识
 typedef union
 {
 		struct
 		{
-				uint8_t usb_offline:1;							//0表示连上USB，1表示没连上USB
-				uint8_t auto_show:1;								//连接钱包后自动弹出驱动界面
-				uint8_t auto_update:1;							//开机时自动检查更新
-				uint8_t add_address:1;							//新增地址
-				uint8_t del_address:1;							//删除地址
-				uint8_t backup_address:1;				  	//备份地址
-				uint8_t backup_address_encrypt:1; 	//备份钱包时进行加密标识
+				uint8_t usb_offline:1;							//0表示连上USB，1表示没连上USB			
 				uint8_t usb_state_pre:1;						//USB前时刻的状态
 		}flag;
 		uint8_t data;

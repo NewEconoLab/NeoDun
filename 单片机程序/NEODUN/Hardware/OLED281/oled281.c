@@ -7,15 +7,17 @@
 #ifdef English
 		#include "Eng_pic.h"
 #endif
-//__INLINE static uint8_t get_Ascii_width(uint8_t ch)
-//{
-//		return AscillIndexLen[ch-32];
-//}
 
-//__INLINE static int get_Ascii_index(uint8_t ch)
-//{
-//		return AscillIndexNum[ch-32];
-//}
+
+__INLINE static uint8_t get_Ascii_width(uint8_t ch)
+{
+		return AscillIndexLen[ch-32];
+}
+
+__INLINE static int get_Ascii_index(uint8_t ch)
+{
+		return AscillIndexNum[ch-32];
+}
 
 //向SSD1325写入一个字节。
 //dat:要写入的数据/命令
@@ -569,25 +571,51 @@ void Show_HZ12_12(unsigned char x, unsigned char y, unsigned char num1, unsigned
 //==============================================================  
 void Asc8_16(unsigned char x, unsigned char y, unsigned char ch[]) 
 {
-	unsigned char x1, c = 0, i = 0, j = 0;
-	while (ch[i] != '\0') {
-		x1 = x / 4;
-		c = ch[i] - 32;
-		if (x1 > 61) {
-			x = 0;
-			x1 = x / 4;
-			y = y + 16;
-		}  //换行
-		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
-		Set_Row_Address(y, y + 15);
-		Set_Write_RAM();	 //	写显存
-
-		for (j = 0; j < 16; j++) {
-			Con_4_byte(ASC8X16[c * 16 + j]);	//数据转换
+		unsigned char x1, i = 0, j = 0;
+		unsigned char width = 0;
+		unsigned int index = 0;
+	
+		while (ch[i] != '\0') 
+		{
+				width = get_Ascii_width(ch[i]);
+				index = get_Ascii_index(ch[i]);
+			
+				//换行判断
+				x1 = x / 4;
+				if(x1 > 61)
+				{
+						x = 0;
+						x1 = x / 4;
+						y = y + 16;
+				}
+				
+				//行列设置  写显存
+				if(width == 8)
+						Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
+				else if(width == 4)
+						Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1); // 设置列坐标，shift为列偏移量由1322决定
+				Set_Row_Address(y, y + 15);
+				Set_Write_RAM();
+				
+				//数据转换
+				if(width == 8)
+				{
+						for (j = 0; j < 16; j++) 
+						{
+								Con_4_byte(ASC8X16[index + j]);
+						}
+						x = x + 8;
+				}
+				else if(width == 4)
+				{
+						for (j = 0; j < 8; j++) 
+						{
+								Con_4_byte(ASC8X16[index + j]);
+						}				
+						x = x + 4;
+				}
+				i++;				  
 		}
-		i++;
-		x = x + 8;	 //字间距，8为最小
-	}
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -635,10 +663,10 @@ void clearArea(int x, int y, int width, int height)
 
 void Show_num(unsigned char x,unsigned char y,int num,unsigned char isReverse)
 {
-		int x1,data,c,j;
-
+		int x1,data,j;
+		int index = get_Ascii_index(num+0x30);
+	
 		x1 = x / 4;
-		c = num + 16;
 		if (x1 > 61) 
 		{
 				x = 0;
@@ -651,7 +679,7 @@ void Show_num(unsigned char x,unsigned char y,int num,unsigned char isReverse)
 
 		for (j = 0; j < 16; j++) 
 		{
-				data = ASC8X16[c * 16 + j];
+				data = ASC8X16[index + j];
 				Con_4_byte(isReverse ? ~data : data);	//数据转换
 		}
 }
@@ -667,8 +695,10 @@ long long LCD_Pow(int m, int n)
 void drawInt(int x, int y, int num)
 {
 		int x1 = x / 4;
-		int c = num + 16;
-		if (x1 > 61) {
+		int index = get_Ascii_index(num+0x30);
+	
+		if (x1 > 61) 
+		{
 			x = 0;
 			x1 = x / 4;
 			y = y + 16;
@@ -676,10 +706,10 @@ void drawInt(int x, int y, int num)
 		Set_Column_Address(OLED_SHIFT + x1, OLED_SHIFT + x1 + 1); // 设置列坐标，shift为列偏移量由1322决定
 		Set_Row_Address(y, y + 15);
 		Set_Write_RAM();	 //	写显存
-
+		
 		for (int j = 0; j < 16; j++) 
 		{
-			int data = ASC8X16[c * 16 + j];
+			int data = ASC8X16[index + j];
 			Con_4_byte(data);	//数据转换
 		}
 }

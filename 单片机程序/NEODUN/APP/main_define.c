@@ -1,5 +1,4 @@
 #include "main_define.h"
-#include <string.h>
 
 volatile 	uint32_t 	system_base_time = 0;
 uint8_t						  SysFlagType = 0;//0表示正常流程，1表示从其它币种跳回的流程

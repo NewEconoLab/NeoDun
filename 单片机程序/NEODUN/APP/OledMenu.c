@@ -925,7 +925,14 @@ uint8_t Display_VerifyCode(void)
 		{
 				status = verifyCodeGetPin(0,Neo_System.pin);
 				if(status == 0)
+				{
+						if(Neo_System.errornum)
+						{
+								Neo_System.errornum = 0;
+								Update_Flag_ATSHA(&Set_Flag,&Neo_System);					
+						}
 						return 0;
+				}
 				Neo_System.errornum++;
 				Update_Flag_ATSHA(&Set_Flag,&Neo_System);
 				count[0] = Neo_System.errornum + 0x30;
@@ -1152,6 +1159,11 @@ uint8_t Display_VerifyCode_PowerOn(void)
 						return 1;//错误5次，返回1
 				}
 		}
+		if(Neo_System.errornum)
+		{
+				Neo_System.errornum = 0;
+				Update_Flag_ATSHA(&Set_Flag,&Neo_System);					
+		}		
 		return 0;//验证成功返回0
 }
 
@@ -2482,9 +2494,9 @@ SignConTra:
 						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
 						
 						if(data->coin == 0)
-								Asc8_16(count_bit,28,"GAS");
+								Asc8_16(count_bit,0,"GAS");
 						else if(data->coin == 1)
-								Asc8_16(count_bit,28,"NEO");
+								Asc8_16(count_bit,0,"NEO");
 
 						Show_HZ12_12(count_bit+28,0,125,125);//到
 						Display_Fill_Triangle(1,1);
@@ -2522,7 +2534,7 @@ SignConTra:
 				while(Key_Flag.flag.middle == 0);
 				Key_Flag.flag.middle = 0;
 		#endif
-		
+
 		Fill_RAM(0x00);
 		Asc8_16(0,0,(uint8_t*)dst_address);
 		#ifdef Chinese
@@ -2535,7 +2547,7 @@ SignConTra:
 				Show_AscII_Picture(104,51,ConfirmBitmapDot,sizeof(ConfirmBitmapDot));
 				Show_AscII_Picture(172,51,CancelBitmapDot,sizeof(CancelBitmapDot));
 		#endif
-		
+
 		Asc8_16(244,28,"s");
 		Start_TIM(OLED_INPUT_TIME);
 		Key_Control(1);
@@ -2568,24 +2580,9 @@ SignConTra:
 						count_dec = 8;
 						goto SignConTra;
 				}
-		}
-		
-		Key_Control(0);
-		Fill_RAM(0x00);
-		Display_Triangle(0);
-		#ifdef Chinese		
-				Show_HZ12_12(96,16,101,101);//签
-				Show_HZ12_12(112,16,57,57);//名
-				Show_HZ12_12(128,16,27,27);//成
-				Show_HZ12_12(144,16,115,115);//功
-		#endif
-		#ifdef English
-				Show_AscII_Picture(64,16,TransactionBitmapDot,sizeof(TransactionBitmapDot));//80
-				Show_AscII_Picture(148,16,signedBitmapDot,sizeof(signedBitmapDot));//48
-		#endif
-		
+		}		
 		Key_Control(1);
-		return NEO_SUCCESS;		
+		return NEO_SUCCESS;
 }
 
 uint8_t Display_Sign_Nep5(SIGN_Out_Para *data,ADDRESS *address,char *dst_address)
@@ -2618,9 +2615,9 @@ SignNep5:
 						count_bit = index + (count_int + 8 -count_dec)*8 + 4; //index是前面占用的显示，+4是显示空隙，美观
 
 						if(data->coin == 2)
-								Asc8_16(count_bit,28,"NNC");
+								Asc8_16(count_bit,0,"NNC");
 						else if(data->coin == 3)
-								Asc8_16(count_bit,28,"CPX");
+								Asc8_16(count_bit,0,"CPX");
 
 						Show_HZ12_12(count_bit+28,0,125,125);//到
 						Display_Fill_Triangle(1,1);
@@ -2705,22 +2702,7 @@ SignNep5:
 						goto SignNep5;
 				}
 		}
-		
-		Key_Control(0);
-		Fill_RAM(0x00);
-		Display_Triangle(0);
-		#ifdef Chinese		
-				Show_HZ12_12(96,16,101,101);//签
-				Show_HZ12_12(112,16,57,57);//名
-				Show_HZ12_12(128,16,27,27);//成
-				Show_HZ12_12(144,16,115,115);//功
-		#endif
-		#ifdef English
-				Show_AscII_Picture(64,16,TransactionBitmapDot,sizeof(TransactionBitmapDot));//80
-				Show_AscII_Picture(148,16,signedBitmapDot,sizeof(signedBitmapDot));//48
-		#endif
 		Key_Control(1);
-		
 		return NEO_SUCCESS;
 }
 

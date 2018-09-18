@@ -133,7 +133,7 @@ int main(void)
 				else
 				{
 						Asc8_16(100,24,"Waiting");
-				}			
+				}
 				memset(&HID_RX_BUF,0,RECV_BIN_FILE_LEN);								
 				//清除扇区，并回复上位机请求更新
 				STMFLASH_Erase_Sectors(FLASH_SECTOR_5);
