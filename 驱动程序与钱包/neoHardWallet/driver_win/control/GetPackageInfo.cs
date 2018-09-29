@@ -12,25 +12,28 @@ namespace driver_win.control
 
         public override void HandleMsg(params object[] _params)
         {
-            result.msgCode = (EnumMsgCode)_params[0];
-            result.errorCode = (EnumErrorCode)_params[1];
-            byte[] data = (byte[])_params[2];
-            string appVersion = data[0] + "." + data[1];
-
-            MyJson.JsonNode_Object Jo_PackageInfo = new MyJson.JsonNode_Object();
-
-            Jo_PackageInfo["Framework"] = new MyJson.JsonNode_ValueString(appVersion);
-            //获取有几种插件
-            for (var i = 2; i < data.Length; i = i + 4)
+            if (_params.Length == 3)
             {
-                var version = data[i + 2] + "." + data[i + 3];
-                if (version == "0.0")
-                    break;
-                var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
-                Jo_PackageInfo[type.ToString()] = new MyJson.JsonNode_ValueString(version);
-            }
+                result.msgCode = (EnumMsgCode)_params[0];
+                result.errorCode = (EnumErrorCode)_params[1];
+                byte[] data = (byte[])_params[2];
+                string appVersion = data[0] + "." + data[1];
 
-            result.data = Jo_PackageInfo;
+                MyJson.JsonNode_Object Jo_PackageInfo = new MyJson.JsonNode_Object();
+
+                Jo_PackageInfo["Framework"] = new MyJson.JsonNode_ValueString(appVersion);
+                //获取有几种插件
+                for (var i = 2; i < data.Length; i = i + 4)
+                {
+                    var version = data[i + 2] + "." + data[i + 3];
+                    if (version == "0.0")
+                        break;
+                    var type = (NeoDun.AddressType)BitConverter.ToInt16(data, i);
+                    Jo_PackageInfo[type.ToString()] = new MyJson.JsonNode_ValueString(version);
+                }
+
+                result.data = Jo_PackageInfo;
+            }
         }
 
         public override void Init()
