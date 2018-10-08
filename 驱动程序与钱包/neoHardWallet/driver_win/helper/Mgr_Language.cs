@@ -54,6 +54,7 @@ namespace driver_win.helper
             }
             else
             {
+                curEnumLanguage = EnumLanguage.en;
                 curDic = dic_en;
                 curEnumLanguage = EnumLanguage.en;
             }
