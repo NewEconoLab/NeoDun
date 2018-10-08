@@ -50,7 +50,6 @@ namespace driver_win.helper
             if (System.Threading.Thread.CurrentThread.CurrentCulture.Name == "zh-CN")
             {
                 curDic = dic_cn;
-                curEnumLanguage = EnumLanguage.cn;
             }
             else
             {
