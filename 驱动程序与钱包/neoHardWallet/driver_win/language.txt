@@ -90,5 +90,3 @@ $page_securityverificationpassed	Security verification passed	安全检查已通
 $page_securityverificationfaild	Security verification faild	安全通过未通过
 $page_verifying	In verification	验证中……
 $page_safehelp	If you have any problems, please click the	请检查安全码是否输入正确。需要帮助请点击这里
-$page_connected	NEODUN Connected	NeoDun已经连接
-$page_disconnected	NEODUN Disconnected	NeoDun已经拔出

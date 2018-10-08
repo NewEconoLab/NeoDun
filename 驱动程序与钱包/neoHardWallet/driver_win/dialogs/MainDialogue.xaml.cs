@@ -121,14 +121,14 @@ namespace driver_win.dialogs
                         _islinking = true;
                         GetPackageInfo();
                         ShowUnlinkPage(true);
-                        ShowBalloonTip(Mgr_Language.Ins.Code2Word("$page_connected"));
+                        ShowBalloonTip("NeoDun已经连接");
                     }
                 }
                 else
                 {
                     if (_islinking)
                     {
-                        ShowBalloonTip(Mgr_Language.Ins.Code2Word("$page_disconnected"));
+                        ShowBalloonTip("NeoDun已经拔出");
                         _islinking = false;
                     }
                     ManagerControl.Ins.Release();
@@ -294,12 +294,12 @@ namespace driver_win.dialogs
                     btn_install.Visibility = Visibility.Visible;
                 }
                 this.listbox.Items.Add(item);
-                Result addressList = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
             }
             else
             {
                 this.Btn_Framework_update.Visibility = Visibility.Hidden;
             }
+            Result addressList = await ManagerControl.Ins.ToDo(EnumControl.GetAddress);
             AllowAllBtnClick();
         }
         //點擊打開地址管理頁面

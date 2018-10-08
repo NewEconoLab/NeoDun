@@ -45,7 +45,7 @@ namespace driver_win.control
 
         public async Task<Result> ToDo(EnumControl enumControl,params object[] _params)
         {
-            if (Lock && enumControl != EnumControl.InstallFramework)
+            if (Lock)
             {
                 Result result = new Result();
                 return result;
